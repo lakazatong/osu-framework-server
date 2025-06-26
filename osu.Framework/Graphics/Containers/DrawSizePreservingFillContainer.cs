@@ -21,7 +21,7 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// The target <see cref="Drawable.DrawSize"/> to be enforced according to <see cref="Strategy"/>.
         /// </summary>
-        public Vector2 TargetDrawSize = new Vector2(1024, 768);
+        public Vector2 TargetDrawSize = new Vector2(1920, 1080);
 
         /// <summary>
         /// The strategy to be used for enforcing <see cref="TargetDrawSize"/>. The default strategy
