@@ -30,11 +30,8 @@ namespace osu.Framework.Tests.Visual.Graphics
                         RelativeSizeAxes = Axes.Both,
                         Size = new Vector2(2),
                         Masking = true,
-                        Child = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
-                    }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
+                    },
                 },
                 new Container
                 {
@@ -57,7 +54,7 @@ namespace osu.Framework.Tests.Visual.Graphics
                             Origin = Anchor.TopCentre,
                             Text = "Invisible Area",
                             Colour = Color4.Red,
-                            Font = FontUsage.Default.With(size: 36)
+                            Font = FontUsage.Default.With(size: 36),
                         },
                         new Container
                         {
@@ -74,7 +71,7 @@ namespace osu.Framework.Tests.Visual.Graphics
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Alpha = 0,
-                                    AlwaysPresent = true
+                                    AlwaysPresent = true,
                                 },
                                 new SpriteText
                                 {
@@ -82,12 +79,12 @@ namespace osu.Framework.Tests.Visual.Graphics
                                     Origin = Anchor.TopCentre,
                                     Text = "Visible Area",
                                     Colour = Color4.Green,
-                                    Font = FontUsage.Default.With(size: 36)
-                                }
-                            }
-                        }
-                    }
-                }
+                                    Font = FontUsage.Default.With(size: 36),
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
     }

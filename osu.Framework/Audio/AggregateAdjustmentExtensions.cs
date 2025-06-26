@@ -14,7 +14,10 @@ namespace osu.Framework.Audio
         /// <param name="adjustment">The audio adjustments to return from.</param>
         /// <param name="type">The adjustment type.</param>
         /// <returns>The aggregate result.</returns>
-        public static IBindable<double> GetAggregate(this IAggregateAudioAdjustment adjustment, AdjustableProperty type)
+        public static IBindable<double> GetAggregate(
+            this IAggregateAudioAdjustment adjustment,
+            AdjustableProperty type
+        )
         {
             switch (type)
             {
@@ -31,7 +34,10 @@ namespace osu.Framework.Audio
                     return adjustment.AggregateTempo;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), "Invalid adjustable property type.");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(type),
+                        "Invalid adjustable property type."
+                    );
             }
         }
     }

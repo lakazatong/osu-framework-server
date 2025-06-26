@@ -18,26 +18,25 @@ namespace osu.Framework.Tests.Visual.Sprites
     {
         public TestSceneLargeTextureStore()
         {
-            AddRange(new Drawable[]
-            {
-                new LargeTextureStoreProvider(true)
+            AddRange(
+                new Drawable[]
                 {
-                    Width = 0.5f
-                },
-                new Box
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.Y,
-                    Width = 2f
-                },
-                new LargeTextureStoreProvider(false)
-                {
-                    Width = 0.5f,
-                    RelativePositionAxes = Axes.X,
-                    X = 0.5f
+                    new LargeTextureStoreProvider(true) { Width = 0.5f },
+                    new Box
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.Y,
+                        Width = 2f,
+                    },
+                    new LargeTextureStoreProvider(false)
+                    {
+                        Width = 0.5f,
+                        RelativePositionAxes = Axes.X,
+                        X = 0.5f,
+                    },
                 }
-            });
+            );
         }
 
         private partial class LargeTextureStoreProvider : CompositeDrawable
@@ -53,7 +52,15 @@ namespace osu.Framework.Tests.Visual.Sprites
             [BackgroundDependencyLoader]
             private void load(IRenderer renderer, GameHost host, Game game)
             {
-                dependencies.CacheAs(new LargeTextureStore(renderer, host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(game.Resources, "Textures")), manualMipmaps: useManualMipmaps));
+                dependencies.CacheAs(
+                    new LargeTextureStore(
+                        renderer,
+                        host.CreateTextureLoaderStore(
+                            new NamespacedResourceStore<byte[]>(game.Resources, "Textures")
+                        ),
+                        manualMipmaps: useManualMipmaps
+                    )
+                );
 
                 RelativeSizeAxes = Axes.Both;
                 InternalChildren = new Drawable[]
@@ -62,7 +69,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
-                        Text = $"useManaulMipmaps: {useManualMipmaps}"
+                        Text = $"useManaulMipmaps: {useManualMipmaps}",
                     },
                     new GridContainer
                     {
@@ -80,23 +87,16 @@ namespace osu.Framework.Tests.Visual.Sprites
                         },
                         Content = new[]
                         {
-                            new Drawable[]
-                            {
-                                new MipmapSprite(0),
-                                new MipmapSprite(1)
-                            },
-                            new Drawable[]
-                            {
-                                new MipmapSprite(2),
-                                new MipmapSprite(3)
-                            }
-                        }
-                    }
+                            new Drawable[] { new MipmapSprite(0), new MipmapSprite(1) },
+                            new Drawable[] { new MipmapSprite(2), new MipmapSprite(3) },
+                        },
+                    },
                 };
             }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-                => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            ) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
         }
 
         private partial class MipmapSprite : Sprite
@@ -117,7 +117,8 @@ namespace osu.Framework.Tests.Visual.Sprites
                 Scale = new Vector2(0.4f);
             }
 
-            protected override DrawNode CreateDrawNode() => new SingleMipmapSpriteDrawNode(this, level);
+            protected override DrawNode CreateDrawNode() =>
+                new SingleMipmapSpriteDrawNode(this, level);
 
             private class SingleMipmapSpriteDrawNode : SpriteDrawNode
             {

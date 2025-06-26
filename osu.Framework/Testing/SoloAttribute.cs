@@ -12,7 +12,5 @@ namespace osu.Framework.Testing
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     [MeansImplicitUse]
-    public class SoloAttribute : Attribute
-    {
-    }
+    public class SoloAttribute : Attribute { }
 }

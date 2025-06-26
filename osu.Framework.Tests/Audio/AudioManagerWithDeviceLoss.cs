@@ -16,10 +16,12 @@ namespace osu.Framework.Tests.Audio
     /// </summary>
     internal class AudioManagerWithDeviceLoss : AudioManager
     {
-        public AudioManagerWithDeviceLoss(AudioThread audioThread, ResourceStore<byte[]> trackStore, ResourceStore<byte[]> sampleStore)
-            : base(audioThread, trackStore, sampleStore)
-        {
-        }
+        public AudioManagerWithDeviceLoss(
+            AudioThread audioThread,
+            ResourceStore<byte[]> trackStore,
+            ResourceStore<byte[]> sampleStore
+        )
+            : base(audioThread, trackStore, sampleStore) { }
 
         public volatile int CurrentDevice = Bass.DefaultDevice;
 
@@ -90,7 +92,11 @@ namespace osu.Framework.Tests.Audio
         {
             current ??= CurrentDevice;
 
-            AudioThreadTest.WaitForOrAssert(() => CurrentDevice != current, $"Timed out while waiting for the device to change from {current}.", timeoutMs);
+            AudioThreadTest.WaitForOrAssert(
+                () => CurrentDevice != current,
+                $"Timed out while waiting for the device to change from {current}.",
+                timeoutMs
+            );
         }
     }
 }

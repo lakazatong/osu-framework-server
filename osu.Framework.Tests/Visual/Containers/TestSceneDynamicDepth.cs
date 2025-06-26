@@ -15,31 +15,48 @@ namespace osu.Framework.Tests.Visual.Containers
     {
         private void addDepthSteps(DepthBox box, Container container)
         {
-            AddStep($@"bring forward {box.Name}", () => container.ChangeChildDepth(box, box.Depth - 1));
-            AddStep($@"send backward {box.Name}", () => container.ChangeChildDepth(box, box.Depth + 1));
+            AddStep(
+                $@"bring forward {box.Name}",
+                () => container.ChangeChildDepth(box, box.Depth - 1)
+            );
+            AddStep(
+                $@"send backward {box.Name}",
+                () => container.ChangeChildDepth(box, box.Depth + 1)
+            );
         }
 
         public TestSceneDynamicDepth()
         {
-            DepthBox red, blue, green, purple;
+            DepthBox red,
+                blue,
+                green,
+                purple;
             Container container;
 
-            AddRange(new[]
-            {
-                container = new Container
+            AddRange(
+                new[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(340),
-                    Children = new[]
+                    container = new Container
                     {
-                        red = new DepthBox(Color4.Red, Anchor.TopLeft) { Name = "red" },
-                        blue = new DepthBox(Color4.Blue, Anchor.TopRight) { Name = "blue" },
-                        green = new DepthBox(Color4.Green, Anchor.BottomRight) { Name = "green" },
-                        purple = new DepthBox(Color4.Purple, Anchor.BottomLeft) { Name = "purple" },
-                    }
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(340),
+                        Children = new[]
+                        {
+                            red = new DepthBox(Color4.Red, Anchor.TopLeft) { Name = "red" },
+                            blue = new DepthBox(Color4.Blue, Anchor.TopRight) { Name = "blue" },
+                            green = new DepthBox(Color4.Green, Anchor.BottomRight)
+                            {
+                                Name = "green",
+                            },
+                            purple = new DepthBox(Color4.Purple, Anchor.BottomLeft)
+                            {
+                                Name = "purple",
+                            },
+                        },
+                    },
                 }
-            });
+            );
 
             addDepthSteps(red, container);
             addDepthSteps(blue, container);
@@ -56,19 +73,13 @@ namespace osu.Framework.Tests.Visual.Containers
                 Size = new Vector2(240);
                 Anchor = Origin = anchor;
 
-                AddRange(new Drawable[]
-                {
-                    new Box
+                AddRange(
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = colour,
-                    },
-                    depthText = new SpriteText
-                    {
-                        Anchor = anchor,
-                        Origin = anchor,
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = colour },
+                        depthText = new SpriteText { Anchor = anchor, Origin = anchor },
                     }
-                });
+                );
             }
 
             protected override void Update()

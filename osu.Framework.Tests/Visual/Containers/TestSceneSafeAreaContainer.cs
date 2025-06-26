@@ -41,7 +41,7 @@ namespace osu.Framework.Tests.Visual.Containers
                 {
                     Name = "Overriding Background",
                     Colour = Color4.Blue,
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
                 },
             };
 
@@ -52,7 +52,11 @@ namespace osu.Framework.Tests.Visual.Containers
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new MarginPaddingControlsContainer(safeAreaBackground, safeAreaGrid, safeAreaPadding)
+                    new MarginPaddingControlsContainer(
+                        safeAreaBackground,
+                        safeAreaGrid,
+                        safeAreaPadding
+                    )
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
@@ -73,11 +77,7 @@ namespace osu.Framework.Tests.Visual.Containers
                             {
                                 Position = new Vector2(50, 50),
                                 Size = new Vector2(400, 300),
-                                Children = new Drawable[]
-                                {
-                                    safeAreaBackground,
-                                    safeAreaGrid,
-                                }
+                                Children = new Drawable[] { safeAreaBackground, safeAreaGrid },
                             },
                             safeAreaLeftOverlay = new Box
                             {
@@ -86,7 +86,7 @@ namespace osu.Framework.Tests.Visual.Containers
                                 Width = 0,
                                 RelativeSizeAxes = Axes.Y,
                                 Colour = Color4.Green,
-                                Alpha = 0.2f
+                                Alpha = 0.2f,
                             },
                             safeAreaRightOverlay = new Box
                             {
@@ -95,7 +95,7 @@ namespace osu.Framework.Tests.Visual.Containers
                                 Width = 0,
                                 RelativeSizeAxes = Axes.Y,
                                 Colour = Color4.Green,
-                                Alpha = 0.2f
+                                Alpha = 0.2f,
                             },
                             safeAreaTopOverlay = new Box
                             {
@@ -104,7 +104,7 @@ namespace osu.Framework.Tests.Visual.Containers
                                 Height = 0,
                                 RelativeSizeAxes = Axes.X,
                                 Colour = Color4.Green,
-                                Alpha = 0.2f
+                                Alpha = 0.2f,
                             },
                             safeAreaBottomOverlay = new Box
                             {
@@ -113,11 +113,11 @@ namespace osu.Framework.Tests.Visual.Containers
                                 Height = 0,
                                 RelativeSizeAxes = Axes.X,
                                 Colour = Color4.Green,
-                                Alpha = 0.2f
-                            }
-                        }
-                    }
-                }
+                                Alpha = 0.2f,
+                            },
+                        },
+                    },
+                },
             };
 
             safeAreaPadding.ValueChanged += e => safeAreaPaddingChanged(e.NewValue);
@@ -125,14 +125,29 @@ namespace osu.Framework.Tests.Visual.Containers
 
         private GridContainer createGridContainer(int rows, int columns)
         {
-            Drawable[][] boxes = Enumerable.Range(1, rows).Select(row => Enumerable.Range(1, columns).Select(column => new Box
-            {
-                Colour = new Color4(1f, 0.2f + (row * 0.8f) / rows, 0.2f + (column * 0.8f) / columns, 1f),
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.7f),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            } as Drawable).ToArray()).ToArray();
+            Drawable[][] boxes = Enumerable
+                .Range(1, rows)
+                .Select(row =>
+                    Enumerable
+                        .Range(1, columns)
+                        .Select(column =>
+                            new Box
+                            {
+                                Colour = new Color4(
+                                    1f,
+                                    0.2f + (row * 0.8f) / rows,
+                                    0.2f + (column * 0.8f) / columns,
+                                    1f
+                                ),
+                                RelativeSizeAxes = Axes.Both,
+                                Size = new Vector2(0.7f),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            } as Drawable
+                        )
+                        .ToArray()
+                )
+                .ToArray();
 
             return new GridContainer
             {
@@ -159,7 +174,11 @@ namespace osu.Framework.Tests.Visual.Containers
 
             private readonly BindableSafeArea bindableSafeArea;
 
-            public MarginPaddingControlsContainer(SafeAreaContainer safeAreaBackground, SafeAreaContainer safeAreaGrid, BindableSafeArea bindableSafeArea)
+            public MarginPaddingControlsContainer(
+                SafeAreaContainer safeAreaBackground,
+                SafeAreaContainer safeAreaGrid,
+                BindableSafeArea bindableSafeArea
+            )
             {
                 this.bindableSafeArea = bindableSafeArea;
 
@@ -172,10 +191,34 @@ namespace osu.Framework.Tests.Visual.Containers
                 Spacing = new Vector2(10);
                 Children = new Drawable[]
                 {
-                    new MarginPaddingControl(safeAreaBackground, safeAreaGrid, "Top", safeAreaPaddingTop, Edges.Top),
-                    new MarginPaddingControl(safeAreaBackground, safeAreaGrid, "Bottom", safeAreaPaddingBottom, Edges.Bottom),
-                    new MarginPaddingControl(safeAreaBackground, safeAreaGrid, "Left", safeAreaPaddingLeft, Edges.Left),
-                    new MarginPaddingControl(safeAreaBackground, safeAreaGrid, "Right", safeAreaPaddingRight, Edges.Right),
+                    new MarginPaddingControl(
+                        safeAreaBackground,
+                        safeAreaGrid,
+                        "Top",
+                        safeAreaPaddingTop,
+                        Edges.Top
+                    ),
+                    new MarginPaddingControl(
+                        safeAreaBackground,
+                        safeAreaGrid,
+                        "Bottom",
+                        safeAreaPaddingBottom,
+                        Edges.Bottom
+                    ),
+                    new MarginPaddingControl(
+                        safeAreaBackground,
+                        safeAreaGrid,
+                        "Left",
+                        safeAreaPaddingLeft,
+                        Edges.Left
+                    ),
+                    new MarginPaddingControl(
+                        safeAreaBackground,
+                        safeAreaGrid,
+                        "Right",
+                        safeAreaPaddingRight,
+                        Edges.Right
+                    ),
                 };
 
                 safeAreaPaddingTop.ValueChanged += updateMarginPadding;
@@ -197,7 +240,13 @@ namespace osu.Framework.Tests.Visual.Containers
 
             private partial class MarginPaddingControl : FillFlowContainer
             {
-                public MarginPaddingControl(SafeAreaContainer safeAreaBackground, SafeAreaContainer safeAreaGrid, string title, Bindable<float> bindable, Edges edge)
+                public MarginPaddingControl(
+                    SafeAreaContainer safeAreaBackground,
+                    SafeAreaContainer safeAreaGrid,
+                    string title,
+                    Bindable<float> bindable,
+                    Edges edge
+                )
                 {
                     SpriteText valueText;
                     BasicCheckbox overrideCheckbox;
@@ -242,7 +291,7 @@ namespace osu.Framework.Tests.Visual.Containers
                             Origin = Anchor.CentreLeft,
                             Anchor = Anchor.CentreLeft,
                         },
-                        safeCheckbox = new BasicCheckbox()
+                        safeCheckbox = new BasicCheckbox(),
                     };
 
                     overrideCheckbox.Current.ValueChanged += e =>

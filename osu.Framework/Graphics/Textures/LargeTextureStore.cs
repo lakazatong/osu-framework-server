@@ -22,12 +22,16 @@ namespace osu.Framework.Graphics.Textures
     public class LargeTextureStore : TextureStore
     {
         private readonly object referenceCountLock = new object();
-        private readonly Dictionary<string, TextureWithRefCount.ReferenceCount> referenceCounts = new Dictionary<string, TextureWithRefCount.ReferenceCount>();
+        private readonly Dictionary<string, TextureWithRefCount.ReferenceCount> referenceCounts =
+            new Dictionary<string, TextureWithRefCount.ReferenceCount>();
 
-        public LargeTextureStore(IRenderer renderer, IResourceStore<TextureUpload> store = null, TextureFilteringMode filteringMode = TextureFilteringMode.Linear, bool manualMipmaps = true)
-            : base(renderer, store, false, filteringMode, manualMipmaps)
-        {
-        }
+        public LargeTextureStore(
+            IRenderer renderer,
+            IResourceStore<TextureUpload> store = null,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+            bool manualMipmaps = true
+        )
+            : base(renderer, store, false, filteringMode, manualMipmaps) { }
 
         protected override bool TryGetCached(string lookupKey, out Texture texture)
         {
@@ -47,18 +51,32 @@ namespace osu.Framework.Graphics.Textures
         protected override Texture CacheAndReturnTexture(string lookupKey, Texture texture)
         {
             lock (referenceCountLock)
-                return createTextureWithRefCount(lookupKey, base.CacheAndReturnTexture(lookupKey, texture));
+                return createTextureWithRefCount(
+                    lookupKey,
+                    base.CacheAndReturnTexture(lookupKey, texture)
+                );
         }
 
-        private TextureWithRefCount createTextureWithRefCount([NotNull] string lookupKey, [CanBeNull] Texture baseTexture)
+        private TextureWithRefCount createTextureWithRefCount(
+            [NotNull] string lookupKey,
+            [CanBeNull] Texture baseTexture
+        )
         {
             if (baseTexture == null)
                 return null;
 
             lock (referenceCountLock)
             {
-                if (!referenceCounts.TryGetValue(lookupKey, out TextureWithRefCount.ReferenceCount count))
-                    referenceCounts[lookupKey] = count = new TextureWithRefCount.ReferenceCount(referenceCountLock, () => onAllReferencesLost(baseTexture));
+                if (
+                    !referenceCounts.TryGetValue(
+                        lookupKey,
+                        out TextureWithRefCount.ReferenceCount count
+                    )
+                )
+                    referenceCounts[lookupKey] = count = new TextureWithRefCount.ReferenceCount(
+                        referenceCountLock,
+                        () => onAllReferencesLost(baseTexture)
+                    );
 
                 return new TextureWithRefCount(baseTexture, count);
             }

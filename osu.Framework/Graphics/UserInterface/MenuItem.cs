@@ -13,7 +13,9 @@ namespace osu.Framework.Graphics.UserInterface
         /// <summary>
         /// The text which this <see cref="MenuItem"/> displays.
         /// </summary>
-        public readonly Bindable<LocalisableString> Text = new Bindable<LocalisableString>(string.Empty);
+        public readonly Bindable<LocalisableString> Text = new Bindable<LocalisableString>(
+            string.Empty
+        );
 
         /// <summary>
         /// The <see cref="Action"/> that is performed when this <see cref="MenuItem"/> is clicked.

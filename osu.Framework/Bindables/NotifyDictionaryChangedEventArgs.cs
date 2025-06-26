@@ -34,17 +34,21 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="item">The item affected.</param>
-        public NotifyDictionaryChangedEventArgs(NotifyDictionaryChangedAction action, KeyValuePair<TKey, TValue> item)
-            : this(action, new[] { item })
-        {
-        }
+        public NotifyDictionaryChangedEventArgs(
+            NotifyDictionaryChangedAction action,
+            KeyValuePair<TKey, TValue> item
+        )
+            : this(action, new[] { item }) { }
 
         /// <summary>
         /// Creates a new <see cref="NotifyDictionaryChangedEventArgs{TKey,TValue}"/> that describes an add or remove event.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="items">The items affected.</param>
-        public NotifyDictionaryChangedEventArgs(NotifyDictionaryChangedAction action, ICollection<KeyValuePair<TKey, TValue>> items)
+        public NotifyDictionaryChangedEventArgs(
+            NotifyDictionaryChangedAction action,
+            ICollection<KeyValuePair<TKey, TValue>> items
+        )
         {
             Action = action;
 
@@ -59,7 +63,10 @@ namespace osu.Framework.Bindables
                     break;
 
                 default:
-                    throw new ArgumentException($"Action must be {nameof(NotifyDictionaryChangedAction.Add)} or {nameof(NotifyDictionaryChangedAction.Remove)}.", nameof(action));
+                    throw new ArgumentException(
+                        $"Action must be {nameof(NotifyDictionaryChangedAction.Add)} or {nameof(NotifyDictionaryChangedAction.Remove)}.",
+                        nameof(action)
+                    );
             }
         }
 
@@ -68,7 +75,10 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="newItem">The new (added) item.</param>
         /// <param name="oldItem">The old (removed) item.</param>
-        public NotifyDictionaryChangedEventArgs(KeyValuePair<TKey, TValue> newItem, KeyValuePair<TKey, TValue> oldItem)
+        public NotifyDictionaryChangedEventArgs(
+            KeyValuePair<TKey, TValue> newItem,
+            KeyValuePair<TKey, TValue> oldItem
+        )
         {
             Action = NotifyDictionaryChangedAction.Replace;
             NewItems = new[] { newItem };
@@ -79,7 +89,10 @@ namespace osu.Framework.Bindables
     /// <summary>
     /// The delegate to use for handlers that receive the CollectionChanged event.
     /// </summary>
-    public delegate void NotifyDictionaryChangedEventHandler<TKey, TValue>(object? sender, NotifyDictionaryChangedEventArgs<TKey, TValue> e)
+    public delegate void NotifyDictionaryChangedEventHandler<TKey, TValue>(
+        object? sender,
+        NotifyDictionaryChangedEventArgs<TKey, TValue> e
+    )
         where TKey : notnull;
 
     public enum NotifyDictionaryChangedAction

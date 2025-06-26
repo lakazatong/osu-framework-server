@@ -16,10 +16,14 @@ namespace osu.Framework.Platform.MacOS
     /// </summary>
     internal class SDL3MacOSWindow : SDL3DesktopWindow
     {
-        private static readonly IntPtr sel_hasprecisescrollingdeltas = Selector.Get("hasPreciseScrollingDeltas");
+        private static readonly IntPtr sel_hasprecisescrollingdeltas = Selector.Get(
+            "hasPreciseScrollingDeltas"
+        );
         private static readonly IntPtr sel_scrollingdeltax = Selector.Get("scrollingDeltaX");
         private static readonly IntPtr sel_scrollingdeltay = Selector.Get("scrollingDeltaY");
-        private static readonly IntPtr sel_respondstoselector_ = Selector.Get("respondsToSelector:");
+        private static readonly IntPtr sel_respondstoselector_ = Selector.Get(
+            "respondsToSelector:"
+        );
 
         private delegate void ScrollWheelDelegate(IntPtr handle, IntPtr selector, IntPtr theEvent); // v@:@
 
@@ -27,9 +31,7 @@ namespace osu.Framework.Platform.MacOS
         private ScrollWheelDelegate scrollWheelHandler;
 
         public SDL3MacOSWindow(GraphicsSurfaceType surfaceType, string appName)
-            : base(surfaceType, appName)
-        {
-        }
+            : base(surfaceType, appName) { }
 
         public override void Create()
         {
@@ -38,7 +40,12 @@ namespace osu.Framework.Platform.MacOS
             // replace [SDLView scrollWheel:(NSEvent *)] with our own version
             IntPtr viewClass = Class.Get("SDL3View");
             scrollWheelHandler = scrollWheel;
-            originalScrollWheel = Class.SwizzleMethod(viewClass, "scrollWheel:", "v@:@", scrollWheelHandler);
+            originalScrollWheel = Class.SwizzleMethod(
+                viewClass,
+                "scrollWheel:",
+                "v@:@",
+                scrollWheelHandler
+            );
         }
 
         /// <summary>
@@ -46,8 +53,9 @@ namespace osu.Framework.Platform.MacOS
         /// </summary>
         private void scrollWheel(IntPtr receiver, IntPtr selector, IntPtr theEvent)
         {
-            bool hasPrecise = Interop.SendBool(theEvent, sel_respondstoselector_, sel_hasprecisescrollingdeltas) &&
-                              Interop.SendBool(theEvent, sel_hasprecisescrollingdeltas);
+            bool hasPrecise =
+                Interop.SendBool(theEvent, sel_respondstoselector_, sel_hasprecisescrollingdeltas)
+                && Interop.SendBool(theEvent, sel_hasprecisescrollingdeltas);
 
             if (!hasPrecise)
             {
@@ -66,7 +74,12 @@ namespace osu.Framework.Platform.MacOS
             float scrollingDeltaX = Interop.SendFloat(theEvent, sel_scrollingdeltax);
             float scrollingDeltaY = Interop.SendFloat(theEvent, sel_scrollingdeltay);
 
-            ScheduleEvent(() => TriggerMouseWheel(new Vector2(scrollingDeltaX * scale_factor, scrollingDeltaY * scale_factor), true));
+            ScheduleEvent(() =>
+                TriggerMouseWheel(
+                    new Vector2(scrollingDeltaX * scale_factor, scrollingDeltaY * scale_factor),
+                    true
+                )
+            );
         }
     }
 }

@@ -28,8 +28,6 @@ namespace osu.Framework.Input.Events
         public IEnumerable<MouseButton> PressedButtons => CurrentState.Mouse.Buttons;
 
         protected MouseEvent(InputState state)
-            : base(state)
-        {
-        }
+            : base(state) { }
     }
 }

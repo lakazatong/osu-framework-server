@@ -22,18 +22,21 @@ namespace osu.Framework.Allocation
     [AttributeUsage(AttributeTargets.Method)]
     public class BackgroundDependencyLoaderAttribute : Attribute
     {
-        private static readonly GlobalStatistic<int> count_reflection_attributes = GlobalStatistics.Get<int>("Dependencies", "Reflected [BackgroundDependencyLoader]s");
+        private static readonly GlobalStatistic<int> count_reflection_attributes =
+            GlobalStatistics.Get<int>("Dependencies", "Reflected [BackgroundDependencyLoader]s");
 
-        private const BindingFlags activator_flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        private const BindingFlags activator_flags =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.DeclaredOnly;
 
         private bool permitNulls { get; }
 
         /// <summary>
         /// Marks this method as the (potentially asynchronous) initializer for a class in the context of dependency injection.
         /// </summary>
-        public BackgroundDependencyLoaderAttribute()
-        {
-        }
+        public BackgroundDependencyLoaderAttribute() { }
 
         /// <summary>
         /// Marks this method as the (potentially asynchronous) initializer for a class in the context of dependency injection.
@@ -48,7 +51,9 @@ namespace osu.Framework.Allocation
         {
             count_reflection_attributes.Value++;
 
-            var loaderMethods = type.GetMethods(activator_flags).Where(m => m.GetCustomAttribute<BackgroundDependencyLoaderAttribute>() != null).ToArray();
+            var loaderMethods = type.GetMethods(activator_flags)
+                .Where(m => m.GetCustomAttribute<BackgroundDependencyLoaderAttribute>() != null)
+                .ToArray();
 
             switch (loaderMethods.Length)
             {
@@ -60,14 +65,26 @@ namespace osu.Framework.Allocation
 
                     var modifier = method.GetAccessModifier();
                     if (modifier != AccessModifier.Private)
-                        throw new AccessModifierNotAllowedForLoaderMethodException(modifier, method);
+                        throw new AccessModifierNotAllowedForLoaderMethodException(
+                            modifier,
+                            method
+                        );
 
-                    var attribute = method.GetCustomAttribute<BackgroundDependencyLoaderAttribute>();
+                    var attribute =
+                        method.GetCustomAttribute<BackgroundDependencyLoaderAttribute>();
                     Debug.Assert(attribute != null);
 
                     bool permitNulls = attribute.permitNulls;
-                    var parameterGetters = method.GetParameters()
-                                                 .Select(parameter => getDependency(parameter.ParameterType, type, permitNulls || parameter.IsNullable())).ToArray();
+                    var parameterGetters = method
+                        .GetParameters()
+                        .Select(parameter =>
+                            getDependency(
+                                parameter.ParameterType,
+                                type,
+                                permitNulls || parameter.IsNullable()
+                            )
+                        )
+                        .ToArray();
 
                     return (target, dc) =>
                     {
@@ -90,7 +107,20 @@ namespace osu.Framework.Allocation
             }
         }
 
-        private static Func<IReadOnlyDependencyContainer, object> getDependency(Type type, Type requestingType, bool permitNulls)
-            => dc => SourceGeneratorUtils.GetDependency(dc, type, requestingType, null, null, permitNulls, false);
+        private static Func<IReadOnlyDependencyContainer, object> getDependency(
+            Type type,
+            Type requestingType,
+            bool permitNulls
+        ) =>
+            dc =>
+                SourceGeneratorUtils.GetDependency(
+                    dc,
+                    type,
+                    requestingType,
+                    null,
+                    null,
+                    permitNulls,
+                    false
+                );
     }
 }

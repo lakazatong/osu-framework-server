@@ -36,10 +36,7 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestConstructorWithItemsAddsItemsInternally()
         {
-            string[] array =
-            {
-                "ok", "nope", "random", null, ""
-            };
+            string[] array = { "ok", "nope", "random", null, "" };
 
             var bindableList = new BindableList<string>(array);
 
@@ -153,12 +150,16 @@ namespace osu.Framework.Tests.Bindables
 
             Assert.That(triggeredArgs, Has.Count.EqualTo(2));
 
-            var removeEvent = triggeredArgs.SingleOrDefault(ev => ev.Action == NotifyCollectionChangedAction.Remove);
+            var removeEvent = triggeredArgs.SingleOrDefault(ev =>
+                ev.Action == NotifyCollectionChangedAction.Remove
+            );
             Assert.That(removeEvent, Is.Not.Null);
             Assert.That(removeEvent.OldStartingIndex, Is.EqualTo(0));
             Assert.That(removeEvent.OldItems, Is.EquivalentTo(new[] { "first", "list", "here" }));
 
-            var addEvent = triggeredArgs.SingleOrDefault(ev => ev.Action == NotifyCollectionChangedAction.Add);
+            var addEvent = triggeredArgs.SingleOrDefault(ev =>
+                ev.Action == NotifyCollectionChangedAction.Add
+            );
             Assert.That(addEvent, Is.Not.Null);
             Assert.That(addEvent.NewStartingIndex, Is.EqualTo(0));
             Assert.That(addEvent.NewItems, Is.EquivalentTo(otherList));
@@ -362,7 +363,10 @@ namespace osu.Framework.Tests.Bindables
         {
             bindableStringList.Disabled = true;
 
-            Assert.Throws<InvalidOperationException>(() => { bindableStringList.Add(str); });
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                bindableStringList.Add(str);
+            });
         }
 
         [TestCase("a random string")]
@@ -405,10 +409,7 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestAddRangeAddsItemsToEnumerator()
         {
-            string[] items =
-            {
-                "A", "B", "C", "D"
-            };
+            string[] items = { "A", "B", "C", "D" };
 
             bindableStringList.AddRange(items);
 
@@ -771,7 +772,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringList.Add(item);
             bindableStringList.Disabled = true;
 
-            Assert.Throws<InvalidOperationException>(() => { bindableStringList.Remove(item); });
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                bindableStringList.Remove(item);
+            });
         }
 
         [Test]
@@ -1271,7 +1275,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringList.Clear();
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyCollectionChangedAction.Remove));
-            Assert.That(triggeredArgs.OldItems, Is.EquivalentTo(new[] { "testA", "testA", "testA", "testA", "testA" }));
+            Assert.That(
+                triggeredArgs.OldItems,
+                Is.EquivalentTo(new[] { "testA", "testA", "testA", "testA", "testA" })
+            );
             Assert.That(triggeredArgs.OldStartingIndex, Is.EqualTo(0));
         }
 
@@ -1536,11 +1543,18 @@ namespace osu.Framework.Tests.Bindables
 
             Assert.Multiple(() =>
             {
-                Assert.Throws(typeof(InvalidOperationException), () => bindableStringList.Parse(null, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(InvalidOperationException), () => bindableStringList.Parse(new object[]
-                {
-                    "test", "testabc", "asdasdasdasd"
-                }, CultureInfo.InvariantCulture));
+                Assert.Throws(
+                    typeof(InvalidOperationException),
+                    () => bindableStringList.Parse(null, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(InvalidOperationException),
+                    () =>
+                        bindableStringList.Parse(
+                            new object[] { "test", "testabc", "asdasdasdasd" },
+                            CultureInfo.InvariantCulture
+                        )
+                );
             });
         }
 
@@ -1549,13 +1563,34 @@ namespace osu.Framework.Tests.Bindables
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse(1, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse("", CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse(new object(), CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse(1.1, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse(1.1f, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse("test123", CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringList.Parse(29387L, CultureInfo.InvariantCulture));
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse(1, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse("", CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse(new object(), CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse(1.1, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse(1.1f, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse("test123", CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringList.Parse(29387L, CultureInfo.InvariantCulture)
+                );
             });
         }
 
@@ -1571,7 +1606,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringList.Parse(null, CultureInfo.InvariantCulture);
 
             Assert.That(triggeredArgs, Has.Count.EqualTo(1));
-            Assert.That(triggeredArgs.First().Action, Is.EqualTo(NotifyCollectionChangedAction.Remove));
+            Assert.That(
+                triggeredArgs.First().Action,
+                Is.EqualTo(NotifyCollectionChangedAction.Remove)
+            );
             Assert.That(triggeredArgs.First().OldItems, Is.EquivalentTo(strings));
             Assert.That(triggeredArgs.First().OldStartingIndex, Is.EqualTo(0));
         }
@@ -1588,10 +1626,16 @@ namespace osu.Framework.Tests.Bindables
             bindableStringList.Parse(strings, CultureInfo.InvariantCulture);
 
             Assert.That(triggeredArgs, Has.Count.EqualTo(2));
-            Assert.That(triggeredArgs.First().Action, Is.EqualTo(NotifyCollectionChangedAction.Remove));
+            Assert.That(
+                triggeredArgs.First().Action,
+                Is.EqualTo(NotifyCollectionChangedAction.Remove)
+            );
             Assert.That(triggeredArgs.First().OldItems, Is.EquivalentTo("test123".Yield()));
             Assert.That(triggeredArgs.First().OldStartingIndex, Is.EqualTo(0));
-            Assert.That(triggeredArgs.ElementAt(1).Action, Is.EqualTo(NotifyCollectionChangedAction.Add));
+            Assert.That(
+                triggeredArgs.ElementAt(1).Action,
+                Is.EqualTo(NotifyCollectionChangedAction.Add)
+            );
             Assert.That(triggeredArgs.ElementAt(1).NewItems, Is.EquivalentTo(strings));
             Assert.That(triggeredArgs.ElementAt(1).NewStartingIndex, Is.EqualTo(0));
         }

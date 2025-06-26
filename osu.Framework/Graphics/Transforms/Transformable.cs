@@ -42,7 +42,8 @@ namespace osu.Framework.Graphics.Transforms
         /// <summary>
         /// A lazily-initialized list of <see cref="Transform"/>s applied to this object.
         /// </summary>
-        public IEnumerable<Transform> Transforms => targetGroupingTrackers?.SelectMany(t => t.Transforms) ?? Array.Empty<Transform>();
+        public IEnumerable<Transform> Transforms =>
+            targetGroupingTrackers?.SelectMany(t => t.Transforms) ?? Array.Empty<Transform>();
 
         /// <summary>
         /// Retrieves the <see cref="Transform"/>s for a given target member.
@@ -116,7 +117,10 @@ namespace osu.Framework.Graphics.Transforms
             return null;
         }
 
-        private TargetGroupingTransformTracker getTrackerForGrouping(string targetGrouping, bool createIfNotExisting)
+        private TargetGroupingTransformTracker getTrackerForGrouping(
+            string targetGrouping,
+            bool createIfNotExisting
+        )
         {
             if (targetGroupingTrackers != null)
             {
@@ -178,7 +182,10 @@ namespace osu.Framework.Graphics.Transforms
         /// An optional <see cref="Transform.TargetMember"/> name of <see cref="Transform"/>s to clear.
         /// Null for clearing all <see cref="Transform"/>s.
         /// </param>
-        public virtual void ClearTransforms(bool propagateChildren = false, string targetMember = null)
+        public virtual void ClearTransforms(
+            bool propagateChildren = false,
+            string targetMember = null
+        )
         {
             EnsureTransformMutationAllowed();
 
@@ -194,7 +201,11 @@ namespace osu.Framework.Graphics.Transforms
         /// An optional <see cref="Transform.TargetMember"/> name of <see cref="Transform"/>s to clear.
         /// Null for clearing all <see cref="Transform"/>s.
         /// </param>
-        public virtual void ClearTransformsAfter(double time, bool propagateChildren = false, string targetMember = null)
+        public virtual void ClearTransformsAfter(
+            double time,
+            bool propagateChildren = false,
+            string targetMember = null
+        )
         {
             if (targetGroupingTrackers == null)
                 return;
@@ -225,7 +236,10 @@ namespace osu.Framework.Graphics.Transforms
         {
             EnsureTransformMutationAllowed();
 
-            if (RemoveCompletedTransforms) throw new InvalidOperationException($"Cannot arbitrarily apply transforms with {nameof(RemoveCompletedTransforms)} active.");
+            if (RemoveCompletedTransforms)
+                throw new InvalidOperationException(
+                    $"Cannot arbitrarily apply transforms with {nameof(RemoveCompletedTransforms)} active."
+                );
 
             updateTransforms(time);
         }
@@ -238,7 +252,10 @@ namespace osu.Framework.Graphics.Transforms
         /// An optional <see cref="Transform.TargetMember"/> name of <see cref="Transform"/>s to finish.
         /// Null for finishing all <see cref="Transform"/>s.
         /// </param>
-        public virtual void FinishTransforms(bool propagateChildren = false, string targetMember = null)
+        public virtual void FinishTransforms(
+            bool propagateChildren = false,
+            string targetMember = null
+        )
         {
             if (targetGroupingTrackers == null)
                 return;
@@ -265,7 +282,8 @@ namespace osu.Framework.Graphics.Transforms
         /// <param name="duration">The delay duration to add.</param>
         /// <param name="propagateChildren">Whether we also delay down the child tree.</param>
         /// <returns>This</returns>
-        internal virtual void AddDelay(double duration, bool propagateChildren = false) => TransformDelay += duration;
+        internal virtual void AddDelay(double duration, bool propagateChildren = false) =>
+            TransformDelay += duration;
 
         /// <summary>
         /// Start a sequence of <see cref="Transform"/>s with a (cumulative) relative delay applied.
@@ -283,17 +301,26 @@ namespace osu.Framework.Graphics.Transforms
             AddDelay(delay, recursive);
             double newTransformDelay = TransformDelay;
 
-            return new ValueInvokeOnDisposal<DelayedSequenceSender>(new DelayedSequenceSender(this, delay, recursive, newTransformDelay), static sender =>
-            {
-                if (!Precision.AlmostEquals(sender.NewTransformDelay, sender.Transformable.TransformDelay))
+            return new ValueInvokeOnDisposal<DelayedSequenceSender>(
+                new DelayedSequenceSender(this, delay, recursive, newTransformDelay),
+                static sender =>
                 {
-                    throw new InvalidOperationException(
-                        $"{nameof(sender.Transformable.TransformStartTime)} at the end of delayed sequence is not the same as at the beginning, but should be. " +
-                        $"(begin={sender.NewTransformDelay} end={sender.Transformable.TransformDelay})");
-                }
+                    if (
+                        !Precision.AlmostEquals(
+                            sender.NewTransformDelay,
+                            sender.Transformable.TransformDelay
+                        )
+                    )
+                    {
+                        throw new InvalidOperationException(
+                            $"{nameof(sender.Transformable.TransformStartTime)} at the end of delayed sequence is not the same as at the beginning, but should be. "
+                                + $"(begin={sender.NewTransformDelay} end={sender.Transformable.TransformDelay})"
+                        );
+                    }
 
-                sender.Transformable.AddDelay(-sender.Delay, sender.Recursive);
-            });
+                    sender.Transformable.AddDelay(-sender.Delay, sender.Recursive);
+                }
+            );
         }
 
         /// An ad-hoc struct used as a closure environment in <see cref="BeginDelayedSequence" />.
@@ -304,7 +331,12 @@ namespace osu.Framework.Graphics.Transforms
             public readonly bool Recursive;
             public readonly double NewTransformDelay;
 
-            public DelayedSequenceSender(Transformable transformable, double delay, bool recursive, double newTransformDelay)
+            public DelayedSequenceSender(
+                Transformable transformable,
+                double delay,
+                bool recursive,
+                double newTransformDelay
+            )
             {
                 Transformable = transformable;
                 Delay = delay;
@@ -320,14 +352,20 @@ namespace osu.Framework.Graphics.Transforms
         /// <param name="recursive">Whether this should be applied to all children. True by default.</param>
         /// <returns>An <see cref="InvokeOnDisposal"/> to be used in a using() statement.</returns>
         /// <exception cref="InvalidOperationException">Absolute sequences should never be nested inside another existing sequence.</exception>
-        public virtual IDisposable BeginAbsoluteSequence(double newTransformStartTime, bool recursive = true)
+        public virtual IDisposable BeginAbsoluteSequence(
+            double newTransformStartTime,
+            bool recursive = true
+        )
         {
             EnsureTransformMutationAllowed();
 
             return createAbsoluteSequenceAction(newTransformStartTime);
         }
 
-        internal virtual void CollectAbsoluteSequenceActionsFromSubTree(double newTransformStartTime, List<AbsoluteSequenceSender> actions)
+        internal virtual void CollectAbsoluteSequenceActionsFromSubTree(
+            double newTransformStartTime,
+            List<AbsoluteSequenceSender> actions
+        )
         {
             actions.Add(createAbsoluteSequenceAction(newTransformStartTime));
         }
@@ -335,7 +373,8 @@ namespace osu.Framework.Graphics.Transforms
         private AbsoluteSequenceSender createAbsoluteSequenceAction(double newTransformStartTime)
         {
             double oldTransformDelay = TransformDelay;
-            double newTransformDelay = TransformDelay = newTransformStartTime - (Clock?.CurrentTime ?? 0);
+            double newTransformDelay = TransformDelay =
+                newTransformStartTime - (Clock?.CurrentTime ?? 0);
 
             return new AbsoluteSequenceSender(this, oldTransformDelay, newTransformDelay);
         }
@@ -348,7 +387,11 @@ namespace osu.Framework.Graphics.Transforms
             public readonly double OldTransformDelay;
             public readonly double NewTransformDelay;
 
-            public AbsoluteSequenceSender(Transformable sender, double oldTransformDelay, double newTransformDelay)
+            public AbsoluteSequenceSender(
+                Transformable sender,
+                double oldTransformDelay,
+                double newTransformDelay
+            )
             {
                 OldTransformDelay = oldTransformDelay;
                 NewTransformDelay = newTransformDelay;
@@ -361,8 +404,9 @@ namespace osu.Framework.Graphics.Transforms
                 if (!Precision.AlmostEquals(NewTransformDelay, Sender.TransformDelay))
                 {
                     throw new InvalidOperationException(
-                        $"{nameof(Sender.TransformStartTime)} at the end of absolute sequence is not the same as at the beginning, but should be. " +
-                        $"(begin={NewTransformDelay} end={Sender.TransformDelay})");
+                        $"{nameof(Sender.TransformStartTime)} at the end of absolute sequence is not the same as at the beginning, but should be. "
+                            + $"(begin={NewTransformDelay} end={Sender.TransformDelay})"
+                    );
                 }
 
                 Sender.TransformDelay = OldTransformDelay;
@@ -387,8 +431,9 @@ namespace osu.Framework.Graphics.Transforms
             if (!ReferenceEquals(transform.TargetTransformable, this))
             {
                 throw new InvalidOperationException(
-                    $"{nameof(transform)} must have been populated via {nameof(TransformableExtensions)}.{nameof(TransformableExtensions.PopulateTransform)} " +
-                    "using this object prior to being added.");
+                    $"{nameof(transform)} must have been populated via {nameof(TransformableExtensions)}.{nameof(TransformableExtensions.PopulateTransform)} "
+                        + "using this object prior to being added."
+                );
             }
 
             if (Clock == null)
@@ -405,14 +450,18 @@ namespace osu.Framework.Graphics.Transforms
                 return;
             }
 
-            getTrackerForGrouping(transform.TargetGrouping, true).AddTransform(transform, customTransformID);
+            getTrackerForGrouping(transform.TargetGrouping, true)
+                .AddTransform(transform, customTransformID);
 
             // If our newly added transform could have an immediate effect, then let's
             // make this effect happen immediately.
             // This is done globally instead of locally in the single member tracker
             // to keep the transformable's state consistent (e.g. with lastUpdateTransformsTime)
             if (transform.StartTime < Time.Current || transform.EndTime <= Time.Current)
-                updateTransforms(Time.Current, !RemoveCompletedTransforms && transform.StartTime <= Time.Current);
+                updateTransforms(
+                    Time.Current,
+                    !RemoveCompletedTransforms && transform.StartTime <= Time.Current
+                );
         }
 
         /// <summary>

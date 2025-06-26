@@ -61,7 +61,8 @@ namespace osu.Framework.Graphics.Containers
 
         RectangleF ISafeArea.AvailableNonSafeSpace => DrawRectangle;
 
-        Quad ISafeArea.ExpandRectangleToSpaceOfOtherDrawable(IDrawable other) => ToSpaceOfOtherDrawable(DrawRectangle, other);
+        Quad ISafeArea.ExpandRectangleToSpaceOfOtherDrawable(IDrawable other) =>
+            ToSpaceOfOtherDrawable(DrawRectangle, other);
 
         BindableSafeArea ISafeArea.SafeAreaPadding => safeArea;
 

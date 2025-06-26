@@ -9,26 +9,31 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
 {
     public class HandleInputSourceEmitter : IncrementalSourceEmitter
     {
-        private const string interface_name = "global::osu.Framework.Input.ISourceGeneratedHandleInputCache";
+        private const string interface_name =
+            "global::osu.Framework.Input.ISourceGeneratedHandleInputCache";
 
         protected override string FileSuffix => "HandleInput";
 
         public new HandleInputSemanticTarget Target => (HandleInputSemanticTarget)base.Target;
 
         public HandleInputSourceEmitter(IncrementalSemanticTarget target)
-            : base(target)
-        {
-        }
+            : base(target) { }
 
-        protected override ClassDeclarationSyntax ConstructClass(ClassDeclarationSyntax initialClass)
+        protected override ClassDeclarationSyntax ConstructClass(
+            ClassDeclarationSyntax initialClass
+        )
         {
-            return initialClass.WithBaseList(
-                                   SyntaxFactory.BaseList(
-                                       SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
-                                           SyntaxFactory.SimpleBaseType(
-                                               SyntaxFactory.ParseTypeName(interface_name)))))
-                               .WithMembers(
-                                   SyntaxFactory.List(createProperties()));
+            return initialClass
+                .WithBaseList(
+                    SyntaxFactory.BaseList(
+                        SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
+                            SyntaxFactory.SimpleBaseType(
+                                SyntaxFactory.ParseTypeName(interface_name)
+                            )
+                        )
+                    )
+                )
+                .WithMembers(SyntaxFactory.List(createProperties()));
         }
 
         private IEnumerable<MemberDeclarationSyntax> createProperties()
@@ -36,39 +41,58 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
             // Drawable is the base type which always needs to have the members defined.
             bool isDrawable = Target.FullyQualifiedTypeName == "osu.Framework.Graphics.Drawable";
 
-            yield return SyntaxFactory.PropertyDeclaration(
-                                          SyntaxFactory.ParseTypeName("global::System.Type"),
-                                          SyntaxFactory.Identifier("KnownType"))
-                                      .WithExplicitInterfaceSpecifier(
-                                          SyntaxFactory.ExplicitInterfaceSpecifier(
-                                              SyntaxFactory.IdentifierName(interface_name)))
-                                      .WithExpressionBody(
-                                          SyntaxFactory.ArrowExpressionClause(
-                                              SyntaxFactory.TypeOfExpression(
-                                                  SyntaxFactory.ParseTypeName(Target.GlobalPrefixedTypeName))))
-                                      .WithSemicolonToken(
-                                          SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+            yield return SyntaxFactory
+                .PropertyDeclaration(
+                    SyntaxFactory.ParseTypeName("global::System.Type"),
+                    SyntaxFactory.Identifier("KnownType")
+                )
+                .WithExplicitInterfaceSpecifier(
+                    SyntaxFactory.ExplicitInterfaceSpecifier(
+                        SyntaxFactory.IdentifierName(interface_name)
+                    )
+                )
+                .WithExpressionBody(
+                    SyntaxFactory.ArrowExpressionClause(
+                        SyntaxFactory.TypeOfExpression(
+                            SyntaxFactory.ParseTypeName(Target.GlobalPrefixedTypeName)
+                        )
+                    )
+                )
+                .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
 
             if (Target.RequestsPositionalInput || isDrawable)
-                yield return createInputMember("RequestsPositionalInput", Target.RequestsPositionalInput);
+                yield return createInputMember(
+                    "RequestsPositionalInput",
+                    Target.RequestsPositionalInput
+                );
 
             if (Target.RequestsNonPositionalInput || isDrawable)
-                yield return createInputMember("RequestsNonPositionalInput", Target.RequestsNonPositionalInput);
+                yield return createInputMember(
+                    "RequestsNonPositionalInput",
+                    Target.RequestsNonPositionalInput
+                );
 
             MemberDeclarationSyntax createInputMember(string name, bool value) =>
-                SyntaxFactory.PropertyDeclaration(
-                                 SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-                                 SyntaxFactory.Identifier(name))
-                             .WithExplicitInterfaceSpecifier(
-                                 SyntaxFactory.ExplicitInterfaceSpecifier(
-                                     SyntaxFactory.IdentifierName(interface_name)))
-                             .WithExpressionBody(
-                                 SyntaxFactory.ArrowExpressionClause(
-                                     SyntaxFactory.LiteralExpression(
-                                         value
-                                             ? SyntaxKind.TrueLiteralExpression
-                                             : SyntaxKind.FalseLiteralExpression)))
-                             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+                SyntaxFactory
+                    .PropertyDeclaration(
+                        SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
+                        SyntaxFactory.Identifier(name)
+                    )
+                    .WithExplicitInterfaceSpecifier(
+                        SyntaxFactory.ExplicitInterfaceSpecifier(
+                            SyntaxFactory.IdentifierName(interface_name)
+                        )
+                    )
+                    .WithExpressionBody(
+                        SyntaxFactory.ArrowExpressionClause(
+                            SyntaxFactory.LiteralExpression(
+                                value
+                                    ? SyntaxKind.TrueLiteralExpression
+                                    : SyntaxKind.FalseLiteralExpression
+                            )
+                        )
+                    )
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
         }
     }
 }

@@ -16,13 +16,23 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
 {
     internal class VeldridShaderPart : IShaderPart
     {
-        private static readonly Regex shader_input_pattern = new Regex(@"^\s*layout\s*\(\s*location\s*=\s*(-?\d+)\s*\)\s*in\s+((?:(?:lowp|mediump|highp)\s+)?\w+)\s+(\w+)\s*;", RegexOptions.Multiline);
+        private static readonly Regex shader_input_pattern = new Regex(
+            @"^\s*layout\s*\(\s*location\s*=\s*(-?\d+)\s*\)\s*in\s+((?:(?:lowp|mediump|highp)\s+)?\w+)\s+(\w+)\s*;",
+            RegexOptions.Multiline
+        );
 
-        private static readonly Regex shader_output_pattern =
-            new Regex(@"^\s*layout\s*\(\s*location\s*=\s*(-?\d+)\s*\)\s*out\s+((?:(?:lowp|mediump|highp)\s+)?\w+)\s+(\w+)\s*;", RegexOptions.Multiline);
+        private static readonly Regex shader_output_pattern = new Regex(
+            @"^\s*layout\s*\(\s*location\s*=\s*(-?\d+)\s*\)\s*out\s+((?:(?:lowp|mediump|highp)\s+)?\w+)\s+(\w+)\s*;",
+            RegexOptions.Multiline
+        );
 
-        private static readonly Regex uniform_pattern = new Regex(@"^(\s*layout\s*\(.*)set\s*=\s*(-?\d)(.*\)\s*(?:(?:readonly\s*)?buffer|uniform))", RegexOptions.Multiline);
-        private static readonly Regex include_pattern = new Regex(@"^\s*#\s*include\s+[""<](.*)["">]");
+        private static readonly Regex uniform_pattern = new Regex(
+            @"^(\s*layout\s*\(.*)set\s*=\s*(-?\d)(.*\)\s*(?:(?:readonly\s*)?buffer|uniform))",
+            RegexOptions.Multiline
+        );
+        private static readonly Regex include_pattern = new Regex(
+            @"^\s*#\s*include\s+[""<](.*)["">]"
+        );
 
         public readonly ShaderPartType Type;
 
@@ -34,7 +44,12 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
         public readonly List<VeldridShaderAttribute> Inputs = new List<VeldridShaderAttribute>();
         public readonly List<VeldridShaderAttribute> Outputs = new List<VeldridShaderAttribute>();
 
-        public VeldridShaderPart(IVeldridRenderer renderer, byte[]? data, ShaderPartType type, IShaderStore store)
+        public VeldridShaderPart(
+            IVeldridRenderer renderer,
+            byte[]? data,
+            ShaderPartType type,
+            IShaderStore store
+        )
         {
             this.store = store;
 
@@ -47,18 +62,29 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
             code += loadFile(data, true);
 
             // Find the minimum uniform/buffer binding set across all shader codes. This will be a negative number (see sh_GlobalUniforms.h / sh_MaskingInfo.h).
-            int minSet = uniform_pattern.Matches(code)
-                                        .Where(m => m.Success)
-                                        .Select(m => int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture))
-                                        .DefaultIfEmpty(0).Min();
+            int minSet = uniform_pattern
+                .Matches(code)
+                .Where(m => m.Success)
+                .Select(m => int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture))
+                .DefaultIfEmpty(0)
+                .Min();
 
             // Increment the binding set of all uniform blocks equal to the absolute value of the minimum set from above.
             // After this transformation, blocks with negative sets will start from set 0, and all other user blocks begin after them.
             // The reason for doing this is that uniform blocks must be consistent between the shader stages, so they can't be appended.
-            code = uniform_pattern.Replace(code, match => $"{match.Groups[1].Value}set = {int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) + Math.Abs(minSet)}{match.Groups[3].Value}");
+            code = uniform_pattern.Replace(
+                code,
+                match =>
+                    $"{match.Groups[1].Value}set = {int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) + Math.Abs(minSet)}{match.Groups[3].Value}"
+            );
         }
 
-        private VeldridShaderPart(string code, string header, ShaderPartType type, IShaderStore store)
+        private VeldridShaderPart(
+            string code,
+            string header,
+            ShaderPartType type,
+            IShaderStore store
+        )
         {
             this.code = code;
             this.header = header;
@@ -76,8 +102,12 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
 
             if (mainFile)
             {
-                builder.AppendLine(loadFile(store.GetRawData("Internal/sh_Compatibility.h"), false));
-                builder.AppendLine(loadFile(store.GetRawData("Internal/sh_GlobalUniforms.h"), false));
+                builder.AppendLine(
+                    loadFile(store.GetRawData("Internal/sh_Compatibility.h"), false)
+                );
+                builder.AppendLine(
+                    loadFile(store.GetRawData("Internal/sh_GlobalUniforms.h"), false)
+                );
             }
 
             using (MemoryStream ms = new MemoryStream(bytes))
@@ -123,18 +153,36 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
                     return output;
 
                 Inputs.AddRange(
-                    shader_input_pattern.Matches(output).Select(m => new VeldridShaderAttribute(int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture), m.Groups[2].Value)));
+                    shader_input_pattern
+                        .Matches(output)
+                        .Select(m => new VeldridShaderAttribute(
+                            int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture),
+                            m.Groups[2].Value
+                        ))
+                );
                 Outputs.AddRange(
-                    shader_output_pattern.Matches(output).Select(m => new VeldridShaderAttribute(int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture), m.Groups[2].Value)));
+                    shader_output_pattern
+                        .Matches(output)
+                        .Select(m => new VeldridShaderAttribute(
+                            int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture),
+                            m.Groups[2].Value
+                        ))
+                );
 
-                string outputCode = loadFile(store.GetRawData($"Internal/sh_{Type}_Output.h"), false);
+                string outputCode = loadFile(
+                    store.GetRawData($"Internal/sh_{Type}_Output.h"),
+                    false
+                );
 
                 if (!string.IsNullOrEmpty(outputCode))
                 {
                     const string real_main_name = "__internal_real_main";
 
                     outputCode = outputCode.Replace("{{ real_main }}", real_main_name);
-                    output = Regex.Replace(output, @"void main\((.*)\)", $"void {real_main_name}()") + outputCode + '\n';
+                    output =
+                        Regex.Replace(output, @"void main\((.*)\)", $"void {real_main_name}()")
+                        + outputCode
+                        + '\n';
                 }
 
                 return output;
@@ -155,7 +203,9 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
         /// </para>
         /// </remarks>
         /// <param name="attributes">The list of attributes to include in the shader as input &amp; output.</param>
-        public VeldridShaderPart WithPassthroughInput(IReadOnlyList<VeldridShaderAttribute> attributes)
+        public VeldridShaderPart WithPassthroughInput(
+            IReadOnlyList<VeldridShaderAttribute> attributes
+        )
         {
             string result = code;
 
@@ -173,8 +223,12 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
                 string inputName = $"__unused_input_{attribute.Location}";
                 string outputName = $"__unused_output_{outputLayoutIndex}";
 
-                attributesLayout.AppendLine($"layout (location = {attribute.Location}) in {attribute.Type} {inputName};");
-                attributesLayout.AppendLine($"layout (location = {outputLayoutIndex}) out {attribute.Type} {outputName};");
+                attributesLayout.AppendLine(
+                    $"layout (location = {attribute.Location}) in {attribute.Type} {inputName};"
+                );
+                attributesLayout.AppendLine(
+                    $"layout (location = {outputLayoutIndex}) out {attribute.Type} {outputName};"
+                );
                 attributesAssignment.Append($"{outputName} = {inputName};\n    ");
 
                 outputAttributes.Add(attribute with { Location = outputLayoutIndex++ });
@@ -183,8 +237,14 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
             // we're only using this for fragment shader so let's just assert that.
             Debug.Assert(Type == ShaderPartType.Fragment);
 
-            result = result.Replace("{{ fragment_output_layout }}", attributesLayout.ToString().Trim());
-            result = result.Replace("{{ fragment_output_assignment }}", attributesAssignment.ToString().Trim());
+            result = result.Replace(
+                "{{ fragment_output_layout }}",
+                attributesLayout.ToString().Trim()
+            );
+            result = result.Replace(
+                "{{ fragment_output_assignment }}",
+                attributesAssignment.ToString().Trim()
+            );
 
             var part = new VeldridShaderPart(result, header, Type, store);
             part.Inputs.AddRange(Inputs.Concat(attributes).DistinctBy(a => a.Location));
@@ -196,9 +256,7 @@ namespace osu.Framework.Graphics.Veldrid.Shaders
 
         #region IDisposable Support
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         #endregion
     }

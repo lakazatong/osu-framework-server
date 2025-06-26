@@ -24,51 +24,75 @@ namespace osu.Framework.Tests.Visual.Graphics
         [Test]
         public void TestBatchUntilOverflow()
         {
-            AddStep("load boxes", () =>
-            {
-                Clear();
-
-                Add(new FillFlowContainer
+            AddStep(
+                "load boxes",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Margin = new MarginPadding(25f),
-                    Spacing = new Vector2(10f),
-                    ChildrenEnumerable = Enumerable.Range(0, max_boxes_per_batch * 2).Select(i => new Box
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                        Size = new Vector2(50f),
-                    })
-                });
-            });
+                    Clear();
+
+                    Add(
+                        new FillFlowContainer
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Margin = new MarginPadding(25f),
+                            Spacing = new Vector2(10f),
+                            ChildrenEnumerable = Enumerable
+                                .Range(0, max_boxes_per_batch * 2)
+                                .Select(i => new Box
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Colour = new Color4(
+                                        RNG.NextSingle(1),
+                                        RNG.NextSingle(1),
+                                        RNG.NextSingle(1),
+                                        1
+                                    ),
+                                    Size = new Vector2(50f),
+                                }),
+                        }
+                    );
+                }
+            );
         }
 
         [Test]
         public void TestBatchWithFlushes()
         {
-            AddStep("load boxes", () =>
-            {
-                Clear();
-
-                Add(new FillFlowContainer
+            AddStep(
+                "load boxes",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Margin = new MarginPadding(25f),
-                    Spacing = new Vector2(10f),
-                    ChildrenEnumerable = Enumerable.Range(0, max_boxes_per_batch * 2).Select(i => new BoxWithFlush
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                        Size = new Vector2(50f),
-                    })
-                });
-            });
+                    Clear();
+
+                    Add(
+                        new FillFlowContainer
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Margin = new MarginPadding(25f),
+                            Spacing = new Vector2(10f),
+                            ChildrenEnumerable = Enumerable
+                                .Range(0, max_boxes_per_batch * 2)
+                                .Select(i => new BoxWithFlush
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Colour = new Color4(
+                                        RNG.NextSingle(1),
+                                        RNG.NextSingle(1),
+                                        RNG.NextSingle(1),
+                                        1
+                                    ),
+                                    Size = new Vector2(50f),
+                                }),
+                        }
+                    );
+                }
+            );
         }
 
         private partial class BoxWithFlush : Box
@@ -80,9 +104,7 @@ namespace osu.Framework.Tests.Visual.Graphics
                 protected new BoxWithFlush Source => (BoxWithFlush)base.Source;
 
                 public BoxWithFlushDrawNode(BoxWithFlush source)
-                    : base(source)
-                {
-                }
+                    : base(source) { }
 
                 protected override void Draw(IRenderer renderer)
                 {

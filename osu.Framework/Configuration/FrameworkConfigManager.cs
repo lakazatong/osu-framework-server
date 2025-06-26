@@ -25,7 +25,12 @@ namespace osu.Framework.Configuration
         {
             SetDefault(FrameworkSetting.ShowLogOverlay, false);
 
-            SetDefault(FrameworkSetting.WindowedSize, new Size(1366, 768), new Size(640, 480), new Size(65536, 65536));
+            SetDefault(
+                FrameworkSetting.WindowedSize,
+                new Size(1366, 768),
+                new Size(640, 480),
+                new Size(65536, 65536)
+            );
             SetDefault(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Fullscreen);
             SetDefault(FrameworkSetting.ExecutionMode, ExecutionMode.MultiThreaded);
             SetDefault(FrameworkSetting.WindowedPositionX, 0.5, -0.5, 1.5);
@@ -51,27 +56,70 @@ namespace osu.Framework.Configuration
 #pragma warning restore 618
         }
 
-        public FrameworkConfigManager(Storage storage, IDictionary<FrameworkSetting, object> defaultOverrides = null)
-            : base(storage, defaultOverrides)
-        {
-        }
+        public FrameworkConfigManager(
+            Storage storage,
+            IDictionary<FrameworkSetting, object> defaultOverrides = null
+        )
+            : base(storage, defaultOverrides) { }
 
-        public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
-        {
-            new TrackedSetting<FrameSync>(FrameworkSetting.FrameSync, v => new SettingDescription(v, "Frame Limiter", v.GetDescription(), "Ctrl+F7")),
-            new TrackedSetting<string>(FrameworkSetting.AudioDevice, v => new SettingDescription(v, "Audio Device", string.IsNullOrEmpty(v) ? "Default" : v, v)),
-            new TrackedSetting<bool>(FrameworkSetting.ShowLogOverlay, v => new SettingDescription(v, "Debug Logs", v ? "visible" : "hidden", "Ctrl+F10")),
-            new TrackedSetting<Size>(FrameworkSetting.WindowedSize, v => new SettingDescription(v, "Screen resolution", $"{v.Width}x{v.Height}")),
-            new TrackedSetting<WindowMode>(FrameworkSetting.WindowMode, v => new SettingDescription(v, "Screen Mode", v.ToString(), "Alt+Enter")),
-#pragma warning disable 618
-            new TrackedSetting<double>(FrameworkSetting.CursorSensitivity, v => new SettingDescription(v, "Cursor Sensitivity", v.ToString(@"0.##x"), "Ctrl+Alt+R to reset")),
-            new TrackedSetting<string>(FrameworkSetting.IgnoredInputHandlers, v =>
+        public override TrackedSettings CreateTrackedSettings() =>
+            new TrackedSettings
             {
-                bool raw = !v.Contains("Raw");
-                return new SettingDescription(raw, "Raw Input", raw ? "enabled" : "disabled", "Ctrl+Alt+R to reset");
-            }),
+                new TrackedSetting<FrameSync>(
+                    FrameworkSetting.FrameSync,
+                    v => new SettingDescription(v, "Frame Limiter", v.GetDescription(), "Ctrl+F7")
+                ),
+                new TrackedSetting<string>(
+                    FrameworkSetting.AudioDevice,
+                    v => new SettingDescription(
+                        v,
+                        "Audio Device",
+                        string.IsNullOrEmpty(v) ? "Default" : v,
+                        v
+                    )
+                ),
+                new TrackedSetting<bool>(
+                    FrameworkSetting.ShowLogOverlay,
+                    v => new SettingDescription(
+                        v,
+                        "Debug Logs",
+                        v ? "visible" : "hidden",
+                        "Ctrl+F10"
+                    )
+                ),
+                new TrackedSetting<Size>(
+                    FrameworkSetting.WindowedSize,
+                    v => new SettingDescription(v, "Screen resolution", $"{v.Width}x{v.Height}")
+                ),
+                new TrackedSetting<WindowMode>(
+                    FrameworkSetting.WindowMode,
+                    v => new SettingDescription(v, "Screen Mode", v.ToString(), "Alt+Enter")
+                ),
+#pragma warning disable 618
+                new TrackedSetting<double>(
+                    FrameworkSetting.CursorSensitivity,
+                    v => new SettingDescription(
+                        v,
+                        "Cursor Sensitivity",
+                        v.ToString(@"0.##x"),
+                        "Ctrl+Alt+R to reset"
+                    )
+                ),
+                new TrackedSetting<string>(
+                    FrameworkSetting.IgnoredInputHandlers,
+                    v =>
+                    {
+                        bool raw = !v.Contains("Raw");
+                        return new SettingDescription(
+                            raw,
+                            "Raw Input",
+                            raw ? "enabled" : "disabled",
+                            "Ctrl+Alt+R to reset"
+                        );
+                    }
+                ),
 #pragma warning restore 618
-        };
+            };
     }
 
     public enum FrameworkSetting
@@ -106,13 +154,19 @@ namespace osu.Framework.Configuration
         ShowUnicode,
         Locale,
 
-        [Obsolete("Input-related settings are now stored in InputConfigManager. Adjustments should be made via Host.AvailableInputHandlers bindables directly.")] // can be removed 20210911
+        [Obsolete(
+            "Input-related settings are now stored in InputConfigManager. Adjustments should be made via Host.AvailableInputHandlers bindables directly."
+        )] // can be removed 20210911
         IgnoredInputHandlers,
 
-        [Obsolete("Input-related settings are now stored in InputConfigManager. Adjustments should be made via Host.AvailableInputHandlers bindables directly.")] // can be removed 20210911
+        [Obsolete(
+            "Input-related settings are now stored in InputConfigManager. Adjustments should be made via Host.AvailableInputHandlers bindables directly."
+        )] // can be removed 20210911
         CursorSensitivity,
 
-        [Obsolete("Input-related settings are now stored in InputConfigManager. Adjustments should be made via Host.AvailableInputHandlers bindables directly.")] // can be removed 20210911
+        [Obsolete(
+            "Input-related settings are now stored in InputConfigManager. Adjustments should be made via Host.AvailableInputHandlers bindables directly."
+        )] // can be removed 20210911
         MapAbsoluteInputToWindow,
     }
 }

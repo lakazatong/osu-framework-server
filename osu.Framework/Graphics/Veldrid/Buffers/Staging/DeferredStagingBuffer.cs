@@ -27,10 +27,15 @@ namespace osu.Framework.Graphics.Veldrid.Buffers.Staging
             Count = count;
             SizeInBytes = (uint)(Unsafe.SizeOf<T>() * count);
 
-            memoryOwner = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<T>((int)Count, AllocationOptions.Clean);
+            memoryOwner = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<T>(
+                (int)Count,
+                AllocationOptions.Clean
+            );
             cpuBuffer = memoryOwner.Memory;
 
-            driverBuffer = renderer.Factory.CreateBuffer(new BufferDescription(SizeInBytes, BufferUsage.Staging));
+            driverBuffer = renderer.Factory.CreateBuffer(
+                new BufferDescription(SizeInBytes, BufferUsage.Staging)
+            );
         }
 
         public uint SizeInBytes { get; }
@@ -47,14 +52,16 @@ namespace osu.Framework.Graphics.Veldrid.Buffers.Staging
                 driverBuffer,
                 (uint)(srcOffset * Unsafe.SizeOf<T>()),
                 ref Data[(int)srcOffset],
-                (uint)(count * Unsafe.SizeOf<T>()));
+                (uint)(count * Unsafe.SizeOf<T>())
+            );
 
             renderer.BufferUpdateCommands.CopyBuffer(
                 driverBuffer,
                 (uint)(srcOffset * Unsafe.SizeOf<T>()),
                 buffer,
                 (uint)(dstOffset * Unsafe.SizeOf<T>()),
-                (uint)(count * Unsafe.SizeOf<T>()));
+                (uint)(count * Unsafe.SizeOf<T>())
+            );
         }
 
         public void Dispose()

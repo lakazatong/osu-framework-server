@@ -56,8 +56,11 @@ namespace osu.Framework.Utils
         {
             if (buffer.Length < GetClipBufferSize())
             {
-                throw new ArgumentException($"Clip buffer must have a length of {GetClipBufferSize()}, but was {buffer.Length}."
-                                            + "Use GetClipBufferSize() to calculate the size of the buffer.", nameof(buffer));
+                throw new ArgumentException(
+                    $"Clip buffer must have a length of {GetClipBufferSize()}, but was {buffer.Length}."
+                        + "Use GetClipBufferSize() to calculate the size of the buffer.",
+                    nameof(buffer)
+                );
             }
 
             ReadOnlySpan<Vector2> origSubjectVertices = subjectPolygon.GetVertices();
@@ -69,12 +72,18 @@ namespace osu.Framework.Utils
                 return Span<Vector2>.Empty;
 
             // Add the subject vertices to the buffer and immediately normalise them
-            Span<Vector2> subjectVertices = getNormalised(origSubjectVertices, buffer.Slice(0, origSubjectVertices.Length), true);
+            Span<Vector2> subjectVertices = getNormalised(
+                origSubjectVertices,
+                buffer.Slice(0, origSubjectVertices.Length),
+                true
+            );
 
             // Since the clip vertices aren't modified, we can use them as they are if they are normalised
             // However if they are not normalised, then we must add them to the buffer and normalise them there
             bool clipNormalised = Vector2Extensions.GetOrientation(origClipVertices) >= 0;
-            Span<Vector2> clipBuffer = clipNormalised ? null : stackalloc Vector2[origClipVertices.Length];
+            Span<Vector2> clipBuffer = clipNormalised
+                ? null
+                : stackalloc Vector2[origClipVertices.Length];
             ReadOnlySpan<Vector2> clipVertices = clipNormalised
                 ? origClipVertices
                 : getNormalised(origClipVertices, clipBuffer, false);
@@ -85,7 +94,12 @@ namespace osu.Framework.Utils
             int validClipEdges = 0;
 
             // Process the clip edge connecting the last vertex to the first vertex
-            inputCount = processClipEdge(new Line(clipVertices[^1], clipVertices[0]), buffer, inputCount, ref validClipEdges);
+            inputCount = processClipEdge(
+                new Line(clipVertices[^1], clipVertices[0]),
+                buffer,
+                inputCount,
+                ref validClipEdges
+            );
 
             // Process all other edges
             for (int c = 1; c < clipVertices.Length; c++)
@@ -93,7 +107,12 @@ namespace osu.Framework.Utils
                 if (inputCount == 0)
                     break;
 
-                inputCount = processClipEdge(new Line(clipVertices[c - 1], clipVertices[c]), buffer, inputCount, ref validClipEdges);
+                inputCount = processClipEdge(
+                    new Line(clipVertices[c - 1], clipVertices[c]),
+                    buffer,
+                    inputCount,
+                    ref validClipEdges
+                );
             }
 
             if (validClipEdges < 3)
@@ -103,7 +122,12 @@ namespace osu.Framework.Utils
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int processClipEdge(in Line clipEdge, in Span<Vector2> buffer, in int inputCount, ref int validClipEdges)
+        private int processClipEdge(
+            in Line clipEdge,
+            in Span<Vector2> buffer,
+            in int inputCount,
+            ref int validClipEdges
+        )
         {
             if (clipEdge.EndPoint == clipEdge.StartPoint)
                 return inputCount;
@@ -119,17 +143,35 @@ namespace osu.Framework.Utils
             int outputCount = 0;
 
             // Process the edge connecting the last vertex with the first vertex
-            outputVertices(ref inputVertices[inputCount - 1], ref inputVertices[0], clipEdge, buffer, ref outputCount);
+            outputVertices(
+                ref inputVertices[inputCount - 1],
+                ref inputVertices[0],
+                clipEdge,
+                buffer,
+                ref outputCount
+            );
 
             // Process all other vertices
             for (int i = 1; i < inputCount; i++)
-                outputVertices(ref inputVertices[i - 1], ref inputVertices[i], clipEdge, buffer, ref outputCount);
+                outputVertices(
+                    ref inputVertices[i - 1],
+                    ref inputVertices[i],
+                    clipEdge,
+                    buffer,
+                    ref outputCount
+                );
 
             return outputCount;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void outputVertices(ref Vector2 startVertex, ref Vector2 endVertex, in Line clipEdge, in Span<Vector2> buffer, ref int bufferIndex)
+        private void outputVertices(
+            ref Vector2 startVertex,
+            ref Vector2 endVertex,
+            in Line clipEdge,
+            in Span<Vector2> buffer,
+            ref int bufferIndex
+        )
         {
             if (endVertex.InRightHalfPlaneOf(clipEdge))
             {
@@ -149,7 +191,11 @@ namespace osu.Framework.Utils
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Span<Vector2> getNormalised(in ReadOnlySpan<Vector2> original, in Span<Vector2> bufferSlice, bool verify)
+        private Span<Vector2> getNormalised(
+            in ReadOnlySpan<Vector2> original,
+            in Span<Vector2> bufferSlice,
+            bool verify
+        )
         {
             original.CopyTo(bufferSlice);
 

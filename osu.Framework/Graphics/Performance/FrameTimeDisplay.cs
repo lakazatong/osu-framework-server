@@ -27,22 +27,24 @@ namespace osu.Framework.Graphics.Performance
             Masking = true;
             CornerRadius = 5;
 
-            AddRange(new Drawable[]
-            {
-                new Box
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black,
-                    Alpha = 0.75f
-                },
-                counter = new SpriteText
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    Font = FrameworkFont.Regular,
-                    Text = @"...",
+                    new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Black,
+                        Alpha = 0.75f,
+                    },
+                    counter = new SpriteText
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        Font = FrameworkFont.Regular,
+                        Text = @"...",
+                    },
                 }
-            });
+            );
         }
 
         private float aimWidth;
@@ -91,7 +93,12 @@ namespace osu.Framework.Graphics.Performance
 
             if (framesSinceLastUpdate > 0)
             {
-                rollingElapsed = Interpolation.Damp(rollingElapsed, elapsedSinceLastUpdate / framesSinceLastUpdate, 0.01, dampRate);
+                rollingElapsed = Interpolation.Damp(
+                    rollingElapsed,
+                    elapsedSinceLastUpdate / framesSinceLastUpdate,
+                    0.01,
+                    dampRate
+                );
             }
 
             lastUpdateLocalTime = Clock.CurrentTime;
@@ -99,13 +106,19 @@ namespace osu.Framework.Graphics.Performance
             framesSinceLastUpdate = 0;
             elapsedSinceLastUpdate = 0;
 
-            counter.Text = $"{displayFps:0}fps ({rollingElapsed:0.00}ms ±{jitter:0.00}ms)"
-                           + (clock.Throttling ? $"{(clock.MaximumUpdateHz > 0 && clock.MaximumUpdateHz < 10000 ? clock.MaximumUpdateHz.ToString("0") : "∞"),4}hz" : string.Empty);
+            counter.Text =
+                $"{displayFps:0}fps ({rollingElapsed:0.00}ms ±{jitter:0.00}ms)"
+                + (
+                    clock.Throttling
+                        ? $"{(clock.MaximumUpdateHz > 0 && clock.MaximumUpdateHz < 10000 ? clock.MaximumUpdateHz.ToString("0") : "∞"), 4}hz"
+                        : string.Empty
+                );
         }
 
         public void NewFrame(FrameStatistics frame)
         {
-            if (!Counting) return;
+            if (!Counting)
+                return;
 
             foreach (var pair in frame.CollectedTimes)
             {

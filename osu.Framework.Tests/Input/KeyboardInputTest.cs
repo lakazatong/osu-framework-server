@@ -27,29 +27,37 @@ namespace osu.Framework.Tests.Input
         {
             var receptors = new InputReceptor[3];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptors[0] = new InputReceptor
+                    Children = new Drawable[]
                     {
-                        Size = new Vector2(100),
-                        KeyDown = () => true
-                    },
-                    receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                };
-            });
+                        receptors[0] = new InputReceptor
+                        {
+                            Size = new Vector2(100),
+                            KeyDown = () => true,
+                        },
+                        receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                    };
+                }
+            );
 
             AddStep("press key", () => InputManager.PressKey(Key.A));
-            AddStep("add receptor above", () =>
-            {
-                Add(receptors[2] = new InputReceptor
+            AddStep(
+                "add receptor above",
+                () =>
                 {
-                    Size = new Vector2(100),
-                    KeyDown = () => true,
-                    KeyUp = () => true
-                });
-            });
+                    Add(
+                        receptors[2] = new InputReceptor
+                        {
+                            Size = new Vector2(100),
+                            KeyDown = () => true,
+                            KeyUp = () => true,
+                        }
+                    );
+                }
+            );
 
             AddStep("release key", () => InputManager.ReleaseKey(Key.A));
 
@@ -69,24 +77,30 @@ namespace osu.Framework.Tests.Input
         {
             var receptors = new InputReceptor[2];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptors[0] = new InputReceptor { Size = new Vector2(100) },
-                    receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                };
-            });
+                    Children = new Drawable[]
+                    {
+                        receptors[0] = new InputReceptor { Size = new Vector2(100) },
+                        receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                    };
+                }
+            );
 
             AddStep("press key", () => InputManager.PressKey(Key.A));
             AddUntilStep("wait for repeat on receptor 0", () => receptors[0].RepeatReceived);
 
-            AddStep("remove receptor 0 & reset repeat", () =>
-            {
-                Remove(receptors[0], true);
-                receptors[0].RepeatReceived = false;
-                receptors[1].RepeatReceived = false;
-            });
+            AddStep(
+                "remove receptor 0 & reset repeat",
+                () =>
+                {
+                    Remove(receptors[0], true);
+                    receptors[0].RepeatReceived = false;
+                    receptors[1].RepeatReceived = false;
+                }
+            );
 
             AddUntilStep("wait for repeat on receptor 1", () => receptors[1].RepeatReceived);
             AddAssert("receptor 0 did not receive repeat", () => !receptors[0].RepeatReceived);
@@ -101,36 +115,42 @@ namespace osu.Framework.Tests.Input
             var receptors = new InputReceptor[2];
             var receptorParents = new Container[2];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptorParents[0] = new Container
+                    Children = new Drawable[]
                     {
-                        Children = new Drawable[]
+                        receptorParents[0] = new Container
                         {
-                            receptors[0] = new InputReceptor { Size = new Vector2(100) }
-                        }
-                    },
-                    receptorParents[1] = new Container
-                    {
-                        Children = new Drawable[]
+                            Children = new Drawable[]
+                            {
+                                receptors[0] = new InputReceptor { Size = new Vector2(100) },
+                            },
+                        },
+                        receptorParents[1] = new Container
                         {
-                            receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                        }
-                    }
-                };
-            });
+                            Children = new Drawable[]
+                            {
+                                receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                            },
+                        },
+                    };
+                }
+            );
 
             AddStep("press key", () => InputManager.PressKey(Key.A));
             AddUntilStep("wait for repeat on receptor 0", () => receptors[0].RepeatReceived);
 
-            AddStep("remove receptor parent 0 & reset repeat", () =>
-            {
-                Remove(receptorParents[0], true);
-                receptors[0].RepeatReceived = false;
-                receptors[1].RepeatReceived = false;
-            });
+            AddStep(
+                "remove receptor parent 0 & reset repeat",
+                () =>
+                {
+                    Remove(receptorParents[0], true);
+                    receptors[0].RepeatReceived = false;
+                    receptors[1].RepeatReceived = false;
+                }
+            );
 
             AddUntilStep("wait for repeat on receptor 1", () => receptors[1].RepeatReceived);
             AddAssert("receptor 0 did not receive repeat", () => !receptors[0].RepeatReceived);
@@ -145,22 +165,28 @@ namespace osu.Framework.Tests.Input
         {
             var receptors = new InputReceptor[2];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptors[0] = new InputReceptor { Size = new Vector2(100) },
-                    receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                };
-            });
+                    Children = new Drawable[]
+                    {
+                        receptors[0] = new InputReceptor { Size = new Vector2(100) },
+                        receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                    };
+                }
+            );
 
             AddStep("press key", () => InputManager.PressKey(Key.A));
-            AddStep("remove receptor 0 & reset repeat", () =>
-            {
-                Remove(receptors[0], false);
-                receptors[0].RepeatReceived = false;
-                receptors[1].RepeatReceived = false;
-            });
+            AddStep(
+                "remove receptor 0 & reset repeat",
+                () =>
+                {
+                    Remove(receptors[0], false);
+                    receptors[0].RepeatReceived = false;
+                    receptors[1].RepeatReceived = false;
+                }
+            );
 
             AddUntilStep("wait for repeat on receptor 1", () => receptors[1].RepeatReceived);
             AddStep("add back receptor 0", () => Add(receptors[0]));

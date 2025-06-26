@@ -38,7 +38,9 @@ namespace osu.Framework.iOS
 
                     var type = UTType.CreateFromExtension(extension.Replace(".", string.Empty));
                     if (type == null)
-                        throw new InvalidOperationException($"System failed to recognise extension \"{extension}\" while preparing the file selector.\n");
+                        throw new InvalidOperationException(
+                            $"System failed to recognise extension \"{extension}\" while preparing the file selector.\n"
+                        );
 
                     utTypes[i] = type;
                 }
@@ -59,8 +61,10 @@ namespace osu.Framework.iOS
             });
         }
 
-        public override void DidPickDocument(UIDocumentPickerViewController controller, NSUrl url)
-            => Selected?.Invoke(new FileInfo(url.Path!));
+        public override void DidPickDocument(
+            UIDocumentPickerViewController controller,
+            NSUrl url
+        ) => Selected?.Invoke(new FileInfo(url.Path!));
 
         protected override void Dispose(bool disposing)
         {

@@ -23,7 +23,10 @@ namespace osu.Framework.Platform
         public static NativeMemoryLease AddMemory(object source, long amount)
         {
             getStatistic(source).Value += amount;
-            return new NativeMemoryLease((source, amount), static sender => removeMemory(sender.source, sender.amount));
+            return new NativeMemoryLease(
+                (source, amount),
+                static sender => removeMemory(sender.source, sender.amount)
+            );
         }
 
         /// <summary>
@@ -36,17 +39,19 @@ namespace osu.Framework.Platform
             getStatistic(source).Value -= amount;
         }
 
-        private static GlobalStatistic<long> getStatistic(object source) => GlobalStatistics.Get<long>("Native", source.GetType().Name);
+        private static GlobalStatistic<long> getStatistic(object source) =>
+            GlobalStatistics.Get<long>("Native", source.GetType().Name);
 
         /// <summary>
         /// A leased on a native memory allocation. Should be disposed when the associated memory is freed.
         /// </summary>
         public class NativeMemoryLease : InvokeOnDisposal<(object source, long amount)>
         {
-            internal NativeMemoryLease((object source, long amount) sender, [RequireStaticDelegate(IsError = true)] Action<(object source, long amount)> action)
-                : base(sender, action)
-            {
-            }
+            internal NativeMemoryLease(
+                (object source, long amount) sender,
+                [RequireStaticDelegate(IsError = true)] Action<(object source, long amount)> action
+            )
+                : base(sender, action) { }
 
             private bool isDisposed;
 

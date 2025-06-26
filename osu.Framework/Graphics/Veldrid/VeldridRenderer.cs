@@ -10,13 +10,13 @@ using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Veldrid.Batches;
-using osu.Framework.Platform;
 using osu.Framework.Graphics.Veldrid.Buffers;
 using osu.Framework.Graphics.Veldrid.Buffers.Staging;
 using osu.Framework.Graphics.Veldrid.Pipelines;
 using osu.Framework.Graphics.Veldrid.Shaders;
 using osu.Framework.Graphics.Veldrid.Textures;
 using osu.Framework.Graphics.Veldrid.Vertices;
+using osu.Framework.Platform;
 using osuTK;
 using osuTK.Graphics;
 using SixLabors.ImageSharp;
@@ -40,28 +40,22 @@ namespace osu.Framework.Graphics.Veldrid
             set => veldridDevice.AllowTearing = value;
         }
 
-        public override bool IsDepthRangeZeroToOne
-            => veldridDevice.IsDepthRangeZeroToOne;
+        public override bool IsDepthRangeZeroToOne => veldridDevice.IsDepthRangeZeroToOne;
 
-        public override bool IsUvOriginTopLeft
-            => veldridDevice.IsUvOriginTopLeft;
+        public override bool IsUvOriginTopLeft => veldridDevice.IsUvOriginTopLeft;
 
-        public override bool IsClipSpaceYInverted
-            => veldridDevice.IsClipSpaceYInverted;
+        public override bool IsClipSpaceYInverted => veldridDevice.IsClipSpaceYInverted;
 
-        public bool UseStructuredBuffers
-            => veldridDevice.UseStructuredBuffers;
+        public bool UseStructuredBuffers => veldridDevice.UseStructuredBuffers;
 
-        public GraphicsDevice Device
-            => veldridDevice.Device;
+        public GraphicsDevice Device => veldridDevice.Device;
 
-        public ResourceFactory Factory
-            => veldridDevice.Factory;
+        public ResourceFactory Factory => veldridDevice.Factory;
 
-        public GraphicsSurfaceType SurfaceType
-            => veldridDevice.SurfaceType;
+        public GraphicsSurfaceType SurfaceType => veldridDevice.SurfaceType;
 
-        private readonly HashSet<IVeldridUniformBuffer> uniformBufferResetList = new HashSet<IVeldridUniformBuffer>();
+        private readonly HashSet<IVeldridUniformBuffer> uniformBufferResetList =
+            new HashSet<IVeldridUniformBuffer>();
 
         private VeldridDevice veldridDevice = null!;
         private GraphicsPipeline graphicsPipeline = null!;
@@ -107,26 +101,22 @@ namespace osu.Framework.Graphics.Veldrid
             graphicsPipeline.End();
         }
 
-        protected internal override void SwapBuffers()
-            => veldridDevice.SwapBuffers();
+        protected internal override void SwapBuffers() => veldridDevice.SwapBuffers();
 
-        protected internal override void WaitUntilIdle()
-            => veldridDevice.WaitUntilIdle();
+        protected internal override void WaitUntilIdle() => veldridDevice.WaitUntilIdle();
 
-        protected internal override void WaitUntilNextFrameReady()
-            => veldridDevice.WaitUntilNextFrameReady();
+        protected internal override void WaitUntilNextFrameReady() =>
+            veldridDevice.WaitUntilNextFrameReady();
 
-        protected internal override void MakeCurrent()
-            => veldridDevice.MakeCurrent();
+        protected internal override void MakeCurrent() => veldridDevice.MakeCurrent();
 
-        protected internal override void ClearCurrent()
-            => veldridDevice.ClearCurrent();
+        protected internal override void ClearCurrent() => veldridDevice.ClearCurrent();
 
-        protected override void ClearImplementation(ClearInfo clearInfo)
-            => graphicsPipeline.Clear(clearInfo);
+        protected override void ClearImplementation(ClearInfo clearInfo) =>
+            graphicsPipeline.Clear(clearInfo);
 
-        protected override void SetScissorStateImplementation(bool enabled)
-            => graphicsPipeline.SetScissorState(enabled);
+        protected override void SetScissorStateImplementation(bool enabled) =>
+            graphicsPipeline.SetScissorState(enabled);
 
         protected override bool SetTextureImplementation(INativeTexture? texture, int unit)
         {
@@ -137,34 +127,38 @@ namespace osu.Framework.Graphics.Veldrid
             return true;
         }
 
-        protected override void SetShaderImplementation(IShader shader)
-            => graphicsPipeline.SetShader((VeldridShader)shader);
+        protected override void SetShaderImplementation(IShader shader) =>
+            graphicsPipeline.SetShader((VeldridShader)shader);
 
-        protected override void SetBlendImplementation(BlendingParameters blendingParameters)
-            => graphicsPipeline.SetBlend(blendingParameters);
+        protected override void SetBlendImplementation(BlendingParameters blendingParameters) =>
+            graphicsPipeline.SetBlend(blendingParameters);
 
-        protected override void SetBlendMaskImplementation(BlendingMask blendingMask)
-            => graphicsPipeline.SetBlendMask(blendingMask);
+        protected override void SetBlendMaskImplementation(BlendingMask blendingMask) =>
+            graphicsPipeline.SetBlendMask(blendingMask);
 
-        protected override void SetViewportImplementation(RectangleI viewport)
-            => graphicsPipeline.SetViewport(viewport);
+        protected override void SetViewportImplementation(RectangleI viewport) =>
+            graphicsPipeline.SetViewport(viewport);
 
-        protected override void SetScissorImplementation(RectangleI scissor)
-            => graphicsPipeline.SetScissor(scissor);
+        protected override void SetScissorImplementation(RectangleI scissor) =>
+            graphicsPipeline.SetScissor(scissor);
 
-        protected override void SetDepthInfoImplementation(DepthInfo depthInfo)
-            => graphicsPipeline.SetDepthInfo(depthInfo);
+        protected override void SetDepthInfoImplementation(DepthInfo depthInfo) =>
+            graphicsPipeline.SetDepthInfo(depthInfo);
 
-        protected override void SetStencilInfoImplementation(StencilInfo stencilInfo)
-            => graphicsPipeline.SetStencilInfo(stencilInfo);
+        protected override void SetStencilInfoImplementation(StencilInfo stencilInfo) =>
+            graphicsPipeline.SetStencilInfo(stencilInfo);
 
-        protected override void SetFrameBufferImplementation(IFrameBuffer? frameBuffer)
-            => graphicsPipeline.SetFrameBuffer((VeldridFrameBuffer?)frameBuffer);
+        protected override void SetFrameBufferImplementation(IFrameBuffer? frameBuffer) =>
+            graphicsPipeline.SetFrameBuffer((VeldridFrameBuffer?)frameBuffer);
 
-        protected override void DeleteFrameBufferImplementation(IFrameBuffer frameBuffer)
-            => ((VeldridFrameBuffer)frameBuffer).DeleteResources(true);
+        protected override void DeleteFrameBufferImplementation(IFrameBuffer frameBuffer) =>
+            ((VeldridFrameBuffer)frameBuffer).DeleteResources(true);
 
-        public override void DrawVerticesImplementation(PrimitiveTopology topology, int vertexStart, int verticesCount)
+        public override void DrawVerticesImplementation(
+            PrimitiveTopology topology,
+            int vertexStart,
+            int verticesCount
+        )
         {
             // normally we would flush/submit all texture upload commands at the end of the frame, since no actual rendering by the GPU will happen until then,
             // but turns out on macOS with non-apple GPU, this results in rendering corruption.
@@ -173,12 +167,16 @@ namespace osu.Framework.Graphics.Veldrid
             // until that appears to be problem, let's just flush here.
             flushTextureUploadPipeline();
 
-            graphicsPipeline.DrawVertices(topology.ToPrimitiveTopology(), vertexStart, verticesCount);
+            graphicsPipeline.DrawVertices(
+                topology.ToPrimitiveTopology(),
+                vertexStart,
+                verticesCount
+            );
         }
 
         public void BindVertexBuffer<T>(IVeldridVertexBuffer<T> buffer)
-            where T : unmanaged, IEquatable<T>, IVertex
-            => graphicsPipeline.SetVertexBuffer(buffer.Buffer, VeldridVertexUtils<T>.Layout);
+            where T : unmanaged, IEquatable<T>, IVertex =>
+            graphicsPipeline.SetVertexBuffer(buffer.Buffer, VeldridVertexUtils<T>.Layout);
 
         public void BindIndexBuffer(VeldridIndexLayout layout, int verticesCount)
         {
@@ -217,14 +215,14 @@ namespace osu.Framework.Graphics.Veldrid
         /// Checks whether the given frame buffer is currently bound.
         /// </summary>
         /// <param name="frameBuffer">The frame buffer to check.</param>
-        public bool IsFrameBufferBound(IFrameBuffer frameBuffer)
-            => FrameBuffer == frameBuffer;
+        public bool IsFrameBufferBound(IFrameBuffer frameBuffer) => FrameBuffer == frameBuffer;
 
-        protected internal override Image<Rgba32> TakeScreenshot()
-            => veldridDevice.TakeScreenshot();
+        protected internal override Image<Rgba32> TakeScreenshot() =>
+            veldridDevice.TakeScreenshot();
 
-        protected internal override Image<Rgba32>? ExtractFrameBufferData(IFrameBuffer frameBuffer)
-            => ExtractTexture((VeldridTexture)frameBuffer.Texture.NativeTexture);
+        protected internal override Image<Rgba32>? ExtractFrameBufferData(
+            IFrameBuffer frameBuffer
+        ) => ExtractTexture((VeldridTexture)frameBuffer.Texture.NativeTexture);
 
         protected internal Image<Rgba32>? ExtractTexture(VeldridTexture texture)
         {
@@ -246,11 +244,28 @@ namespace osu.Framework.Graphics.Veldrid
         /// <param name="level">The texture level.</param>
         /// <param name="data">The texture data.</param>
         /// <typeparam name="T">The pixel type.</typeparam>
-        public void UpdateTexture<T>(global::Veldrid.Texture texture, int x, int y, int width, int height, int level, ReadOnlySpan<T> data)
+        public void UpdateTexture<T>(
+            global::Veldrid.Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int level,
+            ReadOnlySpan<T> data
+        )
             where T : unmanaged
         {
             ensureTextureUploadPipelineBegan();
-            textureUploadPipeline.UpdateTexture(stagingTexturePool, texture, x, y, width, height, level, data);
+            textureUploadPipeline.UpdateTexture(
+                stagingTexturePool,
+                texture,
+                x,
+                y,
+                width,
+                height,
+                level,
+                data
+            );
         }
 
         /// <summary>
@@ -264,63 +279,119 @@ namespace osu.Framework.Graphics.Veldrid
         /// <param name="level">The texture level.</param>
         /// <param name="data">The texture data.</param>
         /// <param name="rowLengthInBytes">The number of bytes per row of the image to read from <paramref name="data"/>.</param>
-        public void UpdateTexture(global::Veldrid.Texture texture, int x, int y, int width, int height, int level, IntPtr data, int rowLengthInBytes)
-            => bufferUpdatePipeline.UpdateTexture(stagingTexturePool, texture, x, y, width, height, level, data, rowLengthInBytes);
+        public void UpdateTexture(
+            global::Veldrid.Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int level,
+            IntPtr data,
+            int rowLengthInBytes
+        ) =>
+            bufferUpdatePipeline.UpdateTexture(
+                stagingTexturePool,
+                texture,
+                x,
+                y,
+                width,
+                height,
+                level,
+                data,
+                rowLengthInBytes
+            );
 
-        protected override void SetUniformImplementation<T>(IUniformWithValue<T> uniform)
-        {
-        }
+        protected override void SetUniformImplementation<T>(IUniformWithValue<T> uniform) { }
 
-        protected override void SetUniformBufferImplementation(string blockName, IUniformBuffer buffer)
-            => graphicsPipeline.AttachUniformBuffer(blockName, (IVeldridUniformBuffer)buffer);
+        protected override void SetUniformBufferImplementation(
+            string blockName,
+            IUniformBuffer buffer
+        ) => graphicsPipeline.AttachUniformBuffer(blockName, (IVeldridUniformBuffer)buffer);
 
-        public void RegisterUniformBufferForReset(IVeldridUniformBuffer buffer)
-            => uniformBufferResetList.Add(buffer);
+        public void RegisterUniformBufferForReset(IVeldridUniformBuffer buffer) =>
+            uniformBufferResetList.Add(buffer);
 
-        public void GenerateMipmaps(VeldridTexture texture)
-            => graphicsPipeline.GenerateMipmaps(texture);
+        public void GenerateMipmaps(VeldridTexture texture) =>
+            graphicsPipeline.GenerateMipmaps(texture);
 
-        public CommandList BufferUpdateCommands
-            => bufferUpdatePipeline.Commands;
+        public CommandList BufferUpdateCommands => bufferUpdatePipeline.Commands;
 
-        void IVeldridRenderer.BindShader(VeldridShader shader)
-            => BindShader(shader);
+        void IVeldridRenderer.BindShader(VeldridShader shader) => BindShader(shader);
 
-        void IVeldridRenderer.UnbindShader(VeldridShader shader)
-            => UnbindShader(shader);
+        void IVeldridRenderer.UnbindShader(VeldridShader shader) => UnbindShader(shader);
 
-        void IVeldridRenderer.EnqueueTextureUpload(VeldridTexture texture)
-            => EnqueueTextureUpload(texture);
+        void IVeldridRenderer.EnqueueTextureUpload(VeldridTexture texture) =>
+            EnqueueTextureUpload(texture);
 
-        protected override IShaderPart CreateShaderPart(IShaderStore store, string name, byte[]? rawData, ShaderPartType partType)
-            => new VeldridShaderPart(this, rawData, partType, store);
+        protected override IShaderPart CreateShaderPart(
+            IShaderStore store,
+            string name,
+            byte[]? rawData,
+            ShaderPartType partType
+        ) => new VeldridShaderPart(this, rawData, partType, store);
 
-        protected override IShader CreateShader(string name, IShaderPart[] parts, ShaderCompilationStore compilationStore)
-            => new VeldridShader(this, name, parts.Cast<VeldridShaderPart>().ToArray(), compilationStore);
+        protected override IShader CreateShader(
+            string name,
+            IShaderPart[] parts,
+            ShaderCompilationStore compilationStore
+        ) =>
+            new VeldridShader(
+                this,
+                name,
+                parts.Cast<VeldridShaderPart>().ToArray(),
+                compilationStore
+            );
 
-        public override IFrameBuffer CreateFrameBuffer(RenderBufferFormat[]? renderBufferFormats = null, TextureFilteringMode filteringMode = TextureFilteringMode.Linear)
-            => new VeldridFrameBuffer(this, renderBufferFormats?.ToPixelFormats(), filteringMode.ToSamplerFilter());
+        public override IFrameBuffer CreateFrameBuffer(
+            RenderBufferFormat[]? renderBufferFormats = null,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear
+        ) =>
+            new VeldridFrameBuffer(
+                this,
+                renderBufferFormats?.ToPixelFormats(),
+                filteringMode.ToSamplerFilter()
+            );
 
-        protected override IVertexBatch<TVertex> CreateLinearBatch<TVertex>(int size, int maxBuffers, PrimitiveTopology primitiveType)
+        protected override IVertexBatch<TVertex> CreateLinearBatch<TVertex>(
+            int size,
+            int maxBuffers,
+            PrimitiveTopology primitiveType
+        )
             // maxBuffers is ignored because batches are not allowed to wrap around in Veldrid.
-            => new VeldridLinearBatch<TVertex>(this, size, primitiveType);
+            =>
+            new VeldridLinearBatch<TVertex>(this, size, primitiveType);
 
         protected override IVertexBatch<TVertex> CreateQuadBatch<TVertex>(int size, int maxBuffers)
             // maxBuffers is ignored because batches are not allowed to wrap around in Veldrid.
-            => new VeldridQuadBatch<TVertex>(this, size);
+            =>
+            new VeldridQuadBatch<TVertex>(this, size);
 
-        protected override IUniformBuffer<TData> CreateUniformBuffer<TData>()
-            => new VeldridUniformBuffer<TData>(this);
+        protected override IUniformBuffer<TData> CreateUniformBuffer<TData>() =>
+            new VeldridUniformBuffer<TData>(this);
 
-        protected override IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(int uboSize, int ssboSize)
-            => new VeldridShaderStorageBufferObject<TData>(this, uboSize, ssboSize);
+        protected override IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(
+            int uboSize,
+            int ssboSize
+        ) => new VeldridShaderStorageBufferObject<TData>(this, uboSize, ssboSize);
 
-        protected override INativeTexture CreateNativeTexture(int width, int height, bool manualMipmaps = false, TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
-                                                              Color4? initialisationColour = null)
-            => new VeldridTexture(this, width, height, manualMipmaps, filteringMode.ToSamplerFilter(), initialisationColour);
+        protected override INativeTexture CreateNativeTexture(
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+            Color4? initialisationColour = null
+        ) =>
+            new VeldridTexture(
+                this,
+                width,
+                height,
+                manualMipmaps,
+                filteringMode.ToSamplerFilter(),
+                initialisationColour
+            );
 
-        protected override INativeTexture CreateNativeVideoTexture(int width, int height)
-            => new VeldridVideoTexture(this, width, height);
+        protected override INativeTexture CreateNativeVideoTexture(int width, int height) =>
+            new VeldridVideoTexture(this, width, height);
 
         internal IStagingBuffer<T> CreateStagingBuffer<T>(uint count)
             where T : unmanaged

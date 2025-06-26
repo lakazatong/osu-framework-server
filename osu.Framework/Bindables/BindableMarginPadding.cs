@@ -13,9 +13,7 @@ namespace osu.Framework.Bindables
         protected override MarginPadding DefaultMaxValue => new MarginPadding(float.MaxValue);
 
         public BindableMarginPadding(MarginPadding defaultValue = default)
-            : base(defaultValue)
-        {
-        }
+            : base(defaultValue) { }
 
         public override void Parse(object? input, IFormatProvider provider)
         {
@@ -27,7 +25,9 @@ namespace osu.Framework.Bindables
                     string[] split = str.Trim("() ".ToCharArray()).Split(',');
 
                     if (split.Length != 4)
-                        throw new ArgumentException($"Input string was in wrong format! (expected: '(<top>, <left>, <bottom>, <right>)', actual: '{str}')");
+                        throw new ArgumentException(
+                            $"Input string was in wrong format! (expected: '(<top>, <left>, <bottom>, <right>)', actual: '{str}')"
+                        );
 
                     Value = new MarginPadding
                     {
@@ -44,23 +44,27 @@ namespace osu.Framework.Bindables
             }
         }
 
-        protected sealed override MarginPadding ClampValue(MarginPadding value, MarginPadding minValue, MarginPadding maxValue)
+        protected sealed override MarginPadding ClampValue(
+            MarginPadding value,
+            MarginPadding minValue,
+            MarginPadding maxValue
+        )
         {
             return new MarginPadding
             {
                 Top = Math.Clamp(value.Top, minValue.Top, maxValue.Top),
                 Left = Math.Clamp(value.Left, minValue.Left, maxValue.Left),
                 Bottom = Math.Clamp(value.Bottom, minValue.Bottom, maxValue.Bottom),
-                Right = Math.Clamp(value.Right, minValue.Right, maxValue.Right)
+                Right = Math.Clamp(value.Right, minValue.Right, maxValue.Right),
             };
         }
 
         protected sealed override bool IsValidRange(MarginPadding min, MarginPadding max)
         {
-            return min.Top <= max.Top &&
-                   min.Left <= max.Left &&
-                   min.Bottom <= max.Bottom &&
-                   min.Right <= max.Right;
+            return min.Top <= max.Top
+                && min.Left <= max.Left
+                && min.Bottom <= max.Bottom
+                && min.Right <= max.Right;
         }
 
         protected override Bindable<MarginPadding> CreateInstance() => new BindableMarginPadding();

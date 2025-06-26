@@ -22,7 +22,10 @@ namespace osu.Framework.Extensions
         public static byte[] ReadAllBytesToArray(this Stream stream)
         {
             if (!stream.CanSeek)
-                throw new ArgumentException($"Stream must be seekable to use this function. Consider using {nameof(ReadAllRemainingBytesToArray)} instead.", nameof(stream));
+                throw new ArgumentException(
+                    $"Stream must be seekable to use this function. Consider using {nameof(ReadAllRemainingBytesToArray)} instead.",
+                    nameof(stream)
+                );
 
             if (stream.Length >= Array.MaxLength)
                 throw new ArgumentException("The stream is too long for an array.", nameof(stream));
@@ -41,10 +44,16 @@ namespace osu.Framework.Extensions
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The full byte content.</returns>
         /// <exception cref="ArgumentException">The <paramref name="stream"/> does not allow seeking, or is too long.</exception>
-        public static Task<byte[]> ReadAllBytesToArrayAsync(this Stream stream, CancellationToken cancellationToken = default)
+        public static Task<byte[]> ReadAllBytesToArrayAsync(
+            this Stream stream,
+            CancellationToken cancellationToken = default
+        )
         {
             if (!stream.CanSeek)
-                throw new ArgumentException($"Stream must be seekable to use this function. Consider using {nameof(ReadAllRemainingBytesToArray)} instead.", nameof(stream));
+                throw new ArgumentException(
+                    $"Stream must be seekable to use this function. Consider using {nameof(ReadAllRemainingBytesToArray)} instead.",
+                    nameof(stream)
+                );
 
             if (stream.Length >= Array.MaxLength)
                 throw new ArgumentException("The stream is too long for an array.", nameof(stream));
@@ -75,7 +84,11 @@ namespace osu.Framework.Extensions
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The full byte content.</returns>
         /// <exception cref="EndOfStreamException">The <paramref name="length"/> specified exceeded the available data in the stream.</exception>
-        public static async Task<byte[]> ReadBytesToArrayAsync(this Stream stream, int length, CancellationToken cancellationToken = default)
+        public static async Task<byte[]> ReadBytesToArrayAsync(
+            this Stream stream,
+            int length,
+            CancellationToken cancellationToken = default
+        )
         {
             byte[] bytes = new byte[length];
             await stream.ReadExactlyAsync(bytes, cancellationToken).ConfigureAwait(false);
@@ -102,7 +115,10 @@ namespace osu.Framework.Extensions
         /// <param name="stream">The stream to read.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The full byte content.</returns>
-        public static async Task<byte[]> ReadAllRemainingBytesToArrayAsync(this Stream stream, CancellationToken cancellationToken = default)
+        public static async Task<byte[]> ReadAllRemainingBytesToArrayAsync(
+            this Stream stream,
+            CancellationToken cancellationToken = default
+        )
         {
             using (var ms = new MemoryStream())
             {

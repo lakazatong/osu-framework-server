@@ -27,6 +27,11 @@ namespace osu.Framework.Graphics.Rendering.Vertices
         [VertexMember(2, VertexAttribPointerType.Float)]
         public Vector2 Direction;
 
-        public readonly bool Equals(ParticleVertex2D other) => Position.Equals(other.Position) && TexturePosition.Equals(other.TexturePosition) && Colour.Equals(other.Colour) && Time.Equals(other.Time) && Direction.Equals(other.Direction);
+        public readonly bool Equals(ParticleVertex2D other) =>
+            Position.Equals(other.Position)
+            && TexturePosition.Equals(other.TexturePosition)
+            && Colour.Equals(other.Colour)
+            && Time.Equals(other.Time)
+            && Direction.Equals(other.Direction);
     }
 }

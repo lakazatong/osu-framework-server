@@ -11,11 +11,7 @@ namespace TemplateGame.Game.Tests
         {
             base.LoadComplete();
 
-            AddRange(new Drawable[]
-            {
-                new TestBrowser("TemplateGame"),
-                new CursorContainer()
-            });
+            AddRange(new Drawable[] { new TestBrowser("TemplateGame"), new CursorContainer() });
         }
 
         public override void SetHost(GameHost host)

@@ -2,12 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Localisation;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Localisation;
 
 namespace osu.Framework.Testing.Drawables
 {
@@ -34,7 +34,8 @@ namespace osu.Framework.Testing.Drawables
             set
             {
                 bool contains = Group.TestTypes.Contains(value);
-                if (contains) Show();
+                if (contains)
+                    Show();
 
                 buttonFlow.ForEach(btn => btn.Current = btn.TestType == value);
                 headerButton.Current = contains;
@@ -46,7 +47,11 @@ namespace osu.Framework.Testing.Drawables
             var tests = group.TestTypes;
 
             if (tests.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(group), tests.Length, "Type array must not be empty!");
+                throw new ArgumentOutOfRangeException(
+                    nameof(group),
+                    tests.Length,
+                    "Type array must not be empty!"
+                );
 
             Group = group;
 
@@ -57,20 +62,14 @@ namespace osu.Framework.Testing.Drawables
             {
                 Direction = FillDirection.Vertical,
                 AutoSizeAxes = Axes.Y,
-                RelativeSizeAxes = Axes.X
+                RelativeSizeAxes = Axes.X,
             };
 
-            buttonFlow.Add(headerButton = new TestButton(group.Name)
-            {
-                Action = ToggleVisibility
-            });
+            buttonFlow.Add(headerButton = new TestButton(group.Name) { Action = ToggleVisibility });
 
             foreach (var test in tests)
             {
-                buttonFlow.Add(new TestSubButton(test, 1)
-                {
-                    Action = () => loadTest(test)
-                });
+                buttonFlow.Add(new TestSubButton(test, 1) { Action = () => loadTest(test) });
             }
         }
 

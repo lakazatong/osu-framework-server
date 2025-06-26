@@ -20,7 +20,10 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestShowHide()
         {
-            AddStep("create container", () => Child = testContainer = new TestVisibilityContainer());
+            AddStep(
+                "create container",
+                () => Child = testContainer = new TestVisibilityContainer()
+            );
 
             checkHidden(true);
 
@@ -37,8 +40,15 @@ namespace osu.Framework.Tests.Visual.Containers
         [TestCase(false)]
         public void TestStartHidden(bool startHidden)
         {
-            AddStep("create container", () => Child = testContainer =
-                new TestVisibilityContainer(startHidden) { State = { Value = Visibility.Visible } });
+            AddStep(
+                "create container",
+                () =>
+                    Child = testContainer =
+                        new TestVisibilityContainer(startHidden)
+                        {
+                            State = { Value = Visibility.Visible },
+                        }
+            );
 
             checkVisible(!startHidden);
 
@@ -51,8 +61,12 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestNotStartHiddenButHidden()
         {
-            AddStep("create container", () => Child = testContainer =
-                new TestVisibilityContainer(false) { State = { Value = Visibility.Hidden } });
+            AddStep(
+                "create container",
+                () =>
+                    Child = testContainer =
+                        new TestVisibilityContainer(false) { State = { Value = Visibility.Hidden } }
+            );
 
             AddAssert("alpha above zero", () => testContainer.Alpha > 0);
 
@@ -62,21 +76,24 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestShowInCtor()
         {
-            AddStep("create container", () =>
-            {
-                var container = new TestVisibilityContainer(null);
-                container.Show();
-
-                var containingContainer = new Container
+            AddStep(
+                "create container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = testContainer = container
-                };
+                    var container = new TestVisibilityContainer(null);
+                    container.Show();
 
-                containingContainer.OnLoadComplete += _ => testContainer.Hide();
+                    var containingContainer = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = testContainer = container,
+                    };
 
-                Child = containingContainer;
-            });
+                    containingContainer.OnLoadComplete += _ => testContainer.Hide();
+
+                    Child = containingContainer;
+                }
+            );
 
             checkHidden();
         }
@@ -89,13 +106,27 @@ namespace osu.Framework.Tests.Visual.Containers
         {
             TestNestedVisibilityContainer visibility = null;
 
-            AddStep("create container", () =>
-            {
-                Child = testContainer =
-                    visibility = new TestNestedVisibilityContainer(startHidden) { State = { Value = immediatelyVisible ? Visibility.Visible : Visibility.Hidden } };
+            AddStep(
+                "create container",
+                () =>
+                {
+                    Child =
+                        testContainer =
+                        visibility =
+                            new TestNestedVisibilityContainer(startHidden)
+                            {
+                                State =
+                                {
+                                    Value = immediatelyVisible
+                                        ? Visibility.Visible
+                                        : Visibility.Hidden,
+                                },
+                            };
 
-                if (!immediatelyVisible) testContainer.Show();
-            });
+                    if (!immediatelyVisible)
+                        testContainer.Show();
+                }
+            );
 
             checkVisible(!startHidden);
 
@@ -138,14 +169,16 @@ namespace osu.Framework.Tests.Visual.Containers
             {
                 Add(nested = new TestVisibilityContainer(true, Color4.Yellow));
 
-                nested.Add(box = new Box
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(0.5f),
-                });
+                nested.Add(
+                    box = new Box
+                    {
+                        Colour = Color4.Black,
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(0.5f),
+                    }
+                );
             }
 
             protected override void PopIn()
@@ -181,11 +214,7 @@ namespace osu.Framework.Tests.Visual.Containers
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = colour ?? Color4.Cyan,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = colour ?? Color4.Cyan, RelativeSizeAxes = Axes.Both },
                 };
 
                 State.ValueChanged += _ => FireCount++;

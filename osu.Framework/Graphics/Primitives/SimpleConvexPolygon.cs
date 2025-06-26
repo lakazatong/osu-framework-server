@@ -22,6 +22,7 @@ namespace osu.Framework.Graphics.Primitives
 
         public int MaxClipVertices => vertices.Length * 2;
 
-        public override string ToString() => $"{{ {string.Join(", ", vertices.Select(v => $"({v.X}, {v.Y})"))} }}";
+        public override string ToString() =>
+            $"{{ {string.Join(", ", vertices.Select(v => $"({v.X}, {v.Y})"))} }}";
     }
 }

@@ -28,11 +28,7 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < nesting_level; i++)
                 {
-                    var box = new Box
-                    {
-                        Size = new Vector2(100),
-                        Colour = Color4.Black
-                    };
+                    var box = new Box { Size = new Vector2(100), Colour = Color4.Black };
 
                     container.Add(box);
                 }
@@ -54,19 +50,17 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < nesting_level; i++)
                 {
-                    container.Add(new Container
-                    {
-                        Size = new Vector2(100),
-                        Colour = Color4.Black,
-                        Children = new Drawable[]
+                    container.Add(
+                        new Container
                         {
-                            new Box
+                            Size = new Vector2(100),
+                            Colour = Color4.Black,
+                            Children = new Drawable[]
                             {
-                                Colour = Color4.Black,
-                                RelativeSizeAxes = Axes.Both,
+                                new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                             },
                         }
-                    });
+                    );
                 }
 
                 game.Clear();
@@ -87,7 +81,11 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < nesting_level; i++)
                 {
-                    var newContainer = new Container { Size = new Vector2(100), Colour = Color4.Black };
+                    var newContainer = new Container
+                    {
+                        Size = new Vector2(100),
+                        Colour = Color4.Black,
+                    };
 
                     target.Add(newContainer);
                     target = newContainer;
@@ -102,8 +100,6 @@ namespace osu.Framework.Benchmarks
 
         protected override Game CreateGame() => game = new TestGame();
 
-        private partial class TestGame : Game
-        {
-        }
+        private partial class TestGame : Game { }
     }
 }

@@ -26,7 +26,10 @@ namespace osu.Framework.Timing
     ///   Note that no such special handling is assured for when the source has a maximum allowable time,
     ///   since it is not known what that time is.
     /// </remarks>
-    public sealed class DecouplingFramedClock : ISourceChangeableClock, IAdjustableClock, IFrameBasedClock
+    public sealed class DecouplingFramedClock
+        : ISourceChangeableClock,
+            IAdjustableClock,
+            IFrameBasedClock
     {
         /// <summary>
         /// Whether to allow operation in decoupled mode. Defaults to <c>true</c>.
@@ -113,7 +116,8 @@ namespace osu.Framework.Timing
                 if (lastReferenceTime == null)
                     return;
 
-                double elapsedReferenceTime = (realtimeReferenceClock.CurrentTime - lastReferenceTime.Value) * Rate;
+                double elapsedReferenceTime =
+                    (realtimeReferenceClock.CurrentTime - lastReferenceTime.Value) * Rate;
 
                 currentTime += elapsedReferenceTime;
 

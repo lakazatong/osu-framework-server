@@ -1,11 +1,11 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Statistics;
 using System;
 using System.Collections.Generic;
 using osu.Framework.Development;
 using osu.Framework.Platform;
+using osu.Framework.Statistics;
 using osuTK;
 
 namespace osu.Framework.Threading
@@ -28,7 +28,9 @@ namespace osu.Framework.Threading
 
             if (window != null)
             {
-                host.Renderer.BeginFrame(new Vector2(window.ClientSize.Width, window.ClientSize.Height));
+                host.Renderer.BeginFrame(
+                    new Vector2(window.ClientSize.Width, window.ClientSize.Height)
+                );
                 host.Renderer.FinishFrame();
             }
         }
@@ -49,18 +51,19 @@ namespace osu.Framework.Threading
                 host.Renderer.ClearCurrent();
         }
 
-        internal override IEnumerable<StatisticsCounterType> StatisticsCounters => new[]
-        {
-            StatisticsCounterType.VBufBinds,
-            StatisticsCounterType.VBufOverflow,
-            StatisticsCounterType.TextureBinds,
-            StatisticsCounterType.FBORedraw,
-            StatisticsCounterType.DrawCalls,
-            StatisticsCounterType.ShaderBinds,
-            StatisticsCounterType.VerticesDraw,
-            StatisticsCounterType.VerticesUpl,
-            StatisticsCounterType.UniformUpl,
-            StatisticsCounterType.Pixels,
-        };
+        internal override IEnumerable<StatisticsCounterType> StatisticsCounters =>
+            new[]
+            {
+                StatisticsCounterType.VBufBinds,
+                StatisticsCounterType.VBufOverflow,
+                StatisticsCounterType.TextureBinds,
+                StatisticsCounterType.FBORedraw,
+                StatisticsCounterType.DrawCalls,
+                StatisticsCounterType.ShaderBinds,
+                StatisticsCounterType.VerticesDraw,
+                StatisticsCounterType.VerticesUpl,
+                StatisticsCounterType.UniformUpl,
+                StatisticsCounterType.Pixels,
+            };
     }
 }

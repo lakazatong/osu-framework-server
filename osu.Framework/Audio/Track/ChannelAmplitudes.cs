@@ -44,7 +44,11 @@ namespace osu.Framework.Audio.Track
 
         private static readonly float[] empty_array = new float[AMPLITUDES_SIZE];
 
-        public ChannelAmplitudes(float leftChannel = 0, float rightChannel = 0, float[] amplitudes = null)
+        public ChannelAmplitudes(
+            float leftChannel = 0,
+            float rightChannel = 0,
+            float[] amplitudes = null
+        )
         {
             LeftChannel = leftChannel;
             RightChannel = rightChannel;

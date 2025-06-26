@@ -11,14 +11,16 @@ namespace osu.Framework.Input.Handlers.Joystick
 {
     public class JoystickHandler : InputHandler
     {
-        private static readonly GlobalStatistic<ulong> statistic_total_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<JoystickHandler>(), "Total events");
+        private static readonly GlobalStatistic<ulong> statistic_total_events =
+            GlobalStatistics.Get<ulong>(StatisticGroupFor<JoystickHandler>(), "Total events");
 
-        public BindableFloat DeadzoneThreshold { get; } = new BindableFloat(0.1f)
-        {
-            MinValue = 0,
-            MaxValue = 0.95f,
-            Precision = 0.005f,
-        };
+        public BindableFloat DeadzoneThreshold { get; } =
+            new BindableFloat(0.1f)
+            {
+                MinValue = 0,
+                MaxValue = 0.95f,
+                Precision = 0.005f,
+            };
 
         public override string Description => "Joystick / Gamepad";
 
@@ -32,21 +34,24 @@ namespace osu.Framework.Input.Handlers.Joystick
             if (!(host.Window is ISDLWindow window))
                 return false;
 
-            Enabled.BindValueChanged(e =>
-            {
-                if (e.NewValue)
+            Enabled.BindValueChanged(
+                e =>
                 {
-                    window.JoystickButtonDown += enqueueJoystickButtonDown;
-                    window.JoystickButtonUp += enqueueJoystickButtonUp;
-                    window.JoystickAxisChanged += enqueueJoystickAxisChanged;
-                }
-                else
-                {
-                    window.JoystickButtonDown -= enqueueJoystickButtonDown;
-                    window.JoystickButtonUp -= enqueueJoystickButtonUp;
-                    window.JoystickAxisChanged -= enqueueJoystickAxisChanged;
-                }
-            }, true);
+                    if (e.NewValue)
+                    {
+                        window.JoystickButtonDown += enqueueJoystickButtonDown;
+                        window.JoystickButtonUp += enqueueJoystickButtonUp;
+                        window.JoystickAxisChanged += enqueueJoystickAxisChanged;
+                    }
+                    else
+                    {
+                        window.JoystickButtonDown -= enqueueJoystickButtonDown;
+                        window.JoystickButtonUp -= enqueueJoystickButtonUp;
+                        window.JoystickAxisChanged -= enqueueJoystickAxisChanged;
+                    }
+                },
+                true
+            );
 
             return true;
         }
@@ -58,15 +63,21 @@ namespace osu.Framework.Input.Handlers.Joystick
             statistic_total_events.Value++;
         }
 
-        private void enqueueJoystickButtonDown(JoystickButton button) => enqueueJoystickEvent(new JoystickButtonInput(button, true));
+        private void enqueueJoystickButtonDown(JoystickButton button) =>
+            enqueueJoystickEvent(new JoystickButtonInput(button, true));
 
-        private void enqueueJoystickButtonUp(JoystickButton button) => enqueueJoystickEvent(new JoystickButtonInput(button, false));
+        private void enqueueJoystickButtonUp(JoystickButton button) =>
+            enqueueJoystickEvent(new JoystickButtonInput(button, false));
 
         /// <summary>
         /// Enqueues a <see cref="JoystickAxisInput"/> taking into account the axis deadzone.
         /// </summary>
         private void enqueueJoystickAxisChanged(JoystickAxisSource source, float value) =>
-            enqueueJoystickEvent(new JoystickAxisInput(new JoystickAxis(source, RescaleByDeadzone(value, DeadzoneThreshold.Value))));
+            enqueueJoystickEvent(
+                new JoystickAxisInput(
+                    new JoystickAxis(source, RescaleByDeadzone(value, DeadzoneThreshold.Value))
+                )
+            );
 
         internal static float RescaleByDeadzone(float axisValue, float deadzoneThreshold)
         {

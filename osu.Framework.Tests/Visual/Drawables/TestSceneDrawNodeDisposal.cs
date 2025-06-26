@@ -23,57 +23,64 @@ namespace osu.Framework.Tests.Visual.Drawables
         /// Tests that all references are lost after a drawable is disposed.
         /// </summary>
         [Test]
-        public void TestBasicDrawNodeReferencesRemovedAfterDisposal() => performTest(new Box { RelativeSizeAxes = Axes.Both });
+        public void TestBasicDrawNodeReferencesRemovedAfterDisposal() =>
+            performTest(new Box { RelativeSizeAxes = Axes.Both });
 
         /// <summary>
         /// Tests that all references are lost after a composite is disposed.
         /// </summary>
         [Test]
-        public void TestCompositeDrawNodeReferencesRemovedAfterDisposal() => performTest(new NonFlattenedContainer
-        {
-            RelativeSizeAxes = Axes.Both,
-            Children = new[]
-            {
-                new Box
+        public void TestCompositeDrawNodeReferencesRemovedAfterDisposal() =>
+            performTest(
+                new NonFlattenedContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Width = 0.5f,
-                    Colour = Color4.Blue
-                },
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    X = 0.5f,
-                    Width = 0.5f,
-                    Colour = Color4.Blue
-                },
-            }
-        });
+                    Children = new[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Width = 0.5f,
+                            Colour = Color4.Blue,
+                        },
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            X = 0.5f,
+                            Width = 0.5f,
+                            Colour = Color4.Blue,
+                        },
+                    },
+                }
+            );
 
         /// <summary>
         /// Tests that all references are lost after a buffered container is disposed.
         /// </summary>
         [Test]
-        public void TestBufferedDrawNodeReferencesRemovedAfterDisposal() => performTest(new BufferedContainer
-        {
-            RelativeSizeAxes = Axes.Both,
-            Children = new[]
-            {
-                new Box
+        public void TestBufferedDrawNodeReferencesRemovedAfterDisposal() =>
+            performTest(
+                new BufferedContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Width = 0.5f,
-                    Colour = Color4.Blue
-                },
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    X = 0.5f,
-                    Width = 0.5f,
-                    Colour = Color4.Blue
-                },
-            }
-        });
+                    Children = new[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Width = 0.5f,
+                            Colour = Color4.Blue,
+                        },
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            X = 0.5f,
+                            Width = 0.5f,
+                            Colour = Color4.Blue,
+                        },
+                    },
+                }
+            );
 
         private void performTest(Drawable child)
         {
@@ -82,53 +89,65 @@ namespace osu.Framework.Tests.Visual.Drawables
             var drawableRefs = new List<WeakReference>();
 
             // Add the children to the hierarchy, and build weak-reference wrappers around them
-            AddStep("create hierarchy", () =>
-            {
-                drawableRefs.Clear();
-                buildReferencesRecursive(child);
-
-                Child = parentContainer = new NonFlattenedContainer
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Child = child
-                };
+                    drawableRefs.Clear();
+                    buildReferencesRecursive(child);
 
-                void buildReferencesRecursive(Drawable target)
-                {
-                    drawableRefs.Add(new WeakReference(target));
-
-                    if (target is CompositeDrawable compositeTarget)
+                    Child = parentContainer = new NonFlattenedContainer
                     {
-                        foreach (var c in compositeTarget.InternalChildren)
-                            buildReferencesRecursive(c);
+                        Size = new Vector2(200),
+                        Child = child,
+                    };
+
+                    void buildReferencesRecursive(Drawable target)
+                    {
+                        drawableRefs.Add(new WeakReference(target));
+
+                        if (target is CompositeDrawable compositeTarget)
+                        {
+                            foreach (var c in compositeTarget.InternalChildren)
+                                buildReferencesRecursive(c);
+                        }
                     }
                 }
-            });
+            );
 
             AddWaitStep("wait for some draw nodes", IRenderer.MAX_DRAW_NODES);
 
             // Clear the parent to ensure no references are held via drawables themselves,
             // and remove the parent to ensure that the parent maintains references to the child draw nodes
-            AddStep("clear + remove parent container", () =>
-            {
-                parentContainer.Clear();
-                Remove(parentContainer, false);
+            AddStep(
+                "clear + remove parent container",
+                () =>
+                {
+                    parentContainer.Clear();
+                    Remove(parentContainer, false);
 
-                // Lose last hard-reference to the child
-                child = null;
-            });
+                    // Lose last hard-reference to the child
+                    child = null;
+                }
+            );
 
             // Wait for all drawables to get disposed
             DisposalMarker disposalMarker = null;
-            AddStep("add disposal marker", () => AsyncDisposalQueue.Enqueue(disposalMarker = new DisposalMarker()));
+            AddStep(
+                "add disposal marker",
+                () => AsyncDisposalQueue.Enqueue(disposalMarker = new DisposalMarker())
+            );
             AddUntilStep("wait for drawables to dispose", () => disposalMarker.Disposed);
 
             // Induce the collection of drawables
-            AddStep("invoke GC", () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            });
+            AddStep(
+                "invoke GC",
+                () =>
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
+            );
 
             AddUntilStep("all drawable references lost", () => !drawableRefs.Any(r => r.IsAlive));
         }

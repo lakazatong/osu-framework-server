@@ -34,18 +34,21 @@ namespace osu.Framework.Tests.Visual.Sprites
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("load container", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "load container",
+                () =>
                 {
-                    animationContainer = new Container
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Clock = new FramedClock(clock = new ManualClock()),
-                    },
-                    timeText = new SpriteText { Text = "Animation is loading..." }
-                };
-            });
+                        animationContainer = new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Clock = new FramedClock(clock = new ManualClock()),
+                        },
+                        timeText = new SpriteText { Text = "Animation is loading..." },
+                    };
+                }
+            );
 
             loadNewAnimation();
 
@@ -55,7 +58,10 @@ namespace osu.Framework.Tests.Visual.Sprites
         [Test]
         public void TestFrameSeeking()
         {
-            AddAssert("frame count is correct", () => animation.FrameCount == TestAnimation.LOADABLE_FRAMES);
+            AddAssert(
+                "frame count is correct",
+                () => animation.FrameCount == TestAnimation.LOADABLE_FRAMES
+            );
             AddUntilStep("wait for frames to pass", () => animation.CurrentFrameIndex > 10);
             AddStep("stop animation", () => animation.Stop());
             AddAssert("is stopped", () => !animation.IsPlaying);
@@ -132,9 +138,15 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             AddStep("store position", () => posBefore = animation.PlaybackPosition);
 
-            AddStep("Set custom clock", () => animation.Clock = new FramedOffsetClock(null) { Offset = 10000 });
+            AddStep(
+                "Set custom clock",
+                () => animation.Clock = new FramedOffsetClock(null) { Offset = 10000 }
+            );
 
-            AddAssert("Animation continued playing at current position", () => animation.PlaybackPosition - posBefore < 1000);
+            AddAssert(
+                "Animation continued playing at current position",
+                () => animation.PlaybackPosition - posBefore < 1000
+            );
         }
 
         [Test]
@@ -146,7 +158,10 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             AddUntilStep("Animation is not near start", () => animation.PlaybackPosition > 1000);
 
-            AddStep("Set custom clock", () => animation.Clock = new FramedOffsetClock(null) { Offset = 10000 });
+            AddStep(
+                "Set custom clock",
+                () => animation.Clock = new FramedOffsetClock(null) { Offset = 10000 }
+            );
 
             AddAssert("Animation is not near start", () => animation.PlaybackPosition > 1000);
         }
@@ -172,7 +187,10 @@ namespace osu.Framework.Tests.Visual.Sprites
         public void TestAnimationDoesNotLoopIfDisabled()
         {
             AddStep("Seek to end", () => clock.CurrentTime = animation.Duration);
-            AddUntilStep("Animation seeked", () => animation.PlaybackPosition >= animation.Duration - 1000);
+            AddUntilStep(
+                "Animation seeked",
+                () => animation.PlaybackPosition >= animation.Duration - 1000
+            );
 
             AddWaitStep("Wait for playback", 10);
             AddAssert("Not looped", () => animation.PlaybackPosition >= animation.Duration - 1000);
@@ -183,7 +201,10 @@ namespace osu.Framework.Tests.Visual.Sprites
         {
             AddStep("Set looping", () => animation.Loop = true);
             AddStep("Seek to end", () => clock.CurrentTime = animation.Duration - 2000);
-            AddUntilStep("Animation seeked", () => animation.PlaybackPosition >= animation.Duration - 1000);
+            AddUntilStep(
+                "Animation seeked",
+                () => animation.PlaybackPosition >= animation.Duration - 1000
+            );
 
             AddWaitStep("Wait for playback", 10);
             AddUntilStep("Looped", () => animation.PlaybackPosition < animation.Duration - 1000);
@@ -208,10 +229,13 @@ namespace osu.Framework.Tests.Visual.Sprites
         {
             AddStep("set time to future", () => clock.CurrentTime = 10000);
 
-            loadNewAnimation(false, a =>
-            {
-                a.PlaybackPosition = -10000;
-            });
+            loadNewAnimation(
+                false,
+                a =>
+                {
+                    a.PlaybackPosition = -10000;
+                }
+            );
 
             AddAssert("Animation is at beginning", () => animation.PlaybackPosition < 1000);
         }
@@ -225,11 +249,14 @@ namespace osu.Framework.Tests.Visual.Sprites
             AddStep("hide animation", () => animation.Hide());
 
             AddStep("set time = 2000", () => clock.CurrentTime = 2000);
-            AddStep("goto(0) and show", () =>
-            {
-                animation.GotoFrame(0);
-                animation.Show();
-            });
+            AddStep(
+                "goto(0) and show",
+                () =>
+                {
+                    animation.GotoFrame(0);
+                    animation.Show();
+                }
+            );
 
             // Note: We won't get PlaybackPosition=0 here because the test runner increments the clock by at least 200ms per step, so 1000 is a safe value.
             AddAssert("animation restarted from 0", () => animation.PlaybackPosition < 1000);
@@ -239,10 +266,10 @@ namespace osu.Framework.Tests.Visual.Sprites
         [TestCase(48)]
         public void TestGotoFrameBeforeLoaded(int frame)
         {
-            AddStep("create new animation", () => animation = new TestAnimation(true, fontStore)
-            {
-                Loop = false
-            });
+            AddStep(
+                "create new animation",
+                () => animation = new TestAnimation(true, fontStore) { Loop = false }
+            );
             AddStep($"go to frame {frame}", () => animation.GotoFrame(frame));
 
             AddStep("load animation", () => animationContainer.Child = animation);
@@ -265,23 +292,38 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             AddAssert("animation duration is 0", () => animation.Duration == 0);
             AddAssert("animation is at start", () => animation.CurrentFrameIndex == 0);
-            AddAssert("animation is not showing frame", () => animation.ChildrenOfType<Sprite>().First().Texture == null);
+            AddAssert(
+                "animation is not showing frame",
+                () => animation.ChildrenOfType<Sprite>().First().Texture == null
+            );
 
             AddStep("add one frame back", () => animation.AddFrame(lastFrame));
-            AddAssert("animation is showing frame", () => animation.ChildrenOfType<Sprite>().First().Texture == lastFrame);
+            AddAssert(
+                "animation is showing frame",
+                () => animation.ChildrenOfType<Sprite>().First().Texture == lastFrame
+            );
         }
 
-        private void loadNewAnimation(bool startFromCurrent = true, Action<TestAnimation> postLoadAction = null)
+        private void loadNewAnimation(
+            bool startFromCurrent = true,
+            Action<TestAnimation> postLoadAction = null
+        )
         {
-            AddStep("load animation", () =>
-            {
-                animationContainer.Child = animation = new TestAnimation(startFromCurrent, fontStore)
+            AddStep(
+                "load animation",
+                () =>
                 {
-                    Loop = false,
-                };
+                    animationContainer.Child = animation = new TestAnimation(
+                        startFromCurrent,
+                        fontStore
+                    )
+                    {
+                        Loop = false,
+                    };
 
-                postLoadAction?.Invoke(animation);
-            });
+                    postLoadAction?.Invoke(animation);
+                }
+            );
 
             AddUntilStep("Wait for animation to load", () => animation.IsLoaded);
         }
@@ -295,7 +337,8 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             if (animation != null)
             {
-                timeText.Text = $"playback: {animation.PlaybackPosition:N0} current frame: {animation.CurrentFrameIndex} total frames: {animation.FramesProcessed}";
+                timeText.Text =
+                    $"playback: {animation.PlaybackPosition:N0} current frame: {animation.CurrentFrameIndex} total frames: {animation.FramesProcessed}";
             }
         }
 
@@ -315,10 +358,13 @@ namespace osu.Framework.Tests.Visual.Sprites
 
                 for (int i = 0; i < LOADABLE_FRAMES; i++)
                 {
-                    AddFrame(new Texture(fontStore.Get(null, (char)('0' + i)).AsNonNull().Texture)
-                    {
-                        ScaleAdjust = 1 + i / 40f,
-                    }, 250);
+                    AddFrame(
+                        new Texture(fontStore.Get(null, (char)('0' + i)).AsNonNull().Texture)
+                        {
+                            ScaleAdjust = 1 + i / 40f,
+                        },
+                        250
+                    );
                 }
             }
 

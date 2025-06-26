@@ -1,5 +1,5 @@
-using osu.Framework.Graphics;
 using NUnit.Framework;
+using osu.Framework.Graphics;
 
 namespace TemplateGame.Game.Tests.Visual
 {
@@ -11,10 +11,7 @@ namespace TemplateGame.Game.Tests.Visual
 
         public TestSceneSpinningBox()
         {
-            Add(new SpinningBox
-            {
-                Anchor = Anchor.Centre,
-            });
+            Add(new SpinningBox { Anchor = Anchor.Centre });
         }
     }
 }

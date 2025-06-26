@@ -22,14 +22,35 @@ namespace osu.Framework.Tests.IO
         public void OneTimeSetUp()
         {
             storage = new TemporaryNativeStorage("fontstore-test");
-            fontResourceStore = new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(Drawable).Assembly), "Resources.Fonts.Roboto");
+            fontResourceStore = new NamespacedResourceStore<byte[]>(
+                new DllResourceStore(typeof(Drawable).Assembly),
+                "Resources.Fonts.Roboto"
+            );
         }
 
         [Test]
         public void TestNestedScaleAdjust()
         {
-            using (var fontStore = new FontStore(new DummyRenderer(), new RawCachingGlyphStore(fontResourceStore, "Roboto-Regular") { CacheStorage = storage }, scaleAdjust: 100))
-            using (var nestedFontStore = new FontStore(new DummyRenderer(), new RawCachingGlyphStore(fontResourceStore, "Roboto-Bold") { CacheStorage = storage }, 10))
+            using (
+                var fontStore = new FontStore(
+                    new DummyRenderer(),
+                    new RawCachingGlyphStore(fontResourceStore, "Roboto-Regular")
+                    {
+                        CacheStorage = storage,
+                    },
+                    scaleAdjust: 100
+                )
+            )
+            using (
+                var nestedFontStore = new FontStore(
+                    new DummyRenderer(),
+                    new RawCachingGlyphStore(fontResourceStore, "Roboto-Bold")
+                    {
+                        CacheStorage = storage,
+                    },
+                    10
+                )
+            )
             {
                 fontStore.AddStore(nestedFontStore);
 

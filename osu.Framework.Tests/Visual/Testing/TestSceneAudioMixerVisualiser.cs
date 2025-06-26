@@ -15,7 +15,8 @@ namespace osu.Framework.Tests.Visual.Testing
 {
     public partial class TestSceneAudioMixerVisualiser : FrameworkTestScene
     {
-        private Container<TestAudioPlayingSource> mixedSources = new Container<TestAudioPlayingSource>();
+        private Container<TestAudioPlayingSource> mixedSources =
+            new Container<TestAudioPlayingSource>();
         private TestAudioPlayingSource globalSource;
 
         [BackgroundDependencyLoader]
@@ -27,7 +28,7 @@ namespace osu.Framework.Tests.Visual.Testing
             {
                 globalSource = new TestAudioPlayingSource(false),
                 mixedSources = new Container<TestAudioPlayingSource>(),
-                visualiser = new AudioMixerVisualiser()
+                visualiser = new AudioMixerVisualiser(),
             };
 
             visualiser.Show();
@@ -39,12 +40,15 @@ namespace osu.Framework.Tests.Visual.Testing
 
             addButtonsForSource("global", globalSource);
 
-            AddStep("add mixer", () =>
-            {
-                var source = new TestAudioPlayingSource(true);
-                mixedSources.Add(source);
-                addButtonsForSource($"mixer {mixedSources.Count}", source);
-            });
+            AddStep(
+                "add mixer",
+                () =>
+                {
+                    var source = new TestAudioPlayingSource(true);
+                    mixedSources.Add(source);
+                    addButtonsForSource($"mixer {mixedSources.Count}", source);
+                }
+            );
         }
 
         private void addButtonsForSource(string name, TestAudioPlayingSource source)
@@ -79,7 +83,7 @@ namespace osu.Framework.Tests.Visual.Testing
                     InternalChild = new DrawableAudioMixer
                     {
                         Name = "drawable mixer",
-                        Children = new Drawable[] { track, sample }
+                        Children = new Drawable[] { track, sample },
                     };
                 }
                 else
@@ -87,7 +91,9 @@ namespace osu.Framework.Tests.Visual.Testing
             }
 
             public void PlayTrack() => Schedule(() => track.Start());
+
             public void StopTrack() => Schedule(() => track.Stop());
+
             public void PlaySample() => Schedule(() => sample.Play());
         }
     }

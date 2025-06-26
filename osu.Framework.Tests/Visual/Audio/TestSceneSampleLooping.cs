@@ -23,11 +23,14 @@ namespace osu.Framework.Tests.Visual.Audio
         public void SetUpSteps()
         {
             AddUntilStep("audio device ready", () => audioManager.IsLoaded);
-            AddStep("create looping sample", () =>
-            {
-                sample?.Dispose();
-                sample = audioManager.Samples.Get("tone.wav");
-            });
+            AddStep(
+                "create looping sample",
+                () =>
+                {
+                    sample?.Dispose();
+                    sample = audioManager.Samples.Get("tone.wav");
+                }
+            );
         }
 
         [Test]
@@ -78,15 +81,18 @@ namespace osu.Framework.Tests.Visual.Audio
 
         private void playAndCheckSample()
         {
-            AddStep("play sample", () =>
-            {
-                channel = sample.GetChannel();
-                channel.Looping = true;
+            AddStep(
+                "play sample",
+                () =>
+                {
+                    channel = sample.GetChannel();
+                    channel.Looping = true;
 
-                // reduce volume of the tone due to how loud it normally is.
-                channel.Volume.Value = 0.05;
-                channel.Play();
-            });
+                    // reduce volume of the tone due to how loud it normally is.
+                    channel.Volume.Value = 0.05;
+                    channel.Play();
+                }
+            );
 
             // ensures that it is in fact looping given that the loaded sample length is very short.
             AddWaitStep("wait", 10);

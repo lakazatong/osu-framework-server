@@ -9,10 +9,13 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
     [Generator]
     public class HandleInputSourceGenerator : AbstractIncrementalGenerator
     {
-        protected override IncrementalSemanticTarget CreateSemanticTarget(ClassDeclarationSyntax node, SemanticModel semanticModel)
-            => new HandleInputSemanticTarget(node, semanticModel);
+        protected override IncrementalSemanticTarget CreateSemanticTarget(
+            ClassDeclarationSyntax node,
+            SemanticModel semanticModel
+        ) => new HandleInputSemanticTarget(node, semanticModel);
 
-        protected override IncrementalSourceEmitter CreateSourceEmitter(IncrementalSemanticTarget target)
-            => new HandleInputSourceEmitter(target);
+        protected override IncrementalSourceEmitter CreateSourceEmitter(
+            IncrementalSemanticTarget target
+        ) => new HandleInputSourceEmitter(target);
     }
 }

@@ -9,10 +9,13 @@ namespace osu.Framework.SourceGeneration.Generators.LongRunningLoad
     [Generator]
     public class LongRunningLoadSourceGenerator : AbstractIncrementalGenerator
     {
-        protected override IncrementalSemanticTarget CreateSemanticTarget(ClassDeclarationSyntax node, SemanticModel semanticModel)
-            => new LongRunningLoadSemanticTarget(node, semanticModel);
+        protected override IncrementalSemanticTarget CreateSemanticTarget(
+            ClassDeclarationSyntax node,
+            SemanticModel semanticModel
+        ) => new LongRunningLoadSemanticTarget(node, semanticModel);
 
-        protected override IncrementalSourceEmitter CreateSourceEmitter(IncrementalSemanticTarget target)
-            => new LongRunningLoadSourceEmitter(target);
+        protected override IncrementalSourceEmitter CreateSourceEmitter(
+            IncrementalSemanticTarget target
+        ) => new LongRunningLoadSourceEmitter(target);
     }
 }

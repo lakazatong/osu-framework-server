@@ -18,8 +18,10 @@ namespace osu.Framework.Graphics
         /// </summary>
         internal static class HandleInputCache
         {
-            private static readonly ConcurrentDictionary<Type, bool> positional_cached_values = new ConcurrentDictionary<Type, bool>();
-            private static readonly ConcurrentDictionary<Type, bool> non_positional_cached_values = new ConcurrentDictionary<Type, bool>();
+            private static readonly ConcurrentDictionary<Type, bool> positional_cached_values =
+                new ConcurrentDictionary<Type, bool>();
+            private static readonly ConcurrentDictionary<Type, bool> non_positional_cached_values =
+                new ConcurrentDictionary<Type, bool>();
 
             private static readonly string[] positional_input_methods =
             {
@@ -41,7 +43,7 @@ namespace osu.Framework.Graphics
                 nameof(OnTouchMove),
                 nameof(OnTouchUp),
                 nameof(OnTabletPenButtonPress),
-                nameof(OnTabletPenButtonRelease)
+                nameof(OnTabletPenButtonRelease),
             };
 
             private static readonly string[] non_positional_input_methods =
@@ -57,7 +59,7 @@ namespace osu.Framework.Graphics
                 nameof(OnTabletAuxiliaryButtonPress),
                 nameof(OnTabletAuxiliaryButtonRelease),
                 nameof(OnMidiDown),
-                nameof(OnMidiUp)
+                nameof(OnMidiUp),
             };
 
             private static readonly Type[] positional_input_interfaces =
@@ -87,7 +89,10 @@ namespace osu.Framework.Graphics
             public static bool RequestsPositionalInput(Drawable drawable)
             {
                 // ReSharper disable once SuspiciousTypeConversion.Global (this is used by source generators, but only in release builds).
-                if (drawable is ISourceGeneratedHandleInputCache sgInput && sgInput.KnownType == drawable.GetType())
+                if (
+                    drawable is ISourceGeneratedHandleInputCache sgInput
+                    && sgInput.KnownType == drawable.GetType()
+                )
                     return sgInput.RequestsPositionalInput;
 
                 return getViaReflection(drawable, positional_cached_values, true);
@@ -96,13 +101,20 @@ namespace osu.Framework.Graphics
             public static bool RequestsNonPositionalInput(Drawable drawable)
             {
                 // ReSharper disable once SuspiciousTypeConversion.Global (this is used by source generators, but only in release builds).
-                if (drawable is ISourceGeneratedHandleInputCache sgInput && sgInput.KnownType == drawable.GetType())
+                if (
+                    drawable is ISourceGeneratedHandleInputCache sgInput
+                    && sgInput.KnownType == drawable.GetType()
+                )
                     return sgInput.RequestsNonPositionalInput;
 
                 return getViaReflection(drawable, non_positional_cached_values, false);
             }
 
-            private static bool getViaReflection(Drawable drawable, ConcurrentDictionary<Type, bool> cache, bool positional)
+            private static bool getViaReflection(
+                Drawable drawable,
+                ConcurrentDictionary<Type, bool> cache,
+                bool positional
+            )
             {
                 var type = drawable.GetType();
 
@@ -117,12 +129,17 @@ namespace osu.Framework.Graphics
 
             private static bool computeViaReflection(Type type, bool positional)
             {
-                string[] inputMethods = positional ? positional_input_methods : non_positional_input_methods;
+                string[] inputMethods = positional
+                    ? positional_input_methods
+                    : non_positional_input_methods;
 
                 foreach (string inputMethod in inputMethods)
                 {
                     // check for any input method overrides which are at a higher level than drawable.
-                    var method = type.GetMethod(inputMethod, BindingFlags.Instance | BindingFlags.NonPublic);
+                    var method = type.GetMethod(
+                        inputMethod,
+                        BindingFlags.Instance | BindingFlags.NonPublic
+                    );
 
                     Debug.Assert(method != null);
 
@@ -130,7 +147,9 @@ namespace osu.Framework.Graphics
                         return true;
                 }
 
-                var inputInterfaces = positional ? positional_input_interfaces : non_positional_input_interfaces;
+                var inputInterfaces = positional
+                    ? positional_input_interfaces
+                    : non_positional_input_interfaces;
 
                 foreach (var inputInterface in inputInterfaces)
                 {
@@ -139,7 +158,9 @@ namespace osu.Framework.Graphics
                         return true;
                 }
 
-                string[] inputProperties = positional ? positional_input_properties : non_positional_input_properties;
+                string[] inputProperties = positional
+                    ? positional_input_properties
+                    : non_positional_input_properties;
 
                 foreach (string inputProperty in inputProperties)
                 {

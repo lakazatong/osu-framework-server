@@ -57,9 +57,7 @@ namespace osu.Framework.Benchmarks
         {
             [UsedImplicitly] // params used implicitly
             [BackgroundDependencyLoader]
-            private void load(Game game, TextureStore textures, AudioManager audio)
-            {
-            }
+            private void load(Game game, TextureStore textures, AudioManager audio) { }
         }
 
         private partial class TestCachedReceiver : Drawable
@@ -74,8 +72,6 @@ namespace osu.Framework.Benchmarks
             private FrameworkDebugConfigManager frameworkDebugConfigManager { get; set; } = null!;
         }
 
-        private partial class TestGame : Game
-        {
-        }
+        private partial class TestGame : Game { }
     }
 }

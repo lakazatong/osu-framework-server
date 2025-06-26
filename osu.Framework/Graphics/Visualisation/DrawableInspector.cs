@@ -15,7 +15,8 @@ namespace osu.Framework.Graphics.Visualisation
     internal partial class DrawableInspector : VisibilityContainer
     {
         [Cached]
-        public Bindable<Drawable> InspectedDrawable { get; private set; } = new Bindable<Drawable>();
+        public Bindable<Drawable> InspectedDrawable { get; private set; } =
+            new Bindable<Drawable>();
 
         private const float width = 600;
 
@@ -33,11 +34,7 @@ namespace osu.Framework.Graphics.Visualisation
             Child = content = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                RowDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension()
-                },
+                RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension() },
                 ColumnDimensions = new[] { new Dimension() },
                 Content = new[]
                 {
@@ -47,12 +44,8 @@ namespace osu.Framework.Graphics.Visualisation
                         {
                             RelativeSizeAxes = Axes.X,
                             Height = 20,
-                            Margin = new MarginPadding
-                            {
-                                Horizontal = 10,
-                                Vertical = 5
-                            },
-                            Items = Enum.GetValues<Tab>().ToList()
+                            Margin = new MarginPadding { Horizontal = 10, Vertical = 5 },
+                            Items = Enum.GetValues<Tab>().ToList(),
                         },
                         tabContentContainer = new Container
                         {
@@ -60,11 +53,11 @@ namespace osu.Framework.Graphics.Visualisation
                             Children = new Drawable[]
                             {
                                 propertyDisplay = new PropertyDisplay(),
-                                transformDisplay = new TransformDisplay()
-                            }
-                        }
-                    }
-                }.Invert()
+                                transformDisplay = new TransformDisplay(),
+                            },
+                        },
+                    },
+                }.Invert(),
             };
         }
 
@@ -108,7 +101,7 @@ namespace osu.Framework.Graphics.Visualisation
         private enum Tab
         {
             Properties,
-            Transforms
+            Transforms,
         }
     }
 }

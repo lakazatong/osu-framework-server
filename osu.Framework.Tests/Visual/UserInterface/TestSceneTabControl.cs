@@ -43,127 +43,173 @@ namespace osu.Framework.Tests.Visual.UserInterface
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Clear();
-
-            Add(tabControlContainer = new FillFlowContainer
+        public void Setup() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Direction = FillDirection.Full,
-                Spacing = new Vector2(50),
-                Children = new Drawable[]
-                {
-                    simpleTabcontrol = new StyledTabControl
+                Clear();
+
+                Add(
+                    tabControlContainer = new FillFlowContainer
                     {
-                        Size = new Vector2(200, 30),
-                    },
-                    simpleTabcontrolNoSwitchOnRemove = new StyledTabControl
-                    {
-                        Size = new Vector2(200, 30),
-                        SwitchTabOnRemove = false
-                    },
-                    multilineTabControl = new StyledMultilineTabControl
-                    {
-                        Size = new Vector2(200, 60),
-                    },
-                    pinnedAndAutoSort = new StyledTabControl
-                    {
-                        Size = new Vector2(200, 30),
-                        AutoSort = true
-                    },
-                    platformActionContainer = new PlatformActionContainer
-                    {
-                        RelativeSizeAxes = Axes.None,
-                        Size = new Vector2(200, 30),
-                        Child = switchingTabControl = new StyledTabControl
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Full,
+                        Spacing = new Vector2(50),
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            IsSwitchable = true,
-                        }
-                    },
-                    removeAllTabControl = new StyledTabControl
-                    {
-                        Size = new Vector2(200, 30)
-                    },
-                    withoutDropdownTabControl = new StyledTabControlWithoutDropdown
-                    {
-                        Size = new Vector2(200, 30)
-                    },
-                    basicTabControl = new BasicTabControl<TestEnum?>
-                    {
-                        Size = new Vector2(200, 20)
+                            simpleTabcontrol = new StyledTabControl { Size = new Vector2(200, 30) },
+                            simpleTabcontrolNoSwitchOnRemove = new StyledTabControl
+                            {
+                                Size = new Vector2(200, 30),
+                                SwitchTabOnRemove = false,
+                            },
+                            multilineTabControl = new StyledMultilineTabControl
+                            {
+                                Size = new Vector2(200, 60),
+                            },
+                            pinnedAndAutoSort = new StyledTabControl
+                            {
+                                Size = new Vector2(200, 30),
+                                AutoSort = true,
+                            },
+                            platformActionContainer = new PlatformActionContainer
+                            {
+                                RelativeSizeAxes = Axes.None,
+                                Size = new Vector2(200, 30),
+                                Child = switchingTabControl =
+                                    new StyledTabControl
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        IsSwitchable = true,
+                                    },
+                            },
+                            removeAllTabControl = new StyledTabControl
+                            {
+                                Size = new Vector2(200, 30),
+                            },
+                            withoutDropdownTabControl = new StyledTabControlWithoutDropdown
+                            {
+                                Size = new Vector2(200, 30),
+                            },
+                            basicTabControl = new BasicTabControl<TestEnum?>
+                            {
+                                Size = new Vector2(200, 20),
+                            },
+                        },
                     }
+                );
+
+                foreach (var item in items)
+                {
+                    simpleTabcontrol.AddItem(item);
+                    simpleTabcontrolNoSwitchOnRemove.AddItem(item);
+                    multilineTabControl.AddItem(item);
+                    switchingTabControl.AddItem(item);
+                    withoutDropdownTabControl.AddItem(item);
+                    basicTabControl.AddItem(item);
                 }
+
+                items.Take(7).ForEach(item => pinnedAndAutoSort.AddItem(item));
+                pinnedAndAutoSort.PinItem(TestEnum.Test5);
             });
-
-            foreach (var item in items)
-            {
-                simpleTabcontrol.AddItem(item);
-                simpleTabcontrolNoSwitchOnRemove.AddItem(item);
-                multilineTabControl.AddItem(item);
-                switchingTabControl.AddItem(item);
-                withoutDropdownTabControl.AddItem(item);
-                basicTabControl.AddItem(item);
-            }
-
-            items.Take(7).ForEach(item => pinnedAndAutoSort.AddItem(item));
-            pinnedAndAutoSort.PinItem(TestEnum.Test5);
-        });
 
         [Test]
         public void Basic()
         {
-            var nextTest = new Func<TestEnum>(() => items.FirstOrDefault(test => !pinnedAndAutoSort.Items.Contains(test)));
+            var nextTest = new Func<TestEnum>(() =>
+                items.FirstOrDefault(test => !pinnedAndAutoSort.Items.Contains(test))
+            );
 
             Stack<TestEnum> pinned = new Stack<TestEnum>();
 
-            AddStep("AddItem", () =>
-            {
-                var item = nextTest.Invoke();
-                if (!pinnedAndAutoSort.Items.Contains(item))
-                    pinnedAndAutoSort.AddItem(item);
-            });
-
-            AddStep("RemoveItem", () =>
-            {
-                if (pinnedAndAutoSort.Items.Any())
+            AddStep(
+                "AddItem",
+                () =>
                 {
-                    pinnedAndAutoSort.RemoveItem(pinnedAndAutoSort.Items.First());
+                    var item = nextTest.Invoke();
+                    if (!pinnedAndAutoSort.Items.Contains(item))
+                        pinnedAndAutoSort.AddItem(item);
                 }
-            });
+            );
 
-            AddStep("PinItem", () =>
-            {
-                var item = nextTest.Invoke();
-
-                if (!pinnedAndAutoSort.Items.Contains(item))
+            AddStep(
+                "RemoveItem",
+                () =>
                 {
-                    pinned.Push(item);
-                    pinnedAndAutoSort.AddItem(item);
-                    pinnedAndAutoSort.PinItem(item);
+                    if (pinnedAndAutoSort.Items.Any())
+                    {
+                        pinnedAndAutoSort.RemoveItem(pinnedAndAutoSort.Items.First());
+                    }
                 }
-            });
+            );
 
-            AddStep("UnpinItem", () =>
-            {
-                if (pinned.Count > 0) pinnedAndAutoSort.UnpinItem(pinned.Pop());
-            });
+            AddStep(
+                "PinItem",
+                () =>
+                {
+                    var item = nextTest.Invoke();
 
-            AddStep("Set first tab", () => switchingTabControl.Current.Value = switchingTabControl.Items.First());
-            AddStep("Switch forward", () => platformActionContainer.TriggerPressed(PlatformAction.DocumentNext));
-            AddAssert("Ensure second tab", () => switchingTabControl.Current.Value == switchingTabControl.Items.ElementAt(1));
+                    if (!pinnedAndAutoSort.Items.Contains(item))
+                    {
+                        pinned.Push(item);
+                        pinnedAndAutoSort.AddItem(item);
+                        pinnedAndAutoSort.PinItem(item);
+                    }
+                }
+            );
 
-            AddStep("Switch backward", () => platformActionContainer.TriggerPressed(PlatformAction.DocumentPrevious));
-            AddAssert("Ensure first Tab", () => switchingTabControl.Current.Value == switchingTabControl.Items.First());
+            AddStep(
+                "UnpinItem",
+                () =>
+                {
+                    if (pinned.Count > 0)
+                        pinnedAndAutoSort.UnpinItem(pinned.Pop());
+                }
+            );
 
-            AddStep("Switch backward", () => platformActionContainer.TriggerPressed(PlatformAction.DocumentPrevious));
-            AddAssert("Ensure last tab", () => switchingTabControl.Current.Value == switchingTabControl.Items.Last());
+            AddStep(
+                "Set first tab",
+                () => switchingTabControl.Current.Value = switchingTabControl.Items.First()
+            );
+            AddStep(
+                "Switch forward",
+                () => platformActionContainer.TriggerPressed(PlatformAction.DocumentNext)
+            );
+            AddAssert(
+                "Ensure second tab",
+                () => switchingTabControl.Current.Value == switchingTabControl.Items.ElementAt(1)
+            );
 
-            AddStep("Switch forward", () => platformActionContainer.TriggerPressed(PlatformAction.DocumentNext));
-            AddAssert("Ensure first tab", () => switchingTabControl.Current.Value == switchingTabControl.Items.First());
+            AddStep(
+                "Switch backward",
+                () => platformActionContainer.TriggerPressed(PlatformAction.DocumentPrevious)
+            );
+            AddAssert(
+                "Ensure first Tab",
+                () => switchingTabControl.Current.Value == switchingTabControl.Items.First()
+            );
 
-            AddStep("Add all items", () => items.ForEach(item => removeAllTabControl.AddItem(item)));
+            AddStep(
+                "Switch backward",
+                () => platformActionContainer.TriggerPressed(PlatformAction.DocumentPrevious)
+            );
+            AddAssert(
+                "Ensure last tab",
+                () => switchingTabControl.Current.Value == switchingTabControl.Items.Last()
+            );
+
+            AddStep(
+                "Switch forward",
+                () => platformActionContainer.TriggerPressed(PlatformAction.DocumentNext)
+            );
+            AddAssert(
+                "Ensure first tab",
+                () => switchingTabControl.Current.Value == switchingTabControl.Items.First()
+            );
+
+            AddStep(
+                "Add all items",
+                () => items.ForEach(item => removeAllTabControl.AddItem(item))
+            );
             AddAssert("Ensure all items", () => removeAllTabControl.Items.Count == items.Length);
 
             AddStep("Remove all items", () => removeAllTabControl.Clear());
@@ -173,8 +219,14 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("Remove all items", () => withoutDropdownTabControl.Clear());
             AddAssert("Ensure no items", () => !withoutDropdownTabControl.Items.Any());
 
-            AddAssert("Ensure not all items visible on singleline", () => simpleTabcontrol.VisibleItems.Count() < items.Length);
-            AddAssert("Ensure all items visible on multiline", () => multilineTabControl.VisibleItems.Count() == items.Length);
+            AddAssert(
+                "Ensure not all items visible on singleline",
+                () => simpleTabcontrol.VisibleItems.Count() < items.Length
+            );
+            AddAssert(
+                "Ensure all items visible on multiline",
+                () => multilineTabControl.VisibleItems.Count() == items.Length
+            );
         }
 
         [Test]
@@ -195,23 +247,23 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             Bindable<TestEnum?> bindable;
 
-            AddStep("add tabcontrol", () =>
-            {
-                bindable = new Bindable<TestEnum?> { Value = TestEnum.Test2 };
-
-                simpleTabcontrol = new StyledTabControl
+            AddStep(
+                "add tabcontrol",
+                () =>
                 {
-                    Size = new Vector2(200, 30)
-                };
+                    bindable = new Bindable<TestEnum?> { Value = TestEnum.Test2 };
 
-                foreach (var item in items)
-                    simpleTabcontrol.AddItem(item);
+                    simpleTabcontrol = new StyledTabControl { Size = new Vector2(200, 30) };
 
-                bindable.Disabled = true;
-                simpleTabcontrol.Current = bindable;
+                    foreach (var item in items)
+                        simpleTabcontrol.AddItem(item);
 
-                Child = simpleTabcontrol;
-            });
+                    bindable.Disabled = true;
+                    simpleTabcontrol.Current = bindable;
+
+                    Child = simpleTabcontrol;
+                }
+            );
 
             AddAssert("test2 selected", () => simpleTabcontrol.SelectedTab.Value == TestEnum.Test2);
         }
@@ -219,22 +271,28 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestClicksBlockedWhenBindableDisabled()
         {
-            AddStep("add tabcontrol", () =>
-            {
-                Child = simpleTabcontrol = new StyledTabControl { Size = new Vector2(200, 30) };
-
-                foreach (var item in items)
-                    simpleTabcontrol.AddItem(item);
-
-                simpleTabcontrol.Current = new Bindable<TestEnum?>
+            AddStep(
+                "add tabcontrol",
+                () =>
                 {
-                    Value = TestEnum.Test0,
-                    Disabled = true
-                };
-            });
+                    Child = simpleTabcontrol = new StyledTabControl { Size = new Vector2(200, 30) };
+
+                    foreach (var item in items)
+                        simpleTabcontrol.AddItem(item);
+
+                    simpleTabcontrol.Current = new Bindable<TestEnum?>
+                    {
+                        Value = TestEnum.Test0,
+                        Disabled = true,
+                    };
+                }
+            );
 
             AddStep("click a tab", () => simpleTabcontrol.TabMap[TestEnum.Test2].TriggerClick());
-            AddAssert("test0 still selected", () => simpleTabcontrol.SelectedTab.Value == TestEnum.Test0);
+            AddAssert(
+                "test0 still selected",
+                () => simpleTabcontrol.SelectedTab.Value == TestEnum.Test0
+            );
         }
 
         [Test]
@@ -252,8 +310,14 @@ namespace osu.Framework.Tests.Visual.UserInterface
         public void SelectNull(bool autoSort)
         {
             AddStep($"Set autosort to {autoSort}", () => simpleTabcontrol.AutoSort = autoSort);
-            AddStep("select item 1", () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.ElementAt(1));
-            AddAssert("item 1 is selected", () => simpleTabcontrol.Current.Value == simpleTabcontrol.Items.ElementAt(1));
+            AddStep(
+                "select item 1",
+                () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.ElementAt(1)
+            );
+            AddAssert(
+                "item 1 is selected",
+                () => simpleTabcontrol.Current.Value == simpleTabcontrol.Items.ElementAt(1)
+            );
             AddStep("select item null", () => simpleTabcontrol.Current.Value = null);
             AddAssert("null is selected", () => simpleTabcontrol.Current.Value == null);
         }
@@ -264,11 +328,16 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("Remove test3", () => simpleTabcontrol.RemoveItem(TestEnum.Test3));
             AddAssert("Test 4 is visible", () => simpleTabcontrol.TabMap[TestEnum.Test4].IsPresent);
 
-            AddUntilStep("Remove all visible items", () =>
-            {
-                simpleTabcontrol.RemoveItem(simpleTabcontrol.Items.First(d => simpleTabcontrol.TabMap[d].IsPresent));
-                return !simpleTabcontrol.Dropdown.Items.Any();
-            });
+            AddUntilStep(
+                "Remove all visible items",
+                () =>
+                {
+                    simpleTabcontrol.RemoveItem(
+                        simpleTabcontrol.Items.First(d => simpleTabcontrol.TabMap[d].IsPresent)
+                    );
+                    return !simpleTabcontrol.Dropdown.Items.Any();
+                }
+            );
         }
 
         [Test]
@@ -276,17 +345,32 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             AddStep("Select tab 2", () => simpleTabcontrol.Current.Value = TestEnum.Test2);
             AddStep("Remove tab 2", () => simpleTabcontrol.RemoveItem(TestEnum.Test2));
-            AddAssert("Ensure selection switches to next tab", () => simpleTabcontrol.SelectedTab.Value == TestEnum.Test3);
+            AddAssert(
+                "Ensure selection switches to next tab",
+                () => simpleTabcontrol.SelectedTab.Value == TestEnum.Test3
+            );
 
-            AddStep("Select last tab", () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.Last());
-            AddStep("Remove selected tab", () => simpleTabcontrol.RemoveItem(simpleTabcontrol.SelectedTab.Value));
-            AddAssert("Ensure selection switches to previous tab", () => simpleTabcontrol.SelectedTab.Value == simpleTabcontrol.Items.Last());
+            AddStep(
+                "Select last tab",
+                () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.Last()
+            );
+            AddStep(
+                "Remove selected tab",
+                () => simpleTabcontrol.RemoveItem(simpleTabcontrol.SelectedTab.Value)
+            );
+            AddAssert(
+                "Ensure selection switches to previous tab",
+                () => simpleTabcontrol.SelectedTab.Value == simpleTabcontrol.Items.Last()
+            );
 
-            AddStep("Remove all tabs", () =>
-            {
-                var itemsForDelete = new List<TestEnum?>(simpleTabcontrol.Items);
-                itemsForDelete.ForEach(item => simpleTabcontrol.RemoveItem(item));
-            });
+            AddStep(
+                "Remove all tabs",
+                () =>
+                {
+                    var itemsForDelete = new List<TestEnum?>(simpleTabcontrol.Items);
+                    itemsForDelete.ForEach(item => simpleTabcontrol.RemoveItem(item));
+                }
+            );
             AddAssert("Ensure selected tab is null", () => simpleTabcontrol.SelectedTab == null);
         }
 
@@ -296,44 +380,93 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestRemovingSelectedTabDoesNotSwitchSelectionIfNotSwitchTabOnRemove()
         {
-            AddStep("Select tab 2", () => simpleTabcontrolNoSwitchOnRemove.Current.Value = TestEnum.Test2);
-            AddStep("Remove tab 2", () => simpleTabcontrolNoSwitchOnRemove.RemoveItem(TestEnum.Test2));
-            AddAssert("Ensure has not switched", () => simpleTabcontrolNoSwitchOnRemove.SelectedTab.Value == TestEnum.Test2);
+            AddStep(
+                "Select tab 2",
+                () => simpleTabcontrolNoSwitchOnRemove.Current.Value = TestEnum.Test2
+            );
+            AddStep(
+                "Remove tab 2",
+                () => simpleTabcontrolNoSwitchOnRemove.RemoveItem(TestEnum.Test2)
+            );
+            AddAssert(
+                "Ensure has not switched",
+                () => simpleTabcontrolNoSwitchOnRemove.SelectedTab.Value == TestEnum.Test2
+            );
         }
 
         [Test]
         public void TestRemovingUnswitchableTab()
         {
-            AddStep("Set last tab unswitchable", () => ((StyledTabControl.TestTabItem)simpleTabcontrol.SwitchableTabs.Last()).SetSwitchable(false));
+            AddStep(
+                "Set last tab unswitchable",
+                () =>
+                    (
+                        (StyledTabControl.TestTabItem)simpleTabcontrol.SwitchableTabs.Last()
+                    ).SetSwitchable(false)
+            );
 
-            AddStep("Select last tab", () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.Last());
-            AddStep("Remove selected tab", () => simpleTabcontrol.RemoveItem(simpleTabcontrol.SelectedTab.Value));
-            AddAssert("Ensure selection switches to previous tab", () => simpleTabcontrol.SelectedTab.Value == simpleTabcontrol.Items.Last());
+            AddStep(
+                "Select last tab",
+                () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.Last()
+            );
+            AddStep(
+                "Remove selected tab",
+                () => simpleTabcontrol.RemoveItem(simpleTabcontrol.SelectedTab.Value)
+            );
+            AddAssert(
+                "Ensure selection switches to previous tab",
+                () => simpleTabcontrol.SelectedTab.Value == simpleTabcontrol.Items.Last()
+            );
 
-            AddStep("Set first tab unswitchable", () => ((StyledTabControl.TestTabItem)simpleTabcontrol.SwitchableTabs.First()).SetSwitchable(false));
+            AddStep(
+                "Set first tab unswitchable",
+                () =>
+                    (
+                        (StyledTabControl.TestTabItem)simpleTabcontrol.SwitchableTabs.First()
+                    ).SetSwitchable(false)
+            );
 
-            AddStep("Select first tab", () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.First());
-            AddStep("Remove selected tab", () => simpleTabcontrol.RemoveItem(simpleTabcontrol.SelectedTab.Value));
-            AddAssert("Ensure selection switches to next tab", () => simpleTabcontrol.SelectedTab.Value == simpleTabcontrol.Items.First());
+            AddStep(
+                "Select first tab",
+                () => simpleTabcontrol.Current.Value = simpleTabcontrol.Items.First()
+            );
+            AddStep(
+                "Remove selected tab",
+                () => simpleTabcontrol.RemoveItem(simpleTabcontrol.SelectedTab.Value)
+            );
+            AddAssert(
+                "Ensure selection switches to next tab",
+                () => simpleTabcontrol.SelectedTab.Value == simpleTabcontrol.Items.First()
+            );
         }
 
         [Test]
         public void TestUnswitchableNotSelectedOnRemoveAll()
         {
-            AddStep("Set middle tab unswitchable", () => ((StyledTabControl.TestTabItem)simpleTabcontrol.SwitchableTabs.Skip(5).First()).SetSwitchable(false));
+            AddStep(
+                "Set middle tab unswitchable",
+                () =>
+                    (
+                        (StyledTabControl.TestTabItem)
+                            simpleTabcontrol.SwitchableTabs.Skip(5).First()
+                    ).SetSwitchable(false)
+            );
 
-            AddStep("Remove all switchable tabs", () =>
-            {
-                var itemsForDelete = new List<TestEnum?>();
-
-                foreach (var kvp in simpleTabcontrol.TabMap)
+            AddStep(
+                "Remove all switchable tabs",
+                () =>
                 {
-                    if (kvp.Value.IsSwitchable)
-                        itemsForDelete.Add(kvp.Key);
-                }
+                    var itemsForDelete = new List<TestEnum?>();
 
-                itemsForDelete.ForEach(item => simpleTabcontrol.RemoveItem(item));
-            });
+                    foreach (var kvp in simpleTabcontrol.TabMap)
+                    {
+                        if (kvp.Value.IsSwitchable)
+                            itemsForDelete.Add(kvp.Key);
+                    }
+
+                    itemsForDelete.ForEach(item => simpleTabcontrol.RemoveItem(item));
+                }
+            );
 
             AddAssert("Unswitchable tab still present", () => simpleTabcontrol.Items.Count == 1);
             AddAssert("Ensure selected tab is null", () => simpleTabcontrol.SelectedTab == null);
@@ -344,15 +477,21 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TabControlWithNoDropdown tabControl = null;
 
-            AddStep("create tab control", () =>
-            {
-                tabControl = new TabControlWithNoDropdown { Size = new Vector2(200, 30) };
+            AddStep(
+                "create tab control",
+                () =>
+                {
+                    tabControl = new TabControlWithNoDropdown { Size = new Vector2(200, 30) };
 
-                foreach (var item in items)
-                    tabControl.AddItem(item);
-            });
+                    foreach (var item in items)
+                        tabControl.AddItem(item);
+                }
+            );
 
-            AddAssert("contained items match added items", () => tabControl.Items.SequenceEqual(items));
+            AddAssert(
+                "contained items match added items",
+                () => tabControl.Items.SequenceEqual(items)
+            );
         }
 
         [Test]
@@ -360,36 +499,53 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TabControlWithNoDropdown tabControl = null;
 
-            AddStep("create tab control", () =>
-            {
-                tabControl = new TabControlWithNoDropdown
+            AddStep(
+                "create tab control",
+                () =>
                 {
-                    Size = new Vector2(200, 30),
-                    Items = items
-                };
-            });
+                    tabControl = new TabControlWithNoDropdown
+                    {
+                        Size = new Vector2(200, 30),
+                        Items = items,
+                    };
+                }
+            );
 
-            AddAssert("contained items match added items", () => tabControl.Items.SequenceEqual(items));
+            AddAssert(
+                "contained items match added items",
+                () => tabControl.Items.SequenceEqual(items)
+            );
         }
 
         [TestCase(false, null)]
         [TestCase(true, TestEnum.Test0)]
-        public void TestInitialSelection(bool selectFirstByDefault, TestEnum? expectedInitialSelection)
+        public void TestInitialSelection(
+            bool selectFirstByDefault,
+            TestEnum? expectedInitialSelection
+        )
         {
             StyledTabControl tabControl = null;
 
-            AddStep("create tab control", () =>
-            {
-                tabControlContainer.Add(tabControl = new StyledTabControl
+            AddStep(
+                "create tab control",
+                () =>
                 {
-                    Size = new Vector2(200, 30),
-                    Items = items.Cast<TestEnum?>().ToList(),
-                    SelectFirstTabByDefault = selectFirstByDefault
-                });
-            });
+                    tabControlContainer.Add(
+                        tabControl = new StyledTabControl
+                        {
+                            Size = new Vector2(200, 30),
+                            Items = items.Cast<TestEnum?>().ToList(),
+                            SelectFirstTabByDefault = selectFirstByDefault,
+                        }
+                    );
+                }
+            );
 
             AddUntilStep("wait for loaded", () => tabControl.IsLoaded);
-            AddAssert("initial selection is correct", () => tabControl.Current.Value == expectedInitialSelection);
+            AddAssert(
+                "initial selection is correct",
+                () => tabControl.Current.Value == expectedInitialSelection
+            );
         }
 
         [TestCase(true, TestEnum.Test1, true)]
@@ -401,37 +557,50 @@ namespace osu.Framework.Tests.Visual.UserInterface
             StyledTabControl tabControlWithBindable = null;
             Bindable<TestEnum?> testBindable = new Bindable<TestEnum?> { Value = initialItem };
 
-            AddStep("create tab control", () =>
-            {
-                tabControlContainer.Add(tabControlWithBindable = new StyledTabControl
+            AddStep(
+                "create tab control",
+                () =>
                 {
-                    Size = new Vector2(200, 20),
-                    Items = items.Cast<TestEnum?>().ToList(),
-                    AutoSort = autoSort,
-                    Current = { BindTarget = testBindable }
-                });
-            });
+                    tabControlContainer.Add(
+                        tabControlWithBindable = new StyledTabControl
+                        {
+                            Size = new Vector2(200, 20),
+                            Items = items.Cast<TestEnum?>().ToList(),
+                            AutoSort = autoSort,
+                            Current = { BindTarget = testBindable },
+                        }
+                    );
+                }
+            );
 
             AddUntilStep("wait for loaded", () => tabControlWithBindable.IsLoaded);
-            AddAssert($"Current selection {(expected ? "visible" : "not visible")}", () => tabControlWithBindable.SelectedTab.IsPresent == expected);
+            AddAssert(
+                $"Current selection {(expected ? "visible" : "not visible")}",
+                () => tabControlWithBindable.SelectedTab.IsPresent == expected
+            );
         }
 
         private partial class StyledTabControlWithoutDropdown : TabControl<TestEnum>
         {
             protected override Dropdown<TestEnum> CreateDropdown() => null;
 
-            protected override TabItem<TestEnum> CreateTabItem(TestEnum value)
-                => new BasicTabControl<TestEnum>.BasicTabItem(value);
+            protected override TabItem<TestEnum> CreateTabItem(TestEnum value) =>
+                new BasicTabControl<TestEnum>.BasicTabItem(value);
         }
 
         private partial class StyledMultilineTabControl : TabControl<TestEnum>
         {
             protected override Dropdown<TestEnum> CreateDropdown() => null;
 
-            protected override TabItem<TestEnum> CreateTabItem(TestEnum value)
-                => new BasicTabControl<TestEnum>.BasicTabItem(value);
+            protected override TabItem<TestEnum> CreateTabItem(TestEnum value) =>
+                new BasicTabControl<TestEnum>.BasicTabItem(value);
 
-            protected override TabFillFlowContainer CreateTabFlow() => base.CreateTabFlow().With(f => { f.AllowMultiline = true; });
+            protected override TabFillFlowContainer CreateTabFlow() =>
+                base.CreateTabFlow()
+                    .With(f =>
+                    {
+                        f.AllowMultiline = true;
+                    });
         }
 
         public partial class StyledTabControl : TabControl<TestEnum?>
@@ -444,17 +613,16 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             protected override Dropdown<TestEnum?> CreateDropdown() => new StyledDropdown();
 
-            public TabItem<TestEnum?> CreateTabItem(TestEnum? value, bool isSwitchable)
-                => new TestTabItem(value);
+            public TabItem<TestEnum?> CreateTabItem(TestEnum? value, bool isSwitchable) =>
+                new TestTabItem(value);
 
-            protected override TabItem<TestEnum?> CreateTabItem(TestEnum? value) => CreateTabItem(value, true);
+            protected override TabItem<TestEnum?> CreateTabItem(TestEnum? value) =>
+                CreateTabItem(value, true);
 
             public partial class TestTabItem : BasicTabControl<TestEnum?>.BasicTabItem
             {
                 public TestTabItem(TestEnum? value)
-                    : base(value)
-                {
-                }
+                    : base(value) { }
 
                 private bool switchable = true;
 
@@ -504,7 +672,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
                 Foreground.Children = new[]
                 {
-                    new Box { Width = 20, Height = 20 }
+                    new Box { Width = 20, Height = 20 },
                 };
             }
 
@@ -539,7 +707,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
             Test9,
             Test10,
             Test11,
-            Test12
+            Test12,
         }
     }
 }

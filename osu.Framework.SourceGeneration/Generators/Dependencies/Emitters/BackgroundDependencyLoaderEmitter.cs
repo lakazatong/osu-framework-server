@@ -17,7 +17,10 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
         private readonly DependenciesFileEmitter fileEmitter;
         private readonly BackgroundDependencyLoaderAttributeData data;
 
-        public BackgroundDependencyLoaderEmitter(DependenciesFileEmitter fileEmitter, BackgroundDependencyLoaderAttributeData data)
+        public BackgroundDependencyLoaderEmitter(
+            DependenciesFileEmitter fileEmitter,
+            BackgroundDependencyLoaderAttributeData data
+        )
         {
             this.fileEmitter = fileEmitter;
             this.data = data;
@@ -38,7 +41,14 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                                         null,
                                         null,
                                         p.CanBeNull || data.CanBeNull,
-                                        false)))))));
+                                        false
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            );
         }
 
         private ExpressionSyntax createMemberAccessor()
@@ -48,8 +58,11 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                 SyntaxFactory.ParenthesizedExpression(
                     SyntaxFactory.CastExpression(
                         SyntaxFactory.ParseTypeName(fileEmitter.Target.GlobalPrefixedTypeName),
-                        SyntaxFactory.IdentifierName(DependenciesFileEmitter.TARGET_PARAMETER_NAME))),
-                SyntaxFactory.IdentifierName(data.MethodName));
+                        SyntaxFactory.IdentifierName(DependenciesFileEmitter.TARGET_PARAMETER_NAME)
+                    )
+                ),
+                SyntaxFactory.IdentifierName(data.MethodName)
+            );
         }
     }
 }

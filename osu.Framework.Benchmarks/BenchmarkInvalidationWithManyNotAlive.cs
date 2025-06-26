@@ -33,11 +33,13 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < 50000; i++)
                 {
-                    container.Add(new Box
-                    {
-                        Size = new Vector2(10),
-                        LifetimeStart = i > 10000 ? double.MaxValue : double.MinValue
-                    });
+                    container.Add(
+                        new Box
+                        {
+                            Size = new Vector2(10),
+                            LifetimeStart = i > 10000 ? double.MaxValue : double.MinValue,
+                        }
+                    );
                 }
 
                 Add(container);

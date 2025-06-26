@@ -36,7 +36,12 @@ namespace osu.Framework.Audio
 
             bool active = channel.Mixer.ChannelIsActive(channel) == PlaybackState.Playing;
 
-            channel.Mixer.ChannelGetLevel(channel, channelLevels, 1 / 60f, LevelRetrievalFlags.Stereo);
+            channel.Mixer.ChannelGetLevel(
+                channel,
+                channelLevels,
+                1 / 60f,
+                LevelRetrievalFlags.Stereo
+            );
 
             float leftChannel = active ? channelLevels[0] : -1;
             float rightChannel = active ? channelLevels[1] : -1;

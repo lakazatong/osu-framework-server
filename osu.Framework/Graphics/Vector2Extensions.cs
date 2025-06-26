@@ -50,7 +50,9 @@ namespace osu.Framework.Graphics
         /// <param name="result">The distance</param>
         public static void Distance(ref Vector2 vec1, ref Vector2 vec2, out float result)
         {
-            result = MathF.Sqrt((vec2.X - vec1.X) * (vec2.X - vec1.X) + (vec2.Y - vec1.Y) * (vec2.Y - vec1.Y));
+            result = MathF.Sqrt(
+                (vec2.X - vec1.X) * (vec2.X - vec1.X) + (vec2.Y - vec1.Y) * (vec2.Y - vec1.Y)
+            );
         }
 
         /// <summary>
@@ -91,7 +93,8 @@ namespace osu.Framework.Graphics
 
             float rotation = 0;
             for (int i = 0; i < vertices.Length - 1; ++i)
-                rotation += (vertices[i + 1].X - vertices[i].X) * (vertices[i + 1].Y + vertices[i].Y);
+                rotation +=
+                    (vertices[i + 1].X - vertices[i].X) * (vertices[i + 1].Y + vertices[i].Y);
 
             rotation += (vertices[0].X - vertices[^1].X) * (vertices[0].Y + vertices[^1].Y);
 
@@ -105,8 +108,9 @@ namespace osu.Framework.Graphics
         /// <param name="point">The point.</param>
         /// <returns>Whether <paramref name="point"/> is in the right half-plane of <paramref name="line"/>. Collinear points are never in the right half-plane of the line. </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool InRightHalfPlaneOf(this Vector2 point, in Line line)
-            => (line.EndPoint.X - line.StartPoint.X) * (point.Y - line.StartPoint.Y)
-                - (line.EndPoint.Y - line.StartPoint.Y) * (point.X - line.StartPoint.X) < 0;
+        public static bool InRightHalfPlaneOf(this Vector2 point, in Line line) =>
+            (line.EndPoint.X - line.StartPoint.X) * (point.Y - line.StartPoint.Y)
+                - (line.EndPoint.Y - line.StartPoint.Y) * (point.X - line.StartPoint.X)
+            < 0;
     }
 }

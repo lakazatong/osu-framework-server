@@ -9,12 +9,11 @@ namespace osu.Framework.Bindables
     public class BindableColour4 : Bindable<Colour4>
     {
         public BindableColour4(Colour4 value = default)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         // 8-bit precision should probably be enough for serialization.
-        public override string ToString(string? format, IFormatProvider? formatProvider) => Value.ToHex();
+        public override string ToString(string? format, IFormatProvider? formatProvider) =>
+            Value.ToHex();
 
         public override void Parse(object? input, IFormatProvider provider)
         {
@@ -24,7 +23,9 @@ namespace osu.Framework.Bindables
             {
                 case string str:
                     if (!Colour4.TryParseHex(str, out Colour4 colour))
-                        throw new ArgumentException($"Input string was in wrong format! (expected valid hex colour, actual: '{str}')");
+                        throw new ArgumentException(
+                            $"Input string was in wrong format! (expected valid hex colour, actual: '{str}')"
+                        );
 
                     Value = colour;
                     break;

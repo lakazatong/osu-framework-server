@@ -28,65 +28,54 @@ namespace osu.Framework.Tests.Visual.Sprites
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
                             Direction = FillDirection.Vertical,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
-            flow.Add(new SpriteText
-            {
-                Text = @"the quick red fox jumps over the lazy brown dog"
-            });
-            flow.Add(new SpriteText
-            {
-                Text = @"THE QUICK RED FOX JUMPS OVER THE LAZY BROWN DOG"
-            });
-            flow.Add(new SpriteText
-            {
-                Text = @"0123456789!@#$%^&*()_-+-[]{}.,<>;'\"
-            });
+            flow.Add(new SpriteText { Text = @"the quick red fox jumps over the lazy brown dog" });
+            flow.Add(new SpriteText { Text = @"THE QUICK RED FOX JUMPS OVER THE LAZY BROWN DOG" });
+            flow.Add(new SpriteText { Text = @"0123456789!@#$%^&*()_-+-[]{}.,<>;'\" });
 
-            flow.Add(new Container
-            {
-                Margin = new MarginPadding { Vertical = 5 },
-                AutoSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            flow.Add(
+                new Container
                 {
-                    new Box
+                    Margin = new MarginPadding { Vertical = 5 },
+                    AutoSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = Color4.Black,
-                        UseFullGlyphHeight = true,
-                        Text = "UseFullGlyphHeight = true",
+                        new Box { RelativeSizeAxes = Axes.Both },
+                        new SpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = Color4.Black,
+                            UseFullGlyphHeight = true,
+                            Text = "UseFullGlyphHeight = true",
+                        },
                     },
                 }
-            });
+            );
 
-            flow.Add(new Container
-            {
-                Margin = new MarginPadding { Vertical = 5 },
-                AutoSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            flow.Add(
+                new Container
                 {
-                    new Box
+                    Margin = new MarginPadding { Vertical = 5 },
+                    AutoSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = Color4.Black,
-                        UseFullGlyphHeight = false,
-                        Text = "UseFullGlyphHeight = false",
+                        new Box { RelativeSizeAxes = Axes.Both },
+                        new SpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = Color4.Black,
+                            UseFullGlyphHeight = false,
+                            Text = "UseFullGlyphHeight = false",
+                        },
                     },
                 }
-            });
+            );
 
             for (int i = 1; i <= 200; i++)
             {

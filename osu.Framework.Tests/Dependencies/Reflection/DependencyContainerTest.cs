@@ -14,7 +14,10 @@ using osu.Framework.Testing.Dependencies;
 namespace osu.Framework.Tests.Dependencies.Reflection
 {
     [TestFixture]
-    [SuppressMessage("Performance", "OFSG001:Class contributes to dependency injection and should be partial")]
+    [SuppressMessage(
+        "Performance",
+        "OFSG001:Class contributes to dependency injection and should be partial"
+    )]
     public class DependencyContainerTest
     {
         [Test]
@@ -36,7 +39,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
                 {
                     receivedBase = b;
                     receivedDerived = d;
-                }
+                },
             };
 
             dependencies.Inject(receiver);
@@ -85,12 +88,14 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var dependencies = new DependencyContainer();
 
-            int count = 0, baseCount = 0, derivedCount = 0;
+            int count = 0,
+                baseCount = 0,
+                derivedCount = 0;
 
             var receiver = new Receiver5
             {
                 Loaded4 = () => baseCount = ++count,
-                Loaded5 = () => derivedCount = ++count
+                Loaded5 = () => derivedCount = ++count,
             };
 
             dependencies.Inject(receiver);
@@ -113,10 +118,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             BaseObject receivedObject = null;
 
-            var receiver = new Receiver3
-            {
-                OnLoad = o => receivedObject = o
-            };
+            var receiver = new Receiver3 { OnLoad = o => receivedObject = o };
 
             dependencies1.Inject(receiver);
             Assert.AreEqual(receivedObject, testObject1);
@@ -143,7 +145,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         [Test]
         public void TestAttemptCacheStruct()
         {
-            Assert.Throws<ArgumentException>(() => new DependencyContainer().Cache(new BaseStructObject()));
+            Assert.Throws<ArgumentException>(() =>
+                new DependencyContainer().Cache(new BaseStructObject())
+            );
         }
 
         /// <summary>
@@ -152,7 +156,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         [Test]
         public void TestAttemptCacheAsStruct()
         {
-            Assert.Throws<ArgumentException>(() => new DependencyContainer().CacheAs<IBaseInterface>(new BaseStructObject()));
+            Assert.Throws<ArgumentException>(() =>
+                new DependencyContainer().CacheAs<IBaseInterface>(new BaseStructObject())
+            );
         }
 
         /// <summary>
@@ -181,7 +187,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver6();
 
-            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() => new DependencyContainer().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() =>
+                new DependencyContainer().Inject(receiver)
+            );
         }
 
         [Test]
@@ -189,7 +197,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver7();
 
-            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() => new DependencyContainer().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() =>
+                new DependencyContainer().Inject(receiver)
+            );
         }
 
         [Test]
@@ -197,7 +207,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver8();
 
-            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() => new DependencyContainer().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() =>
+                new DependencyContainer().Inject(receiver)
+            );
         }
 
         [Test]
@@ -205,7 +217,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver9();
 
-            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() => new DependencyContainer().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForLoaderMethodException>(() =>
+                new DependencyContainer().Inject(receiver)
+            );
         }
 
         [Test]
@@ -215,7 +229,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             var testObject = new CachedStructProvider();
 
-            var dependencies = DependencyActivator.MergeDependencies(testObject, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                testObject,
+                new DependencyContainer()
+            );
 
             Assert.DoesNotThrow(() => dependencies.Inject(receiver));
             Assert.AreEqual(testObject.CachedObject.Value, receiver.TestObject.Value);
@@ -230,7 +247,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var testObject = new CachedNullableProvider();
             testObject.SetValue(testValue);
 
-            var dependencies = DependencyActivator.MergeDependencies(testObject, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                testObject,
+                new DependencyContainer()
+            );
 
             dependencies.Inject(receiver);
 
@@ -247,7 +267,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         [Test]
         public void TestResolveStructWithoutNullPermits()
         {
-            Assert.Throws<DependencyNotRegisteredException>(() => new DependencyContainer().Inject(new Receiver12()));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                new DependencyContainer().Inject(new Receiver12())
+            );
         }
 
         [Test]
@@ -279,7 +301,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
                 default,
                 new CacheInfo("name"),
                 new CacheInfo(parent: typeof(object)),
-                new CacheInfo("name", typeof(object))
+                new CacheInfo("name", typeof(object)),
             };
 
             var dependencies = new DependencyContainer();
@@ -302,7 +324,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
                 default,
                 new CacheInfo("name"),
                 new CacheInfo(parent: typeof(object)),
-                new CacheInfo("name", typeof(object))
+                new CacheInfo("name", typeof(object)),
             };
 
             var dependencies = new DependencyContainer();
@@ -336,34 +358,27 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             Assert.DoesNotThrow(() => dependencies.Inject(receiver));
         }
 
-        private interface IBaseInterface
-        {
-        }
+        private interface IBaseInterface { }
 
         private class BaseObject
         {
             public int TestValue;
         }
 
-        private struct BaseStructObject : IBaseInterface
-        {
-        }
+        private struct BaseStructObject : IBaseInterface { }
 
-        private class DerivedObject : BaseObject
-        {
-        }
+        private class DerivedObject : BaseObject { }
 
         private class Receiver1 : IDependencyInjectionCandidate
         {
             public Action<BaseObject, DerivedObject> OnLoad;
 
             [BackgroundDependencyLoader]
-            private void load(BaseObject baseObject, DerivedObject derivedObject) => OnLoad?.Invoke(baseObject, derivedObject);
+            private void load(BaseObject baseObject, DerivedObject derivedObject) =>
+                OnLoad?.Invoke(baseObject, derivedObject);
         }
 
-        private class Receiver2 : IDependencyInjectionCandidate
-        {
-        }
+        private class Receiver2 : IDependencyInjectionCandidate { }
 
         private class Receiver3 : IDependencyInjectionCandidate
         {
@@ -392,33 +407,25 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         private class Receiver6 : IDependencyInjectionCandidate
         {
             [BackgroundDependencyLoader]
-            public void Load()
-            {
-            }
+            public void Load() { }
         }
 
         private class Receiver7 : IDependencyInjectionCandidate
         {
             [BackgroundDependencyLoader]
-            protected void Load()
-            {
-            }
+            protected void Load() { }
         }
 
         private class Receiver8 : IDependencyInjectionCandidate
         {
             [BackgroundDependencyLoader]
-            internal void Load()
-            {
-            }
+            internal void Load() { }
         }
 
         private class Receiver9 : IDependencyInjectionCandidate
         {
             [BackgroundDependencyLoader]
-            protected internal void Load()
-            {
-            }
+            protected internal void Load() { }
         }
 
         private class Receiver10 : IDependencyInjectionCandidate
@@ -441,9 +448,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             [UsedImplicitly] // param used implicitly
             [BackgroundDependencyLoader]
-            private void load(int testObject)
-            {
-            }
+            private void load(int testObject) { }
         }
 
         private class Receiver13 : IDependencyInjectionCandidate
@@ -459,9 +464,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         private class Receiver14 : IDependencyInjectionCandidate
         {
             [BackgroundDependencyLoader]
-            private void load(BaseObject nonNullObject, DerivedObject? nullableObject)
-            {
-            }
+            private void load(BaseObject nonNullObject, DerivedObject? nullableObject) { }
         }
     }
 }

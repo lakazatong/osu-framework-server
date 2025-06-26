@@ -21,7 +21,8 @@ namespace osu.Framework.Input.Handlers.Midi
 {
     public class MidiHandler : InputHandler
     {
-        private static readonly GlobalStatistic<ulong> statistic_total_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<MidiHandler>(), "Total events");
+        private static readonly GlobalStatistic<ulong> statistic_total_events =
+            GlobalStatistics.Get<ulong>(StatisticGroupFor<MidiHandler>(), "Total events");
 
         public override string Description => "MIDI";
         public override bool IsActive => inGoodState;
@@ -32,7 +33,8 @@ namespace osu.Framework.Input.Handlers.Midi
 
         private ScheduledDelegate scheduledRefreshDevices;
 
-        private readonly Dictionary<string, IMidiInput> openedDevices = new Dictionary<string, IMidiInput>();
+        private readonly Dictionary<string, IMidiInput> openedDevices =
+            new Dictionary<string, IMidiInput>();
 
         /// <summary>
         /// The last event for each midi device. This is required for Running Status (repeat messages sent without
@@ -47,37 +49,45 @@ namespace osu.Framework.Input.Handlers.Midi
             if (!base.Initialize(host))
                 return false;
 
-            Enabled.BindValueChanged(e =>
-            {
-                if (e.NewValue)
+            Enabled.BindValueChanged(
+                e =>
                 {
-                    lastInitTask = Task.Run(() =>
+                    if (e.NewValue)
                     {
-                        inGoodState = true;
+                        lastInitTask = Task.Run(() =>
+                        {
+                            inGoodState = true;
 
-                        // First call to this can be expensive (macOS / coremidi) so let's run it on a separate thread.
-                        if (!refreshDevices())
-                            return;
+                            // First call to this can be expensive (macOS / coremidi) so let's run it on a separate thread.
+                            if (!refreshDevices())
+                                return;
 
-                        host.InputThread.Scheduler.Add(
-                            scheduledRefreshDevices = new ScheduledDelegate(() => refreshDevices(), milliseconds_between_device_refresh, milliseconds_between_device_refresh));
-                    });
-                }
-                else
-                {
-                    lastInitTask?.WaitSafely();
-
-                    scheduledRefreshDevices?.Cancel();
-
-                    lock (openedDevices)
-                    {
-                        foreach (var device in openedDevices.Values)
-                            closeDevice(device);
-
-                        openedDevices.Clear();
+                            host.InputThread.Scheduler.Add(
+                                scheduledRefreshDevices = new ScheduledDelegate(
+                                    () => refreshDevices(),
+                                    milliseconds_between_device_refresh,
+                                    milliseconds_between_device_refresh
+                                )
+                            );
+                        });
                     }
-                }
-            }, true);
+                    else
+                    {
+                        lastInitTask?.WaitSafely();
+
+                        scheduledRefreshDevices?.Cancel();
+
+                        lock (openedDevices)
+                        {
+                            foreach (var device in openedDevices.Values)
+                                closeDevice(device);
+
+                            openedDevices.Clear();
+                        }
+                    }
+                },
+                true
+            );
 
             return true;
         }
@@ -97,7 +107,9 @@ namespace osu.Framework.Input.Handlers.Midi
                         if (openedDevices.ContainsKey(device.Id))
                             continue;
 
-                        var newInput = MidiAccessManager.Default.OpenInputAsync(device.Id).GetResultSafely();
+                        var newInput = MidiAccessManager
+                            .Default.OpenInputAsync(device.Id)
+                            .GetResultSafely();
                         newInput.MessageReceived += onMidiMessageReceived;
                         openedDevices[device.Id] = newInput;
 
@@ -128,9 +140,10 @@ namespace osu.Framework.Input.Handlers.Midi
             }
             catch (Exception e)
             {
-                string message = RuntimeInfo.OS == RuntimeInfo.Platform.Linux
-                    ? "Is libasound2-dev installed?"
-                    : "There may be another application already using MIDI.";
+                string message =
+                    RuntimeInfo.OS == RuntimeInfo.Platform.Linux
+                        ? "Is libasound2-dev installed?"
+                        : "There may be another application already using MIDI.";
 
                 Log($"MIDI devices could not be enumerated. {message} ({e.Message})");
 
@@ -157,16 +170,27 @@ namespace osu.Framework.Input.Handlers.Midi
 
             try
             {
-                for (int i = e.Start; i < e.Length;)
+                for (int i = e.Start; i < e.Length; )
                 {
-                    readEvent(e.Data, senderId, ref i, out byte eventType, out byte key, out byte velocity);
+                    readEvent(
+                        e.Data,
+                        senderId,
+                        ref i,
+                        out byte eventType,
+                        out byte key,
+                        out byte velocity
+                    );
                     dispatchEvent(eventType, key, velocity);
                 }
             }
             catch (Exception exception)
             {
                 string dataString = string.Join("-", e.Data.Select(b => b.ToString("X2")));
-                Log($"An exception occurred while reading MIDI data from sender {senderId}: {dataString}", LogLevel.Error, exception);
+                Log(
+                    $"An exception occurred while reading MIDI data from sender {senderId}: {dataString}",
+                    LogLevel.Error,
+                    exception
+                );
             }
         }
 
@@ -174,7 +198,14 @@ namespace osu.Framework.Input.Handlers.Midi
         /// This function is not intended to provide complete correctness of MIDI parsing.
         /// For now the goal is to correctly parse "note start" and "note end" events and correctly delimit all events.
         /// </remarks>
-        private void readEvent(byte[] data, string senderId, ref int i, out byte eventType, out byte key, out byte velocity)
+        private void readEvent(
+            byte[] data,
+            string senderId,
+            ref int i,
+            out byte eventType,
+            out byte key,
+            out byte velocity
+        )
         {
             byte statusType = data[i++];
 
@@ -183,7 +214,9 @@ namespace osu.Framework.Input.Handlers.Midi
             if (statusType <= 0x7F)
             {
                 if (!runningStatus.TryGetValue(senderId, out eventType))
-                    throw new InvalidDataException($"Received running status of sender {senderId}, but no event type was stored");
+                    throw new InvalidDataException(
+                        $"Received running status of sender {senderId}, but no event type was stored"
+                    );
 
                 key = statusType;
                 velocity = data[i++];

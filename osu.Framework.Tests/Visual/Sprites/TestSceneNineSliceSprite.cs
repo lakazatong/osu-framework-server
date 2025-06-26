@@ -40,107 +40,129 @@ namespace osu.Framework.Tests.Visual.Sprites
         [Test]
         public void TestPlain()
         {
-            setupTestScene(() => new NineSliceSprite
-            {
-                Texture = sampleTexture,
-                TextureInset = new MarginPadding(100),
-            });
+            setupTestScene(() =>
+                new NineSliceSprite
+                {
+                    Texture = sampleTexture,
+                    TextureInset = new MarginPadding(100),
+                }
+            );
         }
 
         [Test]
         public void TestGradient()
         {
-            setupTestScene(() => new NineSliceSprite
-            {
-                Texture = sampleTexture,
-                TextureInset = new MarginPadding(100),
-                Colour = ColourInfo.GradientVertical(Color4.White, Color4.Black)
-            });
+            setupTestScene(() =>
+                new NineSliceSprite
+                {
+                    Texture = sampleTexture,
+                    TextureInset = new MarginPadding(100),
+                    Colour = ColourInfo.GradientVertical(Color4.White, Color4.Black),
+                }
+            );
         }
 
         private void setupTestScene(Func<NineSliceSprite> createComponent)
         {
-            AddStep("setup scene", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "setup scene",
+                () =>
                 {
-                    new FillFlowContainer
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Width = 0.3f,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(10),
-                        Padding = new MarginPadding(10),
-                        Children = new Drawable[]
+                        new FillFlowContainer
                         {
-                            new LabelledContainer("Left")
+                            RelativeSizeAxes = Axes.Both,
+                            Width = 0.3f,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(10),
+                            Padding = new MarginPadding(10),
+                            Children = new Drawable[]
                             {
-                                Child = new InsetTextBox(leftInset) { TabbableContentContainer = this }
-                            },
-                            new LabelledContainer("Right")
-                            {
-                                Child = new InsetTextBox(rightInset) { TabbableContentContainer = this }
-                            },
-                            new LabelledContainer("Top")
-                            {
-                                Child = new InsetTextBox(topInset) { TabbableContentContainer = this }
-                            },
-                            new LabelledContainer("Bottom")
-                            {
-                                Child = new InsetTextBox(bottomInset) { TabbableContentContainer = this }
-                            },
-                            new LabelledContainer("RelativeInsetAxes")
-                            {
-                                Child = new Container
+                                new LabelledContainer("Left")
                                 {
-                                    RelativeSizeAxes = Axes.X,
-                                    Height = 30,
-                                    Child = new BasicDropdown<Axes>
+                                    Child = new InsetTextBox(leftInset)
+                                    {
+                                        TabbableContentContainer = this,
+                                    },
+                                },
+                                new LabelledContainer("Right")
+                                {
+                                    Child = new InsetTextBox(rightInset)
+                                    {
+                                        TabbableContentContainer = this,
+                                    },
+                                },
+                                new LabelledContainer("Top")
+                                {
+                                    Child = new InsetTextBox(topInset)
+                                    {
+                                        TabbableContentContainer = this,
+                                    },
+                                },
+                                new LabelledContainer("Bottom")
+                                {
+                                    Child = new InsetTextBox(bottomInset)
+                                    {
+                                        TabbableContentContainer = this,
+                                    },
+                                },
+                                new LabelledContainer("RelativeInsetAxes")
+                                {
+                                    Child = new Container
                                     {
                                         RelativeSizeAxes = Axes.X,
-                                        Items = new[]
+                                        Height = 30,
+                                        Child = new BasicDropdown<Axes>
                                         {
-                                            Axes.None,
-                                            Axes.X,
-                                            Axes.Y,
-                                            Axes.Both,
+                                            RelativeSizeAxes = Axes.X,
+                                            Items = new[] { Axes.None, Axes.X, Axes.Y, Axes.Both },
+                                            Current = relativeInsetAxes,
                                         },
-                                        Current = relativeInsetAxes,
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    new Container
+                                    },
+                                },
+                            },
+                        },
+                        new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Width = 0.7f,
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            Child = sprite = createComponent(),
+                        },
+                    };
+
+                    sprite
+                        .ResizeTo(new Vector2(600, 400), 1000, Easing.InOutCubic)
+                        .Then()
+                        .ResizeTo(new Vector2(256, 256), 1000, Easing.InOutCubic)
+                        .Loop();
+
+                    leftInset.BindValueChanged(e =>
+                        sprite.TextureInset = sprite.TextureInset with { Left = e.NewValue }
+                    );
+                    topInset.BindValueChanged(e =>
+                        sprite.TextureInset = sprite.TextureInset with { Top = e.NewValue }
+                    );
+                    rightInset.BindValueChanged(e =>
+                        sprite.TextureInset = sprite.TextureInset with { Right = e.NewValue }
+                    );
+                    bottomInset.BindValueChanged(e =>
+                        sprite.TextureInset = sprite.TextureInset with { Bottom = e.NewValue }
+                    );
+
+                    relativeInsetAxes.BindValueChanged(e =>
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Width = 0.7f,
-                        Anchor = Anchor.TopRight,
-                        Origin = Anchor.TopRight,
-                        Child = sprite = createComponent()
-                    }
-                };
+                        sprite.TextureInsetRelativeAxes = e.NewValue;
 
-                sprite.ResizeTo(new Vector2(600, 400), 1000, Easing.InOutCubic)
-                      .Then()
-                      .ResizeTo(new Vector2(256, 256), 1000, Easing.InOutCubic)
-                      .Loop();
-
-                leftInset.BindValueChanged(e => sprite.TextureInset = sprite.TextureInset with { Left = e.NewValue });
-                topInset.BindValueChanged(e => sprite.TextureInset = sprite.TextureInset with { Top = e.NewValue });
-                rightInset.BindValueChanged(e => sprite.TextureInset = sprite.TextureInset with { Right = e.NewValue });
-                bottomInset.BindValueChanged(e => sprite.TextureInset = sprite.TextureInset with { Bottom = e.NewValue });
-
-                relativeInsetAxes.BindValueChanged(e =>
-                {
-                    sprite.TextureInsetRelativeAxes = e.NewValue;
-
-                    leftInset.Value = sprite.TextureInset.Left;
-                    topInset.Value = sprite.TextureInset.Top;
-                    rightInset.Value = sprite.TextureInset.Right;
-                    bottomInset.Value = sprite.TextureInset.Bottom;
-                });
-            });
+                        leftInset.Value = sprite.TextureInset.Left;
+                        topInset.Value = sprite.TextureInset.Top;
+                        rightInset.Value = sprite.TextureInset.Right;
+                        bottomInset.Value = sprite.TextureInset.Bottom;
+                    });
+                }
+            );
         }
 
         private partial class InsetTextBox : BasicTextBox
@@ -163,7 +185,9 @@ namespace osu.Framework.Tests.Visual.Sprites
 
                 OnCommit += textBoxOnCommit;
 
-                insetValue.BindValueChanged(e => Text = e.NewValue.ToString(CultureInfo.InvariantCulture));
+                insetValue.BindValueChanged(e =>
+                    Text = e.NewValue.ToString(CultureInfo.InvariantCulture)
+                );
             }
 
             private void textBoxOnCommit(TextBox textBox, bool newText)
@@ -202,8 +226,8 @@ namespace osu.Framework.Tests.Visual.Sprites
                     {
                         Padding = new MarginPadding { Left = 140 },
                         RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y
-                    }
+                        AutoSizeAxes = Axes.Y,
+                    },
                 };
             }
 

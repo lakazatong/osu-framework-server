@@ -31,7 +31,8 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                     data.GlobalPrefixedTypeName,
                     data.Name,
                     null
-                ));
+                )
+            );
         }
     }
 }

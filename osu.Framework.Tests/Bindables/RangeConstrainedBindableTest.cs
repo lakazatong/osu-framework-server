@@ -15,10 +15,7 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestValueUpdatedOnMaxValueChange()
         {
-            var bindable = new BindableInt(2)
-            {
-                MaxValue = 1
-            };
+            var bindable = new BindableInt(2) { MaxValue = 1 };
 
             Assert.That(bindable.Value, Is.EqualTo(1));
         }
@@ -32,7 +29,11 @@ namespace osu.Framework.Tests.Bindables
         {
             var bindable1 = new BindableInt(2);
             var bindable2 = new BindableInt { BindTarget = bindable1 };
-            int counter = 0, bindable1ValueChange = 0, bindable1MaxChange = 0, bindable2ValueChange = 0, bindable2MaxChange = 0;
+            int counter = 0,
+                bindable1ValueChange = 0,
+                bindable1MaxChange = 0,
+                bindable2ValueChange = 0,
+                bindable2MaxChange = 0;
             bindable1.ValueChanged += _ => bindable1ValueChange = ++counter;
             bindable1.MaxValueChanged += _ => bindable1MaxChange = ++counter;
             bindable2.ValueChanged += _ => bindable2ValueChange = ++counter;
@@ -60,10 +61,7 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestValueUpdatedOnMinValueChange()
         {
-            var bindable = new BindableInt(2)
-            {
-                MinValue = 3
-            };
+            var bindable = new BindableInt(2) { MinValue = 3 };
 
             Assert.That(bindable.Value, Is.EqualTo(3));
         }
@@ -77,7 +75,11 @@ namespace osu.Framework.Tests.Bindables
         {
             var bindable1 = new BindableInt(2);
             var bindable2 = new BindableInt { BindTarget = bindable1 };
-            int counter = 0, bindable1ValueChange = 0, bindable1MinChange = 0, bindable2ValueChange = 0, bindable2MinChange = 0;
+            int counter = 0,
+                bindable1ValueChange = 0,
+                bindable1MinChange = 0,
+                bindable2ValueChange = 0,
+                bindable2MinChange = 0;
             bindable1.ValueChanged += _ => bindable1ValueChange = ++counter;
             bindable1.MinValueChanged += _ => bindable1MinChange = ++counter;
             bindable2.ValueChanged += _ => bindable2ValueChange = ++counter;
@@ -106,14 +108,14 @@ namespace osu.Framework.Tests.Bindables
             {
                 MinValue = -10,
                 MaxValue = -5,
-                Value = -7
+                Value = -7,
             };
 
             var second = new BindableDouble
             {
                 MinValue = 5,
                 MaxValue = 10,
-                Value = 9
+                Value = 9,
             };
 
             first.BindTo(second);
@@ -126,25 +128,23 @@ namespace osu.Framework.Tests.Bindables
         private class BindableNumberWithDefaultMaxValue : BindableInt
         {
             public BindableNumberWithDefaultMaxValue(int value = 0)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
             protected override int DefaultMaxValue => 1;
 
-            protected override Bindable<int> CreateInstance() => new BindableNumberWithDefaultMaxValue();
+            protected override Bindable<int> CreateInstance() =>
+                new BindableNumberWithDefaultMaxValue();
         }
 
         private class BindableNumberWithDefaultMinValue : BindableInt
         {
             public BindableNumberWithDefaultMinValue(int value = 0)
-                : base(value)
-            {
-            }
+                : base(value) { }
 
             protected override int DefaultMinValue => 3;
 
-            protected override Bindable<int> CreateInstance() => new BindableNumberWithDefaultMinValue();
+            protected override Bindable<int> CreateInstance() =>
+                new BindableNumberWithDefaultMinValue();
         }
     }
 }

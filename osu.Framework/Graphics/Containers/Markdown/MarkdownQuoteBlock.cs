@@ -33,24 +33,21 @@ namespace osu.Framework.Graphics.Containers.Markdown
         private void load()
         {
             MarkdownTextFlowContainer textFlow;
-            InternalChildren = new[]
-            {
-                CreateBackground(),
-                textFlow = CreateTextFlow()
-            };
+            InternalChildren = new[] { CreateBackground(), textFlow = CreateTextFlow() };
 
             if (quoteBlock.LastChild is ParagraphBlock paragraphBlock)
                 textFlow.AddInlineText(paragraphBlock.Inline);
         }
 
-        protected virtual Drawable CreateBackground() => new Box
-        {
-            Anchor = Anchor.CentreLeft,
-            Origin = Anchor.CentreLeft,
-            RelativeSizeAxes = Axes.Y,
-            Width = 5,
-            Colour = Color4.Gray
-        };
+        protected virtual Drawable CreateBackground() =>
+            new Box
+            {
+                Anchor = Anchor.CentreLeft,
+                Origin = Anchor.CentreLeft,
+                RelativeSizeAxes = Axes.Y,
+                Width = 5,
+                Colour = Color4.Gray,
+            };
 
         public virtual MarkdownTextFlowContainer CreateTextFlow()
         {

@@ -91,7 +91,7 @@ namespace osu.Framework.Tests.Audio
             Assert.AreEqual(stoppedTime, trackVirtual.CurrentTime);
         }
 
-        private void checkTrackCount(int expected)
-            => Assert.AreEqual(expected, ((TrackStore)Manager.Tracks).Items.Count);
+        private void checkTrackCount(int expected) =>
+            Assert.AreEqual(expected, ((TrackStore)Manager.Tracks).Items.Count);
     }
 }

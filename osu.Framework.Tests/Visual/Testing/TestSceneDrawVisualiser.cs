@@ -27,10 +27,10 @@ namespace osu.Framework.Tests.Visual.Testing
                     {
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.BottomRight,
-                        Size = new Vector2(0.5f)
+                        Size = new Vector2(0.5f),
                     },
                     vis = new DrawVisualiser(),
-                }
+                },
             };
 
             vis.Show();

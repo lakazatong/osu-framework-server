@@ -51,15 +51,17 @@ namespace osu.Framework.Tests.Visual.Platform
                         new FrameworkConfigVisualiser<Size>(FrameworkSetting.WindowedSize),
                         new FrameworkConfigVisualiser<double>(FrameworkSetting.WindowedPositionX),
                         new FrameworkConfigVisualiser<double>(FrameworkSetting.WindowedPositionY),
-                        new FrameworkConfigVisualiser<DisplayIndex>(FrameworkSetting.LastDisplayDevice),
+                        new FrameworkConfigVisualiser<DisplayIndex>(
+                            FrameworkSetting.LastDisplayDevice
+                        ),
                         new FrameworkConfigVisualiser<WindowMode>(FrameworkSetting.WindowMode),
                     },
                 },
                 new WindowDisplaysPreview
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Top = 160 }
-                }
+                    Padding = new MarginPadding { Top = 160 },
+                },
             };
         }
 
@@ -79,15 +81,30 @@ namespace osu.Framework.Tests.Visual.Platform
             const int min_height = 768;
 
             AddStep("reset window to valid size", () => setWindowSize(new Size(640, 480)));
-            AddStep("set minimum size above client size", () => window.MinSize = new Size(min_width, min_height));
+            AddStep(
+                "set minimum size above client size",
+                () => window.MinSize = new Size(min_width, min_height)
+            );
             assertWindowSize(new Size(min_width, min_height));
 
             AddStep("reset window to valid size", () => setWindowSize(new Size(1280, 960)));
             AddStep("set client size below minimum size", () => setWindowSize(new Size(640, 480)));
             assertWindowSize(new Size(min_width, min_height));
 
-            AddStep("overlapping size throws", () => Assert.Throws<InvalidOperationException>(() => window.MinSize = window.MaxSize + new Size(1, 1)));
-            AddStep("negative size throws", () => Assert.Throws<InvalidOperationException>(() => window.MinSize = new Size(-1, -1)));
+            AddStep(
+                "overlapping size throws",
+                () =>
+                    Assert.Throws<InvalidOperationException>(() =>
+                        window.MinSize = window.MaxSize + new Size(1, 1)
+                    )
+            );
+            AddStep(
+                "negative size throws",
+                () =>
+                    Assert.Throws<InvalidOperationException>(() =>
+                        window.MinSize = new Size(-1, -1)
+                    )
+            );
             AddStep("reset minimum size", () => window.MinSize = new Size(640, 480));
         }
 
@@ -98,7 +115,10 @@ namespace osu.Framework.Tests.Visual.Platform
             const int max_height = 768;
 
             AddStep("reset window to valid size", () => setWindowSize(new Size(1280, 960)));
-            AddStep("set maximum size below client size", () => window.MaxSize = new Size(max_width, max_height));
+            AddStep(
+                "set maximum size below client size",
+                () => window.MaxSize = new Size(max_width, max_height)
+            );
             assertWindowSize(new Size(max_width, max_height));
 
             // when the maximum window size changes to a value below the current size, the window implicitly enters maximised state.
@@ -109,17 +129,36 @@ namespace osu.Framework.Tests.Visual.Platform
             AddStep("set client size above maximum size", () => setWindowSize(new Size(1280, 960)));
             assertWindowSize(new Size(max_width, max_height));
 
-            AddStep("overlapping size throws", () => Assert.Throws<InvalidOperationException>(() => window.MaxSize = window.MinSize - new Size(1, 1)));
-            AddStep("negative size throws", () => Assert.Throws<InvalidOperationException>(() => window.MaxSize = new Size(-1, -1)));
+            AddStep(
+                "overlapping size throws",
+                () =>
+                    Assert.Throws<InvalidOperationException>(() =>
+                        window.MaxSize = window.MinSize - new Size(1, 1)
+                    )
+            );
+            AddStep(
+                "negative size throws",
+                () =>
+                    Assert.Throws<InvalidOperationException>(() =>
+                        window.MaxSize = new Size(-1, -1)
+                    )
+            );
             AddStep("reset maximum size", () => window.MaxSize = new Size(65536, 65536));
         }
 
-        private void setWindowSize(Size size) => config.SetValue(FrameworkSetting.WindowedSize, size);
+        private void setWindowSize(Size size) =>
+            config.SetValue(FrameworkSetting.WindowedSize, size);
 
         private void assertWindowSize(Size size)
         {
-            AddAssert($"client size = {size.Width}x{size.Height} (with scale)", () => window.ClientSize == (size * window.Scale).ToSize());
-            AddAssert($"size in config = {size.Width}x{size.Height}", () => config.Get<Size>(FrameworkSetting.WindowedSize) == size);
+            AddAssert(
+                $"client size = {size.Width}x{size.Height} (with scale)",
+                () => window.ClientSize == (size * window.Scale).ToSize()
+            );
+            AddAssert(
+                $"size in config = {size.Width}x{size.Height}",
+                () => config.Get<Size>(FrameworkSetting.WindowedSize) == size
+            );
         }
     }
 }

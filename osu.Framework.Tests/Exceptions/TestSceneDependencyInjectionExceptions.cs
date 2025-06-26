@@ -22,17 +22,20 @@ namespace osu.Framework.Tests.Exceptions
         {
             Exception thrownException = null;
 
-            AddStep("add thrower", () =>
-            {
-                try
+            AddStep(
+                "add thrower",
+                () =>
                 {
-                    Child = new Thrower(typeof(Exception));
+                    try
+                    {
+                        Child = new Thrower(typeof(Exception));
+                    }
+                    catch (Exception ex)
+                    {
+                        thrownException = ex;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    thrownException = ex;
-                }
-            });
+            );
 
             assertCorrectStack(() => thrownException);
         }
@@ -42,17 +45,20 @@ namespace osu.Framework.Tests.Exceptions
         {
             Exception thrownException = null;
 
-            AddStep("add thrower", () =>
-            {
-                try
+            AddStep(
+                "add thrower",
+                () =>
                 {
-                    Child = new Thrower(typeof(Exception), true);
+                    try
+                    {
+                        Child = new Thrower(typeof(Exception), true);
+                    }
+                    catch (Exception ex)
+                    {
+                        thrownException = ex;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    thrownException = ex;
-                }
-            });
+            );
 
             assertCorrectStack(() => thrownException);
         }
@@ -68,13 +74,19 @@ namespace osu.Framework.Tests.Exceptions
             assertCorrectStack(() => thrower.ThrownException);
         }
 
-        private void assertCorrectStack(Func<Exception> exception) => AddAssert("exception has correct callstack", () =>
-        {
-            string stackTrace = exception().StackTrace;
-            Debug.Assert(stackTrace != null);
+        private void assertCorrectStack(Func<Exception> exception) =>
+            AddAssert(
+                "exception has correct callstack",
+                () =>
+                {
+                    string stackTrace = exception().StackTrace;
+                    Debug.Assert(stackTrace != null);
 
-            return stackTrace.Contains($"{nameof(TestSceneDependencyInjectionExceptions)}.{nameof(Thrower)}");
-        });
+                    return stackTrace.Contains(
+                        $"{nameof(TestSceneDependencyInjectionExceptions)}.{nameof(Thrower)}"
+                    );
+                }
+            );
 
         private partial class AsyncThrower : CompositeDrawable
         {

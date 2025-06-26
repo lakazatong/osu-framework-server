@@ -14,42 +14,35 @@ namespace osu.Framework.Audio
     /// </summary>
     public class AudioAdjustments : IAdjustableAudioComponent
     {
-        private static readonly AdjustableProperty[] all_adjustments = Enum.GetValues<AdjustableProperty>();
+        private static readonly AdjustableProperty[] all_adjustments =
+            Enum.GetValues<AdjustableProperty>();
 
         /// <summary>
         /// The volume of this component.
         /// </summary>
-        public BindableNumber<double> Volume { get; } = new BindableDouble(1)
-        {
-            Default = 1,
-            MinValue = 0,
-            MaxValue = 1
-        };
+        public BindableNumber<double> Volume { get; } =
+            new BindableDouble(1)
+            {
+                Default = 1,
+                MinValue = 0,
+                MaxValue = 1,
+            };
 
         /// <summary>
         /// The playback balance of this sample (-1 .. 1 where 0 is centered)
         /// </summary>
-        public BindableNumber<double> Balance { get; } = new BindableDouble
-        {
-            MinValue = -1,
-            MaxValue = 1
-        };
+        public BindableNumber<double> Balance { get; } =
+            new BindableDouble { MinValue = -1, MaxValue = 1 };
 
         /// <summary>
         /// Rate at which the component is played back (affects pitch). 1 is 100% playback speed, or default frequency.
         /// </summary>
-        public BindableNumber<double> Frequency { get; } = new BindableDouble(1)
-        {
-            Default = 1,
-        };
+        public BindableNumber<double> Frequency { get; } = new BindableDouble(1) { Default = 1 };
 
         /// <summary>
         /// Rate at which the component is played back (does not affect pitch). 1 is 100% playback speed.
         /// </summary>
-        public BindableNumber<double> Tempo { get; } = new BindableDouble(1)
-        {
-            Default = 1,
-        };
+        public BindableNumber<double> Tempo { get; } = new BindableDouble(1) { Default = 1 };
 
         public IBindable<double> AggregateVolume => volumeAggregate.Result;
         public IBindable<double> AggregateBalance => balanceAggregate.Result;
@@ -65,16 +58,19 @@ namespace osu.Framework.Audio
         {
             foreach (AdjustableProperty type in all_adjustments)
             {
-                var aggregate = getAggregate(type) = new AggregateBindable<double>(getAggregateFunction(type), getProperty(type).GetUnboundCopy());
+                var aggregate = getAggregate(type) = new AggregateBindable<double>(
+                    getAggregateFunction(type),
+                    getProperty(type).GetUnboundCopy()
+                );
                 aggregate.AddSource(getProperty(type));
             }
         }
 
-        public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable)
-            => getAggregate(type).AddSource(adjustBindable);
+        public void AddAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+            getAggregate(type).AddSource(adjustBindable);
 
-        public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable)
-            => getAggregate(type).RemoveSource(adjustBindable);
+        public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
+            getAggregate(type).RemoveSource(adjustBindable);
 
         public void BindAdjustments(IAggregateAudioAdjustment component)
         {
@@ -113,7 +109,10 @@ namespace osu.Framework.Audio
                     return ref tempoAggregate;
             }
 
-            throw new ArgumentException($"{nameof(AdjustableProperty)} \"{type}\" is missing mapping", nameof(type));
+            throw new ArgumentException(
+                $"{nameof(AdjustableProperty)} \"{type}\" is missing mapping",
+                nameof(type)
+            );
         }
 
         private BindableNumber<double> getProperty(AdjustableProperty type)
@@ -133,7 +132,10 @@ namespace osu.Framework.Audio
                     return Tempo;
             }
 
-            throw new ArgumentException($"{nameof(AdjustableProperty)} \"{type}\" is missing mapping", nameof(type));
+            throw new ArgumentException(
+                $"{nameof(AdjustableProperty)} \"{type}\" is missing mapping",
+                nameof(type)
+            );
         }
 
         private Func<double, double, double> getAggregateFunction(AdjustableProperty type)

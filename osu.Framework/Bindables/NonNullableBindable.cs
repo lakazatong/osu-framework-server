@@ -15,9 +15,7 @@ namespace osu.Framework.Bindables
             Value = Default = defaultValue;
         }
 
-        private NonNullableBindable()
-        {
-        }
+        private NonNullableBindable() { }
 
         public override T Value
         {
@@ -25,7 +23,10 @@ namespace osu.Framework.Bindables
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException(nameof(value), $"Cannot set {nameof(Value)} of a {nameof(NonNullableBindable<T>)} to null.");
+                    throw new ArgumentNullException(
+                        nameof(value),
+                        $"Cannot set {nameof(Value)} of a {nameof(NonNullableBindable<T>)} to null."
+                    );
 
                 base.Value = value;
             }

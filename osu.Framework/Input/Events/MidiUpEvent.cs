@@ -8,8 +8,6 @@ namespace osu.Framework.Input.Events
     public class MidiUpEvent : MidiEvent
     {
         public MidiUpEvent(InputState state, MidiKey key)
-            : base(state, key, 0)
-        {
-        }
+            : base(state, key, 0) { }
     }
 }

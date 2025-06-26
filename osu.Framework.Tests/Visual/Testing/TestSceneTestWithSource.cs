@@ -21,13 +21,14 @@ namespace osu.Framework.Tests.Visual.Testing
 
         protected static object[][] SourceMethod() => SourceField;
 
-        protected static object[][] SourceMethodWithParameters(int x, int y) => new[]
-        {
-            new object[] { x + 1, y + 2 },
-            new object[] { x + 3, y + 4 },
-            new object[] { x + 5, y + 6 },
-            new object[] { x + 7, y + 8 },
-        };
+        protected static object[][] SourceMethodWithParameters(int x, int y) =>
+            new[]
+            {
+                new object[] { x + 1, y + 2 },
+                new object[] { x + 3, y + 4 },
+                new object[] { x + 5, y + 6 },
+                new object[] { x + 7, y + 8 },
+            };
 
         protected static object[] SingleParameterSource = { 1, 2, 3, 4 };
 
@@ -47,52 +48,34 @@ namespace osu.Framework.Tests.Visual.Testing
         public static object[][] ExposedSourceMethod() => SourceMethod();
 
         [TestCaseSource(nameof(SourceField))]
-        public void TestSourceField(int a, int b)
-        {
-        }
+        public void TestSourceField(int a, int b) { }
 
         [TestCaseSource(nameof(SourceProperty))]
-        public void TestSourceProperty(int a, int b)
-        {
-        }
+        public void TestSourceProperty(int a, int b) { }
 
         [TestCaseSource(nameof(SourceMethod))]
-        public void TestSourceMethod(int a, int b)
-        {
-        }
+        public void TestSourceMethod(int a, int b) { }
 
         [TestCaseSource(nameof(SourceMethodWithParameters), new object[] { 10, 20 })]
-        public void TestSourceParamsMethod(int a, int b)
-        {
-        }
+        public void TestSourceParamsMethod(int a, int b) { }
 
         [TestCaseSource(nameof(SourceField))]
         [TestCaseSource(nameof(SourceProperty))]
         [TestCaseSource(nameof(SourceMethod))]
         [TestCaseSource(nameof(SourceMethodWithParameters), new object[] { 10, 20 })]
-        public void TestMultipleSources(int a, int b)
-        {
-        }
+        public void TestMultipleSources(int a, int b) { }
 
         [TestCaseSource(nameof(SingleParameterSource))]
-        public void TestSingleParameterSource(int x)
-        {
-        }
+        public void TestSingleParameterSource(int x) { }
 
         [TestCaseSource(nameof(SingleParameterStringsSource))]
-        public void TestSingleParameterStringsSource(string x)
-        {
-        }
+        public void TestSingleParameterStringsSource(string x) { }
 
         [TestCaseSource(nameof(DifferentTypesSource))]
-        public void TestDifferentTypesSource(Visibility a, FillDirection b, bool c)
-        {
-        }
+        public void TestDifferentTypesSource(Visibility a, FillDirection b, bool c) { }
 
         [TestCaseSource(typeof(TestEnumerable))]
-        public void TestCustomEnumerableSource(int a, int b)
-        {
-        }
+        public void TestCustomEnumerableSource(int a, int b) { }
 
         private class TestEnumerable : IEnumerable
         {

@@ -26,8 +26,14 @@ namespace osu.Framework.Graphics.Containers.Markdown
 
         private readonly Table table;
 
-        private readonly LayoutValue columnDefinitionCache = new LayoutValue(Invalidation.DrawSize, conditions: (s, _) => s.Parent != null);
-        private readonly LayoutValue rowDefinitionCache = new LayoutValue(Invalidation.DrawSize, conditions: (s, _) => s.Parent != null);
+        private readonly LayoutValue columnDefinitionCache = new LayoutValue(
+            Invalidation.DrawSize,
+            conditions: (s, _) => s.Parent != null
+        );
+        private readonly LayoutValue rowDefinitionCache = new LayoutValue(
+            Invalidation.DrawSize,
+            conditions: (s, _) => s.Parent != null
+        );
 
         public MarkdownTable(Table table)
         {
@@ -54,7 +60,9 @@ namespace osu.Framework.Graphics.Containers.Markdown
                 for (int c = 0; c < tableRow.Count; c++)
                 {
                     var columnDimensions = table.ColumnDefinitions[c];
-                    row.Add(CreateTableCell((TableCell)tableRow[c], columnDimensions, rows.Count == 0));
+                    row.Add(
+                        CreateTableCell((TableCell)tableRow[c], columnDimensions, rows.Count == 0)
+                    );
                 }
 
                 rows.Add(row);
@@ -64,7 +72,7 @@ namespace osu.Framework.Graphics.Containers.Markdown
             {
                 AutoSizeAxes = Axes.Y,
                 RelativeSizeAxes = Axes.X,
-                Content = rows.Select(x => x.ToArray()).ToArray()
+                Content = rows.Select(x => x.ToArray()).ToArray(),
             };
         }
 
@@ -101,7 +109,10 @@ namespace osu.Framework.Graphics.Containers.Markdown
             for (int r = 0; r < tableContainer.Content.Count; r++)
             {
                 for (int c = 0; c < tableContainer.Content[r].Count; c++)
-                    columnWidths[c] = Math.Max(columnWidths[c], ((MarkdownTableCell)tableContainer.Content[r][c]).ContentWidth);
+                    columnWidths[c] = Math.Max(
+                        columnWidths[c],
+                        ((MarkdownTableCell)tableContainer.Content[r][c]).ContentWidth
+                    );
             }
 
             float totalWidth = 0;
@@ -120,7 +131,10 @@ namespace osu.Framework.Graphics.Containers.Markdown
             {
                 // The columns will overflow the table, must convert them to a relative size
                 for (int i = 0; i < columnWidths.Length; i++)
-                    columnDimensions[i] = new Dimension(GridSizeMode.Relative, columnWidths[i] / totalWidth);
+                    columnDimensions[i] = new Dimension(
+                        GridSizeMode.Relative,
+                        columnWidths[i] / totalWidth
+                    );
             }
 
             tableContainer.ColumnDimensions = columnDimensions;
@@ -133,11 +147,18 @@ namespace osu.Framework.Graphics.Containers.Markdown
 
             var rowDefinitions = new Dimension[tableContainer.Content.Count];
             for (int r = 0; r < tableContainer.Content.Count; r++)
-                rowDefinitions[r] = new Dimension(GridSizeMode.Absolute, tableContainer.Content[r].Max(c => ((MarkdownTableCell)c).ContentHeight));
+                rowDefinitions[r] = new Dimension(
+                    GridSizeMode.Absolute,
+                    tableContainer.Content[r].Max(c => ((MarkdownTableCell)c).ContentHeight)
+                );
 
             tableContainer.RowDimensions = rowDefinitions;
         }
 
-        protected virtual MarkdownTableCell CreateTableCell(TableCell cell, TableColumnDefinition definition, bool isHeading) => new MarkdownTableCell(cell, definition);
+        protected virtual MarkdownTableCell CreateTableCell(
+            TableCell cell,
+            TableColumnDefinition definition,
+            bool isHeading
+        ) => new MarkdownTableCell(cell, definition);
     }
 }

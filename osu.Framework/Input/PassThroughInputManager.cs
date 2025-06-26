@@ -26,7 +26,9 @@ namespace osu.Framework.Input
     /// Thus, when this is attached to the scene graph initially and when <see cref="UseParentInput"/> becomes true,
     /// multiple events may fire to synchronise the local <see cref="InputState"/> with the parent's.
     /// </remarks>
-    public partial class PassThroughInputManager : CustomInputManager, IRequireHighFrequencyMousePosition
+    public partial class PassThroughInputManager
+        : CustomInputManager,
+            IRequireHighFrequencyMousePosition
     {
         private bool useParentInput = true;
 
@@ -38,7 +40,8 @@ namespace osu.Framework.Input
             get => useParentInput;
             set
             {
-                if (useParentInput == value) return;
+                if (useParentInput == value)
+                    return;
 
                 useParentInput = value;
 
@@ -56,11 +59,18 @@ namespace osu.Framework.Input
             syncWithParent();
         }
 
-        public override bool HandleHoverEvents => parentInputManager != null && UseParentInput ? parentInputManager.HandleHoverEvents : base.HandleHoverEvents;
+        public override bool HandleHoverEvents =>
+            parentInputManager != null && UseParentInput
+                ? parentInputManager.HandleHoverEvents
+                : base.HandleHoverEvents;
 
-        internal override bool BuildNonPositionalInputQueue(List<Drawable> queue, bool allowBlocking = true)
+        internal override bool BuildNonPositionalInputQueue(
+            List<Drawable> queue,
+            bool allowBlocking = true
+        )
         {
-            if (!PropagateNonPositionalInputSubTree) return false;
+            if (!PropagateNonPositionalInputSubTree)
+                return false;
 
             if (!allowBlocking)
                 base.BuildNonPositionalInputQueue(queue, false);
@@ -70,9 +80,13 @@ namespace osu.Framework.Input
             return false;
         }
 
-        internal override bool BuildPositionalInputQueue(Vector2 screenSpacePos, List<Drawable> queue)
+        internal override bool BuildPositionalInputQueue(
+            Vector2 screenSpacePos,
+            List<Drawable> queue
+        )
         {
-            if (!PropagatePositionalInputSubTree) return false;
+            if (!PropagatePositionalInputSubTree)
+                return false;
 
             queue.Add(this);
             return false;
@@ -91,7 +105,8 @@ namespace osu.Framework.Input
 
         protected override bool Handle(UIEvent e)
         {
-            if (!UseParentInput) return false;
+            if (!UseParentInput)
+                return false;
 
             // Don't handle mouse events sourced from touches, we may have a
             // child drawable handling actual touches, we will produce one ourselves.
@@ -105,12 +120,18 @@ namespace osu.Framework.Input
                 {
                     case MouseDownEvent penDown:
                         Debug.Assert(penDown.Button == MouseButton.Left);
-                        new MouseButtonInputFromPen(true) { DeviceType = penInput.DeviceType }.Apply(CurrentState, this);
+                        new MouseButtonInputFromPen(true)
+                        {
+                            DeviceType = penInput.DeviceType,
+                        }.Apply(CurrentState, this);
                         return false;
 
                     case MouseUpEvent penUp:
                         Debug.Assert(penUp.Button == MouseButton.Left);
-                        new MouseButtonInputFromPen(false) { DeviceType = penInput.DeviceType }.Apply(CurrentState, this);
+                        new MouseButtonInputFromPen(false)
+                        {
+                            DeviceType = penInput.DeviceType,
+                        }.Apply(CurrentState, this);
                         return false;
 
                     case MouseMoveEvent penMove:
@@ -119,7 +140,7 @@ namespace osu.Framework.Input
                             new MousePositionAbsoluteInputFromPen
                             {
                                 Position = penMove.ScreenSpaceMousePosition,
-                                DeviceType = penInput.DeviceType
+                                DeviceType = penInput.DeviceType,
                             }.Apply(CurrentState, this);
                         }
 
@@ -139,11 +160,18 @@ namespace osu.Framework.Input
 
                 case MouseMoveEvent mouseMove:
                     if (mouseMove.ScreenSpaceMousePosition != CurrentState.Mouse.Position)
-                        new MousePositionAbsoluteInput { Position = mouseMove.ScreenSpaceMousePosition }.Apply(CurrentState, this);
+                        new MousePositionAbsoluteInput
+                        {
+                            Position = mouseMove.ScreenSpaceMousePosition,
+                        }.Apply(CurrentState, this);
                     break;
 
                 case ScrollEvent scroll:
-                    new MouseScrollRelativeInput { Delta = scroll.ScrollDelta, IsPrecise = scroll.IsPrecise }.Apply(CurrentState, this);
+                    new MouseScrollRelativeInput
+                    {
+                        Delta = scroll.ScrollDelta,
+                        IsPrecise = scroll.IsPrecise,
+                    }.Apply(CurrentState, this);
                     break;
 
                 case KeyDownEvent keyDown:
@@ -158,7 +186,10 @@ namespace osu.Framework.Input
                     break;
 
                 case TouchEvent touch:
-                    new TouchInput(touch.ScreenSpaceTouch, touch.IsActive(touch.ScreenSpaceTouch)).Apply(CurrentState, this);
+                    new TouchInput(
+                        touch.ScreenSpaceTouch,
+                        touch.IsActive(touch.ScreenSpaceTouch)
+                    ).Apply(CurrentState, this);
                     break;
 
                 case JoystickPressEvent joystickPress:
@@ -166,7 +197,10 @@ namespace osu.Framework.Input
                     break;
 
                 case JoystickReleaseEvent joystickRelease:
-                    new JoystickButtonInput(joystickRelease.Button, false).Apply(CurrentState, this);
+                    new JoystickButtonInput(joystickRelease.Button, false).Apply(
+                        CurrentState,
+                        this
+                    );
                     break;
 
                 case JoystickAxisMoveEvent joystickAxisMove:
@@ -174,7 +208,10 @@ namespace osu.Framework.Input
                     break;
 
                 case MidiDownEvent midiDown:
-                    new MidiKeyInput(midiDown.Key, midiDown.Velocity, true).Apply(CurrentState, this);
+                    new MidiKeyInput(midiDown.Key, midiDown.Velocity, true).Apply(
+                        CurrentState,
+                        this
+                    );
                     break;
 
                 case MidiUpEvent midiUp:
@@ -182,19 +219,31 @@ namespace osu.Framework.Input
                     break;
 
                 case TabletPenButtonPressEvent tabletPenButtonPress:
-                    new TabletPenButtonInput(tabletPenButtonPress.Button, true).Apply(CurrentState, this);
+                    new TabletPenButtonInput(tabletPenButtonPress.Button, true).Apply(
+                        CurrentState,
+                        this
+                    );
                     break;
 
                 case TabletPenButtonReleaseEvent tabletPenButtonRelease:
-                    new TabletPenButtonInput(tabletPenButtonRelease.Button, false).Apply(CurrentState, this);
+                    new TabletPenButtonInput(tabletPenButtonRelease.Button, false).Apply(
+                        CurrentState,
+                        this
+                    );
                     break;
 
                 case TabletAuxiliaryButtonPressEvent tabletAuxiliaryButtonPress:
-                    new TabletAuxiliaryButtonInput(tabletAuxiliaryButtonPress.Button, true).Apply(CurrentState, this);
+                    new TabletAuxiliaryButtonInput(tabletAuxiliaryButtonPress.Button, true).Apply(
+                        CurrentState,
+                        this
+                    );
                     break;
 
                 case TabletAuxiliaryButtonReleaseEvent tabletAuxiliaryButtonRelease:
-                    new TabletAuxiliaryButtonInput(tabletAuxiliaryButtonRelease.Button, false).Apply(CurrentState, this);
+                    new TabletAuxiliaryButtonInput(
+                        tabletAuxiliaryButtonRelease.Button,
+                        false
+                    ).Apply(CurrentState, this);
                     break;
             }
 
@@ -233,16 +282,35 @@ namespace osu.Framework.Input
                 return;
 
             var parentState = parentInputManager.CurrentState;
-            var mouseDiff = (parentState?.Mouse?.Buttons ?? new ButtonStates<MouseButton>()).EnumerateDifference(CurrentState.Mouse.Buttons);
-            var keyDiff = (parentState?.Keyboard.Keys ?? new ButtonStates<Key>()).EnumerateDifference(CurrentState.Keyboard.Keys);
-            var touchDiff = (parentState?.Touch ?? new TouchState()).EnumerateDifference(CurrentState.Touch);
-            var joyButtonDiff = (parentState?.Joystick?.Buttons ?? new ButtonStates<JoystickButton>()).EnumerateDifference(CurrentState.Joystick.Buttons);
-            var midiDiff = (parentState?.Midi?.Keys ?? new ButtonStates<MidiKey>()).EnumerateDifference(CurrentState.Midi.Keys);
-            var tabletPenDiff = (parentState?.Tablet?.PenButtons ?? new ButtonStates<TabletPenButton>()).EnumerateDifference(CurrentState.Tablet.PenButtons);
-            var tabletAuxiliaryDiff = (parentState?.Tablet?.AuxiliaryButtons ?? new ButtonStates<TabletAuxiliaryButton>()).EnumerateDifference(CurrentState.Tablet.AuxiliaryButtons);
+            var mouseDiff = (
+                parentState?.Mouse?.Buttons ?? new ButtonStates<MouseButton>()
+            ).EnumerateDifference(CurrentState.Mouse.Buttons);
+            var keyDiff = (
+                parentState?.Keyboard.Keys ?? new ButtonStates<Key>()
+            ).EnumerateDifference(CurrentState.Keyboard.Keys);
+            var touchDiff = (parentState?.Touch ?? new TouchState()).EnumerateDifference(
+                CurrentState.Touch
+            );
+            var joyButtonDiff = (
+                parentState?.Joystick?.Buttons ?? new ButtonStates<JoystickButton>()
+            ).EnumerateDifference(CurrentState.Joystick.Buttons);
+            var midiDiff = (
+                parentState?.Midi?.Keys ?? new ButtonStates<MidiKey>()
+            ).EnumerateDifference(CurrentState.Midi.Keys);
+            var tabletPenDiff = (
+                parentState?.Tablet?.PenButtons ?? new ButtonStates<TabletPenButton>()
+            ).EnumerateDifference(CurrentState.Tablet.PenButtons);
+            var tabletAuxiliaryDiff = (
+                parentState?.Tablet?.AuxiliaryButtons ?? new ButtonStates<TabletAuxiliaryButton>()
+            ).EnumerateDifference(CurrentState.Tablet.AuxiliaryButtons);
 
             if (mouseDiff.Released.Length > 0)
-                new MouseButtonInput(mouseDiff.Released.Select(button => new ButtonInputEntry<MouseButton>(button, false))).Apply(CurrentState, this);
+                new MouseButtonInput(
+                    mouseDiff.Released.Select(button => new ButtonInputEntry<MouseButton>(
+                        button,
+                        false
+                    ))
+                ).Apply(CurrentState, this);
             foreach (var key in keyDiff.Released)
                 new KeyboardKeyInput(key, false).Apply(CurrentState, this);
             if (touchDiff.deactivated.Length > 0)
@@ -250,7 +318,11 @@ namespace osu.Framework.Input
             foreach (var button in joyButtonDiff.Released)
                 new JoystickButtonInput(button, false).Apply(CurrentState, this);
             foreach (var key in midiDiff.Released)
-                new MidiKeyInput(key, parentState?.Midi?.Velocities.GetValueOrDefault(key) ?? 0, false).Apply(CurrentState, this);
+                new MidiKeyInput(
+                    key,
+                    parentState?.Midi?.Velocities.GetValueOrDefault(key) ?? 0,
+                    false
+                ).Apply(CurrentState, this);
             foreach (var button in tabletPenDiff.Released)
                 new TabletPenButtonInput(button, false).Apply(CurrentState, this);
             foreach (var button in tabletAuxiliaryDiff.Released)
@@ -270,7 +342,9 @@ namespace osu.Framework.Input
             {
                 if (parentState?.Joystick?.AxesValues[i] != CurrentState.Joystick.AxesValues[i])
                 {
-                    new JoystickAxisInput(parentState?.Joystick?.GetAxes() ?? Array.Empty<JoystickAxis>()).Apply(CurrentState, this);
+                    new JoystickAxisInput(
+                        parentState?.Joystick?.GetAxes() ?? Array.Empty<JoystickAxis>()
+                    ).Apply(CurrentState, this);
                     break;
                 }
             }
@@ -284,7 +358,10 @@ namespace osu.Framework.Input
             var parentMousePosition = parentInputManager.CurrentState.Mouse.Position;
 
             if (parentMousePosition != CurrentState.Mouse.Position)
-                new MousePositionAbsoluteInput { Position = parentMousePosition }.Apply(CurrentState, this);
+                new MousePositionAbsoluteInput { Position = parentMousePosition }.Apply(
+                    CurrentState,
+                    this
+                );
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK.Graphics;
 using System;
 using System.Globalization;
+using osuTK.Graphics;
 
 namespace osu.Framework.Extensions.Color4Extensions
 {
@@ -28,7 +28,9 @@ namespace osu.Framework.Extensions.Color4Extensions
             if (color == 1)
                 return 1;
 
-            return color <= 0.04045f ? color / 12.92f : MathF.Pow((color + 0.055f) / 1.055f, (float)GAMMA);
+            return color <= 0.04045f
+                ? color / 12.92f
+                : MathF.Pow((color + 0.055f) / 1.055f, (float)GAMMA);
         }
 
         public static double ToSRGB(double color)
@@ -44,26 +46,22 @@ namespace osu.Framework.Extensions.Color4Extensions
             if (color == 1)
                 return 1;
 
-            return color < 0.0031308f ? 12.92f * color : 1.055f * MathF.Pow(color, 1.0f / (float)GAMMA) - 0.055f;
+            return color < 0.0031308f
+                ? 12.92f * color
+                : 1.055f * MathF.Pow(color, 1.0f / (float)GAMMA) - 0.055f;
         }
 
-        public static Color4 Opacity(this Color4 color, float a) => new Color4(color.R, color.G, color.B, a);
+        public static Color4 Opacity(this Color4 color, float a) =>
+            new Color4(color.R, color.G, color.B, a);
 
-        public static Color4 Opacity(this Color4 color, byte a) => new Color4(color.R, color.G, color.B, a / 255f);
+        public static Color4 Opacity(this Color4 color, byte a) =>
+            new Color4(color.R, color.G, color.B, a / 255f);
 
         public static Color4 ToLinear(this Color4 colour) =>
-            new Color4(
-                ToLinear(colour.R),
-                ToLinear(colour.G),
-                ToLinear(colour.B),
-                colour.A);
+            new Color4(ToLinear(colour.R), ToLinear(colour.G), ToLinear(colour.B), colour.A);
 
         public static Color4 ToSRGB(this Color4 colour) =>
-            new Color4(
-                ToSRGB(colour.R),
-                ToSRGB(colour.G),
-                ToSRGB(colour.B),
-                colour.A);
+            new Color4(ToSRGB(colour.R), ToSRGB(colour.G), ToSRGB(colour.B), colour.A);
 
         public static Color4 MultiplySRGB(Color4 first, Color4 second)
         {
@@ -80,7 +78,8 @@ namespace osu.Framework.Extensions.Color4Extensions
                 first.R * second.R,
                 first.G * second.G,
                 first.B * second.B,
-                first.A * second.A).ToSRGB();
+                first.A * second.A
+            ).ToSRGB();
         }
 
         public static Color4 Multiply(Color4 first, Color4 second)
@@ -95,7 +94,8 @@ namespace osu.Framework.Extensions.Color4Extensions
                 first.R * second.R,
                 first.G * second.G,
                 first.B * second.B,
-                first.A * second.A);
+                first.A * second.A
+            );
         }
 
         /// <summary>
@@ -103,14 +103,16 @@ namespace osu.Framework.Extensions.Color4Extensions
         /// </summary>
         /// <param name="colour">Original colour</param>
         /// <param name="amount">Decimal light addition</param>
-        public static Color4 Lighten(this Color4 colour, float amount) => Multiply(colour, 1 + amount);
+        public static Color4 Lighten(this Color4 colour, float amount) =>
+            Multiply(colour, 1 + amount);
 
         /// <summary>
         /// Returns a darkened version of the colour.
         /// </summary>
         /// <param name="colour">Original colour</param>
         /// <param name="amount">Percentage light reduction</param>
-        public static Color4 Darken(this Color4 colour, float amount) => Multiply(colour, 1 / (1 + amount));
+        public static Color4 Darken(this Color4 colour, float amount) =>
+            Multiply(colour, 1 / (1 + amount));
 
         /// <summary>
         /// Multiply the RGB coordinates by a scalar.
@@ -125,7 +127,8 @@ namespace osu.Framework.Extensions.Color4Extensions
                 Math.Min(1, colour.R * scalar),
                 Math.Min(1, colour.G * scalar),
                 Math.Min(1, colour.B * scalar),
-                colour.A);
+                colour.A
+            );
         }
 
         /// <summary>
@@ -159,28 +162,32 @@ namespace osu.Framework.Extensions.Color4Extensions
                         (byte)(byte.Parse(hexSpan.Slice(0, 1), NumberStyles.HexNumber) * 17),
                         (byte)(byte.Parse(hexSpan.Slice(1, 1), NumberStyles.HexNumber) * 17),
                         (byte)(byte.Parse(hexSpan.Slice(2, 1), NumberStyles.HexNumber) * 17),
-                        255);
+                        255
+                    );
 
                 case 6:
                     return new Color4(
                         byte.Parse(hexSpan.Slice(0, 2), NumberStyles.HexNumber),
                         byte.Parse(hexSpan.Slice(2, 2), NumberStyles.HexNumber),
                         byte.Parse(hexSpan.Slice(4, 2), NumberStyles.HexNumber),
-                        255);
+                        255
+                    );
 
                 case 4:
                     return new Color4(
                         (byte)(byte.Parse(hexSpan.Slice(0, 1), NumberStyles.HexNumber) * 17),
                         (byte)(byte.Parse(hexSpan.Slice(1, 1), NumberStyles.HexNumber) * 17),
                         (byte)(byte.Parse(hexSpan.Slice(2, 1), NumberStyles.HexNumber) * 17),
-                        (byte)(byte.Parse(hexSpan.Slice(3, 1), NumberStyles.HexNumber) * 17));
+                        (byte)(byte.Parse(hexSpan.Slice(3, 1), NumberStyles.HexNumber) * 17)
+                    );
 
                 case 8:
                     return new Color4(
                         byte.Parse(hexSpan.Slice(0, 2), NumberStyles.HexNumber),
                         byte.Parse(hexSpan.Slice(2, 2), NumberStyles.HexNumber),
                         byte.Parse(hexSpan.Slice(4, 2), NumberStyles.HexNumber),
-                        byte.Parse(hexSpan.Slice(6, 2), NumberStyles.HexNumber));
+                        byte.Parse(hexSpan.Slice(6, 2), NumberStyles.HexNumber)
+                    );
             }
         }
 

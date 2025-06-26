@@ -10,21 +10,22 @@ namespace osu.Framework.Graphics.Video
     internal class AVHWDeviceTypePerformanceComparer : Comparer<AVHWDeviceType>
     {
         // higher = better
-        private static readonly IReadOnlyDictionary<AVHWDeviceType, int> performance_scores = new Dictionary<AVHWDeviceType, int>
-        {
-            // Windows
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_CUDA, 10 },
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_QSV, 9 },
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_D3D11VA, 8 },
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_DXVA2, 7 },
-            // Linux
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_VDPAU, 10 },
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_VAAPI, 9 },
-            // Android
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_MEDIACODEC, 10 },
-            // iOS, macOS
-            { AVHWDeviceType.AV_HWDEVICE_TYPE_VIDEOTOOLBOX, 10 },
-        };
+        private static readonly IReadOnlyDictionary<AVHWDeviceType, int> performance_scores =
+            new Dictionary<AVHWDeviceType, int>
+            {
+                // Windows
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_CUDA, 10 },
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_QSV, 9 },
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_D3D11VA, 8 },
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_DXVA2, 7 },
+                // Linux
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_VDPAU, 10 },
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_VAAPI, 9 },
+                // Android
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_MEDIACODEC, 10 },
+                // iOS, macOS
+                { AVHWDeviceType.AV_HWDEVICE_TYPE_VIDEOTOOLBOX, 10 },
+            };
 
         public override int Compare(AVHWDeviceType x, AVHWDeviceType y)
         {

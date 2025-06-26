@@ -26,31 +26,45 @@ namespace osu.Framework.Tests.Input
         {
             var receptors = new InputReceptor[3];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptors[0] = new InputReceptor
+                    Children = new Drawable[]
                     {
-                        Size = new Vector2(100),
-                        Press = () => true
-                    },
-                    receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                };
-            });
+                        receptors[0] = new InputReceptor
+                        {
+                            Size = new Vector2(100),
+                            Press = () => true,
+                        },
+                        receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                    };
+                }
+            );
 
-            AddStep("press a button", () => InputManager.PressJoystickButton(JoystickButton.Button1));
-            AddStep("add receptor above", () =>
-            {
-                Add(receptors[2] = new InputReceptor
+            AddStep(
+                "press a button",
+                () => InputManager.PressJoystickButton(JoystickButton.Button1)
+            );
+            AddStep(
+                "add receptor above",
+                () =>
                 {
-                    Size = new Vector2(100),
-                    Press = () => true,
-                    Release = () => true
-                });
-            });
+                    Add(
+                        receptors[2] = new InputReceptor
+                        {
+                            Size = new Vector2(100),
+                            Press = () => true,
+                            Release = () => true,
+                        }
+                    );
+                }
+            );
 
-            AddStep("release key", () => InputManager.ReleaseJoystickButton(JoystickButton.Button1));
+            AddStep(
+                "release key",
+                () => InputManager.ReleaseJoystickButton(JoystickButton.Button1)
+            );
 
             AddAssert("receptor 0 handled key down", () => receptors[0].PressReceived);
             AddAssert("receptor 0 handled key up", () => receptors[0].ReleaseReceived);

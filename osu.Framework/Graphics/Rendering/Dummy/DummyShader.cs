@@ -14,7 +14,8 @@ namespace osu.Framework.Graphics.Rendering.Dummy
     {
         private readonly IRenderer renderer;
 
-        IReadOnlyDictionary<string, IUniform> IShader.Uniforms { get; } = new Dictionary<string, IUniform>();
+        IReadOnlyDictionary<string, IUniform> IShader.Uniforms { get; } =
+            new Dictionary<string, IUniform>();
 
         public DummyShader(IRenderer renderer)
         {
@@ -40,12 +41,8 @@ namespace osu.Framework.Graphics.Rendering.Dummy
             return new Uniform<T>(renderer, this, name, 0);
         }
 
-        public void BindUniformBlock(string blockName, IUniformBuffer buffer)
-        {
-        }
+        public void BindUniformBlock(string blockName, IUniformBuffer buffer) { }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

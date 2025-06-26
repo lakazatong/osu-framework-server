@@ -27,219 +27,253 @@ namespace osu.Framework.Tests.Visual.Drawables
                     Colour = Color4.LightBlue,
                     Hollow = true,
                     Radius = 5f,
-                    Type = EdgeEffectType.Glow
-                }
+                    Type = EdgeEffectType.Glow,
+                },
             };
-            Add(new FillFlowContainer
-            {
-                Position = new Vector2(10f, 10f),
-                Spacing = new Vector2(25f, 25f),
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                new FillFlowContainer
                 {
-                    new SpriteText
+                    Position = new Vector2(10f, 10f),
+                    Spacing = new Vector2(25f, 25f),
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        Text = "Blur Test",
-                        Font = new FontUsage(size: 32),
-                    }.WithEffect(new BlurEffect
-                    {
-                        Sigma = new Vector2(2f, 0f),
-                        Strength = 2f,
-                        Rotation = 45f,
-                    }),
-                    new SpriteText
-                    {
-                        Text = "EdgeEffect Test",
-                        Font = new FontUsage(size: 32),
-                    }.WithEffect(new EdgeEffect
-                    {
-                        CornerRadius = 3f,
-                        Parameters = new EdgeEffectParameters
+                        new SpriteText
                         {
-                            Colour = Color4.Yellow,
-                            Hollow = true,
-                            Radius = 5f,
-                            Type = EdgeEffectType.Shadow
-                        }
-                    }),
-                    new SpriteText
-                    {
-                        Text = "Repeated usage of same effect test",
-                        Font = new FontUsage(size: 32),
-                    }.WithEffect(effect),
-                    new SpriteText
-                    {
-                        Text = "Repeated usage of same effect test",
-                        Font = new FontUsage(size: 32),
-                    }.WithEffect(effect),
-                    new SpriteText
-                    {
-                        Text = "Repeated usage of same effect test",
-                        Font = new FontUsage(size: 32),
-                    }.WithEffect(effect),
-                    new SpriteText
-                    {
-                        Text = "Multiple effects Test",
-                        Font = new FontUsage(size: 32),
-                    }.WithEffect(new BlurEffect
-                    {
-                        Sigma = new Vector2(2f, 2f),
-                        Strength = 2f
-                    }).WithEffect(new EdgeEffect
-                    {
-                        CornerRadius = 3f,
-                        Parameters = new EdgeEffectParameters
-                        {
-                            Colour = Color4.Yellow,
-                            Hollow = true,
-                            Radius = 5f,
-                            Type = EdgeEffectType.Shadow
-                        }
-                    }),
-                    new Container
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new Drawable[]
-                        {
-                            new Box
+                            Text = "Blur Test",
+                            Font = new FontUsage(size: 32),
+                        }.WithEffect(
+                            new BlurEffect
                             {
-                                Colour = Color4.CornflowerBlue,
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                            new SpriteText
-                            {
-                                Text = "Outlined Text",
-                                Font = new FontUsage(size: 32),
-                            }.WithEffect(new OutlineEffect
-                            {
-                                BlurSigma = new Vector2(3f),
-                                Strength = 3f,
-                                Colour = Color4.Red,
-                                PadExtent = true,
-                            })
-                        }
-                    },
-                    new Container
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new Drawable[]
-                        {
-                            new Box
-                            {
-                                Colour = Color4.CornflowerBlue,
-                                RelativeSizeAxes = Axes.Both,
-                            },
-                            new SpriteText
-                            {
-                                Text = "Glowing Text",
-                                Font = new FontUsage(size: 32),
-                            }.WithEffect(new GlowEffect
-                            {
-                                BlurSigma = new Vector2(3f),
-                                Strength = 3f,
-                                Colour = ColourInfo.GradientHorizontal(new Color4(1.2f, 0, 0, 1f), new Color4(0, 1f, 0, 1f)),
-                                PadExtent = true,
-                            }),
-                        }
-                    },
-                    new Container
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new Drawable[]
-                        {
-                            new Box
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Colour = Color4.White,
-                                Size = new Vector2(150, 40),
-                            }.WithEffect(new GlowEffect
-                            {
-                                BlurSigma = new Vector2(3f),
-                                Strength = 3f,
-                                Colour = ColourInfo.GradientHorizontal(new Color4(1.2f, 0, 0, 1f), new Color4(0, 1f, 0, 1f)),
-                                PadExtent = true,
-                            }),
-                            changeColourText = new SpriteText
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Text = "Absolute Size",
-                                Font = new FontUsage(size: 32),
-                                Colour = Color4.Red,
-                                Shadow = true,
+                                Sigma = new Vector2(2f, 0f),
+                                Strength = 2f,
+                                Rotation = 45f,
                             }
-                        }
-                    },
-                    new Container
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new Drawable[]
+                        ),
+                        new SpriteText
                         {
-                            new Box
+                            Text = "EdgeEffect Test",
+                            Font = new FontUsage(size: 32),
+                        }.WithEffect(
+                            new EdgeEffect
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Colour = Color4.White,
-                                RelativeSizeAxes = Axes.Both,
-                                Size = new Vector2(1.1f, 1.1f),
-                            }.WithEffect(new GlowEffect
-                            {
-                                BlurSigma = new Vector2(3f),
-                                Strength = 3f,
-                                Colour = ColourInfo.GradientHorizontal(new Color4(1.2f, 0, 0, 1f), new Color4(0, 1f, 0, 1f)),
-                                PadExtent = true,
-                            }),
-                            new SpriteText
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Text = "Relative Size",
-                                Font = new FontUsage(size: 32),
-                                Colour = Color4.Red,
-                                Shadow = true,
-                            },
-                        }
-                    },
-                    new Container
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new Drawable[]
+                                CornerRadius = 3f,
+                                Parameters = new EdgeEffectParameters
+                                {
+                                    Colour = Color4.Yellow,
+                                    Hollow = true,
+                                    Radius = 5f,
+                                    Type = EdgeEffectType.Shadow,
+                                },
+                            }
+                        ),
+                        new SpriteText
                         {
-                            new Box
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Colour = Color4.White,
-                                RelativeSizeAxes = Axes.Both,
-                                Size = new Vector2(1.1f, 1.1f),
-                                Rotation = 10,
-                            }.WithEffect(new GlowEffect
-                            {
-                                BlurSigma = new Vector2(3f),
-                                Strength = 3f,
-                                Colour = ColourInfo.GradientHorizontal(new Color4(1.2f, 0, 0, 1f), new Color4(0, 1f, 0, 1f)),
-                                PadExtent = true,
-                            }),
-                            new SpriteText
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Text = "Rotation",
-                                Font = new FontUsage(size: 32),
-                                Colour = Color4.Red,
-                                Shadow = true,
-                            },
+                            Text = "Repeated usage of same effect test",
+                            Font = new FontUsage(size: 32),
+                        }.WithEffect(effect),
+                        new SpriteText
+                        {
+                            Text = "Repeated usage of same effect test",
+                            Font = new FontUsage(size: 32),
+                        }.WithEffect(effect),
+                        new SpriteText
+                        {
+                            Text = "Repeated usage of same effect test",
+                            Font = new FontUsage(size: 32),
+                        }.WithEffect(effect),
+                        new SpriteText
+                        {
+                            Text = "Multiple effects Test",
+                            Font = new FontUsage(size: 32),
                         }
+                            .WithEffect(
+                                new BlurEffect { Sigma = new Vector2(2f, 2f), Strength = 2f }
+                            )
+                            .WithEffect(
+                                new EdgeEffect
+                                {
+                                    CornerRadius = 3f,
+                                    Parameters = new EdgeEffectParameters
+                                    {
+                                        Colour = Color4.Yellow,
+                                        Hollow = true,
+                                        Radius = 5f,
+                                        Type = EdgeEffectType.Shadow,
+                                    },
+                                }
+                            ),
+                        new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    Colour = Color4.CornflowerBlue,
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                                new SpriteText
+                                {
+                                    Text = "Outlined Text",
+                                    Font = new FontUsage(size: 32),
+                                }.WithEffect(
+                                    new OutlineEffect
+                                    {
+                                        BlurSigma = new Vector2(3f),
+                                        Strength = 3f,
+                                        Colour = Color4.Red,
+                                        PadExtent = true,
+                                    }
+                                ),
+                            },
+                        },
+                        new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    Colour = Color4.CornflowerBlue,
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                                new SpriteText
+                                {
+                                    Text = "Glowing Text",
+                                    Font = new FontUsage(size: 32),
+                                }.WithEffect(
+                                    new GlowEffect
+                                    {
+                                        BlurSigma = new Vector2(3f),
+                                        Strength = 3f,
+                                        Colour = ColourInfo.GradientHorizontal(
+                                            new Color4(1.2f, 0, 0, 1f),
+                                            new Color4(0, 1f, 0, 1f)
+                                        ),
+                                        PadExtent = true,
+                                    }
+                                ),
+                            },
+                        },
+                        new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Colour = Color4.White,
+                                    Size = new Vector2(150, 40),
+                                }.WithEffect(
+                                    new GlowEffect
+                                    {
+                                        BlurSigma = new Vector2(3f),
+                                        Strength = 3f,
+                                        Colour = ColourInfo.GradientHorizontal(
+                                            new Color4(1.2f, 0, 0, 1f),
+                                            new Color4(0, 1f, 0, 1f)
+                                        ),
+                                        PadExtent = true,
+                                    }
+                                ),
+                                changeColourText = new SpriteText
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Text = "Absolute Size",
+                                    Font = new FontUsage(size: 32),
+                                    Colour = Color4.Red,
+                                    Shadow = true,
+                                },
+                            },
+                        },
+                        new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Colour = Color4.White,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Size = new Vector2(1.1f, 1.1f),
+                                }.WithEffect(
+                                    new GlowEffect
+                                    {
+                                        BlurSigma = new Vector2(3f),
+                                        Strength = 3f,
+                                        Colour = ColourInfo.GradientHorizontal(
+                                            new Color4(1.2f, 0, 0, 1f),
+                                            new Color4(0, 1f, 0, 1f)
+                                        ),
+                                        PadExtent = true,
+                                    }
+                                ),
+                                new SpriteText
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Text = "Relative Size",
+                                    Font = new FontUsage(size: 32),
+                                    Colour = Color4.Red,
+                                    Shadow = true,
+                                },
+                            },
+                        },
+                        new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Colour = Color4.White,
+                                    RelativeSizeAxes = Axes.Both,
+                                    Size = new Vector2(1.1f, 1.1f),
+                                    Rotation = 10,
+                                }.WithEffect(
+                                    new GlowEffect
+                                    {
+                                        BlurSigma = new Vector2(3f),
+                                        Strength = 3f,
+                                        Colour = ColourInfo.GradientHorizontal(
+                                            new Color4(1.2f, 0, 0, 1f),
+                                            new Color4(0, 1f, 0, 1f)
+                                        ),
+                                        PadExtent = true,
+                                    }
+                                ),
+                                new SpriteText
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Text = "Rotation",
+                                    Font = new FontUsage(size: 32),
+                                    Colour = Color4.Red,
+                                    Shadow = true,
+                                },
+                            },
+                        },
                     },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            changeColourText.FadeColour(Color4.Black, 1000).Then().FadeColour(Color4.Red, 1000).Loop();
+            changeColourText
+                .FadeColour(Color4.Black, 1000)
+                .Then()
+                .FadeColour(Color4.Red, 1000)
+                .Loop();
         }
     }
 }

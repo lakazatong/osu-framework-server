@@ -14,7 +14,8 @@ namespace osu.Framework.Allocation
     /// </summary>
     public class TimedExpiryCache<TKey, TValue> : IDisposable
     {
-        private readonly ConcurrentDictionary<TKey, TimedObject<TValue>> dictionary = new ConcurrentDictionary<TKey, TimedObject<TValue>>();
+        private readonly ConcurrentDictionary<TKey, TimedObject<TValue>> dictionary =
+            new ConcurrentDictionary<TKey, TimedObject<TValue>>();
 
         /// <summary>
         /// Whether <see cref="IDisposable"/> items should be disposed on removal.
@@ -51,7 +52,10 @@ namespace osu.Framework.Allocation
             {
                 if ((now - v.Value.LastAccessTime).TotalMilliseconds > ExpiryTime)
                 {
-                    if (dictionary.TryRemove(v.Key, out TimedObject<TValue> removed) && DisposeOnRemoval)
+                    if (
+                        dictionary.TryRemove(v.Key, out TimedObject<TValue> removed)
+                        && DisposeOnRemoval
+                    )
                         (removed.Value as IDisposable)?.Dispose();
                 }
             }

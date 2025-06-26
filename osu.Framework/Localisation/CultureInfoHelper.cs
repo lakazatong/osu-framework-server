@@ -20,7 +20,8 @@ namespace osu.Framework.Localisation
         /// <summary>
         /// The system-default <see cref="CultureInfo"/> used for app languages/translations.
         /// </summary>
-        public static CultureInfo SystemUICulture { get; private set; } = CultureInfo.CurrentUICulture;
+        public static CultureInfo SystemUICulture { get; private set; } =
+            CultureInfo.CurrentUICulture;
 
         /// <summary>
         /// Wrapper around <see cref="CultureInfo.GetCultureInfo(string)"/> providing common behaviour and exception handling.
@@ -62,7 +63,11 @@ namespace osu.Framework.Localisation
         /// </summary>
         public static IEnumerable<CultureInfo> EnumerateParentCultures(this CultureInfo cultureInfo)
         {
-            for (var c = cultureInfo; !EqualityComparer<CultureInfo>.Default.Equals(c, CultureInfo.InvariantCulture); c = c.Parent)
+            for (
+                var c = cultureInfo;
+                !EqualityComparer<CultureInfo>.Default.Equals(c, CultureInfo.InvariantCulture);
+                c = c.Parent
+            )
                 yield return c;
         }
 
@@ -89,6 +94,7 @@ namespace osu.Framework.Localisation
         /// For use in tests only.
         /// Temporarily changes <see cref="SystemCulture"/> and <see cref="SystemUICulture"/>.
         /// </summary>
-        internal static IDisposable ChangeSystemCulture(string allCultures) => ChangeSystemCulture(allCultures, allCultures);
+        internal static IDisposable ChangeSystemCulture(string allCultures) =>
+            ChangeSystemCulture(allCultures, allCultures);
     }
 }

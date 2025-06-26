@@ -24,7 +24,9 @@ namespace osu.Framework.Input.Bindings
         /// </summary>
         public readonly ImmutableArray<InputKey> Keys;
 
-        private static readonly ImmutableArray<InputKey> none = ImmutableArray.Create(InputKey.None);
+        private static readonly ImmutableArray<InputKey> none = ImmutableArray.Create(
+            InputKey.None
+        );
 
         /// <summary>
         /// Construct a new instance.
@@ -65,9 +67,7 @@ namespace osu.Framework.Input.Bindings
         /// <param name="keys">The keys.</param>
         /// <remarks>This constructor is not optimized. Hot paths are assumed to use <see cref="FromInputState(InputState, Vector2?)"/>.</remarks>
         public KeyCombination(params InputKey[] keys)
-            : this((ICollection<InputKey>)keys)
-        {
-        }
+            : this((ICollection<InputKey>)keys) { }
 
         /// <summary>
         /// Construct a new instance from string representation provided by <see cref="ToString"/>.
@@ -75,9 +75,11 @@ namespace osu.Framework.Input.Bindings
         /// <param name="keys">A comma-separated (KeyCode in integer) string representation of the keys.</param>
         /// <remarks>This constructor is not optimized. Hot paths are assumed to use <see cref="FromInputState(InputState, Vector2?)"/>.</remarks>
         public KeyCombination(string keys)
-            : this(keys.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => (InputKey)int.Parse(s)).ToArray())
-        {
-        }
+            : this(
+                keys.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => (InputKey)int.Parse(s))
+                    .ToArray()
+            ) { }
 
         /// <summary>
         /// Constructor optimized for known builder. The caller is responsible to sort it.
@@ -95,7 +97,11 @@ namespace osu.Framework.Input.Bindings
         /// <param name="inputState">The current input state.</param>
         /// <param name="matchingMode">The method for handling exact key matches.</param>
         /// <returns>Whether the pressedKeys keys are valid.</returns>
-        public bool IsPressed(KeyCombination pressedKeys, InputState inputState, KeyCombinationMatchingMode matchingMode)
+        public bool IsPressed(
+            KeyCombination pressedKeys,
+            InputState inputState,
+            KeyCombinationMatchingMode matchingMode
+        )
         {
             Debug.Assert(!pressedKeys.Keys.Contains(InputKey.None)); // Having None in pressed keys will break IsPressed
 
@@ -140,7 +146,11 @@ namespace osu.Framework.Input.Bindings
         /// <param name="matchingMode">The matching mode to be used when checking.</param>
         /// <returns>Whether this is a match.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool ContainsAll(ImmutableArray<InputKey> candidateKeyBinding, ImmutableArray<InputKey> pressedPhysicalKeys, KeyCombinationMatchingMode matchingMode)
+        internal static bool ContainsAll(
+            ImmutableArray<InputKey> candidateKeyBinding,
+            ImmutableArray<InputKey> pressedPhysicalKeys,
+            KeyCombinationMatchingMode matchingMode
+        )
         {
             Debug.Assert(pressedPhysicalKeys.All(k => k.IsPhysical()));
 
@@ -189,10 +199,16 @@ namespace osu.Framework.Input.Bindings
         /// <param name="candidateKeyBinding">The candidate key binding to match against.</param>
         /// <param name="physicalKey">The physical key that has been pressed.</param>
         /// <returns>Whether this is a match.</returns>
-        internal static bool KeyBindingContains(ImmutableArray<InputKey> candidateKeyBinding, InputKey physicalKey)
+        internal static bool KeyBindingContains(
+            ImmutableArray<InputKey> candidateKeyBinding,
+            InputKey physicalKey
+        )
         {
-            return candidateKeyBinding.Contains(physicalKey) ||
-                   (getVirtualKey(physicalKey) is InputKey vKey && candidateKeyBinding.Contains(vKey));
+            return candidateKeyBinding.Contains(physicalKey)
+                || (
+                    getVirtualKey(physicalKey) is InputKey vKey
+                    && candidateKeyBinding.Contains(vKey)
+                );
         }
 
         /// <summary>
@@ -201,7 +217,10 @@ namespace osu.Framework.Input.Bindings
         /// <param name="pressedPhysicalKeys">The currently pressed keys to match against.</param>
         /// <param name="candidateKey">The candidate key to check.</param>
         /// <returns>Whether this is a match.</returns>
-        internal static bool IsPressed(ImmutableArray<InputKey> pressedPhysicalKeys, InputKey candidateKey)
+        internal static bool IsPressed(
+            ImmutableArray<InputKey> pressedPhysicalKeys,
+            InputKey candidateKey
+        )
         {
             if (candidateKey.IsPhysical())
                 return pressedPhysicalKeys.Contains(candidateKey);
@@ -229,9 +248,11 @@ namespace osu.Framework.Input.Bindings
             return hash.ToHashCode();
         }
 
-        public static implicit operator KeyCombination(InputKey singleKey) => new KeyCombination(ImmutableArray.Create(singleKey));
+        public static implicit operator KeyCombination(InputKey singleKey) =>
+            new KeyCombination(ImmutableArray.Create(singleKey));
 
-        public static implicit operator KeyCombination(string stringRepresentation) => new KeyCombination(stringRepresentation);
+        public static implicit operator KeyCombination(string stringRepresentation) =>
+            new KeyCombination(stringRepresentation);
 
         public static implicit operator KeyCombination(InputKey[] keys) => new KeyCombination(keys);
 
@@ -268,32 +289,42 @@ namespace osu.Framework.Input.Bindings
         {
             switch (key)
             {
-                case Key.LShift: return InputKey.LShift;
+                case Key.LShift:
+                    return InputKey.LShift;
 
-                case Key.RShift: return InputKey.RShift;
+                case Key.RShift:
+                    return InputKey.RShift;
 
-                case Key.LControl: return InputKey.LControl;
+                case Key.LControl:
+                    return InputKey.LControl;
 
-                case Key.RControl: return InputKey.RControl;
+                case Key.RControl:
+                    return InputKey.RControl;
 
-                case Key.LAlt: return InputKey.LAlt;
+                case Key.LAlt:
+                    return InputKey.LAlt;
 
-                case Key.RAlt: return InputKey.RAlt;
+                case Key.RAlt:
+                    return InputKey.RAlt;
 
-                case Key.LWin: return InputKey.LSuper;
+                case Key.LWin:
+                    return InputKey.LSuper;
 
-                case Key.RWin: return InputKey.RSuper;
+                case Key.RWin:
+                    return InputKey.RSuper;
             }
 
             return (InputKey)key;
         }
 
-        public static InputKey FromMouseButton(MouseButton button) => (InputKey)((int)InputKey.FirstMouseButton + button);
+        public static InputKey FromMouseButton(MouseButton button) =>
+            (InputKey)((int)InputKey.FirstMouseButton + button);
 
         public static InputKey FromJoystickButton(JoystickButton button)
         {
             if (button >= JoystickButton.FirstHatRight)
-                return InputKey.FirstJoystickHatRightButton + (button - JoystickButton.FirstHatRight);
+                return InputKey.FirstJoystickHatRightButton
+                    + (button - JoystickButton.FirstHatRight);
             if (button >= JoystickButton.FirstHatLeft)
                 return InputKey.FirstJoystickHatLeftButton + (button - JoystickButton.FirstHatLeft);
             if (button >= JoystickButton.FirstHatDown)
@@ -301,9 +332,11 @@ namespace osu.Framework.Input.Bindings
             if (button >= JoystickButton.FirstHatUp)
                 return InputKey.FirstJoystickHatUpButton + (button - JoystickButton.FirstHatUp);
             if (button >= JoystickButton.FirstAxisPositive)
-                return InputKey.FirstJoystickAxisPositiveButton + (button - JoystickButton.FirstAxisPositive);
+                return InputKey.FirstJoystickAxisPositiveButton
+                    + (button - JoystickButton.FirstAxisPositive);
             if (button >= JoystickButton.FirstAxisNegative)
-                return InputKey.FirstJoystickAxisNegativeButton + (button - JoystickButton.FirstAxisNegative);
+                return InputKey.FirstJoystickAxisNegativeButton
+                    + (button - JoystickButton.FirstAxisNegative);
 
             return InputKey.FirstJoystickButton + (button - JoystickButton.FirstButton);
         }
@@ -323,11 +356,14 @@ namespace osu.Framework.Input.Bindings
                 yield return InputKey.MouseWheelRight;
         }
 
-        public static InputKey FromMidiKey(MidiKey key) => (InputKey)((int)InputKey.MidiA0 + key - MidiKey.A0);
+        public static InputKey FromMidiKey(MidiKey key) =>
+            (InputKey)((int)InputKey.MidiA0 + key - MidiKey.A0);
 
-        public static InputKey FromTabletPenButton(TabletPenButton penButton) => (InputKey)((int)InputKey.FirstTabletPenButton + penButton);
+        public static InputKey FromTabletPenButton(TabletPenButton penButton) =>
+            (InputKey)((int)InputKey.FirstTabletPenButton + penButton);
 
-        public static InputKey FromTabletAuxiliaryButton(TabletAuxiliaryButton auxiliaryButton) => (InputKey)((int)InputKey.FirstTabletAuxiliaryButton + auxiliaryButton);
+        public static InputKey FromTabletAuxiliaryButton(TabletAuxiliaryButton auxiliaryButton) =>
+            (InputKey)((int)InputKey.FirstTabletAuxiliaryButton + auxiliaryButton);
 
         /// <summary>
         /// Construct a new instance from input state.

@@ -26,7 +26,8 @@ namespace osu.Framework.Graphics.Veldrid.Vertices
 
         public static VertexLayoutDescription Layout { get; }
 
-        private static readonly List<VertexElementDescription> elements = new List<VertexElementDescription>();
+        private static readonly List<VertexElementDescription> elements =
+            new List<VertexElementDescription>();
 
         static VeldridVertexUtils()
         {
@@ -37,7 +38,11 @@ namespace osu.Framework.Graphics.Veldrid.Vertices
 
         private static void addAttributesRecursive(Type type, int currentOffset)
         {
-            foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            foreach (
+                FieldInfo field in type.GetFields(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                )
+            )
             {
                 int fieldOffset = currentOffset + Marshal.OffsetOf(type, field.Name).ToInt32();
 
@@ -52,7 +57,14 @@ namespace osu.Framework.Graphics.Veldrid.Vertices
                     var attrib = field.GetCustomAttribute<VertexMemberAttribute>();
                     Debug.Assert(attrib != null);
 
-                    elements.Add(new VertexElementDescription($"m_{field.Name}", VertexElementSemantic.TextureCoordinate, attrib.Type.ToVertexElementFormat(attrib.Count), (uint)fieldOffset));
+                    elements.Add(
+                        new VertexElementDescription(
+                            $"m_{field.Name}",
+                            VertexElementSemantic.TextureCoordinate,
+                            attrib.Type.ToVertexElementFormat(attrib.Count),
+                            (uint)fieldOffset
+                        )
+                    );
                 }
             }
         }

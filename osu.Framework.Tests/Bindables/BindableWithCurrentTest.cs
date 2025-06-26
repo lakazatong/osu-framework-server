@@ -71,24 +71,45 @@ namespace osu.Framework.Tests.Bindables
         public void TestUIControlsUsingCurrent()
         {
             Assert.That(new BasicCheckbox().Current, Is.TypeOf<BindableWithCurrent<bool>>());
-            Assert.That(new BasicSliderBar<double>().Current, Is.TypeOf<BindableNumberWithCurrent<double>>());
+            Assert.That(
+                new BasicSliderBar<double>().Current,
+                Is.TypeOf<BindableNumberWithCurrent<double>>()
+            );
             Assert.That(new BasicTextBox().Current, Is.TypeOf<BindableWithCurrent<string>>());
-            Assert.That(new BasicDropdown<object>().Current, Is.TypeOf<BindableWithCurrent<object>>());
+            Assert.That(
+                new BasicDropdown<object>().Current,
+                Is.TypeOf<BindableWithCurrent<object>>()
+            );
         }
 
         [Test]
         public void TestCreateBindableWithCurrentViaFactory()
         {
-            Assert.That(IBindableWithCurrent<string>.Create(), Is.TypeOf<BindableWithCurrent<string>>());
-            Assert.That(IBindableWithCurrent<bool>.Create(), Is.TypeOf<BindableWithCurrent<bool>>());
-            Assert.That(IBindableWithCurrent<int>.Create(), Is.TypeOf<BindableNumberWithCurrent<int>>());
+            Assert.That(
+                IBindableWithCurrent<string>.Create(),
+                Is.TypeOf<BindableWithCurrent<string>>()
+            );
+            Assert.That(
+                IBindableWithCurrent<bool>.Create(),
+                Is.TypeOf<BindableWithCurrent<bool>>()
+            );
+            Assert.That(
+                IBindableWithCurrent<int>.Create(),
+                Is.TypeOf<BindableNumberWithCurrent<int>>()
+            );
         }
 
         [Test]
         public void TestGetBoundCopy()
         {
-            Assert.That(new BindableWithCurrent<string>().GetBoundCopy(), Is.TypeOf<BindableWithCurrent<string>>());
-            Assert.That(new BindableNumberWithCurrent<int>().GetBoundCopy(), Is.TypeOf<BindableNumberWithCurrent<int>>());
+            Assert.That(
+                new BindableWithCurrent<string>().GetBoundCopy(),
+                Is.TypeOf<BindableWithCurrent<string>>()
+            );
+            Assert.That(
+                new BindableNumberWithCurrent<int>().GetBoundCopy(),
+                Is.TypeOf<BindableNumberWithCurrent<int>>()
+            );
         }
     }
 }

@@ -20,7 +20,11 @@ namespace osu.Framework.Utils
         private readonly List<Vector2> inputPath = new List<Vector2>();
         private readonly List<float> cumulativeInputPathLength = new List<float>();
 
-        private static Vector2 getPathAt(List<Vector2> path, List<float> cumulativeDistances, float t)
+        private static Vector2 getPathAt(
+            List<Vector2> path,
+            List<float> cumulativeDistances,
+            float t
+        )
         {
             if (path.Count == 0)
                 throw new InvalidOperationException("Input path is empty.");
@@ -45,7 +49,8 @@ namespace osu.Framework.Utils
             return Vector2.Lerp(path[index], path[index + 1], segmentT);
         }
 
-        private float inputPathLength => cumulativeInputPathLength.Count == 0 ? 0 : cumulativeInputPathLength[^1];
+        private float inputPathLength =>
+            cumulativeInputPathLength.Count == 0 ? 0 : cumulativeInputPathLength[^1];
 
         /// <summary>
         /// Spacing to use in spline-related finite difference (FD) calculations.
@@ -59,7 +64,11 @@ namespace osu.Framework.Utils
         /// <param name="cumulativeDistances">The cumulative distances of the path.</param>
         /// <param name="t">The point on the path to get the rotation from.</param>
         /// <returns>The absolute amount of rotation (in radians) at the given point on the path.</returns>
-        private static float getAbsWindingAt(List<Vector2> path, List<float> cumulativeDistances, float t)
+        private static float getAbsWindingAt(
+            List<Vector2> path,
+            List<float> cumulativeDistances,
+            float t
+        )
         {
             Vector2 xminus = getPathAt(path, cumulativeDistances, t - FD_EPSILON);
             Vector2 x = getPathAt(path, cumulativeDistances, t);
@@ -71,12 +80,12 @@ namespace osu.Framework.Utils
 
         private readonly Cached<List<Vector2>> outputCache = new Cached<List<Vector2>>
         {
-            Value = new List<Vector2>()
+            Value = new List<Vector2>(),
         };
 
         private readonly Cached<List<List<Vector2>>> controlPoints = new Cached<List<List<Vector2>>>
         {
-            Value = new List<List<Vector2>>()
+            Value = new List<List<Vector2>>(),
         };
 
         private bool shouldOptimiseLastSegment;
@@ -186,7 +195,11 @@ namespace osu.Framework.Utils
         /// <param name="degree">The degree of the B-Spline.</param>
         /// <param name="tolerance">The tolerance for control point addition.</param>
         /// <param name="cornerThreshold">The threshold to use for inserting sharp control points at corners.</param>
-        public IncrementalBSplineBuilder(int degree = 3, float tolerance = 1.5f, float cornerThreshold = 0.4f)
+        public IncrementalBSplineBuilder(
+            int degree = 3,
+            float tolerance = 1.5f,
+            float cornerThreshold = 0.4f
+        )
         {
             Degree = degree;
             Tolerance = tolerance;
@@ -196,8 +209,7 @@ namespace osu.Framework.Utils
         /// <summary>
         /// The list of input points.
         /// </summary>
-        public IReadOnlyList<Vector2> GetInputPath()
-            => inputPath.ToArray();
+        public IReadOnlyList<Vector2> GetInputPath() => inputPath.ToArray();
 
         /// <summary>
         /// Computes a smoothed version of the input path by generating a high-degree BSpline from densely
@@ -212,7 +224,10 @@ namespace osu.Framework.Utils
 
             // Empirically, degree 7 works really well as a good tradeoff for smoothing vs sharpness here.
             const int smoothed_input_path_degree = 7;
-            var vertices = PathApproximator.BSplineToPiecewiseLinear(cps, smoothed_input_path_degree);
+            var vertices = PathApproximator.BSplineToPiecewiseLinear(
+                cps,
+                smoothed_input_path_degree
+            );
             var distances = new List<float>();
             float cumulativeLength = 0;
 
@@ -267,7 +282,11 @@ namespace osu.Framework.Utils
                 float midWinding = midt < 0 ? 0 : getAbsWindingAt(vertices, distances, midt);
 
                 float distToPrevCorner = cornerT.Count == 0 ? float.MaxValue : newt - cornerT[^1];
-                if (midWinding > threshold && midWinding > avgCurvature * 4 && distToPrevCorner > n_avg_samples * step_size)
+                if (
+                    midWinding > threshold
+                    && midWinding > avgCurvature * 4
+                    && distToPrevCorner > n_avg_samples * step_size
+                )
                     cornerT.Add(midt);
             }
 
@@ -276,7 +295,12 @@ namespace osu.Framework.Utils
             return cornerT;
         }
 
-        private (List<Vector2>, List<Vector2>, float) initializeSegment(List<Vector2> vertices, List<float> distances, float t0, float t1)
+        private (List<Vector2>, List<Vector2>, float) initializeSegment(
+            List<Vector2> vertices,
+            List<float> distances,
+            float t0,
+            float t1
+        )
         {
             // Populate each segment between corners with control points that have density proportional to the
             // product of Tolerance and curvature.
@@ -311,9 +335,13 @@ namespace osu.Framework.Utils
                     Vector2 p = getPathAt(vertices, distances, t);
                     segmentPath.Add(p);
 
-                    if (currentWinding < Tolerance) continue;
+                    if (currentWinding < Tolerance)
+                        continue;
 
-                    if (linearConnection.DistanceSquaredToPoint(p) > onLineThreshold * onLineThreshold)
+                    if (
+                        linearConnection.DistanceSquaredToPoint(p)
+                        > onLineThreshold * onLineThreshold
+                    )
                         allOnLine = false;
 
                     cps.Add(p);
@@ -324,17 +352,32 @@ namespace osu.Framework.Utils
             cps.Add(c1);
             segmentPath.Add(c1);
 
-            return allOnLine ? (new List<Vector2> { c0, c1 }, segmentPath, totalWinding) : (cps, segmentPath, totalWinding);
+            return allOnLine
+                ? (new List<Vector2> { c0, c1 }, segmentPath, totalWinding)
+                : (cps, segmentPath, totalWinding);
         }
 
-        private void updateLastSegment(List<Vector2> vertices, List<float> distances, List<float> cornerTs, List<List<Vector2>> segments, int iterations, bool mask)
+        private void updateLastSegment(
+            List<Vector2> vertices,
+            List<float> distances,
+            List<float> cornerTs,
+            List<List<Vector2>> segments,
+            int iterations,
+            bool mask
+        )
         {
-            if (segments.Count == 0 || segments.Count >= cornerTs.Count) return;
+            if (segments.Count == 0 || segments.Count >= cornerTs.Count)
+                return;
 
             // Initialize control points for the last segment
             int i = segments.Count - 1;
             var lastSegment = segments[i];
-            var (cps, segmentPath, totalWinding) = initializeSegment(vertices, distances, cornerTs[i], cornerTs[i + 1]);
+            var (cps, segmentPath, totalWinding) = initializeSegment(
+                vertices,
+                distances,
+                cornerTs[i],
+                cornerTs[i + 1]
+            );
 
             // Make sure the last segment has the correct end-points
             if (lastSegment.Count >= 1)
@@ -363,7 +406,8 @@ namespace osu.Framework.Utils
             }
 
             // Optimize the control point placement
-            if (lastSegment.Count <= 2 || lastSegment.Count >= 100) return;
+            if (lastSegment.Count <= 2 || lastSegment.Count >= 100)
+                return;
 
             float[,]? learnableMask = null;
 
@@ -377,7 +421,11 @@ namespace osu.Framework.Utils
                 // Only the 2 * degree last control points are not fixed in place.
                 // This number was chosen because manual testing showed that control points outside this range barely get moved
                 // by the optimization when the end of the segment gets extended.
-                for (int j = Math.Max(1, lastSegment.Count - degree * 2); j < lastSegment.Count - 1; j++)
+                for (
+                    int j = Math.Max(1, lastSegment.Count - degree * 2);
+                    j < lastSegment.Count - 1;
+                    j++
+                )
                 {
                     learnableMask[0, j] = 1;
                     learnableMask[1, j] = 1;
@@ -385,8 +433,16 @@ namespace osu.Framework.Utils
             }
 
             int res = (int)(totalWinding * 10);
-            segments[^1] = PathApproximator.PiecewiseLinearToBSpline(segmentPath.ToArray(), lastSegment.Count, degree,
-                res, iterations, 4f, initialControlPoints: lastSegment, learnableMask: learnableMask);
+            segments[^1] = PathApproximator.PiecewiseLinearToBSpline(
+                segmentPath.ToArray(),
+                lastSegment.Count,
+                degree,
+                res,
+                iterations,
+                4f,
+                initialControlPoints: lastSegment,
+                learnableMask: learnableMask
+            );
         }
 
         private void regenerateLastApproximatedSegment()
@@ -463,13 +519,25 @@ namespace osu.Framework.Utils
 
             for (int i = 1; i < cornerTs.Count; ++i)
             {
-                var (cps, segmentPath, totalWinding) = initializeSegment(vertices, distances, cornerTs[i - 1], cornerTs[i]);
+                var (cps, segmentPath, totalWinding) = initializeSegment(
+                    vertices,
+                    distances,
+                    cornerTs[i - 1],
+                    cornerTs[i]
+                );
 
                 if (cps.Count > 2 && cps.Count < 100)
                 {
                     int res = (int)(totalWinding * 10);
-                    cps = PathApproximator.PiecewiseLinearToBSpline(segmentPath.ToArray(), cps.Count, degree,
-                        res, 200, 5, initialControlPoints: cps);
+                    cps = PathApproximator.PiecewiseLinearToBSpline(
+                        segmentPath.ToArray(),
+                        cps.Count,
+                        degree,
+                        res,
+                        200,
+                        5,
+                        initialControlPoints: cps
+                    );
                 }
 
                 segments.Add(cps);
@@ -484,7 +552,9 @@ namespace osu.Framework.Utils
 
             foreach (var segment in ControlPoints)
             {
-                outputCache.Value.AddRange(PathApproximator.BSplineToPiecewiseLinear(segment.ToArray(), degree));
+                outputCache.Value.AddRange(
+                    PathApproximator.BSplineToPiecewiseLinear(segment.ToArray(), degree)
+                );
             }
         }
 

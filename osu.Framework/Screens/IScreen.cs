@@ -58,7 +58,9 @@ namespace osu.Framework.Screens
             var stack = getStack(screen);
 
             if (stack == null)
-                throw new InvalidOperationException($"Cannot {nameof(Push)} to a non-loaded {nameof(IScreen)} directly. Consider using {nameof(ScreenStack)}.{nameof(ScreenStack.Push)} instead.");
+                throw new InvalidOperationException(
+                    $"Cannot {nameof(Push)} to a non-loaded {nameof(IScreen)} directly. Consider using {nameof(ScreenStack)}.{nameof(ScreenStack.Push)} instead."
+                );
 
             stack.Push(screen, newScreen);
         }
@@ -81,8 +83,8 @@ namespace osu.Framework.Screens
         /// Makes an <see cref="IScreen"/> the current screen, exiting all child <see cref="IScreen"/>s along the way.
         /// </summary>
         /// <param name="screen">The <see cref="IScreen"/> to make current.</param>
-        public static void MakeCurrent(this IScreen screen)
-            => getStack(screen)?.MakeCurrent(screen);
+        public static void MakeCurrent(this IScreen screen) =>
+            getStack(screen)?.MakeCurrent(screen);
 
         /// <summary>
         /// Retrieves whether an <see cref="IScreen"/> is the current screen.
@@ -90,24 +92,24 @@ namespace osu.Framework.Screens
         /// </summary>
         /// <param name="screen">The <see cref="IScreen"/> to check.</param>
         /// <returns>True if <paramref name="screen"/> is the current screen.</returns>
-        public static bool IsCurrentScreen(this IScreen screen)
-            => getStack(screen)?.IsCurrentScreen(screen) ?? false;
+        public static bool IsCurrentScreen(this IScreen screen) =>
+            getStack(screen)?.IsCurrentScreen(screen) ?? false;
 
         /// <summary>
         /// Retrieves the child <see cref="IScreen"/> of an <see cref="IScreen"/>.
         /// </summary>
         /// <param name="screen">The <see cref="IScreen"/> to retrieve the child of.</param>
         /// <returns>The child <see cref="IScreen"/> of <paramref name="screen"/>, or null if <paramref name="screen"/> has no child.</returns>
-        public static IScreen GetChildScreen(this IScreen screen)
-            => getStack(screen)?.GetChildScreen(screen);
+        public static IScreen GetChildScreen(this IScreen screen) =>
+            getStack(screen)?.GetChildScreen(screen);
 
         /// <summary>
         /// Retrieves the parent <see cref="IScreen"/> of an <see cref="IScreen"/>.
         /// </summary>
         /// <param name="screen">The <see cref="IScreen"/> to retrieve the parent of.</param>
         /// <returns>The parent <see cref="IScreen"/> of <paramref name="screen"/>, or null if <paramref name="screen"/> has no parent.</returns>
-        public static IScreen GetParentScreen(this IScreen screen)
-            => getStack(screen)?.GetParentScreen(screen);
+        public static IScreen GetParentScreen(this IScreen screen) =>
+            getStack(screen)?.GetParentScreen(screen);
 
         internal static Drawable AsDrawable(this IScreen screen) => (Drawable)screen;
 

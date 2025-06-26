@@ -30,7 +30,9 @@ namespace osu.Framework.Audio.Sample
         /// <summary>
         /// Todo: Expose this to support per-sample playback concurrency once ManagedBass has been updated (https://github.com/ManagedBass/ManagedBass/pull/85).
         /// </summary>
-        internal readonly Bindable<int> PlaybackConcurrency = new Bindable<int>(Sample.DEFAULT_CONCURRENCY);
+        internal readonly Bindable<int> PlaybackConcurrency = new Bindable<int>(
+            Sample.DEFAULT_CONCURRENCY
+        );
 
         private readonly BassAudioMixer mixer;
 
@@ -51,8 +53,7 @@ namespace osu.Framework.Audio.Sample
 
         private void updatePlaybackConcurrency(ValueChangedEvent<int> concurrency)
         {
-            EnqueueAction(() =>
-            {
+            EnqueueAction(() => {
                 // Broken in ManagedBass (https://github.com/ManagedBass/ManagedBass/pull/85).
                 // if (!IsLoaded)
                 //     return;
@@ -82,7 +83,13 @@ namespace osu.Framework.Audio.Sample
 
             const BassFlags flags = BassFlags.Default | BassFlags.SampleOverrideLongestPlaying;
             using (var handle = new ObjectHandle<byte[]>(data, GCHandleType.Pinned))
-                SampleId = Bass.SampleLoad(handle.Address, 0, dataLength, PlaybackConcurrency.Value, flags);
+                SampleId = Bass.SampleLoad(
+                    handle.Address,
+                    0,
+                    dataLength,
+                    PlaybackConcurrency.Value,
+                    flags
+                );
 
             if (Bass.LastError == Errors.Init)
                 return;

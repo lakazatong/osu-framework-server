@@ -25,20 +25,16 @@ namespace osu.Framework.Tests.Visual.Graphics
         [Test]
         public void TestRawStorageBuffer()
         {
-            AddStep("add grid", () => Child = new GridDrawable
-            {
-                RelativeSizeAxes = Axes.Both,
-                RawBuffer = true
-            });
+            AddStep(
+                "add grid",
+                () => Child = new GridDrawable { RelativeSizeAxes = Axes.Both, RawBuffer = true }
+            );
         }
 
         [Test]
         public void TestStorageBufferStack()
         {
-            AddStep("add grid", () => Child = new GridDrawable
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            AddStep("add grid", () => Child = new GridDrawable { RelativeSizeAxes = Axes.Both });
         }
 
         private partial class GridDrawable : Drawable
@@ -72,7 +68,10 @@ namespace osu.Framework.Tests.Visual.Graphics
                 Invalidate(Invalidation.DrawNode);
             }
 
-            protected override DrawNode CreateDrawNode() => RawBuffer ? new RawStorageBufferDrawNode(this) : new StorageBufferStackDrawNode(this);
+            protected override DrawNode CreateDrawNode() =>
+                RawBuffer
+                    ? new RawStorageBufferDrawNode(this)
+                    : new StorageBufferStackDrawNode(this);
         }
 
         /// <summary>
@@ -86,9 +85,7 @@ namespace osu.Framework.Tests.Visual.Graphics
             private readonly List<Quad> areas = new List<Quad>();
 
             public RawStorageBufferDrawNode(IDrawable source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -112,11 +109,22 @@ namespace osu.Framework.Tests.Visual.Graphics
                 // Create the SSBO. It only needs to be populated once for the demonstration of this test.
                 if (colourBuffer == null)
                 {
-                    colourBuffer = renderer.CreateShaderStorageBufferObject<ColourData>(ubo_size, ssbo_size);
+                    colourBuffer = renderer.CreateShaderStorageBufferObject<ColourData>(
+                        ubo_size,
+                        ssbo_size
+                    );
                     var rng = new Random(1337);
 
                     for (int i = 0; i < colourBuffer.Size; i++)
-                        colourBuffer[i] = new ColourData { Colour = new Vector4(rng.NextSingle(), rng.NextSingle(), rng.NextSingle(), 1) };
+                        colourBuffer[i] = new ColourData
+                        {
+                            Colour = new Vector4(
+                                rng.NextSingle(),
+                                rng.NextSingle(),
+                                rng.NextSingle(),
+                                1
+                            ),
+                        };
                 }
 
                 // Bind the custom shader and SSBO.
@@ -126,29 +134,37 @@ namespace osu.Framework.Tests.Visual.Graphics
                 // Submit vertices, making sure that we don't submit an index which would overflow the SSBO.
                 for (int i = 0; i < areas.Count; i++)
                 {
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].BottomLeft,
-                        ColourIndex = i % colourBuffer.Size
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].BottomLeft,
+                            ColourIndex = i % colourBuffer.Size,
+                        }
+                    );
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].BottomRight,
-                        ColourIndex = i % colourBuffer.Size
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].BottomRight,
+                            ColourIndex = i % colourBuffer.Size,
+                        }
+                    );
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].TopRight,
-                        ColourIndex = i % colourBuffer.Size
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].TopRight,
+                            ColourIndex = i % colourBuffer.Size,
+                        }
+                    );
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].TopLeft,
-                        ColourIndex = i % colourBuffer.Size
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].TopLeft,
+                            ColourIndex = i % colourBuffer.Size,
+                        }
+                    );
                 }
 
                 vertices.Draw();
@@ -176,9 +192,7 @@ namespace osu.Framework.Tests.Visual.Graphics
             private readonly List<Quad> areas = new List<Quad>();
 
             public StorageBufferStackDrawNode(IDrawable source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -200,7 +214,11 @@ namespace osu.Framework.Tests.Visual.Graphics
                 vertices ??= renderer.CreateQuadBatch<ColourIndexedVertex>(400, 1000);
 
                 // Create the SSBO.
-                colourBuffer ??= new ShaderStorageBufferObjectStack<ColourData>(renderer, ubo_size, ssbo_size);
+                colourBuffer ??= new ShaderStorageBufferObjectStack<ColourData>(
+                    renderer,
+                    ubo_size,
+                    ssbo_size
+                );
 
                 // Reset the SSBO. This should be called every frame.
                 colourBuffer.Clear();
@@ -212,34 +230,52 @@ namespace osu.Framework.Tests.Visual.Graphics
 
                 for (int i = 0; i < areas.Count; i++)
                 {
-                    int colourIndex = colourBuffer.Push(new ColourData { Colour = new Vector4(rng.NextSingle(), rng.NextSingle(), rng.NextSingle(), 1) });
+                    int colourIndex = colourBuffer.Push(
+                        new ColourData
+                        {
+                            Colour = new Vector4(
+                                rng.NextSingle(),
+                                rng.NextSingle(),
+                                rng.NextSingle(),
+                                1
+                            ),
+                        }
+                    );
 
                     // Bind the SSBO. This may change between iterations if a buffer transition happens via the above push.
                     shader.BindUniformBlock("g_ColourBuffer", colourBuffer.CurrentBuffer);
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].BottomLeft,
-                        ColourIndex = colourIndex
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].BottomLeft,
+                            ColourIndex = colourIndex,
+                        }
+                    );
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].BottomRight,
-                        ColourIndex = colourIndex
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].BottomRight,
+                            ColourIndex = colourIndex,
+                        }
+                    );
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].TopRight,
-                        ColourIndex = colourIndex
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].TopRight,
+                            ColourIndex = colourIndex,
+                        }
+                    );
 
-                    vertices.Add(new ColourIndexedVertex
-                    {
-                        Position = areas[i].TopLeft,
-                        ColourIndex = colourIndex
-                    });
+                    vertices.Add(
+                        new ColourIndexedVertex
+                        {
+                            Position = areas[i].TopLeft,
+                            ColourIndex = colourIndex,
+                        }
+                    );
 
                     // This isn't really required when using ShaderStorageBufferObjectStack in this isolated form, but is good practice.
                     colourBuffer.Pop();
@@ -273,8 +309,7 @@ namespace osu.Framework.Tests.Visual.Graphics
             public int ColourIndex;
 
             public readonly bool Equals(ColourIndexedVertex other) =>
-                Position.Equals(other.Position)
-                && ColourIndex == other.ColourIndex;
+                Position.Equals(other.Position) && ColourIndex == other.ColourIndex;
         }
     }
 }

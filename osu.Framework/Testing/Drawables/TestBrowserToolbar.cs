@@ -70,7 +70,7 @@ namespace osu.Framework.Testing.Drawables
                                         },
                                     },
                                     new ToolbarRecordSection { RelativeSizeAxes = Axes.Y },
-                                }
+                                },
                             },
                             new Container
                             {
@@ -94,21 +94,42 @@ namespace osu.Framework.Testing.Drawables
                                         Text = "bg",
                                         RelativeSizeAxes = Axes.Y,
                                         Width = 40,
-                                        Action = () => browser.CurrentTest.ChangeBackgroundColour(
-                                            new ColourInfo
-                                            {
-                                                TopLeft = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                                                TopRight = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                                                BottomLeft = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                                                BottomRight = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1)
-                                            }
-                                        )
+                                        Action = () =>
+                                            browser.CurrentTest.ChangeBackgroundColour(
+                                                new ColourInfo
+                                                {
+                                                    TopLeft = new Color4(
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        1
+                                                    ),
+                                                    TopRight = new Color4(
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        1
+                                                    ),
+                                                    BottomLeft = new Color4(
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        1
+                                                    ),
+                                                    BottomRight = new Color4(
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        RNG.NextSingle(1),
+                                                        1
+                                                    ),
+                                                }
+                                            ),
                                     },
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
-                }
+                },
             };
         }
     }

@@ -21,9 +21,16 @@ namespace osu.Framework.IO.Network
         protected override Stream CreateOutputStream()
         {
             string path = Path.GetDirectoryName(Filename);
-            if (!string.IsNullOrEmpty(path)) Directory.CreateDirectory(path);
+            if (!string.IsNullOrEmpty(path))
+                Directory.CreateDirectory(path);
 
-            return new FileStream(Filename, FileMode.Create, FileAccess.Write, FileShare.Write, 32768);
+            return new FileStream(
+                Filename,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.Write,
+                32768
+            );
         }
 
         public FileWebRequest(string filename, string url)

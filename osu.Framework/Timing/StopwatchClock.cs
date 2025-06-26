@@ -1,9 +1,9 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Extensions.TypeExtensions;
 using System;
 using System.Diagnostics;
+using osu.Framework.Extensions.TypeExtensions;
 
 namespace osu.Framework.Timing
 {
@@ -32,7 +32,8 @@ namespace osu.Framework.Timing
         /// <summary>
         /// The current time, represented solely by the accumulated <see cref="Stopwatch"/> time.
         /// </summary>
-        private double stopwatchCurrentTime => (stopwatchMilliseconds - rateChangeUsed) * rate + rateChangeAccumulated;
+        private double stopwatchCurrentTime =>
+            (stopwatchMilliseconds - rateChangeUsed) * rate + rateChangeAccumulated;
 
         private double stopwatchMilliseconds => (double)ElapsedTicks / Frequency * 1000;
 
@@ -43,7 +44,8 @@ namespace osu.Framework.Timing
             get => rate;
             set
             {
-                if (rate == value) return;
+                if (rate == value)
+                    return;
 
                 rateChangeAccumulated += (stopwatchMilliseconds - rateChangeUsed) * rate;
                 rateChangeUsed = stopwatchMilliseconds;
@@ -73,7 +75,8 @@ namespace osu.Framework.Timing
             return true;
         }
 
-        public override string ToString() => $@"{GetType().ReadableName()} ({Math.Truncate(CurrentTime)}ms)";
+        public override string ToString() =>
+            $@"{GetType().ReadableName()} ({Math.Truncate(CurrentTime)}ms)";
 
         private void resetAccumulatedRate()
         {

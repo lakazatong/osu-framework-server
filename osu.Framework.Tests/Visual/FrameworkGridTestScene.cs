@@ -8,10 +8,9 @@ namespace osu.Framework.Tests.Visual
     public abstract partial class FrameworkGridTestScene : GridTestScene
     {
         protected FrameworkGridTestScene(int rows, int cols)
-            : base(rows, cols)
-        {
-        }
+            : base(rows, cols) { }
 
-        protected override ITestSceneTestRunner CreateRunner() => new FrameworkTestSceneTestRunner();
+        protected override ITestSceneTestRunner CreateRunner() =>
+            new FrameworkTestSceneTestRunner();
     }
 }

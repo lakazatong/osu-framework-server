@@ -13,7 +13,8 @@ namespace FlappyDon.Game
         protected override TextureFilteringMode DefaultTextureFilteringMode
             // To preserve the 8-bit aesthetic, disable texture filtering
             // so they won't become blurry when upscaled
-            => TextureFilteringMode.Nearest;
+            =>
+            TextureFilteringMode.Nearest;
 
         [BackgroundDependencyLoader]
         private void load()

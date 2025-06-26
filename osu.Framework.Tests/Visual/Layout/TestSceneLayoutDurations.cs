@@ -8,8 +8,8 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Framework.Utils;
 using osu.Framework.Timing;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -21,86 +21,100 @@ namespace osu.Framework.Tests.Visual.Layout
         private Container autoSizeContainer;
         private FillFlowContainer fillFlowContainer;
 
-        private Box box1, box2;
+        private Box box1,
+            box2;
 
         private const float duration = 1000;
 
         private const float changed_value = 100;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            manualClock = new ManualClock();
-
-            Children = new Drawable[]
+        public void SetUp() =>
+            Schedule(() =>
             {
-                autoSizeContainer = new Container
+                manualClock = new ManualClock();
+
+                Children = new Drawable[]
                 {
-                    Clock = new FramedClock(manualClock),
-                    AutoSizeEasing = Easing.None,
-                    Children = new[]
+                    autoSizeContainer = new Container
                     {
-                        new Box
+                        Clock = new FramedClock(manualClock),
+                        AutoSizeEasing = Easing.None,
+                        Children = new[]
                         {
-                            Colour = Color4.Red,
-                            RelativeSizeAxes = Axes.Both
+                            new Box { Colour = Color4.Red, RelativeSizeAxes = Axes.Both },
+                            box1 = new Box { Colour = Color4.Transparent, Size = Vector2.Zero },
                         },
-                        box1 = new Box
-                        {
-                            Colour = Color4.Transparent,
-                            Size = Vector2.Zero,
-                        },
-                    }
-                },
-                fillFlowContainer = new FillFlowContainer
-                {
-                    Clock = new FramedClock(manualClock),
-                    Position = new Vector2(0, 200),
-                    LayoutEasing = Easing.None,
-                    Children = new Drawable[]
+                    },
+                    fillFlowContainer = new FillFlowContainer
                     {
-                        new Box { Colour = Color4.Red, Size = new Vector2(100) },
-                        box2 = new Box { Colour = Color4.Blue, Size = new Vector2(100) },
-                    }
-                }
-            };
+                        Clock = new FramedClock(manualClock),
+                        Position = new Vector2(0, 200),
+                        LayoutEasing = Easing.None,
+                        Children = new Drawable[]
+                        {
+                            new Box { Colour = Color4.Red, Size = new Vector2(100) },
+                            box2 = new Box { Colour = Color4.Blue, Size = new Vector2(100) },
+                        },
+                    },
+                };
 
-            paused = false;
-            autoSizeContainer.FinishTransforms();
-            fillFlowContainer.FinishTransforms();
+                paused = false;
+                autoSizeContainer.FinishTransforms();
+                fillFlowContainer.FinishTransforms();
 
-            autoSizeContainer.AutoSizeAxes = Axes.None;
-            autoSizeContainer.AutoSizeDuration = 0;
-            autoSizeContainer.Size = Vector2.Zero;
-            box1.Size = Vector2.Zero;
+                autoSizeContainer.AutoSizeAxes = Axes.None;
+                autoSizeContainer.AutoSizeDuration = 0;
+                autoSizeContainer.Size = Vector2.Zero;
+                box1.Size = Vector2.Zero;
 
-            fillFlowContainer.LayoutDuration = 0;
-            fillFlowContainer.Size = new Vector2(200, 200);
-        });
+                fillFlowContainer.LayoutDuration = 0;
+                fillFlowContainer.Size = new Vector2(200, 200);
+            });
 
         private void check(float ratio) =>
-            AddAssert($"Check @{ratio}", () => Precision.AlmostEquals(autoSizeContainer.Size, new Vector2(changed_value * ratio)) &&
-                                               Precision.AlmostEquals(box2.Position, new Vector2(changed_value * (1 - ratio), changed_value * ratio)));
+            AddAssert(
+                $"Check @{ratio}",
+                () =>
+                    Precision.AlmostEquals(
+                        autoSizeContainer.Size,
+                        new Vector2(changed_value * ratio)
+                    )
+                    && Precision.AlmostEquals(
+                        box2.Position,
+                        new Vector2(changed_value * (1 - ratio), changed_value * ratio)
+                    )
+            );
 
-        private void skipTo(float ratio) => AddStep($"skip to {ratio}", () => { manualClock.CurrentTime = duration * ratio; });
+        private void skipTo(float ratio) =>
+            AddStep(
+                $"skip to {ratio}",
+                () =>
+                {
+                    manualClock.CurrentTime = duration * ratio;
+                }
+            );
 
         [Test]
         public void TestChangeAfterDuration()
         {
-            AddStep("Start transformation", () =>
-            {
-                paused = true;
-                manualClock.CurrentTime = 0;
-                autoSizeContainer.FinishTransforms();
-                fillFlowContainer.FinishTransforms();
+            AddStep(
+                "Start transformation",
+                () =>
+                {
+                    paused = true;
+                    manualClock.CurrentTime = 0;
+                    autoSizeContainer.FinishTransforms();
+                    fillFlowContainer.FinishTransforms();
 
-                autoSizeContainer.AutoSizeAxes = Axes.Both;
-                autoSizeContainer.AutoSizeDuration = duration;
-                box1.Size = new Vector2(100);
+                    autoSizeContainer.AutoSizeAxes = Axes.Both;
+                    autoSizeContainer.AutoSizeDuration = duration;
+                    box1.Size = new Vector2(100);
 
-                fillFlowContainer.LayoutDuration = duration;
-                fillFlowContainer.Width = 100;
-            });
+                    fillFlowContainer.LayoutDuration = duration;
+                    fillFlowContainer.Width = 100;
+                }
+            );
 
             foreach (float ratio in new[] { .25f, .5f, .75f, 1 })
             {
@@ -112,29 +126,35 @@ namespace osu.Framework.Tests.Visual.Layout
         [Test]
         public void TestInterruptExistingDuration()
         {
-            AddStep("Start transformation", () =>
-            {
-                paused = true;
-                manualClock.CurrentTime = 0;
-                autoSizeContainer.FinishTransforms();
-                fillFlowContainer.FinishTransforms();
+            AddStep(
+                "Start transformation",
+                () =>
+                {
+                    paused = true;
+                    manualClock.CurrentTime = 0;
+                    autoSizeContainer.FinishTransforms();
+                    fillFlowContainer.FinishTransforms();
 
-                autoSizeContainer.AutoSizeAxes = Axes.Both;
-                autoSizeContainer.AutoSizeDuration = duration;
-                fillFlowContainer.LayoutDuration = duration;
+                    autoSizeContainer.AutoSizeAxes = Axes.Both;
+                    autoSizeContainer.AutoSizeDuration = duration;
+                    fillFlowContainer.LayoutDuration = duration;
 
-                box1.Size = new Vector2(changed_value);
-                fillFlowContainer.Width = changed_value;
-            });
+                    box1.Size = new Vector2(changed_value);
+                    fillFlowContainer.Width = changed_value;
+                }
+            );
 
             skipTo(0.5f);
             check(0.5f);
 
-            AddStep("set duration 0", () =>
-            {
-                autoSizeContainer.AutoSizeDuration = 0;
-                fillFlowContainer.LayoutDuration = 0;
-            });
+            AddStep(
+                "set duration 0",
+                () =>
+                {
+                    autoSizeContainer.AutoSizeDuration = 0;
+                    fillFlowContainer.LayoutDuration = 0;
+                }
+            );
 
             // transform should still be playing
             skipTo(0.75f);
@@ -144,11 +164,14 @@ namespace osu.Framework.Tests.Visual.Layout
             skipTo(0.5f);
             check(0.5f);
 
-            AddStep("alter values", () =>
-            {
-                box1.Size = new Vector2(0);
-                fillFlowContainer.Width = 200;
-            });
+            AddStep(
+                "alter values",
+                () =>
+                {
+                    box1.Size = new Vector2(0);
+                    fillFlowContainer.Width = 200;
+                }
+            );
 
             // fully complete
             check(0);
@@ -164,7 +187,8 @@ namespace osu.Framework.Tests.Visual.Layout
         {
             if (autoSizeContainer != null)
             {
-                if (!paused) manualClock.CurrentTime = Clock.CurrentTime;
+                if (!paused)
+                    manualClock.CurrentTime = Clock.CurrentTime;
 
                 autoSizeContainer.Children[0].Invalidate();
                 fillFlowContainer.Invalidate();

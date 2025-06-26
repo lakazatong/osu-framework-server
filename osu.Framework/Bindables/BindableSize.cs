@@ -15,11 +15,10 @@ namespace osu.Framework.Bindables
         protected override Size DefaultMaxValue => new Size(int.MaxValue, int.MaxValue);
 
         public BindableSize(Size defaultValue = default)
-            : base(defaultValue)
-        {
-        }
+            : base(defaultValue) { }
 
-        public override string ToString(string? format, IFormatProvider? formatProvider) => ((FormattableString)$"{Value.Width}x{Value.Height}").ToString(formatProvider);
+        public override string ToString(string? format, IFormatProvider? formatProvider) =>
+            ((FormattableString)$"{Value.Width}x{Value.Height}").ToString(formatProvider);
 
         public override void Parse(object? input, IFormatProvider provider)
         {
@@ -31,7 +30,9 @@ namespace osu.Framework.Bindables
                     string[] split = str.Split('x');
 
                     if (split.Length != 2)
-                        throw new ArgumentException($"Input string was in wrong format! (expected: '<width>x<height>', actual: '{str}')");
+                        throw new ArgumentException(
+                            $"Input string was in wrong format! (expected: '<width>x<height>', actual: '{str}')"
+                        );
 
                     Value = new Size(int.Parse(split[0], provider), int.Parse(split[1], provider));
                     break;
@@ -49,10 +50,11 @@ namespace osu.Framework.Bindables
             return new Size
             {
                 Width = Math.Clamp(value.Width, minValue.Width, maxValue.Width),
-                Height = Math.Clamp(value.Height, minValue.Height, maxValue.Height)
+                Height = Math.Clamp(value.Height, minValue.Height, maxValue.Height),
             };
         }
 
-        protected sealed override bool IsValidRange(Size min, Size max) => min.Width <= max.Width && min.Height <= max.Height;
+        protected sealed override bool IsValidRange(Size min, Size max) =>
+            min.Width <= max.Width && min.Height <= max.Height;
     }
 }

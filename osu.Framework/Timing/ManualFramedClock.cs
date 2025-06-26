@@ -14,8 +14,6 @@ namespace osu.Framework.Timing
         public double ElapsedFrameTime { get; set; }
         public double FramesPerSecond { get; set; }
 
-        public void ProcessFrame()
-        {
-        }
+        public void ProcessFrame() { }
     }
 }

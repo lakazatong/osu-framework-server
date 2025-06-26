@@ -37,11 +37,14 @@ namespace osu.Framework.SourceGeneration.Tests
         {
             string extension = Path.GetExtension(resourceName);
 
-            resourceName = resourceName.Replace(resourceNamespace, string.Empty).Substring(1)
-                                       .Replace(extension, string.Empty);
+            resourceName = resourceName
+                .Replace(resourceNamespace, string.Empty)
+                .Substring(1)
+                .Replace(extension, string.Empty);
 
             // .txt files are converted to .cs.
-            resourceName = extension == ".txt" ? $"{resourceName}.cs" : $"{resourceName}{extension}";
+            resourceName =
+                extension == ".txt" ? $"{resourceName}.cs" : $"{resourceName}{extension}";
 
             return resourceName;
         }
@@ -51,7 +54,8 @@ namespace osu.Framework.SourceGeneration.Tests
             out (string filename, string content)[] commonSources,
             out (string filename, string content)[] sources,
             out (string filename, string content)[] commonGenerated,
-            out (string filename, string content)[] generated)
+            out (string filename, string content)[] generated
+        )
         {
             string baseNamespace = assembly_namespace;
             if (!string.IsNullOrEmpty(ResourceNamespace))
@@ -70,17 +74,53 @@ namespace osu.Framework.SourceGeneration.Tests
             var commonGeneratedFiles = new List<(string filename, string content)>();
             var generatedFiles = new List<(string filename, string content)>();
 
-            foreach (string file in resourceNames.Where(n => n.StartsWith(commonSourcesNamespace, StringComparison.Ordinal)))
-                commonSourceFiles.Add((getFileNameFromResourceName(commonSourcesNamespace, file), readResourceStream(assembly, file)));
+            foreach (
+                string file in resourceNames.Where(n =>
+                    n.StartsWith(commonSourcesNamespace, StringComparison.Ordinal)
+                )
+            )
+                commonSourceFiles.Add(
+                    (
+                        getFileNameFromResourceName(commonSourcesNamespace, file),
+                        readResourceStream(assembly, file)
+                    )
+                );
 
-            foreach (string file in resourceNames.Where(n => n.StartsWith(commonGeneratedNamespace, StringComparison.Ordinal)))
-                commonGeneratedFiles.Add((getFileNameFromResourceName(commonGeneratedNamespace, file), readResourceStream(assembly, file)));
+            foreach (
+                string file in resourceNames.Where(n =>
+                    n.StartsWith(commonGeneratedNamespace, StringComparison.Ordinal)
+                )
+            )
+                commonGeneratedFiles.Add(
+                    (
+                        getFileNameFromResourceName(commonGeneratedNamespace, file),
+                        readResourceStream(assembly, file)
+                    )
+                );
 
-            foreach (string file in resourceNames.Where(n => n.StartsWith(sourcesNamespace, StringComparison.Ordinal)))
-                sourceFiles.Add((getFileNameFromResourceName(sourcesNamespace, file), readResourceStream(assembly, file)));
+            foreach (
+                string file in resourceNames.Where(n =>
+                    n.StartsWith(sourcesNamespace, StringComparison.Ordinal)
+                )
+            )
+                sourceFiles.Add(
+                    (
+                        getFileNameFromResourceName(sourcesNamespace, file),
+                        readResourceStream(assembly, file)
+                    )
+                );
 
-            foreach (string file in resourceNames.Where(n => n.StartsWith(generatedNamespace, StringComparison.Ordinal)))
-                generatedFiles.Add((getFileNameFromResourceName(generatedNamespace, file), readResourceStream(assembly, file)));
+            foreach (
+                string file in resourceNames.Where(n =>
+                    n.StartsWith(generatedNamespace, StringComparison.Ordinal)
+                )
+            )
+                generatedFiles.Add(
+                    (
+                        getFileNameFromResourceName(generatedNamespace, file),
+                        readResourceStream(assembly, file)
+                    )
+                );
 
             removeNameIndices(commonSourceFiles);
             removeNameIndices(sourceFiles);

@@ -29,25 +29,25 @@ namespace osu.Framework.Tests.Input
             InputReceptor receptorBelow = null;
             InputReceptor receptorAbove = null;
 
-            AddStep("setup", () =>
-            {
-                Child = new TestKeyBindingContainer
+            AddStep(
+                "setup",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = new TestKeyBindingContainer
                     {
-                        receptorBelow = new InputReceptor(true)
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Size = new Vector2(100),
+                            receptorBelow = new InputReceptor(true) { Size = new Vector2(100) },
+                            receptorAbove = new InputReceptor(false)
+                            {
+                                Size = new Vector2(100),
+                                Position = new Vector2(100),
+                            },
                         },
-                        receptorAbove = new InputReceptor(false)
-                        {
-                            Size = new Vector2(100),
-                            Position = new Vector2(100),
-                        }
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             // Input is positional
 
@@ -85,9 +85,7 @@ namespace osu.Framework.Tests.Input
                 return true;
             }
 
-            protected override void OnKeyUp(KeyUpEvent e)
-            {
-            }
+            protected override void OnKeyUp(KeyUpEvent e) { }
 
             public bool OnPressed(KeyBindingPressEvent<TestKeyBinding> e)
             {
@@ -110,24 +108,25 @@ namespace osu.Framework.Tests.Input
             }
         }
 
-        private partial class TestKeyBindingContainer : KeyBindingContainer<TestKeyBinding>, IHandleGlobalKeyboardInput
+        private partial class TestKeyBindingContainer
+            : KeyBindingContainer<TestKeyBinding>,
+                IHandleGlobalKeyboardInput
         {
             public TestKeyBindingContainer()
-                : base(SimultaneousBindingMode.Unique, KeyCombinationMatchingMode.Modifiers)
-            {
-            }
+                : base(SimultaneousBindingMode.Unique, KeyCombinationMatchingMode.Modifiers) { }
 
-            public override IEnumerable<IKeyBinding> DefaultKeyBindings => new[]
-            {
-                new KeyBinding(InputKey.Up, TestKeyBinding.Binding1),
-                new KeyBinding(InputKey.Down, TestKeyBinding.Binding2),
-            };
+            public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
+                new[]
+                {
+                    new KeyBinding(InputKey.Up, TestKeyBinding.Binding1),
+                    new KeyBinding(InputKey.Down, TestKeyBinding.Binding2),
+                };
         }
 
         private enum TestKeyBinding
         {
             Binding1,
-            Binding2
+            Binding2,
         }
     }
 }

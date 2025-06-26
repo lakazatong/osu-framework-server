@@ -39,7 +39,8 @@ namespace osu.Framework.Tests.Visual.Drawables
             AddUntilStep("has spun", () => box.Rotation == 180);
         }
 
-        private GameThreadSynchronizationContext syncContext => SynchronizationContext.Current as GameThreadSynchronizationContext;
+        private GameThreadSynchronizationContext syncContext =>
+            SynchronizationContext.Current as GameThreadSynchronizationContext;
 
         [Test]
         public void TestNoAsyncDoesntUseScheduler()
@@ -60,7 +61,10 @@ namespace osu.Framework.Tests.Visual.Drawables
             AddStep("add box", () => Child = box = new AsyncPerformingBox(true));
             AddAssert("no tasks run", () => syncContext.TotalTasksRun == initialTasksRun);
             AddStep("trigger", () => box.ReleaseAsyncLoadCompleteLock());
-            AddUntilStep("one new task run", () => syncContext.TotalTasksRun == initialTasksRun + 1);
+            AddUntilStep(
+                "one new task run",
+                () => syncContext.TotalTasksRun == initialTasksRun + 1
+            );
         }
 
         [Test]
@@ -68,18 +72,21 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             List<int> ran = new List<int>();
 
-            AddStep("queue items", () =>
-            {
-                SynchronizationContext.Current?.Post(_ => ran.Add(1), null);
-                SynchronizationContext.Current?.Post(_ => ran.Add(2), null);
-                SynchronizationContext.Current?.Post(_ => ran.Add(3), null);
+            AddStep(
+                "queue items",
+                () =>
+                {
+                    SynchronizationContext.Current?.Post(_ => ran.Add(1), null);
+                    SynchronizationContext.Current?.Post(_ => ran.Add(2), null);
+                    SynchronizationContext.Current?.Post(_ => ran.Add(3), null);
 
-                Assert.That(ran, Is.Empty);
+                    Assert.That(ran, Is.Empty);
 
-                SynchronizationContext.Current?.Send(_ => ran.Add(4), null);
+                    SynchronizationContext.Current?.Send(_ => ran.Add(4), null);
 
-                Assert.That(ran, Is.EqualTo(new[] { 1, 2, 3, 4 }));
-            });
+                    Assert.That(ran, Is.EqualTo(new[] { 1, 2, 3, 4 }));
+                }
+            );
         }
 
         [Test]
@@ -88,27 +95,33 @@ namespace osu.Framework.Tests.Visual.Drawables
             ManualResetEventSlim finished = new ManualResetEventSlim();
             List<int> ran = new List<int>();
 
-            AddStep("queue items", () =>
-            {
-                var updateContext = SynchronizationContext.Current;
-
-                Debug.Assert(updateContext != null);
-
-                updateContext.Post(_ => ran.Add(1), null);
-                updateContext.Post(_ => ran.Add(2), null);
-                updateContext.Post(_ => ran.Add(3), null);
-
-                Assert.That(ran, Is.Empty);
-
-                Task.Factory.StartNew(() =>
+            AddStep(
+                "queue items",
+                () =>
                 {
-                    updateContext.Send(_ => ran.Add(4), null);
+                    var updateContext = SynchronizationContext.Current;
 
-                    Assert.That(ran, Is.EqualTo(new[] { 1, 2, 3, 4 }));
+                    Debug.Assert(updateContext != null);
 
-                    finished.Set();
-                }, TaskCreationOptions.LongRunning);
-            });
+                    updateContext.Post(_ => ran.Add(1), null);
+                    updateContext.Post(_ => ran.Add(2), null);
+                    updateContext.Post(_ => ran.Add(3), null);
+
+                    Assert.That(ran, Is.Empty);
+
+                    Task.Factory.StartNew(
+                        () =>
+                        {
+                            updateContext.Send(_ => ran.Add(4), null);
+
+                            Assert.That(ran, Is.EqualTo(new[] { 1, 2, 3, 4 }));
+
+                            finished.Set();
+                        },
+                        TaskCreationOptions.LongRunning
+                    );
+                }
+            );
 
             AddUntilStep("wait for completion", () => finished.IsSet);
         }
@@ -119,20 +132,23 @@ namespace osu.Framework.Tests.Visual.Drawables
             Exception thrown = null;
 
             AddStep("watch for exceptions", () => host.ExceptionThrown += onException);
-            AddStep("throw on update thread", () =>
-            {
-                // ReSharper disable once AsyncVoidLambda
-                host.UpdateThread.Scheduler.Add(async () =>
+            AddStep(
+                "throw on update thread",
+                () =>
                 {
-                    Assert.That(ThreadSafety.IsUpdateThread);
+                    // ReSharper disable once AsyncVoidLambda
+                    host.UpdateThread.Scheduler.Add(async () =>
+                    {
+                        Assert.That(ThreadSafety.IsUpdateThread);
 
-                    await Task.Delay(100).ConfigureAwait(true);
+                        await Task.Delay(100).ConfigureAwait(true);
 
-                    Assert.That(ThreadSafety.IsUpdateThread);
+                        Assert.That(ThreadSafety.IsUpdateThread);
 
-                    throw new InvalidOperationException();
-                });
-            });
+                        throw new InvalidOperationException();
+                    });
+                }
+            );
 
             AddUntilStep("wait for exception to arrive", () => thrown is InvalidOperationException);
             AddStep("stop watching for exceptions", () => host.ExceptionThrown -= onException);
@@ -149,27 +165,33 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             int updateCount = 0;
 
-            AddStep("add box", () =>
-            {
-                updateCount = 0;
-                Child = box = new AsyncPerformingBox(false);
-            });
+            AddStep(
+                "add box",
+                () =>
+                {
+                    updateCount = 0;
+                    Child = box = new AsyncPerformingBox(false);
+                }
+            );
 
             AddUntilStep("has spun", () => box.Rotation == 180);
 
-            AddStep("update with async", () =>
-            {
+            AddStep(
+                "update with async",
+                () =>
+                {
 #pragma warning disable 4014
-                box.OnUpdate += _ => asyncAction();
+                    box.OnUpdate += _ => asyncAction();
 #pragma warning restore 4014
 
-                async Task asyncAction()
-                {
-                    updateCount++;
-                    await box.PerformAsyncWait().ConfigureAwait(true);
-                    box.RotateTo(0, 500);
+                    async Task asyncAction()
+                    {
+                        updateCount++;
+                        await box.PerformAsyncWait().ConfigureAwait(true);
+                        box.RotateTo(0, 500);
+                    }
                 }
-            });
+            );
 
             AddUntilStep("is running updates", () => updateCount > 5);
             AddStep("trigger", () => box.ReleaseAsyncLoadCompleteLock());
@@ -182,19 +204,22 @@ namespace osu.Framework.Tests.Visual.Drawables
             AddStep("add box", () => Child = box = new AsyncPerformingBox(false));
             AddUntilStep("has spun", () => box.Rotation == 180);
 
-            AddStep("schedule with async", () =>
-            {
+            AddStep(
+                "schedule with async",
+                () =>
+                {
 #pragma warning disable 4014
-                // We may want to give `Schedule` a `Task` accepting overload in the future.
-                box.Schedule(() => asyncScheduledAction());
+                    // We may want to give `Schedule` a `Task` accepting overload in the future.
+                    box.Schedule(() => asyncScheduledAction());
 #pragma warning restore 4014
 
-                async Task asyncScheduledAction()
-                {
-                    await box.PerformAsyncWait().ConfigureAwait(true);
-                    box.RotateTo(0, 500);
+                    async Task asyncScheduledAction()
+                    {
+                        await box.PerformAsyncWait().ConfigureAwait(true);
+                        box.RotateTo(0, 500);
+                    }
                 }
-            });
+            );
 
             AddStep("trigger", () => box.ReleaseAsyncLoadCompleteLock());
             AddUntilStep("has spun", () => box.Rotation == 0);
@@ -215,11 +240,14 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             void toggleExecutionMode()
             {
-                var executionMode = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode);
+                var executionMode = config.GetBindable<ExecutionMode>(
+                    FrameworkSetting.ExecutionMode
+                );
 
-                executionMode.Value = executionMode.Value == ExecutionMode.MultiThreaded
-                    ? ExecutionMode.SingleThread
-                    : ExecutionMode.MultiThreaded;
+                executionMode.Value =
+                    executionMode.Value == ExecutionMode.MultiThreaded
+                        ? ExecutionMode.SingleThread
+                        : ExecutionMode.MultiThreaded;
             }
         }
 

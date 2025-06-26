@@ -57,7 +57,8 @@ namespace osu.Framework.Bindables
                 // if a lease is active, disabled can *only* be changed by that leased bindable.
                 throwIfLeased();
 
-                if (disabled == value) return;
+                if (disabled == value)
+                    return;
 
                 SetDisabled(value);
             }
@@ -94,15 +95,23 @@ namespace osu.Framework.Bindables
                 // if the leased bindable decides to disable exclusive access (by setting Disabled = false) then anything will be able to write to Value.
 
                 if (Disabled)
-                    throw new InvalidOperationException($"Can not set value to \"{value.ToString()}\" as bindable is disabled.");
+                    throw new InvalidOperationException(
+                        $"Can not set value to \"{value.ToString()}\" as bindable is disabled."
+                    );
 
-                if (EqualityComparer<T>.Default.Equals(this.value, value)) return;
+                if (EqualityComparer<T>.Default.Equals(this.value, value))
+                    return;
 
                 SetValue(this.value, value);
             }
         }
 
-        internal void SetValue(T previousValue, T value, bool bypassChecks = false, Bindable<T> source = null)
+        internal void SetValue(
+            T previousValue,
+            T value,
+            bool bypassChecks = false,
+            Bindable<T> source = null
+        )
         {
             this.value = value;
             TriggerValueChange(previousValue, source ?? this, true, bypassChecks);
@@ -120,15 +129,23 @@ namespace osu.Framework.Bindables
                 // if the leased bindable decides to disable exclusive access (by setting Disabled = false) then anything will be able to write to Default.
 
                 if (Disabled)
-                    throw new InvalidOperationException($"Can not set default value to \"{value.ToString()}\" as bindable is disabled.");
+                    throw new InvalidOperationException(
+                        $"Can not set default value to \"{value.ToString()}\" as bindable is disabled."
+                    );
 
-                if (EqualityComparer<T>.Default.Equals(defaultValue, value)) return;
+                if (EqualityComparer<T>.Default.Equals(defaultValue, value))
+                    return;
 
                 SetDefaultValue(defaultValue, value);
             }
         }
 
-        internal void SetDefaultValue(T previousValue, T value, bool bypassChecks = false, Bindable<T> source = null)
+        internal void SetDefaultValue(
+            T previousValue,
+            T value,
+            bool bypassChecks = false,
+            Bindable<T> source = null
+        )
         {
             defaultValue = value;
             TriggerDefaultChange(previousValue, source ?? this, true, bypassChecks);
@@ -136,16 +153,15 @@ namespace osu.Framework.Bindables
 
         private WeakReference<Bindable<T>> weakReferenceInstance;
 
-        private WeakReference<Bindable<T>> weakReference => weakReferenceInstance ??= new WeakReference<Bindable<T>>(this);
+        private WeakReference<Bindable<T>> weakReference =>
+            weakReferenceInstance ??= new WeakReference<Bindable<T>>(this);
 
         /// <summary>
         /// Creates a new bindable instance. This is used for deserialization of bindables.
         /// </summary>
         [UsedImplicitly]
         private Bindable()
-            : this(default)
-        {
-        }
+            : this(default) { }
 
         /// <summary>
         /// Creates a new bindable instance initialised with a default value.
@@ -161,7 +177,9 @@ namespace osu.Framework.Bindables
         void IBindable.BindTo(IBindable them)
         {
             if (!(them is Bindable<T> tThem))
-                throw new InvalidCastException($"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
+                throw new InvalidCastException(
+                    $"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}."
+                );
 
             BindTo(tThem);
         }
@@ -169,7 +187,9 @@ namespace osu.Framework.Bindables
         void IBindable<T>.BindTo(IBindable<T> them)
         {
             if (!(them is Bindable<T> tThem))
-                throw new InvalidCastException($"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
+                throw new InvalidCastException(
+                    $"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}."
+                );
 
             BindTo(tThem);
         }
@@ -216,7 +236,10 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="onChange">The action to perform when <see cref="Value"/> changes.</param>
         /// <param name="runOnceImmediately">Whether the action provided in <paramref name="onChange"/> should be run once immediately.</param>
-        public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool runOnceImmediately = false)
+        public void BindValueChanged(
+            Action<ValueChangedEvent<T>> onChange,
+            bool runOnceImmediately = false
+        )
         {
             ValueChanged += onChange;
             if (runOnceImmediately)
@@ -241,7 +264,8 @@ namespace osu.Framework.Bindables
             Bindings.Add(weakReference);
         }
 
-        private void removeWeakReference(WeakReference<Bindable<T>> weakReference) => Bindings?.Remove(weakReference);
+        private void removeWeakReference(WeakReference<Bindable<T>> weakReference) =>
+            Bindings?.Remove(weakReference);
 
         /// <summary>
         /// Parse an object into this instance.
@@ -272,7 +296,10 @@ namespace osu.Framework.Bindables
 
                 case IBindable:
                     if (!(input is IBindable<T> bindable))
-                        throw new ArgumentException($"Expected bindable of type {nameof(IBindable)}<{typeof(T)}>, got {input.GetType()}", nameof(input));
+                        throw new ArgumentException(
+                            $"Expected bindable of type {nameof(IBindable)}<{typeof(T)}>, got {input.GetType()}",
+                            nameof(input)
+                        );
 
                     Value = bindable.Value;
                     break;
@@ -312,7 +339,12 @@ namespace osu.Framework.Bindables
             TriggerDisabledChange(this, false);
         }
 
-        protected void TriggerValueChange(T previousValue, Bindable<T> source, bool propagateToBindings = true, bool bypassChecks = false)
+        protected void TriggerValueChange(
+            T previousValue,
+            Bindable<T> source,
+            bool propagateToBindings = true,
+            bool bypassChecks = false
+        )
         {
             // check a bound bindable hasn't changed the value again (it will fire its own event)
             T beforePropagation = value;
@@ -321,7 +353,8 @@ namespace osu.Framework.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
 
                     b.SetValue(previousValue, value, bypassChecks, this);
                 }
@@ -331,7 +364,12 @@ namespace osu.Framework.Bindables
                 ValueChanged?.Invoke(new ValueChangedEvent<T>(previousValue, value));
         }
 
-        protected void TriggerDefaultChange(T previousValue, Bindable<T> source, bool propagateToBindings = true, bool bypassChecks = false)
+        protected void TriggerDefaultChange(
+            T previousValue,
+            Bindable<T> source,
+            bool propagateToBindings = true,
+            bool bypassChecks = false
+        )
         {
             // check a bound bindable hasn't changed the value again (it will fire its own event)
             T beforePropagation = defaultValue;
@@ -340,7 +378,8 @@ namespace osu.Framework.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
 
                     b.SetDefaultValue(previousValue, defaultValue, bypassChecks, this);
                 }
@@ -350,7 +389,11 @@ namespace osu.Framework.Bindables
                 DefaultChanged?.Invoke(new ValueChangedEvent<T>(previousValue, defaultValue));
         }
 
-        protected void TriggerDisabledChange(Bindable<T> source, bool propagateToBindings = true, bool bypassChecks = false)
+        protected void TriggerDisabledChange(
+            Bindable<T> source,
+            bool propagateToBindings = true,
+            bool bypassChecks = false
+        )
         {
             // check a bound bindable hasn't changed the value again (it will fire its own event)
             bool beforePropagation = disabled;
@@ -359,7 +402,8 @@ namespace osu.Framework.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
 
                     b.SetDisabled(disabled, bypassChecks, this);
                 }
@@ -411,7 +455,9 @@ namespace osu.Framework.Bindables
         public virtual void UnbindFrom(IUnbindable them)
         {
             if (!(them is Bindable<T> tThem))
-                throw new InvalidCastException($"Can't unbind a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
+                throw new InvalidCastException(
+                    $"Can't unbind a bindable of type {them.GetType()} from a bindable of type {GetType()}."
+                );
 
             removeWeakReference(tThem.weakReference);
             tThem.removeWeakReference(weakReference);
@@ -421,7 +467,8 @@ namespace osu.Framework.Bindables
 
         public sealed override string ToString() => ToString(null, CultureInfo.CurrentCulture);
 
-        public virtual string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, $"{{0:{format}}}", Value);
+        public virtual string ToString(string format, IFormatProvider formatProvider) =>
+            string.Format(formatProvider, $"{{0:{format}}}", Value);
 
         /// <summary>
         /// Create an unbound clone of this bindable.
@@ -471,7 +518,9 @@ namespace osu.Framework.Bindables
         public LeasedBindable<T> BeginLease(bool revertValueOnReturn)
         {
             if (checkForLease(this))
-                throw new InvalidOperationException("Attempted to lease a bindable that is already in a leased state.");
+                throw new InvalidOperationException(
+                    "Attempted to lease a bindable that is already in a leased state."
+                );
 
             return leasedBindable = new LeasedBindable<T>(this, revertValueOnReturn);
         }
@@ -502,10 +551,14 @@ namespace osu.Framework.Bindables
         internal void EndLease(ILeasedBindable<T> returnedBindable)
         {
             if (!isLeased)
-                throw new InvalidOperationException("Attempted to end a lease without beginning one.");
+                throw new InvalidOperationException(
+                    "Attempted to end a lease without beginning one."
+                );
 
             if (returnedBindable != leasedBindable)
-                throw new InvalidOperationException("Attempted to end a lease but returned a different bindable to the one used to start the lease.");
+                throw new InvalidOperationException(
+                    "Attempted to end a lease but returned a different bindable to the one used to start the lease."
+                );
 
             leasedBindable = null;
         }
@@ -513,7 +566,9 @@ namespace osu.Framework.Bindables
         private void throwIfLeased()
         {
             if (isLeased)
-                throw new InvalidOperationException($"Cannot perform this operation on a {nameof(Bindable<T>)} that is currently in a leased state.");
+                throw new InvalidOperationException(
+                    $"Cannot perform this operation on a {nameof(Bindable<T>)} that is currently in a leased state."
+                );
         }
     }
 }

@@ -43,8 +43,6 @@ namespace osu.Framework.Tests.Audio
             public new bool IsDisposed => base.IsDisposed;
         }
 
-        private class TestingAdjustableAudioComponent : AdjustableAudioComponent
-        {
-        }
+        private class TestingAdjustableAudioComponent : AdjustableAudioComponent { }
     }
 }

@@ -33,16 +33,18 @@ namespace osu.Framework
         /// When running under NUnit, the assembly of the current test will be returned instead.
         /// </summary>
         /// <returns>The entry assembly.</returns>
-        public static Assembly EntryAssembly { get; internal set; } = DebugUtils.IsNUnitRunning
-            ? DebugUtils.NUnitTestAssembly
+        public static Assembly EntryAssembly { get; internal set; } =
+            DebugUtils.IsNUnitRunning
+                ? DebugUtils.NUnitTestAssembly
 #pragma warning disable RS0030
-            : Assembly.GetEntryAssembly().AsNonNull();
+                : Assembly.GetEntryAssembly().AsNonNull();
 #pragma warning restore RS0030
 
         public static Platform OS { get; }
 
         public static bool IsUnix => OS != Platform.Windows;
-        public static bool IsDesktop => OS == Platform.Linux || OS == Platform.macOS || OS == Platform.Windows;
+        public static bool IsDesktop =>
+            OS == Platform.Linux || OS == Platform.macOS || OS == Platform.Windows;
         public static bool IsMobile => OS == Platform.iOS || OS == Platform.Android;
         public static bool IsApple => OS == Platform.iOS || OS == Platform.macOS;
 
@@ -51,16 +53,38 @@ namespace osu.Framework
             if (OperatingSystem.IsWindows())
                 OS = Platform.Windows;
             if (OperatingSystem.IsIOS())
-                OS = OS == 0 ? Platform.iOS : throw new InvalidOperationException($"Tried to set OS Platform to {nameof(Platform.iOS)}, but is already {Enum.GetName(OS)}");
+                OS =
+                    OS == 0
+                        ? Platform.iOS
+                        : throw new InvalidOperationException(
+                            $"Tried to set OS Platform to {nameof(Platform.iOS)}, but is already {Enum.GetName(OS)}"
+                        );
             if (OperatingSystem.IsAndroid())
-                OS = OS == 0 ? Platform.Android : throw new InvalidOperationException($"Tried to set OS Platform to {nameof(Platform.Android)}, but is already {Enum.GetName(OS)}");
+                OS =
+                    OS == 0
+                        ? Platform.Android
+                        : throw new InvalidOperationException(
+                            $"Tried to set OS Platform to {nameof(Platform.Android)}, but is already {Enum.GetName(OS)}"
+                        );
             if (OperatingSystem.IsMacOS())
-                OS = OS == 0 ? Platform.macOS : throw new InvalidOperationException($"Tried to set OS Platform to {nameof(Platform.macOS)}, but is already {Enum.GetName(OS)}");
+                OS =
+                    OS == 0
+                        ? Platform.macOS
+                        : throw new InvalidOperationException(
+                            $"Tried to set OS Platform to {nameof(Platform.macOS)}, but is already {Enum.GetName(OS)}"
+                        );
             if (OperatingSystem.IsLinux())
-                OS = OS == 0 ? Platform.Linux : throw new InvalidOperationException($"Tried to set OS Platform to {nameof(Platform.Linux)}, but is already {Enum.GetName(OS)}");
+                OS =
+                    OS == 0
+                        ? Platform.Linux
+                        : throw new InvalidOperationException(
+                            $"Tried to set OS Platform to {nameof(Platform.Linux)}, but is already {Enum.GetName(OS)}"
+                        );
 
             if (OS == 0)
-                throw new PlatformNotSupportedException("Operating system could not be detected correctly.");
+                throw new PlatformNotSupportedException(
+                    "Operating system could not be detected correctly."
+                );
         }
 
         // todo: revisit when we have a way to exclude enum members from naming rules
@@ -71,7 +95,7 @@ namespace osu.Framework
             Linux = 2,
             macOS = 3,
             iOS = 4,
-            Android = 5
+            Android = 5,
         }
     }
 }

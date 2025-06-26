@@ -4,16 +4,16 @@
 #nullable disable
 
 using System;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Textures;
-using osuTK;
-using osu.Framework.Graphics.Shaders;
-using osu.Framework.Allocation;
 using System.Collections.Generic;
+using osu.Framework.Allocation;
 using osu.Framework.Caching;
 using osu.Framework.Extensions.EnumExtensions;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Layout;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.Lines
@@ -34,8 +34,14 @@ namespace osu.Framework.Graphics.Lines
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
-            pathShader = shaders.Load(VertexShaderDescriptor.TEXTURE_3, FragmentShaderDescriptor.TEXTURE);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
+            pathShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_3,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         private readonly List<Vector2> vertices = new List<Vector2>();
@@ -68,7 +74,8 @@ namespace osu.Framework.Graphics.Lines
             get => pathRadius;
             set
             {
-                if (pathRadius == value) return;
+                if (pathRadius == value)
+                    return;
 
                 pathRadius = value;
 
@@ -85,7 +92,9 @@ namespace osu.Framework.Graphics.Lines
             set
             {
                 if ((AutoSizeAxes & value) != 0)
-                    throw new InvalidOperationException("No axis can be relatively sized and automatically sized at the same time.");
+                    throw new InvalidOperationException(
+                        "No axis can be relatively sized and automatically sized at the same time."
+                    );
 
                 base.RelativeSizeAxes = value;
             }
@@ -107,7 +116,9 @@ namespace osu.Framework.Graphics.Lines
                     return;
 
                 if ((RelativeSizeAxes & value) != 0)
-                    throw new InvalidOperationException("No axis can be relatively sized and automatically sized at the same time.");
+                    throw new InvalidOperationException(
+                        "No axis can be relatively sized and automatically sized at the same time."
+                    );
 
                 autoSizeAxes = value;
                 OnSizingChanged();
@@ -126,7 +137,9 @@ namespace osu.Framework.Graphics.Lines
             set
             {
                 if ((AutoSizeAxes & Axes.X) != 0)
-                    throw new InvalidOperationException($"The width of a {nameof(Path)} with {nameof(AutoSizeAxes)} can not be set manually.");
+                    throw new InvalidOperationException(
+                        $"The width of a {nameof(Path)} with {nameof(AutoSizeAxes)} can not be set manually."
+                    );
 
                 base.Width = value;
             }
@@ -144,7 +157,9 @@ namespace osu.Framework.Graphics.Lines
             set
             {
                 if ((AutoSizeAxes & Axes.Y) != 0)
-                    throw new InvalidOperationException($"The height of a {nameof(Path)} with {nameof(AutoSizeAxes)} can not be set manually.");
+                    throw new InvalidOperationException(
+                        $"The height of a {nameof(Path)} with {nameof(AutoSizeAxes)} can not be set manually."
+                    );
 
                 base.Height = value;
             }
@@ -162,7 +177,9 @@ namespace osu.Framework.Graphics.Lines
             set
             {
                 if ((AutoSizeAxes & Axes.Both) != 0)
-                    throw new InvalidOperationException($"The Size of a {nameof(Path)} with {nameof(AutoSizeAxes)} can not be set manually.");
+                    throw new InvalidOperationException(
+                        $"The Size of a {nameof(Path)} with {nameof(AutoSizeAxes)} can not be set manually."
+                    );
 
                 base.Size = value;
             }
@@ -192,7 +209,12 @@ namespace osu.Framework.Graphics.Lines
                         maxY = Math.Max(maxY, v.Y + PathRadius);
                     }
 
-                    return vertexBoundsCache.Value = new RectangleF(minX, minY, maxX - minX, maxY - minY);
+                    return vertexBoundsCache.Value = new RectangleF(
+                        minX,
+                        minY,
+                        maxX - minX,
+                        maxY - minY
+                    );
                 }
 
                 return vertexBoundsCache.Value = new RectangleF(0, 0, 0, 0);
@@ -289,7 +311,8 @@ namespace osu.Framework.Graphics.Lines
         public Vector2 FrameBufferScale { get; } = Vector2.One;
 
         // The path should not receive the true colour to avoid colour doubling when the frame-buffer is rendered to the back-buffer.
-        public override DrawColourInfo DrawColourInfo => new DrawColourInfo(Color4.White, base.DrawColourInfo.Blending);
+        public override DrawColourInfo DrawColourInfo =>
+            new DrawColourInfo(Color4.White, base.DrawColourInfo.Blending);
 
         private Color4 backgroundColour = new Color4(0, 0, 0, 0);
 
@@ -321,18 +344,24 @@ namespace osu.Framework.Graphics.Lines
             return result;
         }
 
-        private readonly BufferedDrawNodeSharedData sharedData = new BufferedDrawNodeSharedData(new[] { RenderBufferFormat.D16 }, clipToRootNode: true);
+        private readonly BufferedDrawNodeSharedData sharedData = new BufferedDrawNodeSharedData(
+            new[] { RenderBufferFormat.D16 },
+            clipToRootNode: true
+        );
 
-        protected override DrawNode CreateDrawNode() => new PathBufferedDrawNode(this, new PathDrawNode(this), sharedData);
+        protected override DrawNode CreateDrawNode() =>
+            new PathBufferedDrawNode(this, new PathDrawNode(this), sharedData);
 
         private class PathBufferedDrawNode : BufferedDrawNode
         {
             protected new Path Source => (Path)base.Source;
 
-            public PathBufferedDrawNode(Path source, PathDrawNode child, BufferedDrawNodeSharedData sharedData)
-                : base(source, child, sharedData)
-            {
-            }
+            public PathBufferedDrawNode(
+                Path source,
+                PathDrawNode child,
+                BufferedDrawNodeSharedData sharedData
+            )
+                : base(source, child, sharedData) { }
 
             private long pathInvalidationID = -1;
 

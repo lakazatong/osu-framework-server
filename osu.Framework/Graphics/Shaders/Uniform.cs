@@ -57,13 +57,15 @@ namespace osu.Framework.Graphics.Shaders
 
         public void Update()
         {
-            if (!HasChanged) return;
+            if (!HasChanged)
+                return;
 
             renderer.SetUniform(this);
             HasChanged = false;
         }
 
         ref T IUniformWithValue<T>.GetValueByRef() => ref val;
+
         T IUniformWithValue<T>.GetValue() => val;
     }
 }

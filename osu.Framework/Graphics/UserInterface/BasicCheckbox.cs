@@ -1,12 +1,12 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.UserInterface
 {
@@ -83,21 +83,21 @@ namespace osu.Framework.Graphics.UserInterface
                 Spacing = new Vector2(10, 0),
                 Children = new Drawable[]
                 {
-                    box = new Box
-                    {
-                        Size = new Vector2(30),
-                    },
+                    box = new Box { Size = new Vector2(30) },
                     labelSpriteText = new SpriteText
                     {
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Depth = float.MinValue,
-                        Font = FrameworkFont.Condensed
+                        Font = FrameworkFont.Condensed,
                     },
-                }
+                },
             };
 
-            Current.BindValueChanged(e => box.FadeColour(e.NewValue ? CheckedColor : UncheckedColor, FadeDuration), true);
+            Current.BindValueChanged(
+                e => box.FadeColour(e.NewValue ? CheckedColor : UncheckedColor, FadeDuration),
+                true
+            );
         }
     }
 }

@@ -140,7 +140,8 @@ namespace osu.Framework.Threading
 
         internal PerformanceMonitor? Monitor { get; }
 
-        internal virtual IEnumerable<StatisticsCounterType> StatisticsCounters => Array.Empty<StatisticsCounterType>();
+        internal virtual IEnumerable<StatisticsCounterType> StatisticsCounters =>
+            Array.Empty<StatisticsCounterType>();
 
         /// <summary>
         /// The amount of times this thread has run.
@@ -166,7 +167,11 @@ namespace osu.Framework.Threading
         /// </summary>
         private volatile bool exitRequested;
 
-        internal GameThread(Action? onNewFrame = null, string name = "unknown", bool monitorPerformance = true)
+        internal GameThread(
+            Action? onNewFrame = null,
+            string name = "unknown",
+            bool monitorPerformance = true
+        )
         {
             OnNewFrame = onNewFrame;
 
@@ -213,7 +218,9 @@ namespace osu.Framework.Threading
                         break;
 
                     default:
-                        throw new InvalidOperationException($"Cannot start when thread is {state.Value}.");
+                        throw new InvalidOperationException(
+                            $"Cannot start when thread is {state.Value}."
+                        );
                 }
 
                 state.Value = GameThreadState.Starting;
@@ -241,7 +248,9 @@ namespace osu.Framework.Threading
                     case GameThreadState.Paused:
                     case GameThreadState.NotStarted:
                     case GameThreadState.Starting:
-                        throw new InvalidOperationException($"Cannot exit when thread is {state.Value}.");
+                        throw new InvalidOperationException(
+                            $"Cannot exit when thread is {state.Value}."
+                        );
 
                     case GameThreadState.Exited:
                         return;
@@ -367,25 +376,19 @@ namespace osu.Framework.Threading
         /// <summary>
         /// Called whenever the thread is initialised. Should prepare the thread for performing work.
         /// </summary>
-        protected virtual void OnInitialize()
-        {
-        }
+        protected virtual void OnInitialize() { }
 
         /// <summary>
         /// Called when a <see cref="Pause"/> or <see cref="Exit"/> is requested on this <see cref="GameThread"/>.
         /// Use this method to release exclusive resources that the thread could have been holding in its current execution mode,
         /// like GL contexts or similar.
         /// </summary>
-        protected virtual void OnSuspended()
-        {
-        }
+        protected virtual void OnSuspended() { }
 
         /// <summary>
         /// Called when the thread is exited. Should clean up any thread-specific resources.
         /// </summary>
-        protected virtual void OnExit()
-        {
-        }
+        protected virtual void OnExit() { }
 
         private void updateMaximumHz()
         {
@@ -476,7 +479,8 @@ namespace osu.Framework.Threading
 
         private void updateCulture()
         {
-            if (culture == null) return;
+            if (culture == null)
+                return;
 
             Debug.Assert(IsCurrent);
 
@@ -489,7 +493,9 @@ namespace osu.Framework.Threading
             lock (startStopLock)
             {
                 Debug.Assert(state.Value == GameThreadState.Running);
-                Debug.Assert(exitState == GameThreadState.Exited || exitState == GameThreadState.Paused);
+                Debug.Assert(
+                    exitState == GameThreadState.Exited || exitState == GameThreadState.Paused
+                );
 
                 Thread = null;
                 OnSuspended();

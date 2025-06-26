@@ -3,12 +3,12 @@
 
 #nullable disable
 
-using osuTK;
 using System;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
+using osuTK;
 
 namespace osu.Framework.Physics
 {
@@ -99,8 +99,12 @@ namespace osu.Framework.Physics
             Vector2 size = DrawSize;
 
             // Inertial moment for a linearly transformed rectangle with a given size around its center.
-            return ((mat.M11 * mat.M11 + mat.M12 * mat.M12) * size.X * size.X +
-                    (mat.M21 * mat.M21 + mat.M22 * mat.M22) * size.Y * size.Y) * Mass / 12;
+            return (
+                    (mat.M11 * mat.M11 + mat.M12 * mat.M12) * size.X * size.X
+                    + (mat.M21 * mat.M21 + mat.M22 * mat.M22) * size.Y * size.Y
+                )
+                * Mass
+                / 12;
         }
 
         /// <summary>
@@ -132,7 +136,9 @@ namespace osu.Framework.Physics
 
                 for (int j = 0; j < amount_side_steps; ++j)
                 {
-                    Vertices.Add(a + dir * (cornerRadius + j * usableLength / (amount_side_steps - 1)));
+                    Vertices.Add(
+                        a + dir * (cornerRadius + j * usableLength / (amount_side_steps - 1))
+                    );
                     Normals.Add(normal);
                 }
             }
@@ -179,7 +185,9 @@ namespace osu.Framework.Physics
             for (int i = 0; i < Vertices.Count; ++i)
             {
                 Vertices[i] = Vector2Extensions.Transform(Vertices[i], mat);
-                Normals[i] = (Vector2Extensions.Transform(Normals[i], normMat) - translation).Normalized();
+                Normals[i] = (
+                    Vector2Extensions.Transform(Normals[i], normMat) - translation
+                ).Normalized();
             }
         }
 
@@ -214,7 +222,11 @@ namespace osu.Framework.Physics
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
-                if (other.BodyContains(Vector2Extensions.Transform(Vertices[i], SimulationToScreenSpace)))
+                if (
+                    other.BodyContains(
+                        Vector2Extensions.Transform(Vertices[i], SimulationToScreenSpace)
+                    )
+                )
                 {
                     // Compute both impulse responses _before_ applying them, such that
                     // they do not influence each other.

@@ -26,14 +26,17 @@ namespace osu.Framework.Tests.Input
         {
             var receptors = new InputReceptor[2];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptors[0] = new InputReceptor { Size = new Vector2(100) },
-                    receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                };
-            });
+                    Children = new Drawable[]
+                    {
+                        receptors[0] = new InputReceptor { Size = new Vector2(100) },
+                        receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                    };
+                }
+            );
 
             AddStep("move mouse to receptors", () => InputManager.MoveMouseTo(receptors[0]));
             AddStep("press button", () => InputManager.PressButton(MouseButton.Left));
@@ -52,14 +55,17 @@ namespace osu.Framework.Tests.Input
         {
             var receptors = new InputReceptor[2];
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptors[0] = new InputReceptor { Size = new Vector2(100) },
-                    receptors[1] = new InputReceptor { Size = new Vector2(100) }
-                };
-            });
+                    Children = new Drawable[]
+                    {
+                        receptors[0] = new InputReceptor { Size = new Vector2(100) },
+                        receptors[1] = new InputReceptor { Size = new Vector2(100) },
+                    };
+                }
+            );
 
             AddStep("move mouse to receptors", () => InputManager.MoveMouseTo(receptors[0]));
             AddStep("press button", () => InputManager.PressButton(MouseButton.Left));
@@ -79,23 +85,29 @@ namespace osu.Framework.Tests.Input
         {
             InputReceptor receptor = null;
 
-            AddStep("create hierarchy", () =>
-            {
-                Child = receptor = new InputReceptor
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    Size = new Vector2(100),
-                    Click = () => true
-                };
-            });
+                    Child = receptor = new InputReceptor
+                    {
+                        Size = new Vector2(100),
+                        Click = () => true,
+                    };
+                }
+            );
 
             AddStep("move mouse to receptor", () => InputManager.MoveMouseTo(receptor));
             AddStep("click", () => InputManager.Click(MouseButton.Left));
 
-            AddStep("remove receptor and double click", () =>
-            {
-                Remove(receptor, true); // Test correctness can be asserted by removing this line and ensuring the test fails
-                InputManager.Click(MouseButton.Left); // Done immediately after due to double clicks being frame-dependent (timing)
-            });
+            AddStep(
+                "remove receptor and double click",
+                () =>
+                {
+                    Remove(receptor, true); // Test correctness can be asserted by removing this line and ensuring the test fails
+                    InputManager.Click(MouseButton.Left); // Done immediately after due to double clicks being frame-dependent (timing)
+                }
+            );
 
             AddAssert("receptor did not receive double click", () => !receptor.DoubleClickReceived);
         }
@@ -110,25 +122,31 @@ namespace osu.Framework.Tests.Input
             Container receptorParent = null;
             Vector2 lastPosition = Vector2.Zero;
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptorParent = new Container
+                    Children = new Drawable[]
                     {
-                        Children = new Drawable[]
+                        receptorParent = new Container
                         {
-                            receptor = new InputReceptor { Size = new Vector2(100) }
-                        }
-                    }
-                };
-            });
+                            Children = new Drawable[]
+                            {
+                                receptor = new InputReceptor { Size = new Vector2(100) },
+                            },
+                        },
+                    };
+                }
+            );
 
-            AddStep("move mouse to receptor", () =>
-            {
-                lastPosition = receptor.ToScreenSpace(receptor.LayoutRectangle.Centre);
-                InputManager.MoveMouseTo(lastPosition);
-            });
+            AddStep(
+                "move mouse to receptor",
+                () =>
+                {
+                    lastPosition = receptor.ToScreenSpace(receptor.LayoutRectangle.Centre);
+                    InputManager.MoveMouseTo(lastPosition);
+                }
+            );
             AddStep("press button", () => InputManager.PressButton(MouseButton.Left));
 
             AddStep("remove receptor parent", () => Remove(receptorParent, true));

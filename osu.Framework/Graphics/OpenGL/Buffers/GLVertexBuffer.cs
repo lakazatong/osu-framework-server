@@ -3,11 +3,11 @@
 
 using System;
 using System.Buffers;
-using osuTK.Graphics.ES30;
-using osu.Framework.Statistics;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Rendering.Vertices;
+using osu.Framework.Statistics;
+using osuTK.Graphics.ES30;
 using SixLabors.ImageSharp.Memory;
 
 namespace osu.Framework.Graphics.OpenGL.Buffers
@@ -109,9 +109,7 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                 Renderer.BindVertexArray(vaoId);
         }
 
-        public virtual void Unbind()
-        {
-        }
+        public virtual void Unbind() { }
 
         protected virtual int ToElements(int vertices) => vertices;
 
@@ -127,7 +125,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
         public void DrawRange(int startIndex, int endIndex)
         {
             Bind(true);
-            Renderer.DrawVertices(Topology, ToElementIndex(startIndex), ToElements(endIndex - startIndex));
+            Renderer.DrawVertices(
+                Topology,
+                ToElementIndex(startIndex),
+                ToElements(endIndex - startIndex)
+            );
         }
 
         public void Update()
@@ -142,7 +144,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             int countVertices = endIndex - startIndex;
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboId);
-            GL.BufferSubData(BufferTarget.ArrayBuffer, startIndex * STRIDE, (IntPtr)(countVertices * STRIDE), ref getMemory().Span[startIndex]);
+            GL.BufferSubData(
+                BufferTarget.ArrayBuffer,
+                startIndex * STRIDE,
+                (IntPtr)(countVertices * STRIDE),
+                ref getMemory().Span[startIndex]
+            );
 
             FrameStatistics.Add(StatisticsCounterType.VerticesUpl, countVertices);
         }
@@ -153,7 +160,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
             if (!InUse)
             {
-                memoryOwner = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<T>(Size, AllocationOptions.Clean);
+                memoryOwner =
+                    SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<T>(
+                        Size,
+                        AllocationOptions.Clean
+                    );
                 vertexMemory = memoryOwner.Memory;
 
                 Renderer.RegisterVertexBufferUse(this);

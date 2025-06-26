@@ -27,7 +27,11 @@ namespace osu.Framework.Tests.Visual.Drawables
         private Track track;
         private Waveform waveform;
         private Container<Drawable> waveformContainer;
-        private readonly BindableFloat zoom = new BindableFloat(1) { MinValue = 0.1f, MaxValue = 2000 };
+        private readonly BindableFloat zoom = new BindableFloat(1)
+        {
+            MinValue = 0.1f,
+            MaxValue = 2000,
+        };
 
         private ScrollContainer<Drawable> scroll;
 
@@ -60,7 +64,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                                 BackgroundColour = Color4.DarkSlateGray,
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
-                                Action = startStop
+                                Action = startStop,
                             },
                             new SpriteText
                             {
@@ -73,22 +77,23 @@ namespace osu.Framework.Tests.Visual.Drawables
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Size = new Vector2(200, 40),
-                                Current = zoom
+                                Current = zoom,
                             },
                         },
                     },
                     scroll = new BasicScrollContainer(Direction.Horizontal)
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = waveformContainer = new FillFlowContainer
-                        {
-                            RelativeSizeAxes = Axes.Y,
-                            Width = track_width,
-                            Direction = FillDirection.Vertical,
-                            Spacing = new Vector2(0, 10)
-                        }
-                    }
-                }
+                        Child = waveformContainer =
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.Y,
+                                Width = track_width,
+                                Direction = FillDirection.Vertical,
+                                Spacing = new Vector2(0, 10),
+                            },
+                    },
+                },
             };
 
             zoom.ValueChanged += e => waveformContainer.Width = track_width * e.NewValue;
@@ -96,9 +101,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private void loadTrack(bool stereo)
         {
-            string trackName = stereo
-                ? "Tracks/sample-track.mp3"
-                : "Tracks/sample-track-mono.mp3";
+            string trackName = stereo ? "Tracks/sample-track.mp3" : "Tracks/sample-track-mono.mp3";
 
             track = store.Get(trackName);
             waveform = new Waveform(store.GetStream(trackName));
@@ -122,7 +125,12 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestWaveform graph = null;
 
-            AddStep("create waveform", () => waveformContainer.Child = graph = new TestWaveform(track, 1) { Waveform = waveform });
+            AddStep(
+                "create waveform",
+                () =>
+                    waveformContainer.Child = graph =
+                        new TestWaveform(track, 1) { Waveform = waveform }
+            );
             AddUntilStep("wait for load", () => graph.Regenerated);
 
             AddStep("set zoom to highest", () => zoom.Value = zoom.MaxValue);
@@ -136,7 +144,12 @@ namespace osu.Framework.Tests.Visual.Drawables
             AddStep("Load mono track", () => loadTrack(false));
             TestWaveform graph = null;
 
-            AddStep("create waveform", () => waveformContainer.Child = graph = new TestWaveform(track, 1) { Waveform = waveform });
+            AddStep(
+                "create waveform",
+                () =>
+                    waveformContainer.Child = graph =
+                        new TestWaveform(track, 1) { Waveform = waveform }
+            );
             AddUntilStep("wait for load", () => graph.Regenerated);
         }
 
@@ -150,7 +163,12 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestWaveform graph = null;
 
-            AddStep("create waveform", () => waveformContainer.Child = graph = new TestWaveform(track, resolution) { Waveform = waveform });
+            AddStep(
+                "create waveform",
+                () =>
+                    waveformContainer.Child = graph =
+                        new TestWaveform(track, resolution) { Waveform = waveform }
+            );
             AddUntilStep("wait for load", () => graph.Regenerated);
         }
 
@@ -159,7 +177,12 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestWaveform graph = null;
 
-            AddStep("create waveform", () => waveformContainer.Child = graph = new TestWaveform(track, 1) { Waveform = new Waveform(null) });
+            AddStep(
+                "create waveform",
+                () =>
+                    waveformContainer.Child = graph =
+                        new TestWaveform(track, 1) { Waveform = new Waveform(null) }
+            );
             AddUntilStep("wait for load", () => graph.Regenerated);
         }
 
@@ -168,11 +191,12 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestWaveform graph = null;
 
-            AddStep("create waveform", () => waveformContainer.Child = graph = new TestWaveform(track, 1)
-            {
-                Waveform = waveform,
-                Alpha = 0.5f,
-            });
+            AddStep(
+                "create waveform",
+                () =>
+                    waveformContainer.Child = graph =
+                        new TestWaveform(track, 1) { Waveform = waveform, Alpha = 0.5f }
+            );
 
             AddUntilStep("wait for load", () => graph.Regenerated);
 
@@ -234,23 +258,23 @@ namespace osu.Framework.Tests.Visual.Drawables
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Colour = Color4.Black,
-                                Alpha = 0.75f
+                                Alpha = 0.75f,
                             },
                             new SpriteText
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 Padding = new MarginPadding(4),
-                                Text = $"Resolution: {resolution:0.00}"
-                            }
-                        }
+                                Text = $"Resolution: {resolution:0.00}",
+                            },
+                        },
                     },
                     marker = new Box
                     {
                         RelativeSizeAxes = Axes.Y,
                         RelativePositionAxes = Axes.X,
                         Width = 2,
-                        Colour = Color4.Blue
+                        Colour = Color4.Blue,
                     },
                 };
             }

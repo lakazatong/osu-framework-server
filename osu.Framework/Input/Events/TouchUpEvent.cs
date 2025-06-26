@@ -9,8 +9,6 @@ namespace osu.Framework.Input.Events
     public class TouchUpEvent : TouchEvent
     {
         public TouchUpEvent(InputState state, Touch touch, Vector2? screenSpaceTouchDownPosition)
-            : base(state, touch, screenSpaceTouchDownPosition)
-        {
-        }
+            : base(state, touch, screenSpaceTouchDownPosition) { }
     }
 }

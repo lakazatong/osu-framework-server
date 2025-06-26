@@ -24,9 +24,7 @@ namespace osu.Framework.Graphics.Containers
     /// If all children are of a specific non-<see cref="Drawable"/> type, use the
     /// generic version <see cref="Container{T}"/>.
     /// </summary>
-    public partial class Container : Container<Drawable>
-    {
-    }
+    public partial class Container : Container<Drawable> { }
 
     /// <summary>
     /// A drawable which can have children added to it. Transformations applied to
@@ -34,7 +32,12 @@ namespace osu.Framework.Graphics.Containers
     /// Additionally, containers support various effects, such as masking, edge effect,
     /// padding, and automatic sizing depending on their children.
     /// </summary>
-    public partial class Container<T> : CompositeDrawable, IContainerEnumerable<T>, IContainerCollection<T>, ICollection<T>, IReadOnlyList<T>
+    public partial class Container<T>
+        : CompositeDrawable,
+            IContainerEnumerable<T>,
+            IContainerCollection<T>,
+            ICollection<T>,
+            IReadOnlyList<T>
         where T : Drawable
     {
         /// <summary>
@@ -57,7 +60,10 @@ namespace osu.Framework.Graphics.Containers
             if (typeof(T) == typeof(Drawable))
                 aliveInternalChildrenAsT = (IReadOnlyList<T>)AliveInternalChildren;
             else
-                aliveInternalChildrenAsT = new LazyList<Drawable, T>(AliveInternalChildren, c => (T)c);
+                aliveInternalChildrenAsT = new LazyList<Drawable, T>(
+                    AliveInternalChildren,
+                    c => (T)c
+                );
         }
 
         /// <summary>
@@ -169,7 +175,9 @@ namespace osu.Framework.Graphics.Containers
             get
             {
                 if (Children.Count != 1)
-                    throw new InvalidOperationException($"Cannot call {nameof(InternalChild)} unless there's exactly one {nameof(Drawable)} in {nameof(Children)} (currently {Children.Count})!");
+                    throw new InvalidOperationException(
+                        $"Cannot call {nameof(InternalChild)} unless there's exactly one {nameof(Drawable)} in {nameof(Children)} (currently {Children.Count})!"
+                    );
 
                 return Children[0];
             }
@@ -236,8 +244,10 @@ namespace osu.Framework.Graphics.Containers
         {
             if (range is IContainerEnumerable<Drawable>)
             {
-                throw new InvalidOperationException($"Attempting to add a {nameof(IContainer)} as a range of children to {this}."
-                                                    + $"If intentional, consider using the {nameof(IContainerEnumerable<Drawable>.Children)} property instead.");
+                throw new InvalidOperationException(
+                    $"Attempting to add a {nameof(IContainer)} as a range of children to {this}."
+                        + $"If intentional, consider using the {nameof(IContainerEnumerable<Drawable>.Children)} property instead."
+                );
             }
 
             foreach (T d in range)
@@ -249,7 +259,8 @@ namespace osu.Framework.Graphics.Containers
             if (Content == this && drawable != null && !(drawable is T))
             {
                 throw new InvalidOperationException(
-                    $"Only {typeof(T).ReadableName()} type drawables may be added to a container of type {GetType().ReadableName()} which does not redirect {nameof(Content)}.");
+                    $"Only {typeof(T).ReadableName()} type drawables may be added to a container of type {GetType().ReadableName()} which does not redirect {nameof(Content)}."
+                );
             }
 
             enumeratorVersion++;
@@ -527,7 +538,9 @@ namespace osu.Framework.Graphics.Containers
             public bool MoveNext()
             {
                 if (version != container.enumeratorVersion)
-                    throw new InvalidOperationException($"May not add or remove {nameof(Children)} from this {nameof(Container)} during enumeration.");
+                    throw new InvalidOperationException(
+                        $"May not add or remove {nameof(Children)} from this {nameof(Container)} during enumeration."
+                    );
 
                 return ++currentIndex < container.Count;
             }

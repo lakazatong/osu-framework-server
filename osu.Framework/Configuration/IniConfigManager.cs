@@ -26,7 +26,10 @@ namespace osu.Framework.Configuration
 
         private readonly Storage storage;
 
-        public IniConfigManager(Storage storage, IDictionary<TLookup, object> defaultOverrides = null)
+        public IniConfigManager(
+            Storage storage,
+            IDictionary<TLookup, object> defaultOverrides = null
+        )
             : base(defaultOverrides)
         {
             this.storage = storage;
@@ -37,7 +40,8 @@ namespace osu.Framework.Configuration
 
         protected override void PerformLoad()
         {
-            if (string.IsNullOrEmpty(Filename)) return;
+            if (string.IsNullOrEmpty(Filename))
+                return;
 
             using (var stream = storage.GetStream(Filename))
             {
@@ -52,7 +56,8 @@ namespace osu.Framework.Configuration
                     {
                         int equalsIndex = line.IndexOf('=');
 
-                        if (line.Length == 0 || line[0] == '#' || equalsIndex < 0) continue;
+                        if (line.Length == 0 || line[0] == '#' || equalsIndex < 0)
+                            continue;
 
                         string key = line.AsSpan(0, equalsIndex).Trim().ToString();
                         string val = line.AsSpan(equalsIndex + 1).Trim().ToString();
@@ -65,13 +70,19 @@ namespace osu.Framework.Configuration
                             try
                             {
                                 if (!(b is IParseable parseable))
-                                    throw new InvalidOperationException($"Bindable type {b.GetType().ReadableName()} is not {nameof(IParseable)}.");
+                                    throw new InvalidOperationException(
+                                        $"Bindable type {b.GetType().ReadableName()} is not {nameof(IParseable)}."
+                                    );
 
                                 parseable.Parse(val, CultureInfo.InvariantCulture);
                             }
                             catch (Exception e)
                             {
-                                Logger.Log($@"Unable to parse config key {lookup}: {e}", LoggingTarget.Runtime, LogLevel.Important);
+                                Logger.Log(
+                                    $@"Unable to parse config key {lookup}: {e}",
+                                    LoggingTarget.Runtime,
+                                    LogLevel.Important
+                                );
                             }
                         }
                         else if (AddMissingEntries)
@@ -83,7 +94,8 @@ namespace osu.Framework.Configuration
 
         protected override bool PerformSave()
         {
-            if (string.IsNullOrEmpty(Filename)) return false;
+            if (string.IsNullOrEmpty(Filename))
+                return false;
 
             try
             {
@@ -91,7 +103,14 @@ namespace osu.Framework.Configuration
                 using (var w = new StreamWriter(stream))
                 {
                     foreach (var p in ConfigStore)
-                        w.WriteLine(@"{0} = {1}", p.Key, p.Value.ToString(CultureInfo.InvariantCulture).AsNonNull().Replace("\n", "").Replace("\r", ""));
+                        w.WriteLine(
+                            @"{0} = {1}",
+                            p.Key,
+                            p.Value.ToString(CultureInfo.InvariantCulture)
+                                .AsNonNull()
+                                .Replace("\n", "")
+                                .Replace("\r", "")
+                        );
                 }
             }
             catch

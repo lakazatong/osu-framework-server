@@ -23,13 +23,16 @@ namespace osu.Framework.Graphics.Transforms
 
         private TValue valueAt(double time)
         {
-            if (time < StartTime) return StartValue;
-            if (time >= EndTime) return EndValue;
+            if (time < StartTime)
+                return StartValue;
+            if (time >= EndTime)
+                return EndValue;
 
             return Interpolation.ValueAt(time, StartValue, EndValue, StartTime, EndTime, Easing);
         }
 
         protected override void Apply(T d, double time) => targetBindable.Value = valueAt(time);
+
         protected override void ReadIntoStartValue(T d) => StartValue = targetBindable.Value;
     }
 }

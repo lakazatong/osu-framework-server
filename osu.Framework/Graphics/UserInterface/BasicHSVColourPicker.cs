@@ -18,7 +18,9 @@ namespace osu.Framework.Graphics.UserInterface
         }
 
         protected override HueSelector CreateHueSelector() => new BasicHueSelector();
-        protected override SaturationValueSelector CreateSaturationValueSelector() => new BasicSaturationValueSelector();
+
+        protected override SaturationValueSelector CreateSaturationValueSelector() =>
+            new BasicSaturationValueSelector();
 
         public partial class BasicHueSelector : HueSelector
         {
@@ -40,11 +42,11 @@ namespace osu.Framework.Graphics.UserInterface
                     {
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0,
-                        AlwaysPresent = true
+                        AlwaysPresent = true,
                     },
                     Masking = true,
                     BorderColour = FrameworkColour.YellowGreen,
-                    BorderThickness = 4
+                    BorderThickness = 4,
                 };
             }
         }
@@ -67,10 +69,7 @@ namespace osu.Framework.Graphics.UserInterface
                         Masking = true,
                         BorderColour = FrameworkColour.YellowGreen,
                         BorderThickness = 4,
-                        Child = colourPreview = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                        Child = colourPreview = new Box { RelativeSizeAxes = Axes.Both },
                     };
                 }
 

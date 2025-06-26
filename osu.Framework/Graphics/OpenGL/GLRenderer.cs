@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 using osu.Framework.Extensions.EnumExtensions;
-using osu.Framework.Graphics.OpenGL.Buffers;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.OpenGL.Batches;
+using osu.Framework.Graphics.OpenGL.Buffers;
 using osu.Framework.Graphics.OpenGL.Shaders;
+using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
@@ -19,14 +19,14 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using osuTK;
-using osuTK.Graphics.ES30;
 using osuTK.Graphics;
+using osuTK.Graphics.ES30;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using Image = SixLabors.ImageSharp.Image;
 using GL4 = osuTK.Graphics.OpenGL;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace osu.Framework.Graphics.OpenGL
 {
@@ -60,14 +60,17 @@ namespace osu.Framework.Graphics.OpenGL
 
         private int backbufferFramebuffer;
 
-        private readonly Dictionary<string, IGLUniformBuffer> boundUniformBuffers = new Dictionary<string, IGLUniformBuffer>();
+        private readonly Dictionary<string, IGLUniformBuffer> boundUniformBuffers =
+            new Dictionary<string, IGLUniformBuffer>();
         private bool? lastBlendingEnabledState;
         private int lastBoundVertexArray;
 
         protected override void Initialise(IGraphicsSurface graphicsSurface)
         {
             if (graphicsSurface.Type != GraphicsSurfaceType.OpenGL)
-                throw new InvalidOperationException($"{nameof(GLRenderer)} only supports OpenGL graphics surfaces.");
+                throw new InvalidOperationException(
+                    $"{nameof(GLRenderer)} only supports OpenGL graphics surfaces."
+                );
 
             openGLSurface = (IOpenGLGraphicsSurface)graphicsSurface;
             openGLSurface.MakeCurrent(openGLSurface.WindowContext);
@@ -85,14 +88,18 @@ namespace osu.Framework.Graphics.OpenGL
 
             string extensions = GetExtensions();
 
-            Logger.Log($@"GL Initialized
+            Logger.Log(
+                $@"GL Initialized
                         GL Version:                 {GL.GetString(StringName.Version)}
                         GL Renderer:                {GL.GetString(StringName.Renderer)}
                         GL Shader Language version: {GL.GetString(StringName.ShadingLanguageVersion)}
                         GL Vendor:                  {GL.GetString(StringName.Vendor)}
-                        GL Extensions:              {extensions}");
+                        GL Extensions:              {extensions}"
+            );
 
-            UseStructuredBuffers = extensions.Contains(@"GL_ARB_shader_storage_buffer_object") && !FrameworkEnvironment.NoStructuredBuffers;
+            UseStructuredBuffers =
+                extensions.Contains(@"GL_ARB_shader_storage_buffer_object")
+                && !FrameworkEnvironment.NoStructuredBuffers;
 
             Logger.Log($"{nameof(UseStructuredBuffers)}: {UseStructuredBuffers}");
 
@@ -127,13 +134,15 @@ namespace osu.Framework.Graphics.OpenGL
             base.BeginFrame(windowSize);
         }
 
-        protected internal override void WaitUntilNextFrameReady()
-        {
-        }
+        protected internal override void WaitUntilNextFrameReady() { }
 
-        protected internal override void MakeCurrent() => openGLSurface.MakeCurrent(openGLSurface.WindowContext);
+        protected internal override void MakeCurrent() =>
+            openGLSurface.MakeCurrent(openGLSurface.WindowContext);
+
         protected internal override void ClearCurrent() => openGLSurface.ClearCurrent();
+
         protected internal override void SwapBuffers() => openGLSurface.SwapBuffers();
+
         protected internal override void WaitUntilIdle() => GL.Finish();
 
         public bool BindVertexArray(int vaoId)
@@ -148,7 +157,8 @@ namespace osu.Framework.Graphics.OpenGL
             return true;
         }
 
-        protected override void SetShaderImplementation(IShader shader) => GL.UseProgram((GLShader)shader);
+        protected override void SetShaderImplementation(IShader shader) =>
+            GL.UseProgram((GLShader)shader);
 
         protected override void SetUniformImplementation<T>(IUniformWithValue<T> uniform)
         {
@@ -192,8 +202,10 @@ namespace osu.Framework.Graphics.OpenGL
             }
         }
 
-        protected override void SetUniformBufferImplementation(string blockName, IUniformBuffer buffer)
-            => boundUniformBuffers[blockName] = (IGLUniformBuffer)buffer;
+        protected override void SetUniformBufferImplementation(
+            string blockName,
+            IUniformBuffer buffer
+        ) => boundUniformBuffers[blockName] = (IGLUniformBuffer)buffer;
 
         protected override bool SetTextureImplementation(INativeTexture? texture, int unit)
         {
@@ -231,10 +243,13 @@ namespace osu.Framework.Graphics.OpenGL
         }
 
         protected override void SetFrameBufferImplementation(IFrameBuffer? frameBuffer) =>
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, ((GLFrameBuffer?)frameBuffer)?.FrameBuffer ?? backbufferFramebuffer);
+            GL.BindFramebuffer(
+                FramebufferTarget.Framebuffer,
+                ((GLFrameBuffer?)frameBuffer)?.FrameBuffer ?? backbufferFramebuffer
+            );
 
-        protected override void DeleteFrameBufferImplementation(IFrameBuffer frameBuffer)
-            => GL.DeleteFramebuffer(((GLFrameBuffer)frameBuffer).FrameBuffer);
+        protected override void DeleteFrameBufferImplementation(IFrameBuffer frameBuffer) =>
+            GL.DeleteFramebuffer(((GLFrameBuffer)frameBuffer).FrameBuffer);
 
         protected override void ClearImplementation(ClearInfo clearInfo)
         {
@@ -260,10 +275,18 @@ namespace osu.Framework.Graphics.OpenGL
             if (clearInfo.Stencil != CurrentClearInfo.Stencil)
                 GL.ClearStencil(clearInfo.Stencil);
 
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+            GL.Clear(
+                ClearBufferMask.ColorBufferBit
+                    | ClearBufferMask.DepthBufferBit
+                    | ClearBufferMask.StencilBufferBit
+            );
         }
 
-        public override void DrawVerticesImplementation(PrimitiveTopology topology, int vertexStart, int verticesCount)
+        public override void DrawVerticesImplementation(
+            PrimitiveTopology topology,
+            int vertexStart,
+            int verticesCount
+        )
         {
             var glShader = (GLShader)Shader!;
             int currentUniformBinding = 0;
@@ -279,18 +302,31 @@ namespace osu.Framework.Graphics.OpenGL
                 if (buffer is IGLShaderStorageBufferObject && UseStructuredBuffers)
                 {
                     GL4.GL.ShaderStorageBlockBinding(glShader, index, currentStorageBinding);
-                    GL4.GL.BindBufferBase(GL4.BufferRangeTarget.ShaderStorageBuffer, currentStorageBinding, buffer.Id);
+                    GL4.GL.BindBufferBase(
+                        GL4.BufferRangeTarget.ShaderStorageBuffer,
+                        currentStorageBinding,
+                        buffer.Id
+                    );
                     currentStorageBinding++;
                 }
                 else
                 {
                     GL.UniformBlockBinding(glShader, index, currentUniformBinding);
-                    GL.BindBufferBase(BufferRangeTarget.UniformBuffer, currentUniformBinding, buffer.Id);
+                    GL.BindBufferBase(
+                        BufferRangeTarget.UniformBuffer,
+                        currentUniformBinding,
+                        buffer.Id
+                    );
                     currentUniformBinding++;
                 }
             }
 
-            GL.DrawElements(GLUtils.ToPrimitiveType(topology), verticesCount, DrawElementsType.UnsignedShort, vertexStart * sizeof(ushort));
+            GL.DrawElements(
+                GLUtils.ToPrimitiveType(topology),
+                verticesCount,
+                DrawElementsType.UnsignedShort,
+                vertexStart * sizeof(ushort)
+            );
         }
 
         protected override void SetScissorStateImplementation(bool enabled)
@@ -317,23 +353,34 @@ namespace osu.Framework.Graphics.OpenGL
 
                 lastBlendingEnabledState = true;
 
-                GL.BlendEquationSeparate(blendingParameters.RGBEquationMode, blendingParameters.AlphaEquationMode);
-                GL.BlendFuncSeparate(blendingParameters.SourceBlendingFactor, blendingParameters.DestinationBlendingFactor,
-                    blendingParameters.SourceAlphaBlendingFactor, blendingParameters.DestinationAlphaBlendingFactor);
+                GL.BlendEquationSeparate(
+                    blendingParameters.RGBEquationMode,
+                    blendingParameters.AlphaEquationMode
+                );
+                GL.BlendFuncSeparate(
+                    blendingParameters.SourceBlendingFactor,
+                    blendingParameters.DestinationBlendingFactor,
+                    blendingParameters.SourceAlphaBlendingFactor,
+                    blendingParameters.DestinationAlphaBlendingFactor
+                );
             }
         }
 
         protected override void SetBlendMaskImplementation(BlendingMask blendingMask)
         {
-            GL.ColorMask(blendingMask.HasFlagFast(BlendingMask.Red),
+            GL.ColorMask(
+                blendingMask.HasFlagFast(BlendingMask.Red),
                 blendingMask.HasFlagFast(BlendingMask.Green),
                 blendingMask.HasFlagFast(BlendingMask.Blue),
-                blendingMask.HasFlagFast(BlendingMask.Alpha));
+                blendingMask.HasFlagFast(BlendingMask.Alpha)
+            );
         }
 
-        protected override void SetViewportImplementation(RectangleI viewport) => GL.Viewport(viewport.Left, viewport.Top, viewport.Width, viewport.Height);
+        protected override void SetViewportImplementation(RectangleI viewport) =>
+            GL.Viewport(viewport.Left, viewport.Top, viewport.Width, viewport.Height);
 
-        protected override void SetScissorImplementation(RectangleI scissor) => GL.Scissor(scissor.X, Viewport.Height - scissor.Bottom, scissor.Width, scissor.Height);
+        protected override void SetScissorImplementation(RectangleI scissor) =>
+            GL.Scissor(scissor.X, Viewport.Height - scissor.Bottom, scissor.Width, scissor.Height);
 
         protected override void SetDepthInfoImplementation(DepthInfo depthInfo)
         {
@@ -353,11 +400,16 @@ namespace osu.Framework.Graphics.OpenGL
             if (stencilInfo.StencilTest)
             {
                 GL.Enable(EnableCap.StencilTest);
-                GL.StencilFunc(GLUtils.ToStencilFunction(stencilInfo.TestFunction), stencilInfo.TestValue, stencilInfo.Mask);
+                GL.StencilFunc(
+                    GLUtils.ToStencilFunction(stencilInfo.TestFunction),
+                    stencilInfo.TestValue,
+                    stencilInfo.Mask
+                );
                 GL.StencilOp(
                     GLUtils.ToStencilOperation(stencilInfo.StencilTestFailOperation),
                     GLUtils.ToStencilOperation(stencilInfo.DepthTestFailOperation),
-                    GLUtils.ToStencilOperation(stencilInfo.TestPassedOperation));
+                    GLUtils.ToStencilOperation(stencilInfo.TestPassedOperation)
+                );
             }
             else
                 GL.Disable(EnableCap.StencilTest);
@@ -368,7 +420,15 @@ namespace osu.Framework.Graphics.OpenGL
             var size = ((IGraphicsSurface)openGLSurface).GetDrawableSize();
             var data = MemoryAllocator.Default.Allocate<Rgba32>(size.Width * size.Height);
 
-            GL.ReadPixels(0, 0, size.Width, size.Height, PixelFormat.Rgba, PixelType.UnsignedByte, ref MemoryMarshal.GetReference(data.Memory.Span));
+            GL.ReadPixels(
+                0,
+                0,
+                size.Width,
+                size.Height,
+                PixelFormat.Rgba,
+                PixelType.UnsignedByte,
+                ref MemoryMarshal.GetReference(data.Memory.Span)
+            );
 
             var image = Image.LoadPixelData<Rgba32>(data.Memory.Span, size.Width, size.Height);
             image.Mutate(i => i.Flip(FlipMode.Vertical));
@@ -383,7 +443,15 @@ namespace osu.Framework.Graphics.OpenGL
             var data = MemoryAllocator.Default.Allocate<Rgba32>(width * height);
 
             frameBuffer.Bind();
-            GL.ReadPixels(0, 0, width, height, PixelFormat.Rgba, PixelType.UnsignedByte, ref MemoryMarshal.GetReference(data.Memory.Span));
+            GL.ReadPixels(
+                0,
+                0,
+                width,
+                height,
+                PixelFormat.Rgba,
+                PixelType.UnsignedByte,
+                ref MemoryMarshal.GetReference(data.Memory.Span)
+            );
             frameBuffer.Unbind();
 
             var image = Image.LoadPixelData<Rgba32>(data.Memory.Span, width, height);
@@ -391,7 +459,12 @@ namespace osu.Framework.Graphics.OpenGL
             return image;
         }
 
-        protected override IShaderPart CreateShaderPart(IShaderStore store, string name, byte[]? rawData, ShaderPartType partType)
+        protected override IShaderPart CreateShaderPart(
+            IShaderStore store,
+            string name,
+            byte[]? rawData,
+            ShaderPartType partType
+        )
         {
             ShaderType glType;
 
@@ -406,16 +479,25 @@ namespace osu.Framework.Graphics.OpenGL
                     break;
 
                 default:
-                    throw new ArgumentException($"Unsupported shader part type: {partType}", nameof(partType));
+                    throw new ArgumentException(
+                        $"Unsupported shader part type: {partType}",
+                        nameof(partType)
+                    );
             }
 
             return new GLShaderPart(this, name, rawData, glType, store);
         }
 
-        protected override IShader CreateShader(string name, IShaderPart[] parts, ShaderCompilationStore compilationStore)
-            => new GLShader(this, name, parts.Cast<GLShaderPart>().ToArray(), compilationStore);
+        protected override IShader CreateShader(
+            string name,
+            IShaderPart[] parts,
+            ShaderCompilationStore compilationStore
+        ) => new GLShader(this, name, parts.Cast<GLShaderPart>().ToArray(), compilationStore);
 
-        public override IFrameBuffer CreateFrameBuffer(RenderBufferFormat[]? renderBufferFormats = null, TextureFilteringMode filteringMode = TextureFilteringMode.Linear)
+        public override IFrameBuffer CreateFrameBuffer(
+            RenderBufferFormat[]? renderBufferFormats = null,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear
+        )
         {
             All glFilteringMode;
             RenderbufferInternalFormat[]? glFormats = null;
@@ -431,7 +513,10 @@ namespace osu.Framework.Graphics.OpenGL
                     break;
 
                 default:
-                    throw new ArgumentException($"Unsupported filtering mode: {filteringMode}", nameof(filteringMode));
+                    throw new ArgumentException(
+                        $"Unsupported filtering mode: {filteringMode}",
+                        nameof(filteringMode)
+                    );
             }
 
             if (renderBufferFormats != null)
@@ -459,7 +544,10 @@ namespace osu.Framework.Graphics.OpenGL
                             break;
 
                         default:
-                            throw new ArgumentException($"Unsupported render buffer format: {renderBufferFormats[i]}", nameof(renderBufferFormats));
+                            throw new ArgumentException(
+                                $"Unsupported render buffer format: {renderBufferFormats[i]}",
+                                nameof(renderBufferFormats)
+                            );
                     }
                 }
             }
@@ -467,14 +555,21 @@ namespace osu.Framework.Graphics.OpenGL
             return new GLFrameBuffer(this, glFormats, glFilteringMode);
         }
 
-        protected override IUniformBuffer<TData> CreateUniformBuffer<TData>()
-            => new GLUniformBuffer<TData>(this);
+        protected override IUniformBuffer<TData> CreateUniformBuffer<TData>() =>
+            new GLUniformBuffer<TData>(this);
 
-        protected override IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(int uboSize, int ssboSize)
-            => new GLShaderStorageBufferObject<TData>(this, uboSize, ssboSize);
+        protected override IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(
+            int uboSize,
+            int ssboSize
+        ) => new GLShaderStorageBufferObject<TData>(this, uboSize, ssboSize);
 
-        protected override INativeTexture CreateNativeTexture(int width, int height, bool manualMipmaps = false, TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
-                                                              Color4? initialisationColour = null)
+        protected override INativeTexture CreateNativeTexture(
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+            Color4? initialisationColour = null
+        )
         {
             All glFilteringMode;
 
@@ -489,17 +584,34 @@ namespace osu.Framework.Graphics.OpenGL
                     break;
 
                 default:
-                    throw new ArgumentException($"Unsupported filtering mode: {filteringMode}", nameof(filteringMode));
+                    throw new ArgumentException(
+                        $"Unsupported filtering mode: {filteringMode}",
+                        nameof(filteringMode)
+                    );
             }
 
-            return new GLTexture(this, width, height, manualMipmaps, glFilteringMode, initialisationColour);
+            return new GLTexture(
+                this,
+                width,
+                height,
+                manualMipmaps,
+                glFilteringMode,
+                initialisationColour
+            );
         }
 
-        protected override INativeTexture CreateNativeVideoTexture(int width, int height) => new GLVideoTexture(this, width, height);
+        protected override INativeTexture CreateNativeVideoTexture(int width, int height) =>
+            new GLVideoTexture(this, width, height);
 
-        protected override IVertexBatch<TVertex> CreateLinearBatch<TVertex>(int size, int maxBuffers, PrimitiveTopology topology)
-            => new GLLinearBatch<TVertex>(this, size, maxBuffers, topology);
+        protected override IVertexBatch<TVertex> CreateLinearBatch<TVertex>(
+            int size,
+            int maxBuffers,
+            PrimitiveTopology topology
+        ) => new GLLinearBatch<TVertex>(this, size, maxBuffers, topology);
 
-        protected override IVertexBatch<TVertex> CreateQuadBatch<TVertex>(int size, int maxBuffers) => new GLQuadBatch<TVertex>(this, size, maxBuffers);
+        protected override IVertexBatch<TVertex> CreateQuadBatch<TVertex>(
+            int size,
+            int maxBuffers
+        ) => new GLQuadBatch<TVertex>(this, size, maxBuffers);
     }
 }

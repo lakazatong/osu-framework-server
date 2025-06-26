@@ -25,7 +25,9 @@ namespace osu.Framework.Graphics.UserInterface
     {
         protected override bool BlockPositionalInput => true;
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => Body.ReceivePositionalInputAt(screenSpacePos) || Arrow.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+            Body.ReceivePositionalInputAt(screenSpacePos)
+            || Arrow.ReceivePositionalInputAt(screenSpacePos);
 
         public override bool HandleNonPositionalInput => State.Value == Visibility.Visible;
 
@@ -69,17 +71,18 @@ namespace osu.Framework.Graphics.UserInterface
         /// <remarks>
         /// <see cref="Anchor.Centre"/> is used as a fallback if an empty enumerable is provided, or any other anchor fails.
         /// </remarks>
-        public IEnumerable<Anchor> AllowableAnchors { get; set; } = new[]
-        {
-            Anchor.TopLeft,
-            Anchor.TopCentre,
-            Anchor.TopRight,
-            Anchor.CentreLeft,
-            Anchor.CentreRight,
-            Anchor.BottomLeft,
-            Anchor.BottomCentre,
-            Anchor.BottomRight
-        };
+        public IEnumerable<Anchor> AllowableAnchors { get; set; } =
+            new[]
+            {
+                Anchor.TopLeft,
+                Anchor.TopCentre,
+                Anchor.TopRight,
+                Anchor.CentreLeft,
+                Anchor.CentreRight,
+                Anchor.BottomLeft,
+                Anchor.BottomCentre,
+                Anchor.BottomRight,
+            };
 
         /// <summary>
         /// The container holding all of this popover's elements (the <see cref="Body"/> and the <see cref="Arrow"/>).
@@ -101,35 +104,37 @@ namespace osu.Framework.Graphics.UserInterface
         /// </summary>
         protected internal Container Body { get; }
 
-        protected override Container<Drawable> Content { get; } = new Container { AutoSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { AutoSizeAxes = Axes.Both };
 
-        protected override bool ComputeIsMaskedAway(RectangleF maskingBounds) => !Precision.AlmostIntersects(maskingBounds, Content.ScreenSpaceDrawQuad.AABBFloat);
+        protected override bool ComputeIsMaskedAway(RectangleF maskingBounds) =>
+            !Precision.AlmostIntersects(maskingBounds, Content.ScreenSpaceDrawQuad.AABBFloat);
 
         protected Popover()
         {
-            base.AddInternal(BoundingBoxContainer = new Container
-            {
-                AutoSizeAxes = Axes.Both,
-                Children = new[]
+            base.AddInternal(
+                BoundingBoxContainer = new Container
                 {
-                    Arrow = CreateArrow().With(arr =>
+                    AutoSizeAxes = Axes.Both,
+                    Children = new[]
                     {
-                        arr.BypassAutoSizeAxes = Axes.Both;
-                    }),
-                    Body = new Container
-                    {
-                        AutoSizeAxes = Axes.Both,
-                        Children = new Drawable[]
-                        {
-                            Background = new Box
+                        Arrow = CreateArrow()
+                            .With(arr =>
                             {
-                                RelativeSizeAxes = Axes.Both,
+                                arr.BypassAutoSizeAxes = Axes.Both;
+                            }),
+                        Body = new Container
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                Background = new Box { RelativeSizeAxes = Axes.Both },
+                                Content,
                             },
-                            Content
                         },
-                    }
+                    },
                 }
-            });
+            );
         }
 
         /// <summary>
@@ -138,15 +143,14 @@ namespace osu.Framework.Graphics.UserInterface
         protected abstract Drawable CreateArrow();
 
         protected override void PopIn() => this.FadeIn();
+
         protected override void PopOut() => this.FadeOut();
 
         /// <summary>
         /// Called when <see cref="Anchor"/> is set.
         /// Can be used to apply custom layout updates to the subcomponents.
         /// </summary>
-        protected virtual void AnchorUpdated(Anchor anchor)
-        {
-        }
+        protected virtual void AnchorUpdated(Anchor anchor) { }
 
         private float getRotationFor(Anchor anchor)
         {
@@ -179,7 +183,8 @@ namespace osu.Framework.Graphics.UserInterface
             }
         }
 
-        protected sealed override void AddInternal(Drawable drawable) => throw new InvalidOperationException($"Use {nameof(Content)} instead.");
+        protected sealed override void AddInternal(Drawable drawable) =>
+            throw new InvalidOperationException($"Use {nameof(Content)} instead.");
 
         #region Sizing delegation
 

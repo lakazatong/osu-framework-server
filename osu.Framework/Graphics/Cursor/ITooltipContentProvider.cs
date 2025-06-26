@@ -6,7 +6,5 @@ namespace osu.Framework.Graphics.Cursor
     /// <summary>
     /// Marker interface for interfaces that provide tooltip content.
     /// </summary>
-    public interface ITooltipContentProvider : IDrawable
-    {
-    }
+    public interface ITooltipContentProvider : IDrawable { }
 }

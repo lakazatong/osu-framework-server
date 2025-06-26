@@ -27,7 +27,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             var resolver = new FieldModelResolver();
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel { Bindable = { Value = 2 } } }
+                Model = { Value = new FieldModel { Bindable = { Value = 2 } } },
             };
 
             dependencies.Inject(resolver);
@@ -41,7 +41,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             var resolver = new FieldModelResolver();
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel { Bindable = { Value = 2 } } }
+                Model = { Value = new FieldModel { Bindable = { Value = 2 } } },
             };
 
             dependencies.Inject(resolver);
@@ -55,7 +55,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             var resolver = new FieldModelResolver();
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel { Bindable = { Value = 2 } } }
+                Model = { Value = new FieldModel { Bindable = { Value = 2 } } },
             };
 
             dependencies.Inject(resolver);
@@ -78,9 +78,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
                     Value = new DerivedFieldModel
                     {
                         Bindable = { Value = 2 },
-                        BindableString = { Value = "2" }
-                    }
-                }
+                        BindableString = { Value = "2" },
+                    },
+                },
             };
 
             dependencies.Inject(resolver);
@@ -103,7 +103,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
 
             var dependencies = new CachedModelDependencyContainer<CrossDependentFieldModel>(null)
             {
-                Model = { Value = model1 }
+                Model = { Value = model1 },
             };
 
             Assert.AreEqual(2, model1.Bindable.Value);
@@ -145,7 +145,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
 
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = model1 }
+                Model = { Value = model1 },
             };
 
             dependencies.Inject(resolver);
@@ -174,7 +174,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
 
             var dependencies = new CachedModelDependencyContainer<FieldModel?>(null)
             {
-                Model = { Value = model }
+                Model = { Value = model },
             };
 
             dependencies.Inject(resolver);
@@ -199,7 +199,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
 
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel() }
+                Model = { Value = new FieldModel() },
             };
 
             dependencies.Inject(resolver1);
@@ -216,18 +216,18 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             var model1 = new DerivedFieldModel
             {
                 Bindable = { Value = 2 },
-                BindableString = { Value = "2" }
+                BindableString = { Value = "2" },
             };
 
             var model2 = new DerivedFieldModel
             {
                 Bindable = { Value = 3 },
-                BindableString = { Value = "3" }
+                BindableString = { Value = "3" },
             };
 
             var dependencies = new CachedModelDependencyContainer<DerivedFieldModel?>(null)
             {
-                Model = { Value = model1 }
+                Model = { Value = model1 },
             };
 
             dependencies.Inject(resolver);

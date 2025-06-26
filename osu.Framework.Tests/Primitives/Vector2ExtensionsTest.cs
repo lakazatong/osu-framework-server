@@ -21,7 +21,7 @@ namespace osu.Framework.Tests.Primitives
                 new Vector2(0, 1),
                 Vector2.One,
                 new Vector2(1, 0),
-                Vector2.Zero
+                Vector2.Zero,
             };
 
             if (!clockwise)

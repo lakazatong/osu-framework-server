@@ -48,7 +48,11 @@ namespace osu.Framework.Graphics.Sprites
         /// /// <param name="icon">The icon.</param>
         /// <param name="family">The font family name.</param>
         /// <param name="weight">The font weight.</param>
-        public IconUsage(char icon, [CanBeNull] string family = null, [CanBeNull] string weight = null)
+        public IconUsage(
+            char icon,
+            [CanBeNull] string family = null,
+            [CanBeNull] string weight = null
+        )
         {
             Icon = icon;
             Family = family;
@@ -67,12 +71,13 @@ namespace osu.Framework.Graphics.Sprites
         /// <param name="family">The font family. If null, the value is copied from this <see cref="IconUsage"/>.</param>
         /// <param name="weight">The font weight. If null, the value is copied from this <see cref="IconUsage"/>.</param>
         /// <returns>The resulting <see cref="IconUsage"/>.</returns>
-        public IconUsage With([CanBeNull] string family = null, [CanBeNull] string weight = null)
-            => new IconUsage(Icon, family ?? Family, weight ?? Weight);
+        public IconUsage With([CanBeNull] string family = null, [CanBeNull] string weight = null) =>
+            new IconUsage(Icon, family ?? Family, weight ?? Weight);
 
         public override string ToString() => $"Icon={Icon} Font={FontName}";
 
-        public bool Equals(IconUsage other) => Icon == other.Icon && Family == other.Family && Weight == other.Weight;
+        public bool Equals(IconUsage other) =>
+            Icon == other.Icon && Family == other.Family && Weight == other.Weight;
 
         public override bool Equals(object obj) => obj is IconUsage other && Equals(other);
 

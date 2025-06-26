@@ -20,7 +20,11 @@ namespace osu.Framework.Graphics.Effects
         /// <param name="drawable">The drawable to apply the effect to.</param>
         /// <param name="initializationAction">The action that should get called to initialize the created drawable before it is returned.</param>
         /// <returns>The drawable created by applying the given effect to this drawable.</returns>
-        public static T ApplyTo<T>(this IEffect<T> effect, Drawable drawable, Action<T> initializationAction = null) where T : Drawable
-            => drawable.WithEffect(effect, initializationAction);
+        public static T ApplyTo<T>(
+            this IEffect<T> effect,
+            Drawable drawable,
+            Action<T> initializationAction = null
+        )
+            where T : Drawable => drawable.WithEffect(effect, initializationAction);
     }
 }

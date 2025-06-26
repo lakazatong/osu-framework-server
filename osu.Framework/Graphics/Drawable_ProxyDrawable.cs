@@ -17,7 +17,8 @@ namespace osu.Framework.Graphics
             internal ProxyDrawable(Drawable original)
             {
                 Original = original;
-                originalDrawNodes = (original as ProxyDrawable)?.originalDrawNodes ?? original.drawNodes;
+                originalDrawNodes =
+                    (original as ProxyDrawable)?.originalDrawNodes ?? original.drawNodes;
 
                 original.LifetimeChanged += _ => LifetimeChanged?.Invoke(this);
             }
@@ -36,9 +37,14 @@ namespace osu.Framework.Graphics
 
             protected override DrawNode CreateDrawNode() => new ProxyDrawNode(this);
 
-            internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+            internal override DrawNode GenerateDrawNodeSubtree(
+                ulong frame,
+                int treeIndex,
+                bool forceNewDrawNode
+            )
             {
-                var node = (ProxyDrawNode)base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
+                var node = (ProxyDrawNode)
+                    base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
 
                 node.DrawNodeIndex = treeIndex;
                 node.FrameCount = frame;
@@ -77,9 +83,7 @@ namespace osu.Framework.Graphics
                 protected new ProxyDrawable Source => (ProxyDrawable)base.Source;
 
                 public ProxyDrawNode(ProxyDrawable proxyDrawable)
-                    : base(proxyDrawable)
-                {
-                }
+                    : base(proxyDrawable) { }
 
                 protected override void DrawOpaqueInterior(IRenderer renderer)
                 {
@@ -93,7 +97,8 @@ namespace osu.Framework.Graphics
                         DrawOther(getCurrentFrameSource(), renderer);
                 }
 
-                protected internal override bool CanDrawOpaqueInterior => getCurrentFrameSource()?.CanDrawOpaqueInterior ?? false;
+                protected internal override bool CanDrawOpaqueInterior =>
+                    getCurrentFrameSource()?.CanDrawOpaqueInterior ?? false;
 
                 private DrawNode getCurrentFrameSource()
                 {

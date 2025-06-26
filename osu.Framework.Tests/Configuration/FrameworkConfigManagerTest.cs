@@ -63,7 +63,15 @@ namespace osu.Framework.Tests.Configuration
 
             using (var storage = new TemporaryNativeStorage(Guid.NewGuid().ToString()))
             {
-                using (var configManager = new FrameworkConfigManager(storage, new Dictionary<FrameworkSetting, object> { { FrameworkSetting.Locale, test_locale } }))
+                using (
+                    var configManager = new FrameworkConfigManager(
+                        storage,
+                        new Dictionary<FrameworkSetting, object>
+                        {
+                            { FrameworkSetting.Locale, test_locale },
+                        }
+                    )
+                )
                 {
                     var bindable = configManager.GetBindable<string>(FrameworkSetting.Locale);
                     Assert.AreEqual(test_locale, bindable.Value);
@@ -75,7 +83,15 @@ namespace osu.Framework.Tests.Configuration
                 }
 
                 // ensure correct after save
-                using (var configManager = new FrameworkConfigManager(storage, new Dictionary<FrameworkSetting, object> { { FrameworkSetting.Locale, test_locale } }))
+                using (
+                    var configManager = new FrameworkConfigManager(
+                        storage,
+                        new Dictionary<FrameworkSetting, object>
+                        {
+                            { FrameworkSetting.Locale, test_locale },
+                        }
+                    )
+                )
                 {
                     var bindable = configManager.GetBindable<string>(FrameworkSetting.Locale);
                     Assert.AreEqual(test_locale, bindable.Default);
@@ -87,7 +103,15 @@ namespace osu.Framework.Tests.Configuration
                 }
 
                 // ensure correct after save with default
-                using (var configManager = new FrameworkConfigManager(storage, new Dictionary<FrameworkSetting, object> { { FrameworkSetting.Locale, test_locale } }))
+                using (
+                    var configManager = new FrameworkConfigManager(
+                        storage,
+                        new Dictionary<FrameworkSetting, object>
+                        {
+                            { FrameworkSetting.Locale, test_locale },
+                        }
+                    )
+                )
                 {
                     var bindable = configManager.GetBindable<string>(FrameworkSetting.Locale);
                     Assert.AreEqual(test_locale, bindable.Value);

@@ -18,6 +18,7 @@ namespace osu.Framework.Graphics.Rendering.Vertices
         [VertexMember(4, VertexAttribPointerType.Float)]
         public Color4 Colour;
 
-        public readonly bool Equals(Vertex2D other) => Position.Equals(other.Position) && Colour.Equals(other.Colour);
+        public readonly bool Equals(Vertex2D other) =>
+            Position.Equals(other.Position) && Colour.Equals(other.Colour);
     }
 }

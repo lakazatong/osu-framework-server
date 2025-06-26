@@ -12,8 +12,8 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
-using osu.Framework.Utils;
 using osu.Framework.Threading;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -99,9 +99,9 @@ namespace osu.Framework.Tests.Visual.Layout
                                     Anchor.BottomRight,
                                 },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             selectionDropdown.Current.ValueChanged += e => changeTest(e.NewValue);
@@ -131,186 +131,245 @@ namespace osu.Framework.Tests.Visual.Layout
 
         private void changeTest(FlowTestType testType)
         {
-            var method =
-                GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).SingleOrDefault(m => m.GetCustomAttribute<FlowTestCaseAttribute>()?.TestType == testType);
+            var method = GetType()
+                .GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+                .SingleOrDefault(m =>
+                    m.GetCustomAttribute<FlowTestCaseAttribute>()?.TestType == testType
+                );
             if (method != null)
                 method.Invoke(this, Array.Empty<object>());
         }
 
         private void buildTest()
         {
-            Add(new Container
-            {
-                Padding = new MarginPadding(25f),
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                new Container
                 {
-                    fillContainer = new FillFlowContainer
+                    Padding = new MarginPadding(25f),
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        AutoSizeAxes = Axes.None,
+                        fillContainer = new FillFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            AutoSizeAxes = Axes.None,
+                        },
+                        new Box
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Y,
+                            Size = new Vector2(3, 1),
+                            Colour = Color4.HotPink,
+                        },
+                        new Box
+                        {
+                            Anchor = Anchor.CentreRight,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Y,
+                            Size = new Vector2(3, 1),
+                            Colour = Color4.HotPink,
+                        },
+                        new Box
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.X,
+                            Size = new Vector2(1, 3),
+                            Colour = Color4.HotPink,
+                        },
+                        new Box
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.X,
+                            Size = new Vector2(1, 3),
+                            Colour = Color4.HotPink,
+                        },
                     },
-                    new Box
+                }
+            );
+
+            AddToggleStep(
+                "Rotate Container",
+                state =>
+                {
+                    fillContainer.RotateTo(state ? 45f : 0, 1000);
+                }
+            );
+            AddToggleStep(
+                "Scale Container",
+                state =>
+                {
+                    fillContainer.ScaleTo(state ? 1.2f : 1f, 1000);
+                }
+            );
+            AddToggleStep(
+                "Shear Container",
+                state =>
+                {
+                    fillContainer.Shear = state ? new Vector2(0.5f, 0f) : new Vector2(0f, 0f);
+                }
+            );
+            AddToggleStep(
+                "Center Container Anchor",
+                state =>
+                {
+                    fillContainer.Anchor = state ? Anchor.Centre : Anchor.TopLeft;
+                }
+            );
+            AddToggleStep(
+                "Center Container Origin",
+                state =>
+                {
+                    fillContainer.Origin = state ? Anchor.Centre : Anchor.TopLeft;
+                }
+            );
+            AddToggleStep(
+                "Autosize Container",
+                state =>
+                {
+                    if (state)
                     {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Y,
-                        Size = new Vector2(3, 1),
-                        Colour = Color4.HotPink,
-                    },
-                    new Box
+                        fillContainer.RelativeSizeAxes = Axes.None;
+                        fillContainer.AutoSizeAxes = Axes.Both;
+                    }
+                    else
                     {
-                        Anchor = Anchor.CentreRight,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Y,
-                        Size = new Vector2(3, 1),
-                        Colour = Color4.HotPink,
-                    },
-                    new Box
-                    {
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.X,
-                        Size = new Vector2(1, 3),
-                        Colour = Color4.HotPink,
-                    },
-                    new Box
-                    {
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.X,
-                        Size = new Vector2(1, 3),
-                        Colour = Color4.HotPink,
+                        fillContainer.AutoSizeAxes = Axes.None;
+                        fillContainer.RelativeSizeAxes = Axes.Both;
+                        fillContainer.Width = 1;
+                        fillContainer.Height = 1;
                     }
                 }
-            });
-
-            AddToggleStep("Rotate Container", state => { fillContainer.RotateTo(state ? 45f : 0, 1000); });
-            AddToggleStep("Scale Container", state => { fillContainer.ScaleTo(state ? 1.2f : 1f, 1000); });
-            AddToggleStep("Shear Container", state => { fillContainer.Shear = state ? new Vector2(0.5f, 0f) : new Vector2(0f, 0f); });
-            AddToggleStep("Center Container Anchor", state => { fillContainer.Anchor = state ? Anchor.Centre : Anchor.TopLeft; });
-            AddToggleStep("Center Container Origin", state => { fillContainer.Origin = state ? Anchor.Centre : Anchor.TopLeft; });
-            AddToggleStep("Autosize Container", state =>
-            {
-                if (state)
+            );
+            AddToggleStep(
+                "Rotate children",
+                state =>
                 {
-                    fillContainer.RelativeSizeAxes = Axes.None;
-                    fillContainer.AutoSizeAxes = Axes.Both;
-                }
-                else
-                {
-                    fillContainer.AutoSizeAxes = Axes.None;
-                    fillContainer.RelativeSizeAxes = Axes.Both;
-                    fillContainer.Width = 1;
-                    fillContainer.Height = 1;
-                }
-            });
-            AddToggleStep("Rotate children", state =>
-            {
-                if (state)
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.RotateTo(45f, 1000);
-                }
-                else
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.RotateTo(0f, 1000);
-                }
-            });
-            AddToggleStep("Shear children", state =>
-            {
-                if (state)
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.Shear = new Vector2(0.2f, 0.2f);
-                }
-                else
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.Shear = Vector2.Zero;
-                }
-            });
-            AddToggleStep("Scale children", state =>
-            {
-                if (state)
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.ScaleTo(1.25f, 1000);
-                }
-                else
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.ScaleTo(1f, 1000);
-                }
-            });
-            AddToggleStep("Randomly scale children", state =>
-            {
-                if (state)
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.ScaleTo(RNG.NextSingle(1, 2), 1000);
-                }
-                else
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.ScaleTo(1f, 1000);
-                }
-            });
-            AddToggleStep("Randomly set child origins", state =>
-            {
-                if (state)
-                {
-                    foreach (var child in fillContainer.Children)
+                    if (state)
                     {
-                        switch (RNG.Next(9))
+                        foreach (var child in fillContainer.Children)
+                            child.RotateTo(45f, 1000);
+                    }
+                    else
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.RotateTo(0f, 1000);
+                    }
+                }
+            );
+            AddToggleStep(
+                "Shear children",
+                state =>
+                {
+                    if (state)
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.Shear = new Vector2(0.2f, 0.2f);
+                    }
+                    else
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.Shear = Vector2.Zero;
+                    }
+                }
+            );
+            AddToggleStep(
+                "Scale children",
+                state =>
+                {
+                    if (state)
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.ScaleTo(1.25f, 1000);
+                    }
+                    else
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.ScaleTo(1f, 1000);
+                    }
+                }
+            );
+            AddToggleStep(
+                "Randomly scale children",
+                state =>
+                {
+                    if (state)
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.ScaleTo(RNG.NextSingle(1, 2), 1000);
+                    }
+                    else
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.ScaleTo(1f, 1000);
+                    }
+                }
+            );
+            AddToggleStep(
+                "Randomly set child origins",
+                state =>
+                {
+                    if (state)
+                    {
+                        foreach (var child in fillContainer.Children)
                         {
-                            case 0:
-                                child.Origin = Anchor.TopLeft;
-                                break;
+                            switch (RNG.Next(9))
+                            {
+                                case 0:
+                                    child.Origin = Anchor.TopLeft;
+                                    break;
 
-                            case 1:
-                                child.Origin = Anchor.TopCentre;
-                                break;
+                                case 1:
+                                    child.Origin = Anchor.TopCentre;
+                                    break;
 
-                            case 2:
-                                child.Origin = Anchor.TopRight;
-                                break;
+                                case 2:
+                                    child.Origin = Anchor.TopRight;
+                                    break;
 
-                            case 3:
-                                child.Origin = Anchor.CentreLeft;
-                                break;
+                                case 3:
+                                    child.Origin = Anchor.CentreLeft;
+                                    break;
 
-                            case 4:
-                                child.Origin = Anchor.Centre;
-                                break;
+                                case 4:
+                                    child.Origin = Anchor.Centre;
+                                    break;
 
-                            case 5:
-                                child.Origin = Anchor.CentreRight;
-                                break;
+                                case 5:
+                                    child.Origin = Anchor.CentreRight;
+                                    break;
 
-                            case 6:
-                                child.Origin = Anchor.BottomLeft;
-                                break;
+                                case 6:
+                                    child.Origin = Anchor.BottomLeft;
+                                    break;
 
-                            case 7:
-                                child.Origin = Anchor.BottomCentre;
-                                break;
+                                case 7:
+                                    child.Origin = Anchor.BottomCentre;
+                                    break;
 
-                            case 8:
-                                child.Origin = Anchor.BottomRight;
-                                break;
+                                case 8:
+                                    child.Origin = Anchor.BottomRight;
+                                    break;
+                            }
                         }
                     }
+                    else
+                    {
+                        foreach (var child in fillContainer.Children)
+                            child.Origin = originDropdown.Current.Value;
+                    }
                 }
-                else
-                {
-                    foreach (var child in fillContainer.Children)
-                        child.Origin = originDropdown.Current.Value;
-                }
-            });
+            );
 
-            AddToggleStep("Stop adding children", state => { doNotAddChildren = state; });
+            AddToggleStep(
+                "Stop adding children",
+                state =>
+                {
+                    doNotAddChildren = state;
+                }
+            );
 
             scheduledAdder?.Cancel();
             scheduledAdder = Scheduler.AddDelayed(
@@ -326,29 +385,31 @@ namespace osu.Framework.Tests.Visual.Layout
 
                     if (fillContainer.Children.Count < 1000 && !doNotAddChildren)
                     {
-                        fillContainer.Add(new Container
-                        {
-                            Anchor = childAnchor,
-                            Origin = childOrigin,
-                            AutoSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                        fillContainer.Add(
+                            new Container
                             {
-                                new Box
+                                Anchor = childAnchor,
+                                Origin = childOrigin,
+                                AutoSizeAxes = Axes.Both,
+                                Children = new Drawable[]
                                 {
-                                    Width = 50,
-                                    Height = 50,
-                                    Colour = Color4.White
+                                    new Box
+                                    {
+                                        Width = 50,
+                                        Height = 50,
+                                        Colour = Color4.White,
+                                    },
+                                    new SpriteText
+                                    {
+                                        Colour = Color4.Black,
+                                        RelativePositionAxes = Axes.Both,
+                                        Position = new Vector2(0.5f, 0.5f),
+                                        Origin = Anchor.Centre,
+                                        Text = fillContainer.Children.Count.ToString(),
+                                    },
                                 },
-                                new SpriteText
-                                {
-                                    Colour = Color4.Black,
-                                    RelativePositionAxes = Axes.Both,
-                                    Position = new Vector2(0.5f, 0.5f),
-                                    Origin = Anchor.Centre,
-                                    Text = fillContainer.Children.Count.ToString()
-                                }
                             }
-                        });
+                        );
                     }
                 },
                 100,
@@ -392,10 +453,7 @@ namespace osu.Framework.Tests.Visual.Layout
                 Foreground.Padding = new MarginPadding(4);
                 BackgroundColour = new Color4(100, 100, 100, 255);
                 BackgroundColourHover = Color4.HotPink;
-                Children = new[]
-                {
-                    label = new SpriteText(),
-                };
+                Children = new[] { label = new SpriteText() };
             }
 
             protected override DropdownSearchBar CreateSearchBar() => new BasicDropdownSearchBar();

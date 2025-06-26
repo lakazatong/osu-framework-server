@@ -48,7 +48,11 @@ namespace osu.Framework.Audio
             this.channel = channel;
             IsFrequencyZero = false;
 
-            Bass.ChannelGetAttribute(this.channel, ChannelAttribute.Frequency, out initialFrequency);
+            Bass.ChannelGetAttribute(
+                this.channel,
+                ChannelAttribute.Frequency,
+                out initialFrequency
+            );
         }
 
         /// <summary>
@@ -65,11 +69,14 @@ namespace osu.Framework.Audio
         public void SetFrequency(double relativeFrequency)
         {
             if (channel == 0)
-                throw new InvalidOperationException("Attempted to set the channel frequency without calling SetChannel() first.");
+                throw new InvalidOperationException(
+                    "Attempted to set the channel frequency without calling SetChannel() first."
+                );
 
             // In the past, allowing frequency to go too low (like 1 Hz) caused audible artifacts.
             // For this reason, the lower range is clamped to 100Hz, a value which is usually low enough to naturally be silent.
-            int channelFrequency = (int)Math.Max(100, Math.Abs(initialFrequency * relativeFrequency));
+            int channelFrequency = (int)
+                Math.Max(100, Math.Abs(initialFrequency * relativeFrequency));
             Bass.ChannelSetAttribute(channel, ChannelAttribute.Frequency, channelFrequency);
 
             // Maintain internal pause on zero frequency due to BASS not supporting them (0 is took for original rate in BASS API)

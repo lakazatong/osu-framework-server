@@ -14,28 +14,37 @@ using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.UserInterface
 {
-    public partial class BasicRearrangeableListContainer<TModel> : RearrangeableListContainer<TModel>
+    public partial class BasicRearrangeableListContainer<TModel>
+        : RearrangeableListContainer<TModel>
     {
-        protected override FillFlowContainer<RearrangeableListItem<TModel>> CreateListFillFlowContainer() => base.CreateListFillFlowContainer().With(d =>
-        {
-            d.LayoutDuration = 160;
-            d.LayoutEasing = Easing.OutQuint;
-            d.Spacing = new Vector2(1);
-        });
+        protected override FillFlowContainer<
+            RearrangeableListItem<TModel>
+        > CreateListFillFlowContainer() =>
+            base.CreateListFillFlowContainer()
+                .With(d =>
+                {
+                    d.LayoutDuration = 160;
+                    d.LayoutEasing = Easing.OutQuint;
+                    d.Spacing = new Vector2(1);
+                });
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => new BasicScrollContainer().With(d =>
-        {
-            d.RelativeSizeAxes = Axes.Both;
-            d.ScrollbarOverlapsContent = false;
-            d.Padding = new MarginPadding(5);
-        });
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            new BasicScrollContainer().With(d =>
+            {
+                d.RelativeSizeAxes = Axes.Both;
+                d.ScrollbarOverlapsContent = false;
+                d.Padding = new MarginPadding(5);
+            });
 
-        protected sealed override RearrangeableListItem<TModel> CreateDrawable(TModel item) => CreateBasicItem(item).With(d =>
-        {
-            d.RequestRemoval += _ => Items.Remove(item);
-        });
+        protected sealed override RearrangeableListItem<TModel> CreateDrawable(TModel item) =>
+            CreateBasicItem(item)
+                .With(d =>
+                {
+                    d.RequestRemoval += _ => Items.Remove(item);
+                });
 
-        protected virtual BasicRearrangeableListItem<TModel> CreateBasicItem(TModel item) => new BasicRearrangeableListItem<TModel>(item);
+        protected virtual BasicRearrangeableListItem<TModel> CreateBasicItem(TModel item) =>
+            new BasicRearrangeableListItem<TModel>(item);
     }
 
     public partial class BasicRearrangeableListItem<TModel> : RearrangeableListItem<TModel>
@@ -88,7 +97,7 @@ namespace osu.Framework.Graphics.UserInterface
                                     AllowMultiline = false,
                                     Padding = new MarginPadding(5),
                                     Text = Model.ToString(),
-                                }
+                                },
                             },
                         },
                         new Button(FontAwesome.Solid.Times)
@@ -106,7 +115,7 @@ namespace osu.Framework.Graphics.UserInterface
                     new Dimension(GridSizeMode.AutoSize),
                     new Dimension(GridSizeMode.Distributed),
                     new Dimension(GridSizeMode.AutoSize),
-                }
+                },
             };
         }
 

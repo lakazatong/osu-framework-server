@@ -29,7 +29,10 @@ namespace osu.Framework.Graphics.UserInterface
     /// Without this, <see cref="TabControl{T}"/> will automatically hide extra items.
     /// </remarks>
     /// <typeparam name="T">The type of item to be represented by tabs.</typeparam>
-    public abstract partial class TabControl<T> : CompositeDrawable, IHasCurrentValue<T>, IKeyBindingHandler<PlatformAction>
+    public abstract partial class TabControl<T>
+        : CompositeDrawable,
+            IHasCurrentValue<T>,
+            IKeyBindingHandler<PlatformAction>
     {
         private readonly BindableWithCurrent<T> current = new BindableWithCurrent<T>();
 
@@ -42,7 +45,8 @@ namespace osu.Framework.Graphics.UserInterface
         /// <summary>
         /// A collection of all tabs which are valid switch targets, sorted by their order of appearance.
         /// </summary>
-        protected internal IEnumerable<TabItem<T>> SwitchableTabs => AllTabs.Where(tab => tab.IsSwitchable);
+        protected internal IEnumerable<TabItem<T>> SwitchableTabs =>
+            AllTabs.Where(tab => tab.IsSwitchable);
 
         /// <summary>
         /// The collection of all tabs, sorted by their order of appearance.
@@ -172,8 +176,14 @@ namespace osu.Framework.Graphics.UserInterface
 
                 AddInternal(Dropdown);
 
-                Trace.Assert(Dropdown.Header.Anchor.HasFlagFast(Anchor.x2), $@"The {nameof(Dropdown)} implementation should use a right-based anchor inside a TabControl.");
-                Trace.Assert(!Dropdown.Header.RelativeSizeAxes.HasFlagFast(Axes.X), $@"The {nameof(Dropdown)} implementation's header should have a specific size.");
+                Trace.Assert(
+                    Dropdown.Header.Anchor.HasFlagFast(Anchor.x2),
+                    $@"The {nameof(Dropdown)} implementation should use a right-based anchor inside a TabControl."
+                );
+                Trace.Assert(
+                    !Dropdown.Header.RelativeSizeAxes.HasFlagFast(Axes.X),
+                    $@"The {nameof(Dropdown)} implementation's header should have a specific size."
+                );
             }
 
             AddInternal(TabContainer = CreateTabFlow());
@@ -206,25 +216,29 @@ namespace osu.Framework.Graphics.UserInterface
             if (firstSelection && SelectFirstTabByDefault && !Current.Disabled && Items.Count > 0)
                 Current.Value = Items[0];
 
-            Current.BindValueChanged(v =>
-            {
-                TabItem<T> tab = null;
+            Current.BindValueChanged(
+                v =>
+                {
+                    TabItem<T> tab = null;
 
-                if (v.NewValue != null)
-                    tabMap.TryGetValue(v.NewValue, out tab);
+                    if (v.NewValue != null)
+                        tabMap.TryGetValue(v.NewValue, out tab);
 
-                // Only reorder if not pinned and not showing
-                if (AutoSort && tab != null && !tab.IsPresent && !tab.Pinned)
-                    performTabSort(tab);
+                    // Only reorder if not pinned and not showing
+                    if (AutoSort && tab != null && !tab.IsPresent && !tab.Pinned)
+                        performTabSort(tab);
 
-                // Deactivate previously selected tab
-                if (SelectedTab != null && SelectedTab != tab) SelectedTab.Active.Value = false;
+                    // Deactivate previously selected tab
+                    if (SelectedTab != null && SelectedTab != tab)
+                        SelectedTab.Active.Value = false;
 
-                SelectedTab = tab;
+                    SelectedTab = tab;
 
-                if (SelectedTab != null)
-                    SelectedTab.Active.Value = true;
-            }, true);
+                    if (SelectedTab != null)
+                        SelectedTab.Active.Value = true;
+                },
+                true
+            );
 
             // TabContainer doesn't have valid layout yet, so TabItems all have y=0 and selectTab() didn't call performTabSort() so we call it here instead
             if (AutoSort && Current.Value != null)
@@ -279,7 +293,9 @@ namespace osu.Framework.Graphics.UserInterface
         {
             // Do not allow duplicate adding
             if (tabMap.ContainsKey(value))
-                throw new InvalidOperationException($"Item {value} has already been added to this {nameof(TabControl<T>)}");
+                throw new InvalidOperationException(
+                    $"Item {value} has already been added to this {nameof(TabControl<T>)}"
+                );
 
             var tab = CreateTabItem(value);
             AddTabItem(tab, addToDropdown);
@@ -288,7 +304,9 @@ namespace osu.Framework.Graphics.UserInterface
         private void removeTab(T value, bool removeFromDropdown = true)
         {
             if (!tabMap.TryGetValue(value, out var tab))
-                throw new InvalidOperationException($"Item {value} doesn't exist in this {nameof(TabControl<T>)}.");
+                throw new InvalidOperationException(
+                    $"Item {value} doesn't exist in this {nameof(TabControl<T>)}."
+                );
 
             RemoveTabItem(tab, removeFromDropdown);
         }
@@ -323,7 +341,9 @@ namespace osu.Framework.Graphics.UserInterface
         protected virtual void RemoveTabItem(TabItem<T> tab, bool removeFromDropdown = true)
         {
             if (!tab.IsRemovable)
-                throw new InvalidOperationException($"Cannot remove non-removable tab {tab}. Ensure {nameof(TabItem.IsRemovable)} is set appropriately.");
+                throw new InvalidOperationException(
+                    $"Cannot remove non-removable tab {tab}. Ensure {nameof(TabItem.IsRemovable)} is set appropriately."
+                );
 
             if (SwitchTabOnRemove && tab == SelectedTab)
             {
@@ -332,7 +352,10 @@ namespace osu.Framework.Graphics.UserInterface
                 else
                 {
                     // check all tabs as to include self (in correct iteration order)
-                    bool anySwitchableTabsToRight = AllTabs.SkipWhile(t => t != tab).Skip(1).Any(t => t.IsSwitchable);
+                    bool anySwitchableTabsToRight = AllTabs
+                        .SkipWhile(t => t != tab)
+                        .Skip(1)
+                        .Any(t => t.IsSwitchable);
 
                     // switching tab on removal is not directly caused by the user.
                     // call the private method to not trigger a user change event.
@@ -369,7 +392,9 @@ namespace osu.Framework.Graphics.UserInterface
         public void SelectItem(T item)
         {
             if (!tabMap.TryGetValue(item, out var tab))
-                throw new InvalidOperationException($"Item {item} cannot be selected as it does not exist in this {nameof(TabControl<T>)}");
+                throw new InvalidOperationException(
+                    $"Item {item} cannot be selected as it does not exist in this {nameof(TabControl<T>)}"
+                );
 
             SelectTab(tab);
         }
@@ -397,7 +422,8 @@ namespace osu.Framework.Graphics.UserInterface
 
         private bool switchTab(int direction, bool wrap = true)
         {
-            if (Math.Abs(direction) != 1) throw new ArgumentException("value must be -1 or 1", nameof(direction));
+            if (Math.Abs(direction) != 1)
+                throw new ArgumentException("value must be -1 or 1", nameof(direction));
 
             // the current selected tab may be an non-switchable tab, so search all tabs for a candidate.
             // this is done to ensure ordering (ie. if an non-switchable tab is in the middle).
@@ -461,20 +487,19 @@ namespace osu.Framework.Graphics.UserInterface
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
         /// <summary>
         /// Creates the <see cref="TabFillFlowContainer"/> to contain the <see cref="TabItem{T}"/>s.
         /// </summary>
-        protected virtual TabFillFlowContainer CreateTabFlow() => new TabFillFlowContainer
-        {
-            Direction = FillDirection.Full,
-            RelativeSizeAxes = Axes.Both,
-            Depth = -1,
-            Masking = true
-        };
+        protected virtual TabFillFlowContainer CreateTabFlow() =>
+            new TabFillFlowContainer
+            {
+                Direction = FillDirection.Full,
+                RelativeSizeAxes = Axes.Both,
+                Depth = -1,
+                Masking = true,
+            };
 
         public partial class TabFillFlowContainer : FillFlowContainer<TabItem<T>>
         {
@@ -509,18 +534,21 @@ namespace osu.Framework.Graphics.UserInterface
             /// <summary>
             /// The list of all tabs in this container, in order of appearance.
             /// </summary>
-            public IEnumerable<TabItem<T>> AllTabItems => GetFlowingTabs(AliveInternalChildren).OfType<TabItem<T>>();
+            public IEnumerable<TabItem<T>> AllTabItems =>
+                GetFlowingTabs(AliveInternalChildren).OfType<TabItem<T>>();
 
             // The flowing children should only contain the present children, but we also need to consider the non-present children for retrieving all tab items.
             // So the ordering is delegated to a separate method (GetFlowingTabs()).
-            public sealed override IEnumerable<Drawable> FlowingChildren => GetFlowingTabs(AliveInternalChildren.Where(d => d.IsPresent));
+            public sealed override IEnumerable<Drawable> FlowingChildren =>
+                GetFlowingTabs(AliveInternalChildren.Where(d => d.IsPresent));
 
             /// <summary>
             /// Re-orders a given list of <see cref="TabItem{T}"/>s in the order that they should appear.
             /// </summary>
             /// <param name="tabs">The <see cref="TabItem{T}"/>s to order.</param>
             /// <returns>The re-ordered list of <see cref="TabItem{T}"/>s.</returns>
-            public virtual IEnumerable<Drawable> GetFlowingTabs(IEnumerable<Drawable> tabs) => tabs.OrderBy(GetLayoutPosition).ThenBy(d => d.ChildID);
+            public virtual IEnumerable<Drawable> GetFlowingTabs(IEnumerable<Drawable> tabs) =>
+                tabs.OrderBy(GetLayoutPosition).ThenBy(d => d.ChildID);
 
             protected override IEnumerable<Vector2> ComputeLayoutPositions()
             {
@@ -541,11 +569,15 @@ namespace osu.Framework.Graphics.UserInterface
                 }
             }
 
-            private readonly Dictionary<TabItem<T>, bool> tabVisibility = new Dictionary<TabItem<T>, bool>();
+            private readonly Dictionary<TabItem<T>, bool> tabVisibility =
+                new Dictionary<TabItem<T>, bool>();
 
             private void updateChildIfNeeded(TabItem<T> child, bool isVisible)
             {
-                if (!tabVisibility.TryGetValue(child, out bool currentVisibility) || currentVisibility != isVisible)
+                if (
+                    !tabVisibility.TryGetValue(child, out bool currentVisibility)
+                    || currentVisibility != isVisible
+                )
                 {
                     TabVisibilityChanged?.Invoke(child, isVisible);
                     tabVisibility[child] = isVisible;

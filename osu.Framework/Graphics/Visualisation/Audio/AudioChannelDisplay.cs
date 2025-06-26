@@ -44,15 +44,8 @@ namespace osu.Framework.Graphics.Visualisation.Audio
             {
                 RelativeSizeAxes = Axes.Y,
                 AutoSizeAxes = Axes.X,
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.AutoSize)
-                },
-                RowDimensions = new[]
-                {
-                    new Dimension(),
-                    new Dimension(GridSizeMode.AutoSize)
-                },
+                ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                RowDimensions = new[] { new Dimension(), new Dimension(GridSizeMode.AutoSize) },
                 Content = new[]
                 {
                     new Drawable[]
@@ -71,7 +64,9 @@ namespace osu.Framework.Graphics.Visualisation.Audio
                                     Origin = Anchor.BottomLeft,
                                     RelativeSizeAxes = Axes.Y,
                                     Width = 30,
-                                    Colour = isOutputChannel ? FrameworkColour.YellowGreen : FrameworkColour.Green
+                                    Colour = isOutputChannel
+                                        ? FrameworkColour.YellowGreen
+                                        : FrameworkColour.Green,
                                 },
                                 volBarR = new Box
                                 {
@@ -79,10 +74,12 @@ namespace osu.Framework.Graphics.Visualisation.Audio
                                     Origin = Anchor.BottomLeft,
                                     RelativeSizeAxes = Axes.Y,
                                     Width = 30,
-                                    Colour = isOutputChannel ? FrameworkColour.YellowGreen : FrameworkColour.Green
-                                }
-                            }
-                        }
+                                    Colour = isOutputChannel
+                                        ? FrameworkColour.YellowGreen
+                                        : FrameworkColour.Green,
+                                },
+                            },
+                        },
                     },
                     new Drawable[]
                     {
@@ -93,13 +90,26 @@ namespace osu.Framework.Graphics.Visualisation.Audio
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                peakText = new SpriteText { Text = "N/A", Font = FrameworkFont.Condensed.With(size: 14f) },
-                                maxPeakText = new SpriteText { Text = "N/A", Font = FrameworkFont.Condensed.With(size: 14f) },
-                                mixerLabel = new SpriteText { Text = " ", Font = FrameworkFont.Condensed.With(size: 14f), Colour = FrameworkColour.Yellow },
-                            }
-                        }
-                    }
-                }
+                                peakText = new SpriteText
+                                {
+                                    Text = "N/A",
+                                    Font = FrameworkFont.Condensed.With(size: 14f),
+                                },
+                                maxPeakText = new SpriteText
+                                {
+                                    Text = "N/A",
+                                    Font = FrameworkFont.Condensed.With(size: 14f),
+                                },
+                                mixerLabel = new SpriteText
+                                {
+                                    Text = " ",
+                                    Font = FrameworkFont.Condensed.With(size: 14f),
+                                    Colour = FrameworkColour.Yellow,
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -116,9 +126,19 @@ namespace osu.Framework.Graphics.Visualisation.Audio
             float[] levels = new float[2];
 
             if (isOutputChannel && !usingGlobalMixer.Value)
-                Bass.ChannelGetLevel(ChannelHandle, levels, 1 / 1000f * sample_window, LevelRetrievalFlags.Stereo);
+                Bass.ChannelGetLevel(
+                    ChannelHandle,
+                    levels,
+                    1 / 1000f * sample_window,
+                    LevelRetrievalFlags.Stereo
+                );
             else
-                BassMix.ChannelGetLevel(ChannelHandle, levels, 1 / 1000f * sample_window, LevelRetrievalFlags.Stereo);
+                BassMix.ChannelGetLevel(
+                    ChannelHandle,
+                    levels,
+                    1 / 1000f * sample_window,
+                    LevelRetrievalFlags.Stereo
+                );
 
             float curPeakL = levels[0];
             float curPeakR = levels[1];

@@ -22,22 +22,28 @@ namespace osu.Framework.Tests.Visual.Platform
         private FrameworkConfigManager config { get; set; } = null!;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Add(new SpriteText
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Text = $"Renderer: {host.ResolvedRenderer} ({host.Renderer.GetType().Name} / {host.Window.GraphicsSurface.Type})",
-                Font = FrameworkFont.Regular.With(size: 24),
-            });
+                Add(
+                    new SpriteText
+                    {
+                        Text =
+                            $"Renderer: {host.ResolvedRenderer} ({host.Renderer.GetType().Name} / {host.Window.GraphicsSurface.Type})",
+                        Font = FrameworkFont.Regular.With(size: 24),
+                    }
+                );
 
-            Add(new BasicDropdown<RendererType>
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Items = host.GetPreferredRenderersForCurrentPlatform().OrderBy(t => t),
-                Current = config.GetBindable<RendererType>(FrameworkSetting.Renderer),
-                Width = 200f,
+                Add(
+                    new BasicDropdown<RendererType>
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Items = host.GetPreferredRenderersForCurrentPlatform().OrderBy(t => t),
+                        Current = config.GetBindable<RendererType>(FrameworkSetting.Renderer),
+                        Width = 200f,
+                    }
+                );
             });
-        });
     }
 }

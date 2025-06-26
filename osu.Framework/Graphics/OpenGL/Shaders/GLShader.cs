@@ -25,7 +25,8 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
 
         private readonly ScheduledDelegate shaderCompileDelegate;
 
-        internal readonly Dictionary<string, IUniform> Uniforms = new Dictionary<string, IUniform>();
+        internal readonly Dictionary<string, IUniform> Uniforms =
+            new Dictionary<string, IUniform>();
 
         IReadOnlyDictionary<string, IUniform> IShader.Uniforms => Uniforms;
 
@@ -42,7 +43,12 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
         private readonly GLShaderPart fragmentPart;
         private readonly VertexFragmentShaderCompilation compilation;
 
-        internal GLShader(GLRenderer renderer, string name, GLShaderPart[] parts, ShaderCompilationStore compilationStore)
+        internal GLShader(
+            GLRenderer renderer,
+            string name,
+            GLShaderPart[] parts,
+            ShaderCompilationStore compilationStore
+        )
         {
             this.renderer = renderer;
             this.name = name;
@@ -59,7 +65,8 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
                 compilation = compilationStore.CompileVertexFragment(
                     vertexPart.GetRawText(),
                     fragmentPart.GetRawText(),
-                    renderer.IsEmbedded ? CrossCompileTarget.ESSL : CrossCompileTarget.GLSL);
+                    renderer.IsEmbedded ? CrossCompileTarget.ESSL : CrossCompileTarget.GLSL
+                );
             }
             catch (Exception e)
             {
@@ -67,7 +74,9 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
             }
 
             // Final GPU level compilation needs to be run on the draw thread.
-            renderer.ScheduleExpensiveOperation(shaderCompileDelegate = new ScheduledDelegate(compile));
+            renderer.ScheduleExpensiveOperation(
+                shaderCompileDelegate = new ScheduledDelegate(compile)
+            );
         }
 
         private void compile()
@@ -75,7 +84,9 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
             ObjectDisposedException.ThrowIf(IsDisposed, this);
 
             if (IsLoaded)
-                throw new InvalidOperationException("Attempting to compile an already-compiled shader.");
+                throw new InvalidOperationException(
+                    "Attempting to compile an already-compiled shader."
+                );
 
             if (parts.Length == 0)
                 return;
@@ -133,7 +144,8 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
             return (Uniform<T>)Uniforms[name];
         }
 
-        public int? GetUniformBlockIndex(string name) => uniformBlocks.TryGetValue(name, out int index) ? index : null;
+        public int? GetUniformBlockIndex(string name) =>
+            uniformBlocks.TryGetValue(name, out int index) ? index : null;
 
         public virtual void BindUniformBlock(string blockName, IUniformBuffer buffer)
         {
@@ -168,29 +180,54 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
                 if (layout.Elements.Length == 0)
                     continue;
 
-                if (layout.Elements.Any(e => e.Kind == ResourceKind.TextureReadOnly || e.Kind == ResourceKind.TextureReadWrite))
+                if (
+                    layout.Elements.Any(e =>
+                        e.Kind == ResourceKind.TextureReadOnly
+                        || e.Kind == ResourceKind.TextureReadWrite
+                    )
+                )
                 {
-                    ResourceLayoutElementDescription textureElement = layout.Elements.First(e => e.Kind == ResourceKind.TextureReadOnly || e.Kind == ResourceKind.TextureReadWrite);
+                    ResourceLayoutElementDescription textureElement = layout.Elements.First(e =>
+                        e.Kind == ResourceKind.TextureReadOnly
+                        || e.Kind == ResourceKind.TextureReadWrite
+                    );
 
                     if (layout.Elements.All(e => e.Kind != ResourceKind.Sampler))
-                        throw new ProgramLinkingFailedException(name, $"Texture {textureElement.Name} has no associated sampler.");
+                        throw new ProgramLinkingFailedException(
+                            name,
+                            $"Texture {textureElement.Name} has no associated sampler."
+                        );
 
-                    textureUniforms.Add(new Uniform<int>(renderer, this, textureElement.Name, GL.GetUniformLocation(this, textureElement.Name))
-                    {
-                        Value = textureIndex++
-                    });
+                    textureUniforms.Add(
+                        new Uniform<int>(
+                            renderer,
+                            this,
+                            textureElement.Name,
+                            GL.GetUniformLocation(this, textureElement.Name)
+                        )
+                        {
+                            Value = textureIndex++,
+                        }
+                    );
                 }
                 else
                 {
                     switch (layout.Elements[0].Kind)
                     {
                         case ResourceKind.UniformBuffer:
-                            uniformBlocks[layout.Elements[0].Name] = GL.GetUniformBlockIndex(this, layout.Elements[0].Name);
+                            uniformBlocks[layout.Elements[0].Name] = GL.GetUniformBlockIndex(
+                                this,
+                                layout.Elements[0].Name
+                            );
                             break;
 
                         case ResourceKind.StructuredBufferReadOnly:
                         case ResourceKind.StructuredBufferReadWrite:
-                            uniformBlocks[layout.Elements[0].Name] = GL4.GL.GetProgramResourceIndex(this, ProgramInterface.ShaderStorageBlock, layout.Elements[0].Name);
+                            uniformBlocks[layout.Elements[0].Name] = GL4.GL.GetProgramResourceIndex(
+                                this,
+                                ProgramInterface.ShaderStorageBlock,
+                                layout.Elements[0].Name
+                            );
                             break;
                     }
                 }
@@ -243,17 +280,13 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
         public class PartCompilationFailedException : Exception
         {
             public PartCompilationFailedException(string partName, string log)
-                : base($"A {typeof(GLShaderPart)} failed to compile: {partName}:\n{log.Trim()}")
-            {
-            }
+                : base($"A {typeof(GLShaderPart)} failed to compile: {partName}:\n{log.Trim()}") { }
         }
 
         public class ProgramLinkingFailedException : Exception
         {
             public ProgramLinkingFailedException(string programName, string log)
-                : base($"A {typeof(GLShader)} failed to link: {programName}:\n{log.Trim()}")
-            {
-            }
+                : base($"A {typeof(GLShader)} failed to link: {programName}:\n{log.Trim()}") { }
         }
     }
 }

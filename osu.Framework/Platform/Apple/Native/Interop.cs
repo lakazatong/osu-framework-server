@@ -11,9 +11,12 @@ namespace osu.Framework.Platform.Apple.Native
         internal const string LIB_DL = "libSystem.dylib";
         internal const string LIB_APPKIT = "/System/Library/Frameworks/AppKit.framework/AppKit";
         internal const string LIB_OBJ_C = "/usr/lib/libobjc.dylib";
-        internal const string LIB_CORE_GRAPHICS = "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics";
-        internal const string LIB_ACCELERATE = "/System/Library/Frameworks/Accelerate.framework/Accelerate";
-        internal const string LIB_CORE_FOUNDATION = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+        internal const string LIB_CORE_GRAPHICS =
+            "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics";
+        internal const string LIB_ACCELERATE =
+            "/System/Library/Frameworks/Accelerate.framework/Accelerate";
+        internal const string LIB_CORE_FOUNDATION =
+            "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
 
         internal const int RTLD_NOW = 2;
 
@@ -33,20 +36,46 @@ namespace osu.Framework.Platform.Apple.Native
         public static partial IntPtr SendIntPtr(IntPtr receiver, IntPtr selector, IntPtr ptr1);
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
-        public static partial IntPtr SendIntPtr(IntPtr receiver, IntPtr selector, IntPtr ptr1, int int1);
+        public static partial IntPtr SendIntPtr(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr ptr1,
+            int int1
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
-        public static partial IntPtr SendIntPtr(IntPtr receiver, IntPtr selector, IntPtr ptr1, ulong ulong11);
+        public static partial IntPtr SendIntPtr(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr ptr1,
+            ulong ulong11
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
-        public static partial IntPtr SendIntPtr(IntPtr receiver, IntPtr selector, IntPtr ptr1, IntPtr ptr2);
+        public static partial IntPtr SendIntPtr(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr ptr1,
+            IntPtr ptr2
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
-        public static partial IntPtr SendIntPtr(IntPtr receiver, IntPtr selector, IntPtr ptr1, IntPtr ptr2, IntPtr ptr3);
+        public static partial IntPtr SendIntPtr(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr ptr1,
+            IntPtr ptr2,
+            IntPtr ptr3
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
-        public static partial IntPtr SendIntPtr(IntPtr receiver, IntPtr selector, IntPtr ptr1, ulong ulong1,
-                                                [MarshalAs(UnmanagedType.I1)] bool bool1);
+        public static partial IntPtr SendIntPtr(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr ptr1,
+            ulong ulong1,
+            [MarshalAs(UnmanagedType.I1)] bool bool1
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
         public static partial int SendInt(IntPtr receiver, IntPtr selector);
@@ -64,7 +93,12 @@ namespace osu.Framework.Platform.Apple.Native
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static partial bool SendBool(IntPtr receiver, IntPtr selector, IntPtr ptr1, IntPtr ptr2);
+        public static partial bool SendBool(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr ptr1,
+            IntPtr ptr2
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
         public static partial void SendVoid(IntPtr receiver, IntPtr selector);
@@ -73,7 +107,14 @@ namespace osu.Framework.Platform.Apple.Native
         public static partial void SendVoid(IntPtr receiver, IntPtr selector, IntPtr ptr1);
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
-        public static partial void SendVoid(IntPtr receiver, IntPtr selector, IntPtr intPtr1, IntPtr intPtr2, IntPtr intPtr3, IntPtr intPtr4);
+        public static partial void SendVoid(
+            IntPtr receiver,
+            IntPtr selector,
+            IntPtr intPtr1,
+            IntPtr intPtr2,
+            IntPtr intPtr3,
+            IntPtr intPtr4
+        );
 
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend_fpret")]
         public static partial float SendFloat_i386(IntPtr receiver, IntPtr selector);
@@ -81,7 +122,10 @@ namespace osu.Framework.Platform.Apple.Native
         [LibraryImport(LIB_OBJ_C, EntryPoint = "objc_msgSend")]
         public static partial double SendFloat_x64(IntPtr receiver, IntPtr selector);
 
-        public static float SendFloat(IntPtr receiver, IntPtr selector) => IntPtr.Size == 4 ? SendFloat_i386(receiver, selector) : (float)SendFloat_x64(receiver, selector);
+        public static float SendFloat(IntPtr receiver, IntPtr selector) =>
+            IntPtr.Size == 4
+                ? SendFloat_i386(receiver, selector)
+                : (float)SendFloat_x64(receiver, selector);
 
         public static IntPtr AppKitLibrary;
 

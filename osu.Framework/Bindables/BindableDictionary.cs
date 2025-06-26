@@ -15,7 +15,12 @@ using osu.Framework.Lists;
 
 namespace osu.Framework.Bindables
 {
-    public class BindableDictionary<TKey, TValue> : IBindableDictionary<TKey, TValue>, IBindable, IParseable, IDictionary<TKey, TValue>, IDictionary
+    public class BindableDictionary<TKey, TValue>
+        : IBindableDictionary<TKey, TValue>,
+            IBindable,
+            IParseable,
+            IDictionary<TKey, TValue>,
+            IDictionary
         where TKey : notnull
     {
         public event NotifyDictionaryChangedEventHandler<TKey, TValue>? CollectionChanged;
@@ -27,24 +32,29 @@ namespace osu.Framework.Bindables
 
         private readonly Dictionary<TKey, TValue> collection;
 
-        private readonly Cached<WeakReference<BindableDictionary<TKey, TValue>>> weakReferenceCache = new Cached<WeakReference<BindableDictionary<TKey, TValue>>>();
+        private readonly Cached<
+            WeakReference<BindableDictionary<TKey, TValue>>
+        > weakReferenceCache = new Cached<WeakReference<BindableDictionary<TKey, TValue>>>();
 
-        private WeakReference<BindableDictionary<TKey, TValue>> weakReference
-            => weakReferenceCache.IsValid ? weakReferenceCache.Value : weakReferenceCache.Value = new WeakReference<BindableDictionary<TKey, TValue>>(this);
+        private WeakReference<BindableDictionary<TKey, TValue>> weakReference =>
+            weakReferenceCache.IsValid
+                ? weakReferenceCache.Value
+                : weakReferenceCache.Value = new WeakReference<BindableDictionary<TKey, TValue>>(
+                    this
+                );
 
         private LockedWeakList<BindableDictionary<TKey, TValue>>? bindings;
 
         /// <inheritdoc cref="Dictionary{TKey,TValue}(IEqualityComparer{TKey})" />
         public BindableDictionary(IEqualityComparer<TKey>? comparer = null)
-            : this(0, comparer)
-        {
-        }
+            : this(0, comparer) { }
 
         /// <inheritdoc cref="Dictionary{TKey,TValue}(IDictionary{TKey,TValue},IEqualityComparer{TKey})" />
-        public BindableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer = null)
-            : this((IEnumerable<KeyValuePair<TKey, TValue>>)dictionary, comparer)
-        {
-        }
+        public BindableDictionary(
+            IDictionary<TKey, TValue> dictionary,
+            IEqualityComparer<TKey>? comparer = null
+        )
+            : this((IEnumerable<KeyValuePair<TKey, TValue>>)dictionary, comparer) { }
 
         /// <inheritdoc cref="Dictionary{TKey,TValue}(int,IEqualityComparer{TKey})" />
         public BindableDictionary(int capacity, IEqualityComparer<TKey>? comparer = null)
@@ -53,7 +63,10 @@ namespace osu.Framework.Bindables
         }
 
         /// <inheritdoc cref="Dictionary{TKey,TValue}(IEnumerable{KeyValuePair{TKey,TValue}},IEqualityComparer{TKey})" />
-        public BindableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer = null)
+        public BindableDictionary(
+            IEnumerable<KeyValuePair<TKey, TValue>> collection,
+            IEqualityComparer<TKey>? comparer = null
+        )
         {
             this.collection = new Dictionary<TKey, TValue>(collection, comparer);
         }
@@ -62,8 +75,7 @@ namespace osu.Framework.Bindables
 
         /// <inheritdoc />
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="BindableDictionary{TKey, TValue}"/> is <see cref="Disabled"/>.</exception>
-        public void Add(TKey key, TValue value)
-            => add(key, value, null);
+        public void Add(TKey key, TValue value) => add(key, value, null);
 
         private void add(TKey key, TValue value, BindableDictionary<TKey, TValue>? caller)
         {
@@ -82,22 +94,30 @@ namespace osu.Framework.Bindables
                 }
             }
 
-            notifyDictionaryChanged(new NotifyDictionaryChangedEventArgs<TKey, TValue>(NotifyDictionaryChangedAction.Add, new KeyValuePair<TKey, TValue>(key, value)));
+            notifyDictionaryChanged(
+                new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                    NotifyDictionaryChangedAction.Add,
+                    new KeyValuePair<TKey, TValue>(key, value)
+                )
+            );
         }
 
         public bool ContainsKey(TKey key) => collection.ContainsKey(key);
 
         /// <inheritdoc />
         /// <exception cref="InvalidOperationException">Thrown if this <see cref="BindableDictionary{TKey, TValue}"/> is <see cref="Disabled"/>.</exception>
-        public bool Remove(TKey key)
-            => remove(key, out _, null);
+        public bool Remove(TKey key) => remove(key, out _, null);
 
         /// <inheritdoc cref="IDictionary.Remove" />
         /// <exception cref="InvalidOperationException">Thrown if this <see cref="BindableDictionary{TKey, TValue}"/> is <see cref="Disabled"/>.</exception>
-        public bool Remove(TKey key, [MaybeNullWhen(false)] out TValue value)
-            => remove(key, out value, null);
+        public bool Remove(TKey key, [MaybeNullWhen(false)] out TValue value) =>
+            remove(key, out value, null);
 
-        private bool remove(TKey key, [MaybeNullWhen(false)] out TValue value, BindableDictionary<TKey, TValue>? caller)
+        private bool remove(
+            TKey key,
+            [MaybeNullWhen(false)] out TValue value,
+            BindableDictionary<TKey, TValue>? caller
+        )
         {
             ensureMutationAllowed();
 
@@ -115,12 +135,18 @@ namespace osu.Framework.Bindables
                 }
             }
 
-            notifyDictionaryChanged(new NotifyDictionaryChangedEventArgs<TKey, TValue>(NotifyDictionaryChangedAction.Remove, new KeyValuePair<TKey, TValue>(key, value)));
+            notifyDictionaryChanged(
+                new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                    NotifyDictionaryChangedAction.Remove,
+                    new KeyValuePair<TKey, TValue>(key, value)
+                )
+            );
 
             return true;
         }
 
-        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => collection.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) =>
+            collection.TryGetValue(key, out value);
 
         /// <inheritdoc cref="IDictionary{TKey,TValue}.this" />
         /// <exception cref="InvalidOperationException">Thrown when setting an item while this <see cref="BindableDictionary{TKey, TValue}"/> is <see cref="Disabled"/>.</exception>
@@ -149,9 +175,17 @@ namespace osu.Framework.Bindables
                 }
             }
 
-            notifyDictionaryChanged(hasPreviousValue
-                ? new NotifyDictionaryChangedEventArgs<TKey, TValue>(new KeyValuePair<TKey, TValue>(key, value), new KeyValuePair<TKey, TValue>(key, lastValue!))
-                : new NotifyDictionaryChangedEventArgs<TKey, TValue>(NotifyDictionaryChangedAction.Add, new KeyValuePair<TKey, TValue>(key, value)));
+            notifyDictionaryChanged(
+                hasPreviousValue
+                    ? new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                        new KeyValuePair<TKey, TValue>(key, value),
+                        new KeyValuePair<TKey, TValue>(key, lastValue!)
+                    )
+                    : new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                        NotifyDictionaryChangedAction.Add,
+                        new KeyValuePair<TKey, TValue>(key, value)
+                    )
+            );
         }
 
         public ICollection<TKey> Keys => collection.Keys;
@@ -162,12 +196,12 @@ namespace osu.Framework.Bindables
 
         #region IDictionary
 
-        void IDictionary.Add(object key, object? value) => Add((TKey)key, (TValue)(value ?? throw new ArgumentNullException(nameof(value))));
+        void IDictionary.Add(object key, object? value) =>
+            Add((TKey)key, (TValue)(value ?? throw new ArgumentNullException(nameof(value))));
 
         /// <inheritdoc cref="IDictionary.Clear" />
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="BindableDictionary{TKey, TValue}"/> is <see cref="Disabled"/>.</exception>
-        public void Clear()
-            => clear(null);
+        public void Clear() => clear(null);
 
         private void clear(BindableDictionary<TKey, TValue>? caller)
         {
@@ -192,7 +226,12 @@ namespace osu.Framework.Bindables
                 }
             }
 
-            notifyDictionaryChanged(new NotifyDictionaryChangedEventArgs<TKey, TValue>(NotifyDictionaryChangedAction.Remove, clearedItems));
+            notifyDictionaryChanged(
+                new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                    NotifyDictionaryChangedAction.Remove,
+                    clearedItems
+                )
+            );
         }
 
         bool IDictionary.Contains(object key)
@@ -230,7 +269,10 @@ namespace osu.Framework.Bindables
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
-            if (TryGetValue(item.Key, out TValue? value) && EqualityComparer<TValue>.Default.Equals(value, item.Value))
+            if (
+                TryGetValue(item.Key, out TValue? value)
+                && EqualityComparer<TValue>.Default.Equals(value, item.Value)
+            )
             {
                 Remove(item.Key);
                 return true;
@@ -239,21 +281,23 @@ namespace osu.Framework.Bindables
             return false;
         }
 
-        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
-            => Add(item.Key, item.Value);
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) =>
+            Add(item.Key, item.Value);
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
-            => ((ICollection<KeyValuePair<TKey, TValue>>)collection).Contains(item);
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) =>
+            ((ICollection<KeyValuePair<TKey, TValue>>)collection).Contains(item);
 
-        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-            => ((ICollection<KeyValuePair<TKey, TValue>>)collection).CopyTo(array, arrayIndex);
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(
+            KeyValuePair<TKey, TValue>[] array,
+            int arrayIndex
+        ) => ((ICollection<KeyValuePair<TKey, TValue>>)collection).CopyTo(array, arrayIndex);
 
         #endregion
 
         #region ICollection
 
-        void ICollection.CopyTo(Array array, int index)
-            => ((ICollection)collection).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) =>
+            ((ICollection)collection).CopyTo(array, index);
 
         bool ICollection.IsSynchronized => ((ICollection)collection).IsSynchronized;
 
@@ -298,7 +342,9 @@ namespace osu.Framework.Bindables
                     break;
 
                 default:
-                    throw new ArgumentException($@"Could not parse provided {input.GetType()} ({input}) to {typeof(KeyValuePair<TKey, TValue>)}.");
+                    throw new ArgumentException(
+                        $@"Could not parse provided {input.GetType()} ({input}) to {typeof(KeyValuePair<TKey, TValue>)}."
+                    );
             }
         }
 
@@ -322,7 +368,12 @@ namespace osu.Framework.Bindables
                 }
             }
 
-            notifyDictionaryChanged(new NotifyDictionaryChangedEventArgs<TKey, TValue>(NotifyDictionaryChangedAction.Add, typedItems));
+            notifyDictionaryChanged(
+                new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                    NotifyDictionaryChangedAction.Add,
+                    typedItems
+                )
+            );
         }
 
         #endregion
@@ -401,7 +452,9 @@ namespace osu.Framework.Bindables
         public void UnbindFrom(IUnbindable them)
         {
             if (!(them is BindableDictionary<TKey, TValue> tThem))
-                throw new InvalidCastException($"Can't unbind a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
+                throw new InvalidCastException(
+                    $"Can't unbind a bindable of type {them.GetType()} from a bindable of type {GetType()}."
+                );
 
             removeWeakReference(tThem.weakReference);
             tThem.removeWeakReference(weakReference);
@@ -426,7 +479,9 @@ namespace osu.Framework.Bindables
         void IBindable.BindTo(IBindable them)
         {
             if (!(them is BindableDictionary<TKey, TValue> tThem))
-                throw new InvalidCastException($"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
+                throw new InvalidCastException(
+                    $"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}."
+                );
 
             BindTo(tThem);
         }
@@ -434,7 +489,9 @@ namespace osu.Framework.Bindables
         void IBindableDictionary<TKey, TValue>.BindTo(IBindableDictionary<TKey, TValue> them)
         {
             if (!(them is BindableDictionary<TKey, TValue> tThem))
-                throw new InvalidCastException($"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}.");
+                throw new InvalidCastException(
+                    $"Can't bind to a bindable of type {them.GetType()} from a bindable of type {GetType()}."
+                );
 
             BindTo(tThem);
         }
@@ -475,11 +532,20 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="onChange">The action to perform when this <see cref="BindableDictionary{TKey, TValue}"/> changes.</param>
         /// <param name="runOnceImmediately">Whether the action provided in <paramref name="onChange"/> should be run once immediately.</param>
-        public void BindCollectionChanged(NotifyDictionaryChangedEventHandler<TKey, TValue> onChange, bool runOnceImmediately = false)
+        public void BindCollectionChanged(
+            NotifyDictionaryChangedEventHandler<TKey, TValue> onChange,
+            bool runOnceImmediately = false
+        )
         {
             CollectionChanged += onChange;
             if (runOnceImmediately)
-                onChange(this, new NotifyDictionaryChangedEventArgs<TKey, TValue>(NotifyDictionaryChangedAction.Add, collection.ToArray()));
+                onChange(
+                    this,
+                    new NotifyDictionaryChangedEventArgs<TKey, TValue>(
+                        NotifyDictionaryChangedAction.Add,
+                        collection.ToArray()
+                    )
+                );
         }
 
         private void addWeakReference(WeakReference<BindableDictionary<TKey, TValue>> weakReference)
@@ -488,19 +554,24 @@ namespace osu.Framework.Bindables
             bindings.Add(weakReference);
         }
 
-        private void removeWeakReference(WeakReference<BindableDictionary<TKey, TValue>> weakReference) => bindings?.Remove(weakReference);
+        private void removeWeakReference(
+            WeakReference<BindableDictionary<TKey, TValue>> weakReference
+        ) => bindings?.Remove(weakReference);
 
         IBindable IBindable.CreateInstance() => CreateInstance();
 
         /// <inheritdoc cref="IBindable.CreateInstance"/>
-        protected virtual BindableDictionary<TKey, TValue> CreateInstance() => new BindableDictionary<TKey, TValue>();
+        protected virtual BindableDictionary<TKey, TValue> CreateInstance() =>
+            new BindableDictionary<TKey, TValue>();
 
         IBindable IBindable.GetBoundCopy() => GetBoundCopy();
 
-        IBindableDictionary<TKey, TValue> IBindableDictionary<TKey, TValue>.GetBoundCopy() => GetBoundCopy();
+        IBindableDictionary<TKey, TValue> IBindableDictionary<TKey, TValue>.GetBoundCopy() =>
+            GetBoundCopy();
 
         /// <inheritdoc cref="IBindable.GetBoundCopy"/>
-        public BindableDictionary<TKey, TValue> GetBoundCopy() => IBindable.GetBoundCopyImplementation(this);
+        public BindableDictionary<TKey, TValue> GetBoundCopy() =>
+            IBindable.GetBoundCopyImplementation(this);
 
         #endregion IBindableCollection
 
@@ -508,7 +579,9 @@ namespace osu.Framework.Bindables
 
         public Dictionary<TKey, TValue>.Enumerator GetEnumerator() => collection.GetEnumerator();
 
-        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() => GetEnumerator();
+        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<
+            KeyValuePair<TKey, TValue>
+        >.GetEnumerator() => GetEnumerator();
 
         IDictionaryEnumerator IDictionary.GetEnumerator() => GetEnumerator();
 
@@ -516,16 +589,22 @@ namespace osu.Framework.Bindables
 
         #endregion IEnumerable
 
-        private void notifyDictionaryChanged(NotifyDictionaryChangedEventArgs<TKey, TValue> args) => CollectionChanged?.Invoke(this, args);
+        private void notifyDictionaryChanged(NotifyDictionaryChangedEventArgs<TKey, TValue> args) =>
+            CollectionChanged?.Invoke(this, args);
 
         private void ensureMutationAllowed()
         {
             if (Disabled)
-                throw new InvalidOperationException($"Cannot mutate the {nameof(BindableDictionary<TKey, TValue>)} while it is disabled.");
+                throw new InvalidOperationException(
+                    $"Cannot mutate the {nameof(BindableDictionary<TKey, TValue>)} while it is disabled."
+                );
         }
 
         public bool IsDefault => Count == 0;
 
-        string IFormattable.ToString(string? format, IFormatProvider? formatProvider) => ((FormattableString)$"{GetType().ReadableName()}({nameof(Count)}={Count})").ToString(formatProvider);
+        string IFormattable.ToString(string? format, IFormatProvider? formatProvider) =>
+            ((FormattableString)$"{GetType().ReadableName()}({nameof(Count)}={Count})").ToString(
+                formatProvider
+            );
     }
 }

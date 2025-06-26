@@ -2,9 +2,9 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Numerics;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
+using osuTK.Graphics;
 using Vector2 = osuTK.Vector2;
 
 namespace osu.Framework.Graphics.UserInterface
@@ -43,16 +43,12 @@ namespace osu.Framework.Graphics.UserInterface
         {
             Children = new Drawable[]
             {
-                Box = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = FrameworkColour.Green,
-                },
+                Box = new Box { RelativeSizeAxes = Axes.Both, Colour = FrameworkColour.Green },
                 SelectionBox = new Box
                 {
                     Colour = FrameworkColour.Yellow,
                     RelativeSizeAxes = Axes.Both,
-                }
+                },
             };
 
             Masking = true;

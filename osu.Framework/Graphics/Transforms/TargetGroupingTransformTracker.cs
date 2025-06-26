@@ -27,11 +27,16 @@ namespace osu.Framework.Graphics.Transforms
         /// </summary>
         public readonly string TargetGrouping;
 
-        private readonly SortedList<Transform> transforms = new SortedList<Transform>(Transform.COMPARER);
+        private readonly SortedList<Transform> transforms = new SortedList<Transform>(
+            Transform.COMPARER
+        );
 
         private readonly Transformable transformable;
 
-        private readonly Queue<(ITransformSequence sequence, Action<ITransformSequence> action)> removalActions = new Queue<(ITransformSequence, Action<ITransformSequence>)>();
+        private readonly Queue<(
+            ITransformSequence sequence,
+            Action<ITransformSequence> action
+        )> removalActions = new Queue<(ITransformSequence, Action<ITransformSequence>)>();
 
         /// <summary>
         /// Used to assign a monotonically increasing ID to <see cref="Transform"/>s as they are added. This member is
@@ -42,7 +47,8 @@ namespace osu.Framework.Graphics.Transforms
         /// <summary>
         /// The index of the last transform in <see cref="transforms"/> to be applied to completion.
         /// </summary>
-        private readonly Dictionary<string, int> lastAppliedTransformIndices = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> lastAppliedTransformIndices =
+            new Dictionary<string, int>();
 
         /// <summary>
         /// All <see cref="Transform.TargetMember"/>s which are handled by this tracker.
@@ -128,7 +134,8 @@ namespace osu.Framework.Graphics.Transforms
                     for (int j = getLastAppliedIndex(t.TargetMember); j < i; ++j)
                     {
                         var u = transforms[j];
-                        if (u.TargetMember != t.TargetMember) continue;
+                        if (u.TargetMember != t.TargetMember)
+                            continue;
 
                         if (!u.AppliedToEnd)
                             // we may have applied the existing transforms too far into the future.
@@ -143,7 +150,9 @@ namespace osu.Framework.Graphics.Transforms
                             i--;
 
                             if (u.AbortTargetSequence != null)
-                                removalActions.Enqueue((u.AbortTargetSequence, s => s.TransformAborted()));
+                                removalActions.Enqueue(
+                                    (u.AbortTargetSequence, s => s.TransformAborted())
+                                );
                         }
                         else
                             u.AppliedToEnd = true;
@@ -199,7 +208,9 @@ namespace osu.Framework.Graphics.Transforms
                             flushAppliedCache = true;
                         }
                         else if (t.CompletionTargetSequence != null)
-                            removalActions.Enqueue((t.CompletionTargetSequence, s => s.TransformCompleted()));
+                            removalActions.Enqueue(
+                                (t.CompletionTargetSequence, s => s.TransformCompleted())
+                            );
                     }
                 }
 
@@ -224,16 +235,24 @@ namespace osu.Framework.Graphics.Transforms
         /// <param name="customTransformID">When not null, the <see cref="Transform.TransformID"/> to assign for ordering.</param>
         public void AddTransform(Transform transform, ulong? customTransformID = null)
         {
-            Debug.Assert(!(transform.TransformID == 0 && transforms.Contains(transform)), $"Zero-id {nameof(Transform)}s should never be contained already.");
+            Debug.Assert(
+                !(transform.TransformID == 0 && transforms.Contains(transform)),
+                $"Zero-id {nameof(Transform)}s should never be contained already."
+            );
 
             if (transform.TargetGrouping != TargetGrouping)
-                throw new ArgumentException($"Target grouping \"{transform.TargetGrouping}\" does not match this tracker's grouping \"{TargetGrouping}\".", nameof(transform));
+                throw new ArgumentException(
+                    $"Target grouping \"{transform.TargetGrouping}\" does not match this tracker's grouping \"{TargetGrouping}\".",
+                    nameof(transform)
+                );
 
             targetMembers.Add(transform.TargetMember);
 
             // This contains check may be optimized away in the future, should it become a bottleneck
             if (transform.TransformID != 0 && transforms.Contains(transform))
-                throw new InvalidOperationException($"{nameof(Transformable)} may not contain the same {nameof(Transform)} more than once.");
+                throw new InvalidOperationException(
+                    $"{nameof(Transformable)} may not contain the same {nameof(Transform)} more than once."
+                );
 
             transform.TransformID = customTransformID ?? ++currentTransformID;
             int insertionIndex = transforms.Add(transform);
@@ -287,7 +306,9 @@ namespace osu.Framework.Graphics.Transforms
                     {
                         transforms.RemoveAt(i--);
                         if (t.AbortTargetSequence != null)
-                            removalActions.Enqueue((t.AbortTargetSequence, s => s.TransformAborted()));
+                            removalActions.Enqueue(
+                                (t.AbortTargetSequence, s => s.TransformAborted())
+                            );
                     }
                 }
             }
@@ -301,7 +322,9 @@ namespace osu.Framework.Graphics.Transforms
                     {
                         transforms.RemoveAt(i--);
                         if (t.AbortTargetSequence != null)
-                            removalActions.Enqueue((t.AbortTargetSequence, s => s.TransformAborted()));
+                            removalActions.Enqueue(
+                                (t.AbortTargetSequence, s => s.TransformAborted())
+                            );
                     }
                 }
             }

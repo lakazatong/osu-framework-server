@@ -21,20 +21,26 @@ namespace osu.Framework.Tests.Layout
         {
             Box box = null;
 
-            AddStep("create test", () =>
-            {
-                Child = box = new Box
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100),
-                    Rotation = 30
-                };
-            });
+                    Child = box = new Box
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(100),
+                        Rotation = 30,
+                    };
+                }
+            );
 
             AddAssert("zero inflation", () => box.InflationAmount == Vector2.Zero);
             AddStep("change edge smoothness", () => box.EdgeSmoothness = new Vector2(2));
-            AddAssert("has inflation", () => box.InflationAmount.X > 0 && box.InflationAmount.Y > 0);
+            AddAssert(
+                "has inflation",
+                () => box.InflationAmount.X > 0 && box.InflationAmount.Y > 0
+            );
         }
 
         [Test]
@@ -43,21 +49,25 @@ namespace osu.Framework.Tests.Layout
             Drawable parent = null;
             Box box = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100),
-                    Rotation = 30,
-                    Child = box = new Box
+                    Child = parent = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        EdgeSmoothness = new Vector2(2)
-                    }
-                };
-            });
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(100),
+                        Rotation = 30,
+                        Child = box =
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                EdgeSmoothness = new Vector2(2),
+                            },
+                    };
+                }
+            );
 
             Vector2 capturedInflation = Vector2.Zero;
 

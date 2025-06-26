@@ -29,6 +29,11 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="wrapModeT">The texture wrap mode in vertical direction.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The texture.</returns>
-        Task<Texture?> GetAsync(string name, WrapMode wrapModeS, WrapMode wrapModeT, CancellationToken cancellationToken = default);
+        Task<Texture?> GetAsync(
+            string name,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT,
+            CancellationToken cancellationToken = default
+        );
     }
 }

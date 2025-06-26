@@ -14,7 +14,10 @@ namespace osu.Framework
 {
     public static class Host
     {
-        public static DesktopGameHost GetSuitableDesktopHost(string gameName, HostOptions hostOptions = null)
+        public static DesktopGameHost GetSuitableDesktopHost(
+            string gameName,
+            HostOptions hostOptions = null
+        )
         {
             switch (RuntimeInfo.OS)
             {
@@ -29,7 +32,9 @@ namespace osu.Framework
                     return new MacOSGameHost(gameName, hostOptions);
 
                 default:
-                    throw new InvalidOperationException($"Could not find a suitable host for the selected operating system ({RuntimeInfo.OS}).");
+                    throw new InvalidOperationException(
+                        $"Could not find a suitable host for the selected operating system ({RuntimeInfo.OS})."
+                    );
             }
         }
     }

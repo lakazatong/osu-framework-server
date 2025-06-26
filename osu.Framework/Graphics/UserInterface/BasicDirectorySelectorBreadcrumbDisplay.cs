@@ -10,52 +10,55 @@ using osuTK;
 
 namespace osu.Framework.Graphics.UserInterface
 {
-    public partial class BasicDirectorySelectorBreadcrumbDisplay : DirectorySelectorBreadcrumbDisplay
+    public partial class BasicDirectorySelectorBreadcrumbDisplay
+        : DirectorySelectorBreadcrumbDisplay
     {
-        protected override Drawable CreateCaption() => new SpriteText
-        {
-            Text = "Current Directory:",
-            Font = FrameworkFont.Condensed.With(size: 20),
-        };
+        protected override Drawable CreateCaption() =>
+            new SpriteText
+            {
+                Text = "Current Directory:",
+                Font = FrameworkFont.Condensed.With(size: 20),
+            };
 
-        protected override DirectorySelectorDirectory CreateRootDirectoryItem() => new BreadcrumbDisplayComputer();
+        protected override DirectorySelectorDirectory CreateRootDirectoryItem() =>
+            new BreadcrumbDisplayComputer();
 
-        protected override DirectorySelectorDirectory CreateDirectoryItem(DirectoryInfo directory, string displayName = null) => new BreadcrumbDisplayDirectory(directory, displayName);
+        protected override DirectorySelectorDirectory CreateDirectoryItem(
+            DirectoryInfo directory,
+            string displayName = null
+        ) => new BreadcrumbDisplayDirectory(directory, displayName);
 
         protected partial class BreadcrumbDisplayComputer : BreadcrumbDisplayDirectory
         {
             protected override IconUsage? Icon => null;
 
             public BreadcrumbDisplayComputer()
-                : base(null, "Computer")
-            {
-            }
+                : base(null, "Computer") { }
         }
 
         protected partial class BreadcrumbDisplayDirectory : BasicDirectorySelectorDirectory
         {
-            protected override IconUsage? Icon => Directory.Name.Contains(Path.DirectorySeparatorChar) ? base.Icon : null;
+            protected override IconUsage? Icon =>
+                Directory.Name.Contains(Path.DirectorySeparatorChar) ? base.Icon : null;
 
             public BreadcrumbDisplayDirectory(DirectoryInfo directory, string displayName = null)
-                : base(directory, displayName)
-            {
-            }
+                : base(directory, displayName) { }
 
             // this method is suppressed to ensure the breadcrumbs of hidden directories are presented the same way as non-hidden directories
-            protected sealed override void ApplyHiddenState()
-            {
-            }
+            protected sealed override void ApplyHiddenState() { }
 
             [BackgroundDependencyLoader]
             private void load()
             {
-                Flow.Add(new SpriteIcon
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Icon = FontAwesome.Solid.ChevronRight,
-                    Size = new Vector2(FONT_SIZE / 2)
-                });
+                Flow.Add(
+                    new SpriteIcon
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Icon = FontAwesome.Solid.ChevronRight,
+                        Size = new Vector2(FONT_SIZE / 2),
+                    }
+                );
             }
         }
     }

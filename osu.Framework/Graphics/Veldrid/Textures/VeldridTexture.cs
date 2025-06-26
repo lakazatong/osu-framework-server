@@ -43,7 +43,9 @@ namespace osu.Framework.Graphics.Veldrid.Textures
 
         public virtual int Width { get; set; }
         public virtual int Height { get; set; }
+
         public virtual int GetByteSize() => Width * Height * 4;
+
         public bool Available { get; private set; } = true;
 
         ulong INativeTexture.TotalBindCount { get; set; }
@@ -85,8 +87,14 @@ namespace osu.Framework.Graphics.Veldrid.Textures
         /// <param name="manualMipmaps">Whether manual mipmaps will be uploaded to the texture. If false, the texture will compute mipmaps automatically.</param>
         /// <param name="filteringMode">The filtering mode.</param>
         /// <param name="initialisationColour">The colour to initialise texture levels with (in the case of sub region initial uploads). If null, no initialisation is provided out-of-the-box.</param>
-        public VeldridTexture(IVeldridRenderer renderer, int width, int height, bool manualMipmaps = false, SamplerFilter filteringMode = SamplerFilter.MinLinearMagLinearMipLinear,
-                              Color4? initialisationColour = null)
+        public VeldridTexture(
+            IVeldridRenderer renderer,
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            SamplerFilter filteringMode = SamplerFilter.MinLinearMagLinearMipLinear,
+            Color4? initialisationColour = null
+        )
         {
             this.manualMipmaps = manualMipmaps;
             this.filteringMode = filteringMode;
@@ -119,18 +127,21 @@ namespace osu.Framework.Graphics.Veldrid.Textures
 
             isDisposed = true;
 
-            Renderer.ScheduleDisposal(texture =>
-            {
-                while (texture.tryGetNextUpload(out var upload))
-                    upload.Dispose();
+            Renderer.ScheduleDisposal(
+                texture =>
+                {
+                    while (texture.tryGetNextUpload(out var upload))
+                        upload.Dispose();
 
-                texture.memoryLease?.Dispose();
+                    texture.memoryLease?.Dispose();
 
-                texture.resources?.Dispose();
-                texture.resources = null;
+                    texture.resources?.Dispose();
+                    texture.resources = null;
 
-                texture.Available = false;
-            }, this);
+                    texture.Available = false;
+                },
+                this
+            );
         }
 
         #endregion
@@ -163,7 +174,9 @@ namespace osu.Framework.Graphics.Veldrid.Textures
 
         #endregion
 
-        private readonly VeldridTextureResources?[] resourcesArray = new VeldridTextureResources?[1];
+        private readonly VeldridTextureResources?[] resourcesArray = new VeldridTextureResources?[
+            1
+        ];
 
         private VeldridTextureResources? resources
         {
@@ -190,7 +203,9 @@ namespace osu.Framework.Graphics.Veldrid.Textures
             lock (uploadQueue)
             {
                 if (uploadQueue.Count >= 100 && uploadQueue.Count % 100 == 0)
-                    Logger.Log($"Texture {Identifier}'s upload queue is large ({uploadQueue.Count})");
+                    Logger.Log(
+                        $"Texture {Identifier}'s upload queue is large ({uploadQueue.Count})"
+                    );
 
                 bool requireUpload = uploadQueue.Count == 0;
                 uploadQueue.Enqueue(upload);
@@ -458,7 +473,14 @@ namespace osu.Framework.Graphics.Veldrid.Textures
             {
                 texture?.Dispose();
 
-                var textureDescription = TextureDescription.Texture2D((uint)Width, (uint)Height, (uint)CalculateMipmapLevels(Width, Height), 1, PixelFormat.R8G8B8A8UNorm, Usages);
+                var textureDescription = TextureDescription.Texture2D(
+                    (uint)Width,
+                    (uint)Height,
+                    (uint)CalculateMipmapLevels(Width, Height),
+                    1,
+                    PixelFormat.R8G8B8A8UNorm,
+                    Usages
+                );
                 texture = Renderer.Factory.CreateTexture(ref textureDescription);
 
                 // todo: we may want to look into not having to allocate chunks of zero byte region for initialising textures
@@ -482,8 +504,15 @@ namespace osu.Framework.Graphics.Veldrid.Textures
                     maximumUploadedLod = upload.Level;
                 }
 
-                Renderer.UpdateTexture(texture, upload.Bounds.X >> upload.Level, upload.Bounds.Y >> upload.Level, upload.Bounds.Width >> upload.Level, upload.Bounds.Height >> upload.Level,
-                    upload.Level, upload.Data);
+                Renderer.UpdateTexture(
+                    texture,
+                    upload.Bounds.X >> upload.Level,
+                    upload.Bounds.Y >> upload.Level,
+                    upload.Bounds.Width >> upload.Level,
+                    upload.Bounds.Height >> upload.Level,
+                    upload.Level,
+                    upload.Data
+                );
             }
 
             if (sampler == null || maximumUploadedLod > lastMaximumUploadedLod)
@@ -500,12 +529,20 @@ namespace osu.Framework.Graphics.Veldrid.Textures
             if (initialisationColour == null)
                 return;
 
-            var rgbaColour = new Rgba32(new Vector4(initialisationColour.Value.R, initialisationColour.Value.G, initialisationColour.Value.B, initialisationColour.Value.A));
+            var rgbaColour = new Rgba32(
+                new Vector4(
+                    initialisationColour.Value.R,
+                    initialisationColour.Value.G,
+                    initialisationColour.Value.B,
+                    initialisationColour.Value.A
+                )
+            );
 
             // it is faster to initialise without a background specification if transparent black is all that's required.
-            using var image = initialisationColour == default
-                ? new Image<Rgba32>(width, height)
-                : new Image<Rgba32>(width, height, rgbaColour);
+            using var image =
+                initialisationColour == default
+                    ? new Image<Rgba32>(width, height)
+                    : new Image<Rgba32>(width, height, rgbaColour);
 
             using (var pixels = image.CreateReadOnlyPixelSpan())
             {
@@ -516,6 +553,7 @@ namespace osu.Framework.Graphics.Veldrid.Textures
 
         // todo: should this be limited to MAX_MIPMAP_LEVELS or was that constant supposed to be for automatic mipmap generation only?
         // previous implementation was allocating mip levels all the way to 1x1 size when an ITextureUpload.Level > 0, therefore it's not limited there.
-        protected static int CalculateMipmapLevels(int width, int height) => 1 + (int)Math.Floor(Math.Log(Math.Max(width, height), 2));
+        protected static int CalculateMipmapLevels(int width, int height) =>
+            1 + (int)Math.Floor(Math.Log(Math.Max(width, height), 2));
     }
 }

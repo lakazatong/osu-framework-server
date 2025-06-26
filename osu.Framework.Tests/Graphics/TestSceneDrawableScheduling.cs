@@ -27,19 +27,24 @@ namespace osu.Framework.Tests.Graphics
             bool secondExecutedInOrder = false;
 
             AddStep("load container", () => Child = container = new Container());
-            AddStep("schedule delegates", () =>
-            {
-                if (!afterChildren)
+            AddStep(
+                "schedule delegates",
+                () =>
                 {
-                    container.Schedule(() => firstExecutedInOrder = true);
-                    container.Scheduler.Add(() => secondExecutedInOrder = firstExecutedInOrder);
+                    if (!afterChildren)
+                    {
+                        container.Schedule(() => firstExecutedInOrder = true);
+                        container.Scheduler.Add(() => secondExecutedInOrder = firstExecutedInOrder);
+                    }
+                    else
+                    {
+                        container.ScheduleAfterChildren(() => firstExecutedInOrder = true);
+                        container.SchedulerAfterChildren.Add(() =>
+                            secondExecutedInOrder = firstExecutedInOrder
+                        );
+                    }
                 }
-                else
-                {
-                    container.ScheduleAfterChildren(() => firstExecutedInOrder = true);
-                    container.SchedulerAfterChildren.Add(() => secondExecutedInOrder = firstExecutedInOrder);
-                }
-            });
+            );
 
             AddAssert("second executed after first", () => secondExecutedInOrder);
         }

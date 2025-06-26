@@ -24,7 +24,9 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private readonly BindableList<Vector2> controlPoints = new BindableList<Vector2>();
 
-        private float startAngle, endAngle, radius;
+        private float startAngle,
+            endAngle,
+            radius;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -34,72 +36,84 @@ namespace osu.Framework.Tests.Visual.Drawables
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    boundingBox = new Box
-                    {
-                        RelativeSizeAxes = Axes.None,
-                        Colour = Color4.Red
-                    },
-                    path = new SmoothPath
-                    {
-                        Colour = Color4.White,
-                        PathRadius = 2
-                    }
-                }
+                    boundingBox = new Box { RelativeSizeAxes = Axes.None, Colour = Color4.Red },
+                    path = new SmoothPath { Colour = Color4.White, PathRadius = 2 },
+                },
             };
 
-            AddSliderStep("starting angle", 0, 360, 90, angle =>
-            {
-                startAngle = angle;
-                generateControlPoints();
-            });
+            AddSliderStep(
+                "starting angle",
+                0,
+                360,
+                90,
+                angle =>
+                {
+                    startAngle = angle;
+                    generateControlPoints();
+                }
+            );
 
-            AddSliderStep("end angle", 0, 360, 270, angle =>
-            {
-                endAngle = angle;
-                generateControlPoints();
-            });
+            AddSliderStep(
+                "end angle",
+                0,
+                360,
+                270,
+                angle =>
+                {
+                    endAngle = angle;
+                    generateControlPoints();
+                }
+            );
 
-            AddSliderStep("radius", 1, 300, 150, radius =>
-            {
-                this.radius = radius;
-                generateControlPoints();
-            });
+            AddSliderStep(
+                "radius",
+                1,
+                300,
+                150,
+                radius =>
+                {
+                    this.radius = radius;
+                    generateControlPoints();
+                }
+            );
         }
 
         protected override void LoadComplete()
         {
-            controlPoints.BindCollectionChanged((_, _) =>
-            {
-                var copy = controlPoints.ToArray();
-                if (copy.Length != 3)
-                    return;
+            controlPoints.BindCollectionChanged(
+                (_, _) =>
+                {
+                    var copy = controlPoints.ToArray();
+                    if (copy.Length != 3)
+                        return;
 
-                path.Vertices = PathApproximator.CircularArcToPiecewiseLinear(copy);
+                    path.Vertices = PathApproximator.CircularArcToPiecewiseLinear(copy);
 
-                var bounds = PathApproximator.CircularArcBoundingBox(copy);
-                boundingBox.Size = bounds.Size;
+                    var bounds = PathApproximator.CircularArcBoundingBox(copy);
+                    boundingBox.Size = bounds.Size;
 
-                // because SmoothPath's bounding box is not exact,
-                // adjust our box's anchoring so that it's always aligned correctly to encapsulate the arc.
+                    // because SmoothPath's bounding box is not exact,
+                    // adjust our box's anchoring so that it's always aligned correctly to encapsulate the arc.
 
-                Anchor anchor = 0;
+                    Anchor anchor = 0;
 
-                if (path.Vertices.All(v => v.X < 0))
-                    anchor |= Anchor.x0;
-                else if (path.Vertices.All(v => v.X > 0))
-                    anchor |= Anchor.x2;
-                else
-                    anchor |= Anchor.x1;
+                    if (path.Vertices.All(v => v.X < 0))
+                        anchor |= Anchor.x0;
+                    else if (path.Vertices.All(v => v.X > 0))
+                        anchor |= Anchor.x2;
+                    else
+                        anchor |= Anchor.x1;
 
-                if (path.Vertices.All(v => v.Y < 0))
-                    anchor |= Anchor.y0;
-                else if (path.Vertices.All(v => v.Y > 0))
-                    anchor |= Anchor.y2;
-                else
-                    anchor |= Anchor.y1;
+                    if (path.Vertices.All(v => v.Y < 0))
+                        anchor |= Anchor.y0;
+                    else if (path.Vertices.All(v => v.Y > 0))
+                        anchor |= Anchor.y2;
+                    else
+                        anchor |= Anchor.y1;
 
-                boundingBox.Anchor = boundingBox.Origin = anchor;
-            });
+                    boundingBox.Anchor = boundingBox.Origin = anchor;
+                }
+            );
         }
 
         private void generateControlPoints()
@@ -109,15 +123,18 @@ namespace osu.Framework.Tests.Visual.Drawables
             Vector2 polarToCartesian(float r, float theta) =>
                 new Vector2(
                     r * MathF.Cos(MathHelper.DegreesToRadians(theta)),
-                    r * MathF.Sin(MathHelper.DegreesToRadians(theta)));
+                    r * MathF.Sin(MathHelper.DegreesToRadians(theta))
+                );
 
             controlPoints.Clear();
-            controlPoints.AddRange(new[]
-            {
-                polarToCartesian(radius, startAngle),
-                polarToCartesian(radius, midpoint),
-                polarToCartesian(radius, endAngle)
-            });
+            controlPoints.AddRange(
+                new[]
+                {
+                    polarToCartesian(radius, startAngle),
+                    polarToCartesian(radius, midpoint),
+                    polarToCartesian(radius, endAngle),
+                }
+            );
         }
     }
 }

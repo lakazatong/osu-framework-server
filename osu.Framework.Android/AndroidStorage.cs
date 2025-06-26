@@ -8,8 +8,6 @@ namespace osu.Framework.Android
     public class AndroidStorage : NativeStorage
     {
         public AndroidStorage(string path, GameHost host)
-            : base(path, host)
-        {
-        }
+            : base(path, host) { }
     }
 }

@@ -18,7 +18,8 @@ namespace osu.Framework.SourceGeneration.Tests.Dependencies
         [InlineData("MultiPartialResolvedMember")]
         public void Check(string name)
         {
-            GetTestSources(name,
+            GetTestSources(
+                name,
                 out (string filename, string content)[] commonSources,
                 out (string filename, string content)[] sources,
                 out (string filename, string content)[] commonGenerated,
@@ -28,16 +29,16 @@ namespace osu.Framework.SourceGeneration.Tests.Dependencies
             VerifyIncremental.Verify(commonSources, sources, commonGenerated, generated);
         }
 
-        public static TheoryData<string, (int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[]> CheckWithStatisticsData =>
-            new TheoryData<string, (int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[]>
+        public static TheoryData<
+            string,
+            (int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[]
+        > CheckWithStatisticsData =>
+            new TheoryData<
+                string,
+                (int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[]
+            >
             {
-                {
-                    "GeneratorCached", new[]
-                    {
-                        (2, 2, 2),
-                        (0, 0, 0),
-                    }
-                },
+                { "GeneratorCached", new[] { (2, 2, 2), (0, 0, 0) } },
                 // TODO: fix this failing case
                 // { "MultiPhasePartialCachedInterface", new[] {
                 //     (3, 3, 3),
@@ -47,17 +48,26 @@ namespace osu.Framework.SourceGeneration.Tests.Dependencies
 
         [Theory]
         [MemberData(nameof(CheckWithStatisticsData))]
-        public void CheckWithStatistics(string name, (int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[] expectedStatistics)
+        public void CheckWithStatistics(
+            string name,
+            (int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[] expectedStatistics
+        )
         {
-            GetTestSources(name,
+            GetTestSources(
+                name,
                 out (string filename, string content)[] commonSources,
                 out (string filename, string content)[] sources,
                 out (string filename, string content)[] commonGenerated,
                 out (string filename, string content)[] generated
             );
 
-            VerifyIncremental.Verify(commonSources, sources, commonGenerated, generated,
-                test => test.AddStatisticsVerification(expectedStatistics));
+            VerifyIncremental.Verify(
+                commonSources,
+                sources,
+                commonGenerated,
+                generated,
+                test => test.AddStatisticsVerification(expectedStatistics)
+            );
         }
     }
 }

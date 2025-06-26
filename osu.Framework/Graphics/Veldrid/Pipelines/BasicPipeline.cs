@@ -27,14 +27,12 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// <summary>
         /// The platform graphics device.
         /// </summary>
-        public GraphicsDevice Device
-            => device.Device;
+        public GraphicsDevice Device => device.Device;
 
         /// <summary>
         /// The platform graphics resource factory.
         /// </summary>
-        public ResourceFactory Factory
-            => device.Factory;
+        public ResourceFactory Factory => device.Factory;
 
         /// <summary>
         /// The command list.
@@ -49,7 +47,8 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// <summary>
         /// A list of fences which tracks in-flight executions for the purpose of knowing the last completed execution.
         /// </summary>
-        private readonly List<ExecutionCompletionFence> pendingExecutions = new List<ExecutionCompletionFence>();
+        private readonly List<ExecutionCompletionFence> pendingExecutions =
+            new List<ExecutionCompletionFence>();
 
         /// <summary>
         /// We are using fences every execution. Construction can be expensive, so let's pool some.
@@ -118,7 +117,16 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// <param name="level">The texture level.</param>
         /// <param name="data">The texture data.</param>
         /// <typeparam name="T">The pixel type.</typeparam>
-        public void UpdateTexture<T>(VeldridStagingTexturePool stagingPool, Texture texture, int x, int y, int width, int height, int level, ReadOnlySpan<T> data)
+        public void UpdateTexture<T>(
+            VeldridStagingTexturePool stagingPool,
+            Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int level,
+            ReadOnlySpan<T> data
+        )
             where T : unmanaged
         {
             // This code is doing the same as the simpler approach of:
@@ -127,8 +135,36 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
             //
             // Except we are using a staging texture pool to avoid the alloc overhead of each staging texture.
             var staging = stagingPool.Get(width, height, texture.Format);
-            device.Device.UpdateTexture(staging, data, 0, 0, 0, (uint)width, (uint)height, 1, (uint)level, 0);
-            Commands.CopyTexture(staging, 0, 0, 0, 0, 0, texture, (uint)x, (uint)y, 0, (uint)level, 0, (uint)width, (uint)height, 1, 1);
+            device.Device.UpdateTexture(
+                staging,
+                data,
+                0,
+                0,
+                0,
+                (uint)width,
+                (uint)height,
+                1,
+                (uint)level,
+                0
+            );
+            Commands.CopyTexture(
+                staging,
+                0,
+                0,
+                0,
+                0,
+                0,
+                texture,
+                (uint)x,
+                (uint)y,
+                0,
+                (uint)level,
+                0,
+                (uint)width,
+                (uint)height,
+                1,
+                1
+            );
         }
 
         /// <summary>
@@ -143,7 +179,17 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// <param name="level">The texture level.</param>
         /// <param name="data">The texture data.</param>
         /// <param name="rowLengthInBytes">The number of bytes per row of the image to read from <paramref name="data"/>.</param>
-        public void UpdateTexture(VeldridStagingTexturePool stagingPool, Texture texture, int x, int y, int width, int height, int level, IntPtr data, int rowLengthInBytes)
+        public void UpdateTexture(
+            VeldridStagingTexturePool stagingPool,
+            Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int level,
+            IntPtr data,
+            int rowLengthInBytes
+        )
         {
             var staging = stagingPool.Get(width, height, texture.Format);
 
@@ -171,8 +217,23 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
             }
 
             Commands.CopyTexture(
-                staging, 0, 0, 0, 0, 0,
-                texture, (uint)x, (uint)y, 0, (uint)level, 0, (uint)width, (uint)height, 1, 1);
+                staging,
+                0,
+                0,
+                0,
+                0,
+                0,
+                texture,
+                (uint)x,
+                (uint)y,
+                0,
+                (uint)level,
+                0,
+                (uint)width,
+                (uint)height,
+                1,
+                1
+            );
         }
 
         /// <summary>

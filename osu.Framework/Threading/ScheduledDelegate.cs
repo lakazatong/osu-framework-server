@@ -68,10 +68,14 @@ namespace osu.Framework.Threading
             lock (runLock)
             {
                 if (Cancelled)
-                    throw new InvalidOperationException($"Can not run a {nameof(ScheduledDelegate)} that has been {nameof(Cancelled)}.");
+                    throw new InvalidOperationException(
+                        $"Can not run a {nameof(ScheduledDelegate)} that has been {nameof(Cancelled)}."
+                    );
 
                 if (Completed)
-                    throw new InvalidOperationException($"Can not run a {nameof(ScheduledDelegate)} that has been already {nameof(Completed)}.");
+                    throw new InvalidOperationException(
+                        $"Can not run a {nameof(ScheduledDelegate)} that has been already {nameof(Completed)}."
+                    );
 
                 RunTaskInternal();
             }
@@ -120,7 +124,10 @@ namespace osu.Framework.Threading
             }
         }
 
-        public int CompareTo(ScheduledDelegate? other) => ExecutionTime == other?.ExecutionTime ? -1 : ExecutionTime.CompareTo(other?.ExecutionTime);
+        public int CompareTo(ScheduledDelegate? other) =>
+            ExecutionTime == other?.ExecutionTime
+                ? -1
+                : ExecutionTime.CompareTo(other?.ExecutionTime);
 
         internal void SetNextExecution(double? currentTime)
         {
@@ -141,7 +148,8 @@ namespace osu.Framework.Threading
             }
         }
 
-        public override string ToString() => $"method \"{Task?.Method}\" targeting \"{Task?.Target}\" executing at {ExecutionTime:N0} with repeat {RepeatInterval}";
+        public override string ToString() =>
+            $"method \"{Task?.Method}\" targeting \"{Task?.Target}\" executing at {ExecutionTime:N0} with repeat {RepeatInterval}";
 
         /// <summary>
         /// The current state of a scheduled delegate.
@@ -166,7 +174,7 @@ namespace osu.Framework.Threading
             /// <summary>
             /// Task manually cancelled.
             /// </summary>
-            Cancelled
+            Cancelled,
         }
     }
 }

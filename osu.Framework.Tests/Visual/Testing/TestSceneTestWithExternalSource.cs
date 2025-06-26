@@ -7,19 +7,22 @@ namespace osu.Framework.Tests.Visual.Testing
 {
     public partial class TestSceneTestWithExternalSource : FrameworkTestScene
     {
-        [TestCaseSource(typeof(TestSceneTestWithSource), nameof(TestSceneTestWithSource.ExposedSourceField))]
-        public void TestExposedSourceField(int a, int b)
-        {
-        }
+        [TestCaseSource(
+            typeof(TestSceneTestWithSource),
+            nameof(TestSceneTestWithSource.ExposedSourceField)
+        )]
+        public void TestExposedSourceField(int a, int b) { }
 
-        [TestCaseSource(typeof(TestSceneTestWithSource), nameof(TestSceneTestWithSource.ExposedSourceProperty))]
-        public void TestExposedSourceProperty(int a, int b)
-        {
-        }
+        [TestCaseSource(
+            typeof(TestSceneTestWithSource),
+            nameof(TestSceneTestWithSource.ExposedSourceProperty)
+        )]
+        public void TestExposedSourceProperty(int a, int b) { }
 
-        [TestCaseSource(typeof(TestSceneTestWithSource), nameof(TestSceneTestWithSource.ExposedSourceMethod))]
-        public void TestExposedSourceMethod(int a, int b)
-        {
-        }
+        [TestCaseSource(
+            typeof(TestSceneTestWithSource),
+            nameof(TestSceneTestWithSource.ExposedSourceMethod)
+        )]
+        public void TestExposedSourceMethod(int a, int b) { }
     }
 }

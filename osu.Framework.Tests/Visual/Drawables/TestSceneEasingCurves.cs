@@ -24,31 +24,39 @@ namespace osu.Framework.Tests.Visual.Drawables
         private FillFlowContainer easingsContainer;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            var easingTypes = Enum.GetValues(typeof(Easing))
-                                  .OfType<Easing>()
-                                  .ToList();
-
-            Child = new BasicScrollContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Child = easingsContainer = new FillFlowContainer
+                var easingTypes = Enum.GetValues(typeof(Easing)).OfType<Easing>().ToList();
+
+                Child = new BasicScrollContainer
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Children = easingTypes.Select(type => new Visualiser(type)).ToArray()
-                }
-            };
-        });
+                    RelativeSizeAxes = Axes.Both,
+                    Child = easingsContainer =
+                        new FillFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Children = easingTypes.Select(type => new Visualiser(type)).ToArray(),
+                        },
+                };
+            });
 
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddSliderStep("resize easings", default_size / 2, default_size * 2, default_size, size =>
-            {
-                easingsContainer?.Children.OfType<Visualiser>().ForEach(easing => easing.ResizeTo(new Vector2(size)));
-            });
+            AddSliderStep(
+                "resize easings",
+                default_size / 2,
+                default_size * 2,
+                default_size,
+                size =>
+                {
+                    easingsContainer
+                        ?.Children.OfType<Visualiser>()
+                        .ForEach(easing => easing.ResizeTo(new Vector2(size)));
+                }
+            );
         }
 
         private partial class Visualiser : Container
@@ -76,11 +84,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                         Origin = Anchor.BottomCentre,
                         Children = new Drawable[]
                         {
-                            new Box
-                            {
-                                Colour = Color4.DimGray,
-                                RelativeSizeAxes = Axes.Both
-                            },
+                            new Box { Colour = Color4.DimGray, RelativeSizeAxes = Axes.Both },
                             dot = new CircularContainer
                             {
                                 Origin = Anchor.Centre,
@@ -90,17 +94,17 @@ namespace osu.Framework.Tests.Visual.Drawables
                                 Child = new Box
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4.White
-                                }
-                            }
-                        }
+                                    Colour = Color4.White,
+                                },
+                            },
+                        },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
                         Y = 10,
-                        Text = easing.ToString()
+                        Text = easing.ToString(),
                     },
                 };
             }
@@ -110,13 +114,13 @@ namespace osu.Framework.Tests.Visual.Drawables
                 base.LoadComplete();
 
                 dot.MoveToX(1.0f, movement_duration, Easing)
-                   .Then(pause_duration)
-                   .MoveToX(0.0f, movement_duration, Easing)
-                   .Loop(pause_duration);
+                    .Then(pause_duration)
+                    .MoveToX(0.0f, movement_duration, Easing)
+                    .Loop(pause_duration);
                 dot.MoveToY(1.0f, movement_duration)
-                   .Then(pause_duration)
-                   .MoveToY(0.0f, movement_duration)
-                   .Loop(pause_duration);
+                    .Then(pause_duration)
+                    .MoveToY(0.0f, movement_duration)
+                    .Loop(pause_duration);
             }
         }
     }

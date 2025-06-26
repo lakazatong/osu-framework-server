@@ -17,7 +17,12 @@ namespace osu.Framework.Input.StateChanges.Events
         /// </summary>
         public readonly float LastValue;
 
-        public JoystickAxisChangeEvent(InputState state, IInput input, JoystickAxis axis, float lastValue)
+        public JoystickAxisChangeEvent(
+            InputState state,
+            IInput input,
+            JoystickAxis axis,
+            float lastValue
+        )
             : base(state, input)
         {
             Axis = axis;

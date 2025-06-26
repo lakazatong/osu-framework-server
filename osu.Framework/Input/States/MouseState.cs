@@ -26,7 +26,9 @@ namespace osu.Framework.Input.States
         public IInput LastSource { get; set; }
 
         public bool IsPressed(MouseButton button) => Buttons.IsPressed(button);
-        public void SetPressed(MouseButton button, bool pressed) => Buttons.SetPressed(button, pressed);
+
+        public void SetPressed(MouseButton button, bool pressed) =>
+            Buttons.SetPressed(button, pressed);
 
         public override string ToString()
         {

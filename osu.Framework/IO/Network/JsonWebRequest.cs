@@ -16,9 +16,7 @@ namespace osu.Framework.IO.Network
         protected override string Accept => "application/json";
 
         public JsonWebRequest(string url = null, params object[] args)
-            : base(url, args)
-        {
-        }
+            : base(url, args) { }
 
         protected override void ProcessResponse()
         {

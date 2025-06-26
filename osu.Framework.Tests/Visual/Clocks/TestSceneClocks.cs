@@ -21,20 +21,32 @@ namespace osu.Framework.Tests.Visual.Clocks
         [Test]
         public void TestDecouplingWithRangeLimited()
         {
-            AddStep("add non-negative stopwatch", () => AddClock(new TestStopwatchClockWithRangeLimit()));
-            AddStep("add decoupling", () => AddClock(new DecouplingFramedClock { AllowDecoupling = true }));
+            AddStep(
+                "add non-negative stopwatch",
+                () => AddClock(new TestStopwatchClockWithRangeLimit())
+            );
+            AddStep(
+                "add decoupling",
+                () => AddClock(new DecouplingFramedClock { AllowDecoupling = true })
+            );
 
-            AddStep("seek decoupling to -10000", () =>
-            {
-                foreach (var c in this.ChildrenOfType<VisualClock>())
-                    (c.TrackingClock as DecouplingFramedClock)?.Seek(-10000);
-            });
+            AddStep(
+                "seek decoupling to -10000",
+                () =>
+                {
+                    foreach (var c in this.ChildrenOfType<VisualClock>())
+                        (c.TrackingClock as DecouplingFramedClock)?.Seek(-10000);
+                }
+            );
 
-            AddStep("seek decoupling to 10000", () =>
-            {
-                foreach (var c in this.ChildrenOfType<VisualClock>())
-                    (c.TrackingClock as DecouplingFramedClock)?.Seek(10000);
-            });
+            AddStep(
+                "seek decoupling to 10000",
+                () =>
+                {
+                    foreach (var c in this.ChildrenOfType<VisualClock>())
+                        (c.TrackingClock as DecouplingFramedClock)?.Seek(10000);
+                }
+            );
         }
     }
 }

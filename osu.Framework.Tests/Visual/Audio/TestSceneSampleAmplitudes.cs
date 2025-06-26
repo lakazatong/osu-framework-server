@@ -53,8 +53,8 @@ namespace osu.Framework.Tests.Visual.Audio
                                         RelativeSizeAxes = Axes.Both,
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.CentreLeft,
-                                    }
-                                }
+                                    },
+                                },
                             },
                         },
                         new Drawable[]
@@ -62,20 +62,20 @@ namespace osu.Framework.Tests.Visual.Audio
                             amplitudeBoxes = new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                ChildrenEnumerable =
-                                    Enumerable.Range(0, ChannelAmplitudes.AMPLITUDES_SIZE)
-                                              .Select(i => new Box
-                                              {
-                                                  RelativeSizeAxes = Axes.Both,
-                                                  RelativePositionAxes = Axes.X,
-                                                  Anchor = Anchor.BottomLeft,
-                                                  Origin = Anchor.BottomLeft,
-                                                  Width = 1f / ChannelAmplitudes.AMPLITUDES_SIZE,
-                                                  X = (float)i / ChannelAmplitudes.AMPLITUDES_SIZE
-                                              })
+                                ChildrenEnumerable = Enumerable
+                                    .Range(0, ChannelAmplitudes.AMPLITUDES_SIZE)
+                                    .Select(i => new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        RelativePositionAxes = Axes.X,
+                                        Anchor = Anchor.BottomLeft,
+                                        Origin = Anchor.BottomLeft,
+                                        Width = 1f / ChannelAmplitudes.AMPLITUDES_SIZE,
+                                        X = (float)i / ChannelAmplitudes.AMPLITUDES_SIZE,
+                                    }),
                             },
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }
@@ -84,11 +84,14 @@ namespace osu.Framework.Tests.Visual.Audio
         {
             base.LoadComplete();
 
-            AddStep("start sample", () =>
-            {
-                channel = sample.Play();
-                channel.Looping = true;
-            });
+            AddStep(
+                "start sample",
+                () =>
+                {
+                    channel = sample.Play();
+                    channel.Looping = true;
+                }
+            );
 
             AddStep("stop sample", () => channel.Stop());
         }

@@ -18,7 +18,11 @@ namespace osu.Framework.Utils
         /// <param name="throwOnFailure">Whether to throw an exception on failure. If <c>false</c>, will silently fail.</param>
         /// <typeparam name="TException">The type of exception which should trigger retries.</typeparam>
         /// <returns>Whether the operation succeeded.</returns>
-        public static bool AttemptWithRetryOnException<TException>(this Action action, int attempts = 10, bool throwOnFailure = true)
+        public static bool AttemptWithRetryOnException<TException>(
+            this Action action,
+            int attempts = 10,
+            bool throwOnFailure = true
+        )
             where TException : Exception
         {
             while (true)
@@ -41,7 +45,9 @@ namespace osu.Framework.Utils
                         return false;
                     }
 
-                    Logger.Log($"Operation failed ({e.Message}). Retrying {attempts} more times...");
+                    Logger.Log(
+                        $"Operation failed ({e.Message}). Retrying {attempts} more times..."
+                    );
                 }
 
                 Thread.Sleep(250);

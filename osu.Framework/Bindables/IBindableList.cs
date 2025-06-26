@@ -10,7 +10,13 @@ namespace osu.Framework.Bindables
     /// A readonly interface which can be bound to other <see cref="IBindableList{T}"/>s in order to watch for state and content changes.
     /// </summary>
     /// <typeparam name="T">The type of value encapsulated by this <see cref="IBindableList{T}"/>.</typeparam>
-    public interface IBindableList<T> : IReadOnlyList<T>, ICanBeDisabled, IHasDefaultValue, IUnbindable, IHasDescription, INotifyCollectionChanged
+    public interface IBindableList<T>
+        : IReadOnlyList<T>,
+            ICanBeDisabled,
+            IHasDefaultValue,
+            IUnbindable,
+            IHasDescription,
+            INotifyCollectionChanged
     {
         /// <summary>
         /// Binds self to another bindable such that we receive any values and value limitations of the bindable we bind width.
@@ -24,7 +30,10 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="onChange">The action to perform when this <see cref="BindableList{T}"/> changes.</param>
         /// <param name="runOnceImmediately">Whether the action provided in <paramref name="onChange"/> should be run once immediately.</param>
-        void BindCollectionChanged(NotifyCollectionChangedEventHandler onChange, bool runOnceImmediately = false);
+        void BindCollectionChanged(
+            NotifyCollectionChangedEventHandler onChange,
+            bool runOnceImmediately = false
+        );
 
         /// <summary>
         /// An alias of <see cref="BindTo"/> provided for use in object initializer scenarios.

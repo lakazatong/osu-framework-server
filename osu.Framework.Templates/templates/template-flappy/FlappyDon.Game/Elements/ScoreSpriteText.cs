@@ -34,7 +34,8 @@ namespace FlappyDon.Game.Elements
             glyphStore = new ScoreGlyphStore(textures);
         }
 
-        protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) => base.CreateTextBuilder(glyphStore);
+        protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) =>
+            base.CreateTextBuilder(glyphStore);
 
         private class ScoreGlyphStore : ITexturedGlyphLookupStore
         {
@@ -52,11 +53,15 @@ namespace FlappyDon.Game.Elements
                 if (texture == null)
                     return null;
 
-                return new TexturedCharacterGlyph(new CharacterGlyph(character, 0, 0,
-                    texture.Width, 0, null), texture, 0.09f);
+                return new TexturedCharacterGlyph(
+                    new CharacterGlyph(character, 0, 0, texture.Width, 0, null),
+                    texture,
+                    0.09f
+                );
             }
 
-            public Task<ITexturedCharacterGlyph> GetAsync(string fontName, char character) => Task.Run(() => Get(fontName, character));
+            public Task<ITexturedCharacterGlyph> GetAsync(string fontName, char character) =>
+                Task.Run(() => Get(fontName, character));
         }
     }
 }

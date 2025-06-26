@@ -47,10 +47,10 @@ namespace osu.Framework.Tests.Visual.Platform
                             currentActualSize,
                             currentClientSize,
                             currentWindowMode,
-                            currentDisplay
+                            currentDisplay,
                         },
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -60,14 +60,18 @@ namespace osu.Framework.Tests.Visual.Platform
             window = host.Window;
             config.BindWith(FrameworkSetting.WindowMode, windowMode);
 
-            windowMode.BindValueChanged(mode => currentWindowMode.Text = $"Window Mode: {mode.NewValue}", true);
+            windowMode.BindValueChanged(
+                mode => currentWindowMode.Text = $"Window Mode: {mode.NewValue}",
+                true
+            );
 
             if (window == null)
             {
                 return;
             }
 
-            const string desc2 = "Check whether the window size is one pixel wider than the screen in each direction";
+            const string desc2 =
+                "Check whether the window size is one pixel wider than the screen in each direction";
 
             Point originalWindowPosition = Point.Empty;
 
@@ -77,21 +81,43 @@ namespace osu.Framework.Tests.Visual.Platform
 
                 // set up window
                 AddStep("switch to windowed", () => windowMode.Value = WindowMode.Windowed);
-                AddStep($"move window to display {display.Index}", () => window.CurrentDisplayBindable.Value = window.Displays.ElementAt(display.Index));
-                AddStep("set window size to 1280x720", () => config.SetValue(FrameworkSetting.WindowedSize, new Size(1280, 720)));
+                AddStep(
+                    $"move window to display {display.Index}",
+                    () =>
+                        window.CurrentDisplayBindable.Value = window.Displays.ElementAt(
+                            display.Index
+                        )
+                );
+                AddStep(
+                    "set window size to 1280x720",
+                    () => config.SetValue(FrameworkSetting.WindowedSize, new Size(1280, 720))
+                );
                 AddStep("store window position", () => originalWindowPosition = window.Position);
 
                 // borderless alignment tests
                 AddStep("switch to borderless", () => windowMode.Value = WindowMode.Borderless);
-                AddAssert("check window position", () => new Point(window.Position.X, window.Position.Y) == display.Bounds.Location);
-                AddAssert("check window size", () => new Size(window.Size.Width, window.Size.Height) == display.Bounds.Size, desc2);
-                AddAssert("check current screen", () => window.CurrentDisplayBindable.Value.Index == display.Index);
+                AddAssert(
+                    "check window position",
+                    () => new Point(window.Position.X, window.Position.Y) == display.Bounds.Location
+                );
+                AddAssert(
+                    "check window size",
+                    () => new Size(window.Size.Width, window.Size.Height) == display.Bounds.Size,
+                    desc2
+                );
+                AddAssert(
+                    "check current screen",
+                    () => window.CurrentDisplayBindable.Value.Index == display.Index
+                );
 
                 // verify the window size is restored correctly
                 AddStep("switch to windowed", () => windowMode.Value = WindowMode.Windowed);
                 AddAssert("check client size", () => window.ClientSize == new Size(1280, 720));
                 AddAssert("check window position", () => originalWindowPosition == window.Position);
-                AddAssert("check current screen", () => window.CurrentDisplayBindable.Value.Index == display.Index);
+                AddAssert(
+                    "check current screen",
+                    () => window.CurrentDisplayBindable.Value.Index == display.Index
+                );
             }
         }
 

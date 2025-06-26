@@ -17,9 +17,7 @@ namespace osu.Framework.Input
     public class KeyEventManager : ButtonEventManager<Key>
     {
         public KeyEventManager(Key key)
-            : base(key)
-        {
-        }
+            : base(key) { }
 
         public void HandleRepeat(InputState state)
         {
@@ -29,11 +27,14 @@ namespace osu.Framework.Input
             PropagateButtonEvent(drawables, new KeyDownEvent(state, Button, true));
         }
 
-        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) => PropagateButtonEvent(targets, new KeyDownEvent(state, Button));
+        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) =>
+            PropagateButtonEvent(targets, new KeyDownEvent(state, Button));
 
         protected override void HandleButtonUp(InputState state, List<Drawable> targets) =>
             PropagateButtonEvent(targets, new KeyUpEvent(state, Button));
 
-        protected override bool SuppressLoggingEventInformation(Drawable drawable) => drawable is ICanSuppressKeyEventLogging canSuppress && canSuppress.SuppressKeyEventLogging;
+        protected override bool SuppressLoggingEventInformation(Drawable drawable) =>
+            drawable is ICanSuppressKeyEventLogging canSuppress
+            && canSuppress.SuppressKeyEventLogging;
     }
 }

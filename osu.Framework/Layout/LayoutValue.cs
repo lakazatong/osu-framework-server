@@ -20,10 +20,12 @@ namespace osu.Framework.Layout
         /// <param name="invalidation">The <see cref="Invalidation"/> flags that will invalidate this <see cref="LayoutValue"/>.</param>
         /// <param name="source">The source of the invalidation.</param>
         /// <param name="conditions">Any extra conditions that must be satisfied before this <see cref="LayoutValue"/> is invalidated.</param>
-        public LayoutValue(Invalidation invalidation, InvalidationSource source = InvalidationSource.Default, InvalidationConditionDelegate conditions = null)
-            : base(invalidation, source, conditions)
-        {
-        }
+        public LayoutValue(
+            Invalidation invalidation,
+            InvalidationSource source = InvalidationSource.Default,
+            InvalidationConditionDelegate conditions = null
+        )
+            : base(invalidation, source, conditions) { }
 
         /// <summary>
         /// Validates this <see cref="LayoutValue"/>.
@@ -44,10 +46,12 @@ namespace osu.Framework.Layout
         /// <param name="invalidation">The <see cref="Invalidation"/> flags that will invalidate this <see cref="LayoutValue{T}"/>.</param>
         /// <param name="source">The source of the invalidation.</param>
         /// <param name="conditions">Any extra conditions that must be satisfied before this <see cref="LayoutValue{T}"/> is invalidated.</param>
-        public LayoutValue(Invalidation invalidation, InvalidationSource source = InvalidationSource.Default, InvalidationConditionDelegate conditions = null)
-            : base(invalidation, source, conditions)
-        {
-        }
+        public LayoutValue(
+            Invalidation invalidation,
+            InvalidationSource source = InvalidationSource.Default,
+            InvalidationConditionDelegate conditions = null
+        )
+            : base(invalidation, source, conditions) { }
 
         private T value;
 
@@ -60,7 +64,9 @@ namespace osu.Framework.Layout
             get
             {
                 if (!IsValid)
-                    throw new InvalidOperationException($"May not query {nameof(Value)} of an invalid {nameof(LayoutValue<T>)}.");
+                    throw new InvalidOperationException(
+                        $"May not query {nameof(Value)} of an invalid {nameof(LayoutValue<T>)}."
+                    );
 
                 return value;
             }

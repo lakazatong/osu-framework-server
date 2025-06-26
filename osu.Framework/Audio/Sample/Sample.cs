@@ -47,7 +47,8 @@ namespace osu.Framework.Audio.Sample
             OnPlay?.Invoke(this);
         }
 
-        public override bool IsAlive => base.IsAlive && (!PendingActions.IsEmpty || Items.Count > 0);
+        public override bool IsAlive =>
+            base.IsAlive && (!PendingActions.IsEmpty || Items.Count > 0);
 
         /// <summary>
         /// Creates a unique playback of this <see cref="Sample"/>.

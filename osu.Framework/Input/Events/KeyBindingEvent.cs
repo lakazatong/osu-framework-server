@@ -9,7 +9,8 @@ namespace osu.Framework.Input.Events
     /// Events of a key binding action.
     /// </summary>
     /// <typeparam name="T">The action type.</typeparam>
-    public abstract class KeyBindingEvent<T> : UIEvent where T : struct
+    public abstract class KeyBindingEvent<T> : UIEvent
+        where T : struct
     {
         public readonly T Action;
 

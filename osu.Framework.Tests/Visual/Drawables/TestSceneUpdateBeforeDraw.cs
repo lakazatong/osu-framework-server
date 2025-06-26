@@ -32,23 +32,29 @@ namespace osu.Framework.Tests.Visual.Drawables
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Size = new Vector2(50),
-                    Colour = Color4.Red
-                }
+                    Colour = Color4.Red,
+                },
             };
 
             var sender = new HookableContainer();
             var greenBox = new TestBox { Colour = Color4.Green };
 
-            AddStep("add children", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "add children",
+                () =>
                 {
-                    new SpriteText { Text = "Red box should be visible, green should not be visible" },
-                    // Order is important
-                    receiver,
-                    sender,
-                };
-            });
+                    Children = new Drawable[]
+                    {
+                        new SpriteText
+                        {
+                            Text = "Red box should be visible, green should not be visible",
+                        },
+                        // Order is important
+                        receiver,
+                        sender,
+                    };
+                }
+            );
 
             sender.OnUpdateAfterChildren = () => receiver.Add(greenBox);
 
@@ -103,7 +109,11 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Alpha = 0;
             }
 
-            internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+            internal override DrawNode GenerateDrawNodeSubtree(
+                ulong frame,
+                int treeIndex,
+                bool forceNewDrawNode
+            )
             {
                 hasDrawn = true;
                 return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);

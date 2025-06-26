@@ -4,12 +4,12 @@
 #nullable disable
 
 using System;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Textures;
-using osuTK;
-using osu.Framework.Graphics.Shaders;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Layout;
+using osuTK;
 
 namespace osu.Framework.Graphics.Sprites
 {
@@ -27,7 +27,10 @@ namespace osu.Framework.Graphics.Sprites
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         /// <summary>
@@ -133,7 +136,8 @@ namespace osu.Framework.Graphics.Sprites
                 if (value.X > MAX_EDGE_SMOOTHNESS || value.Y > MAX_EDGE_SMOOTHNESS)
                 {
                     throw new InvalidOperationException(
-                        $"May not smooth more than {MAX_EDGE_SMOOTHNESS} or will leak neighboring textures in atlas. Tried to smooth by ({value.X}, {value.Y}).");
+                        $"May not smooth more than {MAX_EDGE_SMOOTHNESS} or will leak neighboring textures in atlas. Tried to smooth by ({value.X}, {value.Y})."
+                    );
                 }
 
                 edgeSmoothness = value;
@@ -186,9 +190,14 @@ namespace osu.Framework.Graphics.Sprites
             }
         }
 
-        public Vector2 InflationAmount => inflationAmountBacking.IsValid ? inflationAmountBacking.Value : (inflationAmountBacking.Value = computeInflationAmount());
+        public Vector2 InflationAmount =>
+            inflationAmountBacking.IsValid
+                ? inflationAmountBacking.Value
+                : (inflationAmountBacking.Value = computeInflationAmount());
 
-        private readonly LayoutValue<Vector2> inflationAmountBacking = new LayoutValue<Vector2>(Invalidation.DrawInfo);
+        private readonly LayoutValue<Vector2> inflationAmountBacking = new LayoutValue<Vector2>(
+            Invalidation.DrawInfo
+        );
 
         private Vector2 computeInflationAmount()
         {
@@ -207,11 +216,16 @@ namespace osu.Framework.Graphics.Sprites
         }
 
         // Matches the invalidation types of Drawable.screenSpaceDrawQuadBacking
-        private readonly LayoutValue<Quad> conservativeScreenSpaceDrawQuadBacking = new LayoutValue<Quad>(Invalidation.DrawInfo | Invalidation.RequiredParentSizeToFit | Invalidation.Presence);
+        private readonly LayoutValue<Quad> conservativeScreenSpaceDrawQuadBacking =
+            new LayoutValue<Quad>(
+                Invalidation.DrawInfo | Invalidation.RequiredParentSizeToFit | Invalidation.Presence
+            );
 
-        public Quad ConservativeScreenSpaceDrawQuad => conservativeScreenSpaceDrawQuadBacking.IsValid
-            ? conservativeScreenSpaceDrawQuadBacking
-            : conservativeScreenSpaceDrawQuadBacking.Value = ComputeConservativeScreenSpaceDrawQuad();
+        public Quad ConservativeScreenSpaceDrawQuad =>
+            conservativeScreenSpaceDrawQuadBacking.IsValid
+                ? conservativeScreenSpaceDrawQuadBacking
+                : conservativeScreenSpaceDrawQuadBacking.Value =
+                    ComputeConservativeScreenSpaceDrawQuad();
 
         protected virtual Quad ComputeConservativeScreenSpaceDrawQuad()
         {

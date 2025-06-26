@@ -22,7 +22,8 @@ namespace osu.Framework.Platform.Apple.Native
             Handle = handle;
         }
 
-        internal static NSArray ArrayWithObject(IntPtr obj) => new NSArray(Interop.SendIntPtr(class_pointer, sel_array_with_object, obj));
+        internal static NSArray ArrayWithObject(IntPtr obj) =>
+            new NSArray(Interop.SendIntPtr(class_pointer, sel_array_with_object, obj));
 
         internal static NSArray ArrayWithObjects(IntPtr[] objs)
         {
@@ -34,7 +35,8 @@ namespace osu.Framework.Platform.Apple.Native
 
         internal int Count() => Interop.SendInt(Handle, sel_count);
 
-        internal IntPtr ObjectAtIndex(int index) => Interop.SendIntPtr(Handle, sel_object_at_index, index);
+        internal IntPtr ObjectAtIndex(int index) =>
+            Interop.SendIntPtr(Handle, sel_object_at_index, index);
 
         internal IntPtr[] ToArray()
         {

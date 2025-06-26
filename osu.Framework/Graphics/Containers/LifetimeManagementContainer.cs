@@ -22,7 +22,8 @@ namespace osu.Framework.Graphics.Containers
     public partial class LifetimeManagementContainer : CompositeDrawable
     {
         private readonly LifetimeEntryManager manager = new LifetimeEntryManager();
-        private readonly Dictionary<Drawable, DrawableLifetimeEntry> drawableMap = new Dictionary<Drawable, DrawableLifetimeEntry>();
+        private readonly Dictionary<Drawable, DrawableLifetimeEntry> drawableMap =
+            new Dictionary<Drawable, DrawableLifetimeEntry>();
 
         /// <summary>
         /// List of drawables that do not have their lifetime managed by us, but still need to have their aliveness processed once.
@@ -45,7 +46,10 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="withManagedLifetime">Whether the lifetime of <paramref name="drawable"/> should be managed by this <see cref="LifetimeManagementContainer"/>.</param>
         protected internal void AddInternal(Drawable drawable, bool withManagedLifetime)
         {
-            Trace.Assert(!drawable.RemoveWhenNotAlive, $"{nameof(RemoveWhenNotAlive)} is not supported for {nameof(LifetimeManagementContainer)}");
+            Trace.Assert(
+                !drawable.RemoveWhenNotAlive,
+                $"{nameof(RemoveWhenNotAlive)} is not supported for {nameof(LifetimeManagementContainer)}"
+            );
 
             base.AddInternal(drawable);
 
@@ -97,25 +101,37 @@ namespace osu.Framework.Graphics.Containers
             return aliveChanged;
         }
 
-        private void entryBecameAlive(LifetimeEntry entry) => MakeChildAlive(((DrawableLifetimeEntry)entry).Drawable);
+        private void entryBecameAlive(LifetimeEntry entry) =>
+            MakeChildAlive(((DrawableLifetimeEntry)entry).Drawable);
 
         private void entryBecameDead(LifetimeEntry entry)
         {
             bool removed = MakeChildDead(((DrawableLifetimeEntry)entry).Drawable);
-            Trace.Assert(!removed, $"{nameof(RemoveWhenNotAlive)} is not supported for children of {nameof(LifetimeManagementContainer)}");
+            Trace.Assert(
+                !removed,
+                $"{nameof(RemoveWhenNotAlive)} is not supported for children of {nameof(LifetimeManagementContainer)}"
+            );
         }
 
-        private void entryCrossedBoundary(LifetimeEntry entry, LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)
-            => OnChildLifetimeBoundaryCrossed(new LifetimeBoundaryCrossedEvent(((DrawableLifetimeEntry)entry).Drawable, kind, direction));
+        private void entryCrossedBoundary(
+            LifetimeEntry entry,
+            LifetimeBoundaryKind kind,
+            LifetimeBoundaryCrossingDirection direction
+        ) =>
+            OnChildLifetimeBoundaryCrossed(
+                new LifetimeBoundaryCrossedEvent(
+                    ((DrawableLifetimeEntry)entry).Drawable,
+                    kind,
+                    direction
+                )
+            );
 
         /// <summary>
         /// Called when the clock is crossed child lifetime boundary.
         /// If child's lifetime is changed during this callback and that causes additional crossings,
         /// those events are queued and this method will be called later (on the same frame).
         /// </summary>
-        protected virtual void OnChildLifetimeBoundaryCrossed(LifetimeBoundaryCrossedEvent e)
-        {
-        }
+        protected virtual void OnChildLifetimeBoundaryCrossed(LifetimeBoundaryCrossedEvent e) { }
 
         private class DrawableLifetimeEntry : LifetimeEntry, IDisposable
         {
@@ -163,7 +179,11 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         public readonly LifetimeBoundaryCrossingDirection Direction;
 
-        public LifetimeBoundaryCrossedEvent(Drawable child, LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)
+        public LifetimeBoundaryCrossedEvent(
+            Drawable child,
+            LifetimeBoundaryKind kind,
+            LifetimeBoundaryCrossingDirection direction
+        )
         {
             Child = child;
             Kind = kind;

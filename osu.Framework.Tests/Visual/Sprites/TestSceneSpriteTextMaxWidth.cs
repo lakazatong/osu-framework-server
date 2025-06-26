@@ -75,13 +75,16 @@ namespace osu.Framework.Tests.Visual.Sprites
         {
             float textWidth = 0;
 
-            createTest(s =>
-            {
-                s.RelativeSizeAxes = Axes.X;
-                s.MaxWidth = 0.5f;
-                s.Text = "some very long text that should exceed the max width";
-                s.Truncate = true;
-            }, Axes.Y);
+            createTest(
+                s =>
+                {
+                    s.RelativeSizeAxes = Axes.X;
+                    s.MaxWidth = 0.5f;
+                    s.Text = "some very long text that should exceed the max width";
+                    s.Truncate = true;
+                },
+                Axes.Y
+            );
             AddStep("store text width", () => textWidth = display.Text.TextBuilder.Bounds.X);
 
             AddStep("set parent size", () => display.Width = 100);
@@ -91,11 +94,14 @@ namespace osu.Framework.Tests.Visual.Sprites
 
         private void createTest(Action<SpriteText> initFunc, Axes autoSizeAxes = Axes.Both)
         {
-            AddStep("create test", () =>
-            {
-                Clear();
-                Add(display = new VisualDisplay(initFunc, autoSizeAxes));
-            });
+            AddStep(
+                "create test",
+                () =>
+                {
+                    Clear();
+                    Add(display = new VisualDisplay(initFunc, autoSizeAxes));
+                }
+            );
         }
 
         private partial class VisualDisplay : CompositeDrawable
@@ -114,9 +120,9 @@ namespace osu.Framework.Tests.Visual.Sprites
                     {
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0.2f,
-                        Colour = Color4.Pink
+                        Colour = Color4.Pink,
                     },
-                    Text = new TestSpriteText { AllowMultiline = false }
+                    Text = new TestSpriteText { AllowMultiline = false },
                 };
 
                 initFunc?.Invoke(Text);
@@ -127,8 +133,8 @@ namespace osu.Framework.Tests.Visual.Sprites
         {
             public TextBuilder TextBuilder { get; private set; }
 
-            protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store)
-                => TextBuilder = base.CreateTextBuilder(store);
+            protected override TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store) =>
+                TextBuilder = base.CreateTextBuilder(store);
         }
     }
 }

@@ -22,7 +22,10 @@ namespace osu.Framework.Graphics.Video
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.VIDEO);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.VIDEO
+            );
         }
 
         protected override DrawNode CreateDrawNode() => new VideoSpriteDrawNode(video);

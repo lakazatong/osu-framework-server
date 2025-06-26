@@ -61,11 +61,7 @@ namespace FlappyDon.Game.Elements
             Origin = Anchor.Centre;
             Position = new Vector2(120.0f, .0f);
 
-            animation = new TextureAnimation
-            {
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-            };
+            animation = new TextureAnimation { Origin = Anchor.Centre, Anchor = Anchor.Centre };
 
             animation.AddFrame(textures.Get("redbird-upflap"), 200.0f);
             animation.AddFrame(textures.Get("redbird-downflap"), 200.0f);
@@ -95,9 +91,10 @@ namespace FlappyDon.Game.Elements
             Rotation = 0.0f;
             Y = -60.0f;
             animation.IsPlaying = true;
-            this.Loop(b => b.MoveToOffset(new Vector2(0.0f, -20.0f), 1000.0f, Easing.InOutSine)
-                            .Then()
-                            .MoveToOffset(new Vector2(0.0f, 20.0f), 1000.0f, Easing.InOutSine)
+            this.Loop(b =>
+                b.MoveToOffset(new Vector2(0.0f, -20.0f), 1000.0f, Easing.InOutSine)
+                    .Then()
+                    .MoveToOffset(new Vector2(0.0f, 20.0f), 1000.0f, Easing.InOutSine)
             );
         }
 

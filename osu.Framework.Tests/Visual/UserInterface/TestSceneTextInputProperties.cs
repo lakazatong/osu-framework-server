@@ -16,53 +16,61 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Create text boxes", () =>
-            {
-                FillFlowContainer flow;
-                Child = new BasicScrollContainer
+            AddStep(
+                "Create text boxes",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = flow = new FillFlowContainer
+                    FillFlowContainer flow;
+                    Child = new BasicScrollContainer
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Width = 0.9f,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Spacing = new Vector2(20, 13),
-                    }
-                };
+                        RelativeSizeAxes = Axes.Both,
+                        Child = flow =
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Width = 0.9f,
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Spacing = new Vector2(20, 13),
+                            },
+                    };
 
-                foreach (var textInputType in Enum.GetValues<TextInputType>())
-                {
-                    flow.Add(new BasicTextBox
+                    foreach (var textInputType in Enum.GetValues<TextInputType>())
                     {
-                        TabbableContentContainer = flow,
-                        RelativeSizeAxes = Axes.X,
-                        Height = 40,
-                        Width = 0.45f,
-                        PlaceholderText = $"{textInputType} (allow IME)",
-                        InputProperties = new TextInputProperties
-                        {
-                            Type = textInputType,
-                            AllowIme = true
-                        },
-                    });
-                    flow.Add(new BasicTextBox
-                    {
-                        TabbableContentContainer = flow,
-                        RelativeSizeAxes = Axes.X,
-                        Height = 40,
-                        Width = 0.45f,
-                        PlaceholderText = $"{textInputType} (no IME)",
-                        InputProperties = new TextInputProperties
-                        {
-                            Type = textInputType,
-                            AllowIme = false
-                        },
-                    });
+                        flow.Add(
+                            new BasicTextBox
+                            {
+                                TabbableContentContainer = flow,
+                                RelativeSizeAxes = Axes.X,
+                                Height = 40,
+                                Width = 0.45f,
+                                PlaceholderText = $"{textInputType} (allow IME)",
+                                InputProperties = new TextInputProperties
+                                {
+                                    Type = textInputType,
+                                    AllowIme = true,
+                                },
+                            }
+                        );
+                        flow.Add(
+                            new BasicTextBox
+                            {
+                                TabbableContentContainer = flow,
+                                RelativeSizeAxes = Axes.X,
+                                Height = 40,
+                                Width = 0.45f,
+                                PlaceholderText = $"{textInputType} (no IME)",
+                                InputProperties = new TextInputProperties
+                                {
+                                    Type = textInputType,
+                                    AllowIme = false,
+                                },
+                            }
+                        );
+                    }
                 }
-            });
+            );
         }
     }
 }

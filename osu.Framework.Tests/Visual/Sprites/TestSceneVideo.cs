@@ -55,7 +55,8 @@ namespace osu.Framework.Tests.Visual.Sprites
             "vp9.webm",
         };
 
-        private static string[][] videoFormatTestCaseSource => video_formats.Select(format => new[] { format }).ToArray();
+        private static string[][] videoFormatTestCaseSource =>
+            video_formats.Select(format => new[] { format }).ToArray();
 
         [BackgroundDependencyLoader]
         private void load(Game game)
@@ -73,26 +74,32 @@ namespace osu.Framework.Tests.Visual.Sprites
                 {
                     RelativeSizeAxes = Axes.Both,
                     Text = "Video is loading...",
-                }
+                },
             };
         }
 
         private void loadNewVideo(string videoFile = "h264.mp4")
         {
-            AddStep("Reset clock", () =>
-            {
-                clock.CurrentTime = 0;
-                didDecode = false;
-            });
-            AddStep($"load {videoFile}", () =>
-            {
-                videoContainer.Child = video = new TestVideo(videoStore.GetStream(videoFile))
+            AddStep(
+                "Reset clock",
+                () =>
                 {
-                    Loop = false,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                };
-            });
+                    clock.CurrentTime = 0;
+                    didDecode = false;
+                }
+            );
+            AddStep(
+                $"load {videoFile}",
+                () =>
+                {
+                    videoContainer.Child = video = new TestVideo(videoStore.GetStream(videoFile))
+                    {
+                        Loop = false,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                    };
+                }
+            );
             AddUntilStep("Wait for video to load", () => video.IsLoaded);
             AddStep("Reset clock", () => clock.CurrentTime = 0);
 
@@ -109,7 +116,14 @@ namespace osu.Framework.Tests.Visual.Sprites
         [Test]
         public void TestVideoFormats()
         {
-            AddStep("disable hardware decoding", () => config.SetValue(FrameworkSetting.HardwareVideoDecoder, HardwareVideoDecoder.None));
+            AddStep(
+                "disable hardware decoding",
+                () =>
+                    config.SetValue(
+                        FrameworkSetting.HardwareVideoDecoder,
+                        HardwareVideoDecoder.None
+                    )
+            );
 
             foreach (string videoFormat in video_formats)
                 loadNewVideo(videoFormat);
@@ -118,7 +132,11 @@ namespace osu.Framework.Tests.Visual.Sprites
         [Test]
         public void TestVideoFormatsWithHwAccel()
         {
-            AddStep("enable hardware decoding", () => config.SetValue(FrameworkSetting.HardwareVideoDecoder, HardwareVideoDecoder.Any));
+            AddStep(
+                "enable hardware decoding",
+                () =>
+                    config.SetValue(FrameworkSetting.HardwareVideoDecoder, HardwareVideoDecoder.Any)
+            );
 
             foreach (string videoFormat in video_formats)
                 loadNewVideo(videoFormat);
@@ -241,58 +259,86 @@ namespace osu.Framework.Tests.Visual.Sprites
         {
             loadNewVideo();
 
-            AddStep("Set colour", () => video.Colour = Color4Extensions.FromHex("#ea7948").Opacity(0.75f));
+            AddStep(
+                "Set colour",
+                () => video.Colour = Color4Extensions.FromHex("#ea7948").Opacity(0.75f)
+            );
             AddToggleStep("Toggle rounding", v => video.Rounded = v);
         }
 
         [Test]
         public void TestUnspecifiedColorspace()
         {
-            AddStep("Reset clock", () =>
-            {
-                clock.CurrentTime = 0;
-                didDecode = false;
-            });
-            AddStep("load videos", () =>
-            {
-                videoContainer.Child = new FillFlowContainer
+            AddStep(
+                "Reset clock",
+                () =>
                 {
-                    Scale = new Vector2(0.75f),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Horizontal,
-                    Children = new[]
+                    clock.CurrentTime = 0;
+                    didDecode = false;
+                }
+            );
+            AddStep(
+                "load videos",
+                () =>
+                {
+                    videoContainer.Child = new FillFlowContainer
                     {
-                        new FillFlowContainer
+                        Scale = new Vector2(0.75f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Children = new[]
                         {
-                            AutoSizeAxes = Axes.Both,
-                            Direction = FillDirection.Vertical,
-                            Children = new[]
+                            new FillFlowContainer
                             {
-                                new SpriteText { Text = "SDTV / Rec. 601" },
-                                new TestVideo(videoStore.GetStream("h264.mp4")),
-                                Empty().With(d => d.Height = 10),
-                                new Sprite { Texture = textures.Get("h264-screenshot.png", WrapMode.ClampToEdge, WrapMode.ClampToEdge), Scale = new Vector2(2f) },
-                                new SpriteText { Text = "Expected" },
-                            }
-                        },
-                        new FillFlowContainer
-                        {
-                            AutoSizeAxes = Axes.Both,
-                            Direction = FillDirection.Vertical,
-                            Children = new[]
+                                AutoSizeAxes = Axes.Both,
+                                Direction = FillDirection.Vertical,
+                                Children = new[]
+                                {
+                                    new SpriteText { Text = "SDTV / Rec. 601" },
+                                    new TestVideo(videoStore.GetStream("h264.mp4")),
+                                    Empty().With(d => d.Height = 10),
+                                    new Sprite
+                                    {
+                                        Texture = textures.Get(
+                                            "h264-screenshot.png",
+                                            WrapMode.ClampToEdge,
+                                            WrapMode.ClampToEdge
+                                        ),
+                                        Scale = new Vector2(2f),
+                                    },
+                                    new SpriteText { Text = "Expected" },
+                                },
+                            },
+                            new FillFlowContainer
                             {
-                                new SpriteText { Text = "HDTV / Rec. 709" },
-                                new TestVideo(videoStore.GetStream("h264-hd.mp4")) { Scale = new Vector2(270f / 576f) },
-                                Empty().With(d => d.Height = 10),
-                                new Sprite { Texture = textures.Get("h264-hd-screenshot.png", WrapMode.ClampToEdge, WrapMode.ClampToEdge), Scale = new Vector2(270f / 576f * 2f) },
-                                new SpriteText { Text = "Expected" },
-                            }
+                                AutoSizeAxes = Axes.Both,
+                                Direction = FillDirection.Vertical,
+                                Children = new[]
+                                {
+                                    new SpriteText { Text = "HDTV / Rec. 709" },
+                                    new TestVideo(videoStore.GetStream("h264-hd.mp4"))
+                                    {
+                                        Scale = new Vector2(270f / 576f),
+                                    },
+                                    Empty().With(d => d.Height = 10),
+                                    new Sprite
+                                    {
+                                        Texture = textures.Get(
+                                            "h264-hd-screenshot.png",
+                                            WrapMode.ClampToEdge,
+                                            WrapMode.ClampToEdge
+                                        ),
+                                        Scale = new Vector2(270f / 576f * 2f),
+                                    },
+                                    new SpriteText { Text = "Expected" },
+                                },
+                            },
                         },
-                    },
-                };
-            });
+                    };
+                }
+            );
             AddStep("Reset clock", () => clock.CurrentTime = 0);
         }
 
@@ -324,12 +370,13 @@ namespace osu.Framework.Tests.Visual.Sprites
 
                 if (timeText != null)
                 {
-                    timeText.Text = $"aim time: {video.PlaybackPosition:N2}\n"
-                                    + $"video time: {video.CurrentFrameTime:N2}\n"
-                                    + $"duration: {video.Duration:N2}\n"
-                                    + $"buffered {video.AvailableFrames}\n"
-                                    + $"FPS: {fps}\n"
-                                    + $"State: {video.State}";
+                    timeText.Text =
+                        $"aim time: {video.PlaybackPosition:N2}\n"
+                        + $"video time: {video.CurrentFrameTime:N2}\n"
+                        + $"duration: {video.Duration:N2}\n"
+                        + $"buffered {video.AvailableFrames}\n"
+                        + $"FPS: {fps}\n"
+                        + $"State: {video.State}";
                 }
 
                 didDecode |= video.State == VideoDecoder.DecoderState.Running;

@@ -29,12 +29,15 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestResultBounds()
         {
-            var aggregate = new AggregateBindable<double>((a, b) => a * b, new BindableDouble(1)
-            {
-                Default = 1,
-                MinValue = 0,
-                MaxValue = 2
-            });
+            var aggregate = new AggregateBindable<double>(
+                (a, b) => a * b,
+                new BindableDouble(1)
+                {
+                    Default = 1,
+                    MinValue = 0,
+                    MaxValue = 2,
+                }
+            );
 
             Assert.AreEqual(1, aggregate.Result.Value);
 
@@ -50,7 +53,9 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestClassAggregate()
         {
-            var aggregate = new AggregateBindable<BoxedInt>((a, b) => new BoxedInt((a?.Value ?? 0) + (b?.Value ?? 0)));
+            var aggregate = new AggregateBindable<BoxedInt>(
+                (a, b) => new BoxedInt((a?.Value ?? 0) + (b?.Value ?? 0))
+            );
 
             Assert.AreEqual(null, aggregate.Result.Value);
 
@@ -116,10 +121,14 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestValueChangedFirings()
         {
-            int aggregateResultFireCount = 0, bindable1FireCount = 0, bindable2FireCount = 0;
+            int aggregateResultFireCount = 0,
+                bindable1FireCount = 0,
+                bindable2FireCount = 0;
 
             var aggregate = new AggregateBindable<double>((a, b) => a * b, new Bindable<double>(1));
-            aggregate.Result.BindValueChanged(_ => Interlocked.Increment(ref aggregateResultFireCount));
+            aggregate.Result.BindValueChanged(_ =>
+                Interlocked.Increment(ref aggregateResultFireCount)
+            );
 
             Assert.AreEqual(0, aggregateResultFireCount);
 

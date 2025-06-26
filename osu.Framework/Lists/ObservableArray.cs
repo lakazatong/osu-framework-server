@@ -14,7 +14,10 @@ namespace osu.Framework.Lists
     /// A wrapper for an array that provides notifications when elements are changed.
     /// </summary>
     /// <typeparam name="T">The type of elements stored in the array.</typeparam>
-    public class ObservableArray<T> : IReadOnlyList<T>, IEquatable<ObservableArray<T>>, INotifyArrayChanged
+    public class ObservableArray<T>
+        : IReadOnlyList<T>,
+            IEquatable<ObservableArray<T>>,
+            INotifyArrayChanged
     {
         /// <summary>
         /// Invoked when an element of the array is changed via <see cref="this[int]"/>.
@@ -42,16 +45,20 @@ namespace osu.Framework.Lists
 
         public bool Equals(ObservableArray<T> other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return wrappedArray == other.wrappedArray;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
 
             return obj.GetType() == GetType() && Equals((ObservableArray<T>)obj);
         }
@@ -88,6 +95,7 @@ namespace osu.Framework.Lists
             ArrayElementChanged?.Invoke();
         }
 
-        public static implicit operator ObservableArray<T>(T[] source) => source == null ? null : new ObservableArray<T>(source);
+        public static implicit operator ObservableArray<T>(T[] source) =>
+            source == null ? null : new ObservableArray<T>(source);
     }
 }

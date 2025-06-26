@@ -36,6 +36,6 @@ namespace osu.Framework.Platform
         /// The window is running in minimised mode, usually triggered by clicking the operating
         /// system's minimise button.
         /// </summary>
-        Minimised
+        Minimised,
     }
 }

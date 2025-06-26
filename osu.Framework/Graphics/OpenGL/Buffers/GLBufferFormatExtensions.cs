@@ -8,7 +8,9 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 {
     public static class GLBufferFormatExtensions
     {
-        public static FramebufferAttachment GetAttachmentType(this RenderbufferInternalFormat format)
+        public static FramebufferAttachment GetAttachmentType(
+            this RenderbufferInternalFormat format
+        )
         {
             switch (format)
             {
@@ -76,7 +78,9 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                     return FramebufferAttachment.DepthStencilAttachment;
 
                 default:
-                    throw new InvalidOperationException($"{format} is not a valid {nameof(RenderbufferInternalFormat)} type.");
+                    throw new InvalidOperationException(
+                        $"{format} is not a valid {nameof(RenderbufferInternalFormat)} type."
+                    );
             }
         }
 
@@ -221,7 +225,9 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                     return 1;
 
                 default:
-                    throw new InvalidOperationException($"{format} is not a valid {nameof(RenderbufferInternalFormat)} type.");
+                    throw new InvalidOperationException(
+                        $"{format} is not a valid {nameof(RenderbufferInternalFormat)} type."
+                    );
             }
         }
     }

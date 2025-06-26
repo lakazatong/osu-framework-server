@@ -20,7 +20,9 @@ namespace osu.Framework.SourceGeneration.Analysers
     {
         public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+            var root = await context
+                .Document.GetSyntaxRootAsync(context.CancellationToken)
+                .ConfigureAwait(false);
 
             var diagnostic = context.Diagnostics.First();
             var diagnosticSpan = diagnostic.Location.SourceSpan;
@@ -28,13 +30,16 @@ namespace osu.Framework.SourceGeneration.Analysers
             SyntaxNode? node = root?.FindToken(diagnosticSpan.Start).Parent;
 
             if (node == null)
-                throw new InvalidOperationException($"Making class partial failed (null syntax) at: {diagnostic.Location}");
+                throw new InvalidOperationException(
+                    $"Making class partial failed (null syntax) at: {diagnostic.Location}"
+                );
 
             switch (node)
             {
                 case AttributeListSyntax:
                 {
-                    ClassDeclarationSyntax? classSyntax = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+                    ClassDeclarationSyntax? classSyntax =
+                        node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 
                     if (classSyntax == null)
                         break;
@@ -55,7 +60,10 @@ namespace osu.Framework.SourceGeneration.Analysers
 
                 case TypeSyntax typeSyntax:
                 {
-                    if (await registerCodeFixForType(context, typeSyntax, diagnostic).ConfigureAwait(false))
+                    if (
+                        await registerCodeFixForType(context, typeSyntax, diagnostic)
+                            .ConfigureAwait(false)
+                    )
                         return;
 
                     break;
@@ -63,7 +71,14 @@ namespace osu.Framework.SourceGeneration.Analysers
 
                 case ObjectCreationExpressionSyntax objectCreationExpression:
                 {
-                    if (await registerCodeFixForType(context, objectCreationExpression.Type.Parent!, diagnostic).ConfigureAwait(false))
+                    if (
+                        await registerCodeFixForType(
+                                context,
+                                objectCreationExpression.Type.Parent!,
+                                diagnostic
+                            )
+                            .ConfigureAwait(false)
+                    )
                         return;
 
                     break;
@@ -71,33 +86,54 @@ namespace osu.Framework.SourceGeneration.Analysers
 
                 case ExpressionSyntax expressionSyntax:
                 {
-                    if (await registerCodeFixForType(context, expressionSyntax.Parent!, diagnostic).ConfigureAwait(false))
+                    if (
+                        await registerCodeFixForType(context, expressionSyntax.Parent!, diagnostic)
+                            .ConfigureAwait(false)
+                    )
                         return;
 
                     break;
                 }
             }
 
-            throw new InvalidOperationException($"Making class partial failed (non-matching node) at: {diagnostic.Location} ({node.GetType()}");
+            throw new InvalidOperationException(
+                $"Making class partial failed (non-matching node) at: {diagnostic.Location} ({node.GetType()}"
+            );
         }
 
-        private bool registerCodeFixForClass(CodeFixContext context, ClassDeclarationSyntax classSyntax, Diagnostic diagnostic)
+        private bool registerCodeFixForClass(
+            CodeFixContext context,
+            ClassDeclarationSyntax classSyntax,
+            Diagnostic diagnostic
+        )
         {
             context.RegisterCodeFix(
                 CodeAction.Create(
                     $"Make class '{classSyntax.Identifier.ValueText}' partial",
-                    cancellationToken => createChangedSolution(context.Document, classSyntax, cancellationToken),
-                    DiagnosticRules.MAKE_DI_CLASS_PARTIAL.Id),
-                diagnostic);
+                    cancellationToken =>
+                        createChangedSolution(context.Document, classSyntax, cancellationToken),
+                    DiagnosticRules.MAKE_DI_CLASS_PARTIAL.Id
+                ),
+                diagnostic
+            );
 
             return true;
         }
 
-        private async Task<bool> registerCodeFixForType(CodeFixContext context, SyntaxNode typeSyntax, Diagnostic diagnostic)
+        private async Task<bool> registerCodeFixForType(
+            CodeFixContext context,
+            SyntaxNode typeSyntax,
+            Diagnostic diagnostic
+        )
         {
-            var compilation = await context.Document.Project.GetCompilationAsync(context.CancellationToken).ConfigureAwait(false);
+            var compilation = await context
+                .Document.Project.GetCompilationAsync(context.CancellationToken)
+                .ConfigureAwait(false);
 
-            ITypeSymbol? typeSymbol = compilation?.GetSemanticModel(typeSyntax.SyntaxTree).GetTypeInfo(typeSyntax).Type;
+            ITypeSymbol? typeSymbol = compilation
+                ?.GetSemanticModel(typeSyntax.SyntaxTree)
+                .GetTypeInfo(typeSyntax)
+                .Type;
 
             if (typeSymbol == null)
                 return false;
@@ -105,9 +141,15 @@ namespace osu.Framework.SourceGeneration.Analysers
             if (typeSymbol.DeclaringSyntaxReferences.Length == 0)
                 return false;
 
-            ClassDeclarationSyntax? classSyntax = (await typeSymbol.DeclaringSyntaxReferences[0].SyntaxTree.GetRootAsync(context.CancellationToken).ConfigureAwait(false))
-                                                  .DescendantNodes().OfType<ClassDeclarationSyntax>()
-                                                  .FirstOrDefault(c => c.Identifier.ValueText == typeSymbol.Name);
+            ClassDeclarationSyntax? classSyntax = (
+                await typeSymbol
+                    .DeclaringSyntaxReferences[0]
+                    .SyntaxTree.GetRootAsync(context.CancellationToken)
+                    .ConfigureAwait(false)
+            )
+                .DescendantNodes()
+                .OfType<ClassDeclarationSyntax>()
+                .FirstOrDefault(c => c.Identifier.ValueText == typeSymbol.Name);
 
             if (classSyntax == null)
                 return false;
@@ -115,26 +157,38 @@ namespace osu.Framework.SourceGeneration.Analysers
             context.RegisterCodeFix(
                 CodeAction.Create(
                     $"Make class '{typeSymbol.Name}' partial",
-                    cancellationToken => createChangedSolution(context.Document, classSyntax, cancellationToken),
-                    DiagnosticRules.MAKE_DI_CLASS_PARTIAL.Id),
-                diagnostic);
+                    cancellationToken =>
+                        createChangedSolution(context.Document, classSyntax, cancellationToken),
+                    DiagnosticRules.MAKE_DI_CLASS_PARTIAL.Id
+                ),
+                diagnostic
+            );
 
             return true;
         }
 
-        private async Task<Solution> createChangedSolution(Document document, ClassDeclarationSyntax classSyntax, CancellationToken cancellationtoken)
+        private async Task<Solution> createChangedSolution(
+            Document document,
+            ClassDeclarationSyntax classSyntax,
+            CancellationToken cancellationtoken
+        )
         {
             Document? classDocument = document.Project.Solution.GetDocument(classSyntax.SyntaxTree);
 
             if (classDocument == null)
                 return document.Project.Solution;
 
-            SyntaxNode? rootNode = await classDocument.GetSyntaxRootAsync(cancellationtoken).ConfigureAwait(false);
+            SyntaxNode? rootNode = await classDocument
+                .GetSyntaxRootAsync(cancellationtoken)
+                .ConfigureAwait(false);
 
             if (rootNode == null)
                 return document.Project.Solution;
 
-            ClassDeclarationSyntax[] toReplace = classSyntax.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().ToArray();
+            ClassDeclarationSyntax[] toReplace = classSyntax
+                .AncestorsAndSelf()
+                .OfType<ClassDeclarationSyntax>()
+                .ToArray();
             rootNode = rootNode.TrackNodes(toReplace.OfType<SyntaxNode>());
 
             foreach (var target in toReplace)
@@ -146,15 +200,23 @@ namespace osu.Framework.SourceGeneration.Analysers
 
                 rootNode = rootNode.ReplaceNode(
                     currentNode,
-                    currentNode.WithModifiers(new SyntaxTokenList(target.Modifiers)
-                        .Add(SyntaxFactory.Token(SyntaxKind.PartialKeyword))));
+                    currentNode.WithModifiers(
+                        new SyntaxTokenList(target.Modifiers).Add(
+                            SyntaxFactory.Token(SyntaxKind.PartialKeyword)
+                        )
+                    )
+                );
             }
 
-            return classDocument.Project.Solution.WithDocumentSyntaxRoot(classDocument.Id, rootNode);
+            return classDocument.Project.Solution.WithDocumentSyntaxRoot(
+                classDocument.Id,
+                rootNode
+            );
         }
 
         public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(DiagnosticRules.MAKE_DI_CLASS_PARTIAL.Id);
+        public override ImmutableArray<string> FixableDiagnosticIds =>
+            ImmutableArray.Create(DiagnosticRules.MAKE_DI_CLASS_PARTIAL.Id);
     }
 }

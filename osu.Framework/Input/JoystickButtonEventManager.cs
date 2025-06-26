@@ -11,11 +11,10 @@ namespace osu.Framework.Input
     public class JoystickButtonEventManager : ButtonEventManager<JoystickButton>
     {
         public JoystickButtonEventManager(JoystickButton button)
-            : base(button)
-        {
-        }
+            : base(button) { }
 
-        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) => PropagateButtonEvent(targets, new JoystickPressEvent(state, Button));
+        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) =>
+            PropagateButtonEvent(targets, new JoystickPressEvent(state, Button));
 
         protected override void HandleButtonUp(InputState state, List<Drawable> targets) =>
             PropagateButtonEvent(targets, new JoystickReleaseEvent(state, Button));

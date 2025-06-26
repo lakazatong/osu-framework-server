@@ -10,8 +10,6 @@ namespace osu.Framework.Graphics.Rendering.Dummy
     {
         public TData Data { get; set; }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

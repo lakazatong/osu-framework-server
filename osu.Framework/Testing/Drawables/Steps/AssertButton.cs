@@ -40,7 +40,10 @@ namespace osu.Framework.Testing.Drawables.Steps
                 if (GetFailureMessage != null)
                     builder.Append($": {GetFailureMessage()}");
 
-                throw ExceptionDispatchInfo.SetRemoteStackTrace(new AssertionException(builder.ToString()), CallStack.ToString());
+                throw ExceptionDispatchInfo.SetRemoteStackTrace(
+                    new AssertionException(builder.ToString()),
+                    CallStack.ToString()
+                );
             }
         }
 

@@ -18,37 +18,77 @@ namespace osu.Framework.Tests.Visual.Input
         public TestSceneHandleInput()
         {
             TestContainerNoHandling notHandleInput;
-            TestContainer handlePositionalInput, handleNonPositionalInput;
+            TestContainer handlePositionalInput,
+                handleNonPositionalInput;
             Add(notHandleInput = new TestContainerNoHandling { Colour = Color4.Red });
-            Add(handlePositionalInput = new TestContainerHandlePositionalInput { X = 300, Colour = Color4.Blue });
-            Add(handleNonPositionalInput = new TestContainerHandleNonPositionalInput { X = 600, Colour = Color4.Green });
+            Add(
+                handlePositionalInput = new TestContainerHandlePositionalInput
+                {
+                    X = 300,
+                    Colour = Color4.Blue,
+                }
+            );
+            Add(
+                handleNonPositionalInput = new TestContainerHandleNonPositionalInput
+                {
+                    X = 600,
+                    Colour = Color4.Green,
+                }
+            );
             Add(new TestSceneMouseStates.StateTracker.BoundedCursorContainer(0));
 
-            AddStep($"enable {notHandleInput}", () => { InputManager.MoveMouseTo(notHandleInput); });
-            AddAssert($"check {nameof(notHandleInput)}", () => !notHandleInput.IsHovered && !notHandleInput.HasFocus);
+            AddStep(
+                $"enable {notHandleInput}",
+                () =>
+                {
+                    InputManager.MoveMouseTo(notHandleInput);
+                }
+            );
+            AddAssert(
+                $"check {nameof(notHandleInput)}",
+                () => !notHandleInput.IsHovered && !notHandleInput.HasFocus
+            );
 
-            AddStep($"enable {nameof(handlePositionalInput)}", () =>
-            {
-                handlePositionalInput.Enabled = true;
-                InputManager.MoveMouseTo(handlePositionalInput);
-            });
-            AddAssert($"check {nameof(handlePositionalInput)}", () => handlePositionalInput.IsHovered && handlePositionalInput.HasFocus);
+            AddStep(
+                $"enable {nameof(handlePositionalInput)}",
+                () =>
+                {
+                    handlePositionalInput.Enabled = true;
+                    InputManager.MoveMouseTo(handlePositionalInput);
+                }
+            );
+            AddAssert(
+                $"check {nameof(handlePositionalInput)}",
+                () => handlePositionalInput.IsHovered && handlePositionalInput.HasFocus
+            );
 
-            AddStep($"enable {nameof(handleNonPositionalInput)}", () =>
-            {
-                handleNonPositionalInput.Enabled = true;
-                InputManager.MoveMouseTo(handleNonPositionalInput);
-                ((IFocusManager)InputManager).TriggerFocusContention(null);
-            });
-            AddAssert($"check {nameof(handleNonPositionalInput)}", () => !handleNonPositionalInput.IsHovered && handleNonPositionalInput.HasFocus);
+            AddStep(
+                $"enable {nameof(handleNonPositionalInput)}",
+                () =>
+                {
+                    handleNonPositionalInput.Enabled = true;
+                    InputManager.MoveMouseTo(handleNonPositionalInput);
+                    ((IFocusManager)InputManager).TriggerFocusContention(null);
+                }
+            );
+            AddAssert(
+                $"check {nameof(handleNonPositionalInput)}",
+                () => !handleNonPositionalInput.IsHovered && handleNonPositionalInput.HasFocus
+            );
 
             AddStep("move mouse", () => InputManager.MoveMouseTo(handlePositionalInput));
-            AddStep("disable all", () =>
-            {
-                handlePositionalInput.Enabled = false;
-                handleNonPositionalInput.Enabled = false;
-            });
-            AddAssert($"check {nameof(handlePositionalInput)}", () => !handlePositionalInput.IsHovered);
+            AddStep(
+                "disable all",
+                () =>
+                {
+                    handlePositionalInput.Enabled = false;
+                    handleNonPositionalInput.Enabled = false;
+                }
+            );
+            AddAssert(
+                $"check {nameof(handlePositionalInput)}",
+                () => !handlePositionalInput.IsHovered
+            );
             // focus is not released when AcceptsFocus become false while focused
             //AddAssert($"check {nameof(handleNonPositionalInput)}", () => !handleNonPositionalInput.HasFocus);
         }
@@ -57,7 +97,8 @@ namespace osu.Framework.Tests.Visual.Input
         {
             protected readonly Box Box;
             protected readonly Box DisabledOverlay;
-            private readonly SpriteText text1, text2;
+            private readonly SpriteText text1,
+                text2;
 
             public new Color4 Colour
             {
@@ -72,7 +113,13 @@ namespace osu.Framework.Tests.Visual.Input
                 Add(new SpriteText { Text = GetType().Name });
                 Add(text1 = new SpriteText { Y = 20 });
                 Add(text2 = new SpriteText { Y = 40 });
-                Add(DisabledOverlay = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray.Opacity(.5f) });
+                Add(
+                    DisabledOverlay = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Gray.Opacity(.5f),
+                    }
+                );
             }
 
             protected override void Update()

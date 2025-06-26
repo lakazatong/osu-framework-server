@@ -53,7 +53,8 @@ namespace osu.Framework.Testing
 
         private int testIndex;
 
-        private Type loadableTestType => testIndex >= 0 ? browser.TestTypes.ElementAtOrDefault(testIndex) : null;
+        private Type loadableTestType =>
+            testIndex >= 0 ? browser.TestTypes.ElementAtOrDefault(testIndex) : null;
 
         private readonly TestBrowser browser;
 
@@ -71,11 +72,14 @@ namespace osu.Framework.Testing
 
             if (browser.CurrentTest?.GetType() != loadableTestType)
             {
-                browser.LoadTest(loadableTestType, () =>
-                {
-                    testIndex++;
-                    Scheduler.AddDelayed(runNext, time_between_tests);
-                });
+                browser.LoadTest(
+                    loadableTestType,
+                    () =>
+                    {
+                        testIndex++;
+                        Scheduler.AddDelayed(runNext, time_between_tests);
+                    }
+                );
             }
         }
     }

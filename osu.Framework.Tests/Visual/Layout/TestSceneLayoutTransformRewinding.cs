@@ -27,45 +27,71 @@ namespace osu.Framework.Tests.Visual.Layout
 
         private void testAutoSizeInstant()
         {
-            AddStep("Initialize autosize test", () =>
-            {
-                manualContainer.Child = new Container
+            AddStep(
+                "Initialize autosize test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Masking = true,
-                    Child = new Box { Size = new Vector2(150) }
-                };
-            });
+                    manualContainer.Child = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Masking = true,
+                        Child = new Box { Size = new Vector2(150) },
+                    };
+                }
+            );
 
             AddStep("Run to end", () => manualContainer.PerformUpdate(null));
-            AddAssert("Size = 150", () => Precision.AlmostEquals(new Vector2(150), manualContainer.Child.Size));
+            AddAssert(
+                "Size = 150",
+                () => Precision.AlmostEquals(new Vector2(150), manualContainer.Child.Size)
+            );
 
-            AddStep("Rewind", () => manualContainer.PerformUpdate(() => manualContainer.ApplyTransformsAt(-1, true)));
-            AddAssert("Size = 150", () => Precision.AlmostEquals(new Vector2(150), manualContainer.Child.Size));
+            AddStep(
+                "Rewind",
+                () =>
+                    manualContainer.PerformUpdate(() => manualContainer.ApplyTransformsAt(-1, true))
+            );
+            AddAssert(
+                "Size = 150",
+                () => Precision.AlmostEquals(new Vector2(150), manualContainer.Child.Size)
+            );
         }
 
         private void testFlowInstant()
         {
             Box box2 = null;
 
-            AddStep("Initialize flow test", () =>
-            {
-                manualContainer.Child = new FillFlowContainer
+            AddStep(
+                "Initialize flow test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Children = new[]
+                    manualContainer.Child = new FillFlowContainer
                     {
-                        new Box { Size = new Vector2(150) },
-                        box2 = new Box { Size = new Vector2(150) }
-                    }
-                };
-            });
+                        AutoSizeAxes = Axes.Both,
+                        Children = new[]
+                        {
+                            new Box { Size = new Vector2(150) },
+                            box2 = new Box { Size = new Vector2(150) },
+                        },
+                    };
+                }
+            );
 
             AddStep("Run to end", () => manualContainer.PerformUpdate(null));
-            AddAssert("Box2 @ (150, 0)", () => Precision.AlmostEquals(new Vector2(150, 0), box2.Position));
+            AddAssert(
+                "Box2 @ (150, 0)",
+                () => Precision.AlmostEquals(new Vector2(150, 0), box2.Position)
+            );
 
-            AddStep("Rewind", () => manualContainer.PerformUpdate(() => manualContainer.ApplyTransformsAt(-1, true)));
-            AddAssert("Box2 @ (150, 0)", () => Precision.AlmostEquals(new Vector2(150, 0), box2.Position));
+            AddStep(
+                "Rewind",
+                () =>
+                    manualContainer.PerformUpdate(() => manualContainer.ApplyTransformsAt(-1, true))
+            );
+            AddAssert(
+                "Box2 @ (150, 0)",
+                () => Precision.AlmostEquals(new Vector2(150, 0), box2.Position)
+            );
         }
 
         private partial class ManualUpdateSubTreeContainer : Container

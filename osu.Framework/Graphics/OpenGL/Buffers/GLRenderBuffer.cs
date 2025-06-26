@@ -35,7 +35,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             attachment = format.GetAttachmentType();
             sizePerPixel = format.GetBytesPerPixel();
 
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, attachment, RenderbufferTarget.Renderbuffer, renderBuffer);
+            GL.FramebufferRenderbuffer(
+                FramebufferTarget.Framebuffer,
+                attachment,
+                RenderbufferTarget.Renderbuffer,
+                renderBuffer
+            );
         }
 
         private Vector2 internalSize;
@@ -52,12 +57,20 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             if (renderer.IsEmbedded || internalSize.X < size.X || internalSize.Y < size.Y)
             {
                 GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, renderBuffer);
-                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, format, (int)Math.Ceiling(size.X), (int)Math.Ceiling(size.Y));
+                GL.RenderbufferStorage(
+                    RenderbufferTarget.Renderbuffer,
+                    format,
+                    (int)Math.Ceiling(size.X),
+                    (int)Math.Ceiling(size.Y)
+                );
 
                 if (!renderer.IsEmbedded)
                 {
                     memoryLease?.Dispose();
-                    memoryLease = NativeMemoryTracker.AddMemory(this, (long)(size.X * size.Y * sizePerPixel));
+                    memoryLease = NativeMemoryTracker.AddMemory(
+                        this,
+                        (long)(size.X * size.Y * sizePerPixel)
+                    );
                 }
 
                 internalSize = size;

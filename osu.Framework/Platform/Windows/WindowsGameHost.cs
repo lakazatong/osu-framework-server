@@ -26,11 +26,18 @@ namespace osu.Framework.Platform.Windows
 
         protected override Clipboard CreateClipboard() => new WindowsClipboard();
 
-        protected override ReadableKeyCombinationProvider CreateReadableKeyCombinationProvider() => new WindowsReadableKeyCombinationProvider();
+        protected override ReadableKeyCombinationProvider CreateReadableKeyCombinationProvider() =>
+            new WindowsReadableKeyCombinationProvider();
 
         public override IEnumerable<string> UserStoragePaths
             // The base implementation returns %LOCALAPPDATA%, but %APPDATA% is a better default on Windows.
-            => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create).Yield();
+            =>
+            Environment
+                .GetFolderPath(
+                    Environment.SpecialFolder.ApplicationData,
+                    Environment.SpecialFolderOption.Create
+                )
+                .Yield();
 
         public override bool CapsLockEnabled => Console.CapsLock;
 
@@ -41,9 +48,7 @@ namespace osu.Framework.Platform.Windows
             {
                 Console.OutputEncoding = Encoding.UTF8;
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         public override bool OpenFileExternally(string filename)
@@ -70,8 +75,8 @@ namespace osu.Framework.Platform.Windows
         {
             // for windows platforms we want to override the relative mouse event handling behaviour.
             return base.CreateAvailableInputHandlers()
-                       .Where(t => !(t is MouseHandler))
-                       .Concat(new InputHandler[] { new WindowsMouseHandler() });
+                .Where(t => !(t is MouseHandler))
+                .Concat(new InputHandler[] { new WindowsMouseHandler() });
         }
 
         protected override IRenderer CreateGLRenderer() => new WindowsGLRenderer(this);
@@ -86,15 +91,23 @@ namespace osu.Framework.Platform.Windows
             timePeriod = new TimePeriod(1);
         }
 
-        protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface)
-            => FrameworkEnvironment.UseSDL3
+        protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface) =>
+            FrameworkEnvironment.UseSDL3
                 ? new SDL3WindowsWindow(preferredSurface, Options.FriendlyGameName)
                 : new SDL2WindowsWindow(preferredSurface, Options.FriendlyGameName);
 
-        public override IEnumerable<KeyBinding> PlatformKeyBindings => base.PlatformKeyBindings.Concat(new[]
-        {
-            new KeyBinding(new KeyCombination(InputKey.Alt, InputKey.F4), PlatformAction.Exit)
-        }).ToList();
+        public override IEnumerable<KeyBinding> PlatformKeyBindings =>
+            base
+                .PlatformKeyBindings.Concat(
+                    new[]
+                    {
+                        new KeyBinding(
+                            new KeyCombination(InputKey.Alt, InputKey.F4),
+                            PlatformAction.Exit
+                        ),
+                    }
+                )
+                .ToList();
 
         protected override void Dispose(bool isDisposing)
         {
@@ -104,7 +117,11 @@ namespace osu.Framework.Platform.Windows
 
         protected override void OnActivated()
         {
-            Execution.SetThreadExecutionState(Execution.ExecutionState.Continuous | Execution.ExecutionState.SystemRequired | Execution.ExecutionState.DisplayRequired);
+            Execution.SetThreadExecutionState(
+                Execution.ExecutionState.Continuous
+                    | Execution.ExecutionState.SystemRequired
+                    | Execution.ExecutionState.DisplayRequired
+            );
             setGamePriority(true);
             base.OnActivated();
         }
@@ -122,7 +139,9 @@ namespace osu.Framework.Platform.Windows
             {
                 // We set process priority after the window becomes active, because for whatever reason windows will
                 // reset this when the window becomes active after being inactive when game mode is enabled.
-                Process.GetCurrentProcess().PriorityClass = active ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
+                Process.GetCurrentProcess().PriorityClass = active
+                    ? ProcessPriorityClass.High
+                    : ProcessPriorityClass.Normal;
             }
             catch
             {

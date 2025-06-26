@@ -20,6 +20,6 @@ namespace osu.Framework.Graphics.Rendering
         SetUniform,
         UnbindTexture,
         SetActiveBatch,
-        StorageBufferOverflow
+        StorageBufferOverflow,
     }
 }

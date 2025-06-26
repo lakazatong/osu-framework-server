@@ -12,18 +12,20 @@ namespace FlappyDon.Game.Testing
         {
             base.LoadComplete();
 
-            AddRange(new Drawable[]
-            {
-                new DrawSizePreservingFillContainer
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    new DrawSizePreservingFillContainer
                     {
-                        new TestBrowser("FlappyDon"),
-                        new CursorContainer()
-                    }
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
+                        {
+                            new TestBrowser("FlappyDon"),
+                            new CursorContainer(),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         public override void SetHost(GameHost host)

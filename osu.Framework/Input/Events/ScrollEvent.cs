@@ -35,6 +35,7 @@ namespace osu.Framework.Input.Events
             IsPrecise = isPrecise;
         }
 
-        public override string ToString() => $"{GetType().ReadableName()}({ScrollDelta}, {IsPrecise})";
+        public override string ToString() =>
+            $"{GetType().ReadableName()}({ScrollDelta}, {IsPrecise})";
     }
 }

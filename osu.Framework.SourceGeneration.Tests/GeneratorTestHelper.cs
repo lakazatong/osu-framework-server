@@ -14,13 +14,13 @@ namespace osu.Framework.SourceGeneration.Tests
     {
         public static void VerifyZeroDiagnostics(this GeneratorDriverRunResult runResult)
         {
-            var compilationDiagnostics = runResult.Diagnostics
-                                                  .Where(d => d.Severity == DiagnosticSeverity.Error)
-                                                  .ToArray();
-            var generatorDiagnostics = runResult.Results
-                                                .SelectMany(r => r.Diagnostics)
-                                                .Where(d => d.Severity == DiagnosticSeverity.Error)
-                                                .ToArray();
+            var compilationDiagnostics = runResult
+                .Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error)
+                .ToArray();
+            var generatorDiagnostics = runResult
+                .Results.SelectMany(r => r.Diagnostics)
+                .Where(d => d.Severity == DiagnosticSeverity.Error)
+                .ToArray();
 
             if (compilationDiagnostics.Length > 0 || generatorDiagnostics.Length > 0)
             {
@@ -38,45 +38,68 @@ namespace osu.Framework.SourceGeneration.Tests
             }
         }
 
-        public static void VerifyMultiPhaseGeneratedSources(this GeneratorDriverRunResult runResult, (string filename, string content)[] files, int phase)
+        public static void VerifyMultiPhaseGeneratedSources(
+            this GeneratorDriverRunResult runResult,
+            (string filename, string content)[] files,
+            int phase
+        )
         {
-            var generatedSources = runResult.Results
-                                            .SelectMany(r => r.GeneratedSources)
-                                            .ToDictionary(s => s.HintName);
+            var generatedSources = runResult
+                .Results.SelectMany(r => r.GeneratedSources)
+                .ToDictionary(s => s.HintName);
 
             if (generatedSources.Count != files.Length)
-                throw new Xunit.Sdk.XunitException($"Phase {phase}: Expected {files.Length} generated sources, but found {generatedSources.Count}");
+                throw new Xunit.Sdk.XunitException(
+                    $"Phase {phase}: Expected {files.Length} generated sources, but found {generatedSources.Count}"
+                );
 
             int matches = 0;
 
             foreach (var (filename, content) in files)
             {
                 if (!generatedSources.TryGetValue(filename, out var source))
-                    throw new Xunit.Sdk.XunitException($"Phase {phase}: Expected generated source {filename}, but it was not found");
+                    throw new Xunit.Sdk.XunitException(
+                        $"Phase {phase}: Expected generated source {filename}, but it was not found"
+                    );
 
                 string actual = source.SourceText.ToString();
 
-                new DefaultVerifier().EqualOrDiff(content, actual, $"Phase {phase}: Generated source {filename} did not match expected content");
+                new DefaultVerifier().EqualOrDiff(
+                    content,
+                    actual,
+                    $"Phase {phase}: Generated source {filename} did not match expected content"
+                );
 
                 matches++;
             }
 
             if (matches != files.Length)
-                throw new Xunit.Sdk.XunitException($"Phase {phase}: Expected {files.Length} generated sources, but found {matches}");
+                throw new Xunit.Sdk.XunitException(
+                    $"Phase {phase}: Expected {files.Length} generated sources, but found {matches}"
+                );
         }
     }
 
     public class IncrementalCompilation
     {
-        private readonly Dictionary<string, SyntaxTree> sources = new Dictionary<string, SyntaxTree>();
+        private readonly Dictionary<string, SyntaxTree> sources =
+            new Dictionary<string, SyntaxTree>();
 
         public Compilation Compilation { get; private set; }
 
         public IncrementalCompilation()
         {
-            Compilation = CSharpCompilation.Create("test",
-                references: new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) },
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
+            Compilation = CSharpCompilation.Create(
+                "test",
+                references: new[]
+                {
+                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                },
+                options: new CSharpCompilationOptions(
+                    OutputKind.DynamicallyLinkedLibrary,
+                    optimizationLevel: OptimizationLevel.Release
+                )
+            );
         }
 
         public GeneratorDriverRunResult RunGenerators(ref GeneratorDriver driver)

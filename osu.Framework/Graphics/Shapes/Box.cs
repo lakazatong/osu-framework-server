@@ -31,7 +31,10 @@ namespace osu.Framework.Graphics.Shapes
         public override Texture Texture
         {
             get => base.Texture;
-            set => throw new InvalidOperationException($"The texture of a {nameof(Box)} cannot be set.");
+            set =>
+                throw new InvalidOperationException(
+                    $"The texture of a {nameof(Box)} cannot be set."
+                );
         }
     }
 }

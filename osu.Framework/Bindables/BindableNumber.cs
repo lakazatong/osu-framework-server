@@ -22,7 +22,8 @@ namespace osu.Framework.Bindables
             if (!Validation.IsSupportedBindableNumberType<T>())
             {
                 throw new NotSupportedException(
-                    $"{nameof(BindableNumber<T>)} only accepts the primitive numeric types (except for {typeof(decimal).FullName}) as type arguments. You provided {typeof(T).FullName}.");
+                    $"{nameof(BindableNumber<T>)} only accepts the primitive numeric types (except for {typeof(decimal).FullName}) as type arguments. You provided {typeof(T).FullName}."
+                );
             }
 
             precision = DefaultPrecision;
@@ -42,7 +43,11 @@ namespace osu.Framework.Bindables
                     return;
 
                 if (value <= T.Zero)
-                    throw new ArgumentOutOfRangeException(nameof(Precision), value, "Must be greater than 0.");
+                    throw new ArgumentOutOfRangeException(
+                        nameof(Precision),
+                        value,
+                        "Must be greater than 0."
+                    );
 
                 SetPrecision(value, true, this);
             }
@@ -78,8 +83,12 @@ namespace osu.Framework.Bindables
             {
                 // this rounding is purposefully performed on `decimal` to ensure that the resulting value is the closest possible floating-point
                 // number to actual real-world base-10 decimals, as that is the most common usage of precision.
-                decimal accurateResult = decimal.CreateTruncating(T.Clamp(value, MinValue, MaxValue));
-                accurateResult = Math.Round(accurateResult / decimal.CreateTruncating(Precision)) * decimal.CreateTruncating(Precision);
+                decimal accurateResult = decimal.CreateTruncating(
+                    T.Clamp(value, MinValue, MaxValue)
+                );
+                accurateResult =
+                    Math.Round(accurateResult / decimal.CreateTruncating(Precision))
+                    * decimal.CreateTruncating(Precision);
 
                 base.Value = T.CreateTruncating(accurateResult);
             }
@@ -114,7 +123,10 @@ namespace osu.Framework.Bindables
             TriggerPrecisionChange(this, false);
         }
 
-        protected void TriggerPrecisionChange(BindableNumber<T> source = null, bool propagateToBindings = true)
+        protected void TriggerPrecisionChange(
+            BindableNumber<T> source = null,
+            bool propagateToBindings = true
+        )
         {
             // check a bound bindable hasn't changed the value again (it will fire its own event)
             T beforePropagation = precision;
@@ -123,7 +135,8 @@ namespace osu.Framework.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
 
                     if (b is BindableNumber<T> bn)
                         bn.SetPrecision(precision, false, this);
@@ -149,15 +162,13 @@ namespace osu.Framework.Bindables
             PrecisionChanged = null;
         }
 
-        public bool IsInteger =>
-            typeof(T) != typeof(float) &&
-            typeof(T) != typeof(double); // Will be **constant** after JIT.
+        public bool IsInteger => typeof(T) != typeof(float) && typeof(T) != typeof(double); // Will be **constant** after JIT.
 
-        public void Set<TNewValue>(TNewValue val) where TNewValue : struct, INumber<TNewValue>
-            => Value = T.CreateTruncating(val);
+        public void Set<TNewValue>(TNewValue val)
+            where TNewValue : struct, INumber<TNewValue> => Value = T.CreateTruncating(val);
 
-        public void Add<TNewValue>(TNewValue val) where TNewValue : struct, INumber<TNewValue>
-            => Value += T.CreateTruncating(val);
+        public void Add<TNewValue>(TNewValue val)
+            where TNewValue : struct, INumber<TNewValue> => Value += T.CreateTruncating(val);
 
         /// <summary>
         /// Sets the value of the bindable to Min + (Max - Min) * amt
@@ -189,13 +200,21 @@ namespace osu.Framework.Bindables
                 if (typeof(T) == typeof(double))
                 {
                     // Take 50% of the precision to ensure the value doesn't underflow and return true for non-default values.
-                    return Utils.Precision.AlmostEquals((double)(object)Value, (double)(object)Default, (double)(object)Precision / 2);
+                    return Utils.Precision.AlmostEquals(
+                        (double)(object)Value,
+                        (double)(object)Default,
+                        (double)(object)Precision / 2
+                    );
                 }
 
                 if (typeof(T) == typeof(float))
                 {
                     // Take 50% of the precision to ensure the value doesn't underflow and return true for non-default values.
-                    return Utils.Precision.AlmostEquals((float)(object)Value, (float)(object)Default, (float)(object)Precision / 2);
+                    return Utils.Precision.AlmostEquals(
+                        (float)(object)Value,
+                        (float)(object)Default,
+                        (float)(object)Precision / 2
+                    );
                 }
 
                 return base.IsDefault;
@@ -204,7 +223,8 @@ namespace osu.Framework.Bindables
 
         protected override Bindable<T> CreateInstance() => new BindableNumber<T>();
 
-        protected sealed override T ClampValue(T value, T minValue, T maxValue) => T.Clamp(value, minValue, maxValue);
+        protected sealed override T ClampValue(T value, T minValue, T maxValue) =>
+            T.Clamp(value, minValue, maxValue);
 
         protected sealed override bool IsValidRange(T min, T max) => min <= max;
     }

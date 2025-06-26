@@ -14,12 +14,27 @@ namespace osu.Framework.Platform.Windows
 {
     internal partial class WindowsMouseHandler
     {
-        private static readonly GlobalStatistic<ulong> statistic_relative_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<WindowsMouseHandler>(), "Relative events");
-        private static readonly GlobalStatistic<ulong> statistic_absolute_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<WindowsMouseHandler>(), "Absolute events");
-        private static readonly GlobalStatistic<ulong> statistic_dropped_touch_inputs = GlobalStatistics.Get<ulong>(StatisticGroupFor<WindowsMouseHandler>(), "Dropped native touch inputs");
+        private static readonly GlobalStatistic<ulong> statistic_relative_events =
+            GlobalStatistics.Get<ulong>(
+                StatisticGroupFor<WindowsMouseHandler>(),
+                "Relative events"
+            );
+        private static readonly GlobalStatistic<ulong> statistic_absolute_events =
+            GlobalStatistics.Get<ulong>(
+                StatisticGroupFor<WindowsMouseHandler>(),
+                "Absolute events"
+            );
+        private static readonly GlobalStatistic<ulong> statistic_dropped_touch_inputs =
+            GlobalStatistics.Get<ulong>(
+                StatisticGroupFor<WindowsMouseHandler>(),
+                "Dropped native touch inputs"
+            );
 
         private static readonly GlobalStatistic<ulong> statistic_inputs_with_extra_information =
-            GlobalStatistics.Get<ulong>(StatisticGroupFor<WindowsMouseHandler>(), "Native inputs with ExtraInformation");
+            GlobalStatistics.Get<ulong>(
+                StatisticGroupFor<WindowsMouseHandler>(),
+                "Native inputs with ExtraInformation"
+            );
 
         private const int raw_input_coordinate_space = 65535;
 
@@ -30,10 +45,18 @@ namespace osu.Framework.Platform.Windows
             // ReSharper disable once ConvertClosureToMethodGroup
             sdl2Callback = (ptr, wnd, u, param, l) => onWndProcSDL2(ptr, wnd, u, param, l);
 
-            Enabled.BindValueChanged(enabled =>
-            {
-                host.InputThread.Scheduler.Add(() => SDL_SetWindowsMessageHook(enabled.NewValue ? sdl2Callback : null, IntPtr.Zero));
-            }, true);
+            Enabled.BindValueChanged(
+                enabled =>
+                {
+                    host.InputThread.Scheduler.Add(() =>
+                        SDL_SetWindowsMessageHook(
+                            enabled.NewValue ? sdl2Callback : null,
+                            IntPtr.Zero
+                        )
+                    );
+                },
+                true
+            );
         }
 
         protected override void HandleMouseMoveRelative(Vector2 delta)
@@ -47,7 +70,13 @@ namespace osu.Framework.Platform.Windows
             base.HandleMouseMoveRelative(delta);
         }
 
-        private unsafe IntPtr onWndProcSDL2(IntPtr userData, IntPtr hWnd, uint message, ulong wParam, long lParam)
+        private unsafe IntPtr onWndProcSDL2(
+            IntPtr userData,
+            IntPtr hWnd,
+            uint message,
+            ulong wParam,
+            long lParam
+        )
         {
             if (!Enabled.Value)
                 return IntPtr.Zero;
@@ -66,7 +95,13 @@ namespace osu.Framework.Platform.Windows
             int payloadSize = sizeof(RawInputData);
 
 #pragma warning disable CA2020 // Prevent behavioral change for IntPtr conversion
-            Native.Input.GetRawInputData((IntPtr)lParam, RawInputCommand.Input, out var data, ref payloadSize, sizeof(RawInputHeader));
+            Native.Input.GetRawInputData(
+                (IntPtr)lParam,
+                RawInputCommand.Input,
+                out var data,
+                ref payloadSize,
+                sizeof(RawInputHeader)
+            );
 #pragma warning restore CA2020
 
             if (data.Header.Type != RawInputType.Mouse)
@@ -96,7 +131,9 @@ namespace osu.Framework.Platform.Windows
 
             if (mouse.Flags.HasFlagFast(RawMouseFlags.MoveAbsolute))
             {
-                var screenRect = mouse.Flags.HasFlagFast(RawMouseFlags.VirtualDesktop) ? Native.Input.VirtualScreenRect : new Rectangle(window.Position, window.ClientSize);
+                var screenRect = mouse.Flags.HasFlagFast(RawMouseFlags.VirtualDesktop)
+                    ? Native.Input.VirtualScreenRect
+                    : new Rectangle(window.Position, window.ClientSize);
 
                 Vector2 screenSize = new Vector2(screenRect.Width, screenRect.Height);
 
@@ -134,7 +171,12 @@ namespace osu.Framework.Platform.Windows
             }
             else
             {
-                PendingInputs.Enqueue(new MousePositionRelativeInput { Delta = new Vector2(mouse.LastX, mouse.LastY) * sensitivity });
+                PendingInputs.Enqueue(
+                    new MousePositionRelativeInput
+                    {
+                        Delta = new Vector2(mouse.LastX, mouse.LastY) * sensitivity,
+                    }
+                );
                 statistic_relative_events.Value++;
             }
 

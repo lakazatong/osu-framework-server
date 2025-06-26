@@ -14,14 +14,17 @@ namespace osu.Framework.Graphics.UserInterface
             BackgroundColour = FrameworkColour.Blue;
         }
 
-        protected override Menu CreateSubMenu() => new BasicMenu(Direction.Vertical)
-        {
-            Anchor = Direction == Direction.Horizontal ? Anchor.BottomLeft : Anchor.TopRight
-        };
+        protected override Menu CreateSubMenu() =>
+            new BasicMenu(Direction.Vertical)
+            {
+                Anchor = Direction == Direction.Horizontal ? Anchor.BottomLeft : Anchor.TopRight,
+            };
 
-        protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) => new BasicDrawableMenuItem(item);
+        protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) =>
+            new BasicDrawableMenuItem(item);
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);
+        protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) =>
+            new BasicScrollContainer(direction);
 
         public partial class BasicDrawableMenuItem : DrawableMenuItem
         {
@@ -32,13 +35,14 @@ namespace osu.Framework.Graphics.UserInterface
                 BackgroundColourHover = FrameworkColour.Green;
             }
 
-            protected override Drawable CreateContent() => new SpriteText
-            {
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreLeft,
-                Padding = new MarginPadding(2),
-                Font = FrameworkFont.Condensed,
-            };
+            protected override Drawable CreateContent() =>
+                new SpriteText
+                {
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    Padding = new MarginPadding(2),
+                    Font = FrameworkFont.Condensed,
+                };
         }
     }
 }

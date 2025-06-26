@@ -23,7 +23,8 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
         public static readonly int STRIDE = Marshal.SizeOf(default(T));
 
         // ReSharper disable StaticMemberInGenericType
-        private static readonly List<VertexMemberAttribute> attributes = new List<VertexMemberAttribute>();
+        private static readonly List<VertexMemberAttribute> attributes =
+            new List<VertexMemberAttribute>();
 
         static GLVertexUtils()
         {
@@ -32,7 +33,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
         private static void addAttributesRecursive(Type type, int currentOffset)
         {
-            foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            foreach (
+                FieldInfo field in type.GetFields(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                )
+            )
             {
                 int fieldOffset = currentOffset + Marshal.OffsetOf(type, field.Name).ToInt32();
 
@@ -44,7 +49,8 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                 }
                 else if (field.IsDefined(typeof(VertexMemberAttribute), true))
                 {
-                    var attrib = (VertexMemberAttribute?)field.GetCustomAttribute(typeof(VertexMemberAttribute));
+                    var attrib = (VertexMemberAttribute?)
+                        field.GetCustomAttribute(typeof(VertexMemberAttribute));
                     Debug.Assert(attrib != null);
 
                     // Because this is an un-seen vertex, the attribute locations are unknown, but they're needed for marshalling
@@ -62,9 +68,22 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                 GL.EnableVertexAttribArray(i);
 
                 if (isIntegerType(attributes[i].Type) && !attributes[i].Normalized)
-                    GL.VertexAttribIPointer(i, attributes[i].Count, convertIntegerType(attributes[i].Type), STRIDE, attributes[i].Offset);
+                    GL.VertexAttribIPointer(
+                        i,
+                        attributes[i].Count,
+                        convertIntegerType(attributes[i].Type),
+                        STRIDE,
+                        attributes[i].Offset
+                    );
                 else
-                    GL.VertexAttribPointer(i, attributes[i].Count, attributes[i].Type, attributes[i].Normalized, STRIDE, attributes[i].Offset);
+                    GL.VertexAttribPointer(
+                        i,
+                        attributes[i].Count,
+                        attributes[i].Type,
+                        attributes[i].Normalized,
+                        STRIDE,
+                        attributes[i].Offset
+                    );
             }
         }
 
@@ -109,7 +128,10 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                     return (VertexAttribIntegerType)type;
 
                 default:
-                    throw new ArgumentException($"\"{type}\" is not an integer type.", nameof(type));
+                    throw new ArgumentException(
+                        $"\"{type}\" is not an integer type.",
+                        nameof(type)
+                    );
             }
         }
     }

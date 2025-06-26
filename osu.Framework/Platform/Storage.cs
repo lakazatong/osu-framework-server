@@ -27,7 +27,9 @@ namespace osu.Framework.Platform
             BasePath = path;
 
             if (BasePath == null)
-                throw new InvalidOperationException($"{nameof(BasePath)} not correctly initialized!");
+                throw new InvalidOperationException(
+                    $"{nameof(BasePath)} not correctly initialized!"
+                );
 
             if (!string.IsNullOrEmpty(subfolder))
                 BasePath = Path.Combine(BasePath, filenameStrip(subfolder));
@@ -120,7 +122,10 @@ namespace osu.Framework.Platform
         [Pure]
         public Stream CreateFileSafely(string path)
         {
-            string temporaryPath = Path.Combine(Path.GetDirectoryName(path).AsNonNull(), $"_{Path.GetFileName(path)}_{Guid.NewGuid()}");
+            string temporaryPath = Path.Combine(
+                Path.GetDirectoryName(path).AsNonNull(),
+                $"_{Path.GetFileName(path)}_{Guid.NewGuid()}"
+            );
 
             return new SafeWriteStream(temporaryPath, path, this);
         }
@@ -133,7 +138,11 @@ namespace osu.Framework.Platform
         /// <param name="mode">The mode in which the file should be opened.</param>
         /// <returns>A stream associated with the requested path.</returns>
         [Pure]
-        public abstract Stream GetStream(string path, FileAccess access = FileAccess.Read, FileMode mode = FileMode.OpenOrCreate);
+        public abstract Stream GetStream(
+            string path,
+            FileAccess access = FileAccess.Read,
+            FileMode mode = FileMode.OpenOrCreate
+        );
 
         /// <summary>
         /// Requests that a file be opened externally with an associated application, if available.

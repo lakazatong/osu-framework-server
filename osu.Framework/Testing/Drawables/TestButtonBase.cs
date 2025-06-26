@@ -18,7 +18,8 @@ namespace osu.Framework.Testing.Drawables
 {
     internal abstract partial class TestButtonBase : ClickableContainer, IFilterable
     {
-        public IEnumerable<LocalisableString> FilterTerms => text.Children.OfType<IHasFilterTerms>().SelectMany(c => c.FilterTerms);
+        public IEnumerable<LocalisableString> FilterTerms =>
+            text.Children.OfType<IHasFilterTerms>().SelectMany(c => c.FilterTerms);
 
         private bool matchingFilter = true;
 
@@ -65,7 +66,9 @@ namespace osu.Framework.Testing.Drawables
                             RelativeSizeAxes = Axes.Both,
                             Child = content = new Container { RelativeSizeAxes = Axes.Both },
                         },
-                        text = new TextFlowContainer(s => s.Font = FrameworkFont.Condensed.With(size: 14f))
+                        text = new TextFlowContainer(s =>
+                            s.Font = FrameworkFont.Condensed.With(size: 14f)
+                        )
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
@@ -76,8 +79,8 @@ namespace osu.Framework.Testing.Drawables
                                 Right = 4 + LEFT_TEXT_PADDING,
                                 Bottom = 5,
                             },
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }
@@ -93,11 +96,14 @@ namespace osu.Framework.Testing.Drawables
             if (description != null)
             {
                 text.NewLine();
-                text.AddText(description, t =>
-                {
-                    t.Font = t.Font.With("Roboto", 11);
-                    t.Colour = FrameworkColour.Yellow;
-                });
+                text.AddText(
+                    description,
+                    t =>
+                    {
+                        t.Font = t.Font.With("Roboto", 11);
+                        t.Colour = FrameworkColour.Yellow;
+                    }
+                );
             }
         }
 
@@ -113,7 +119,8 @@ namespace osu.Framework.Testing.Drawables
         {
             set
             {
-                if (collapsed == value) return;
+                if (collapsed == value)
+                    return;
 
                 collapsed = value;
                 updateVisibility();

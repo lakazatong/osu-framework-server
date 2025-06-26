@@ -52,12 +52,14 @@ namespace osu.Framework.Graphics.UserInterface
 
         public BasicTextBox()
         {
-            Add(background = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Depth = 1,
-                Colour = BackgroundUnfocused,
-            });
+            Add(
+                background = new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = 1,
+                    Colour = BackgroundUnfocused,
+                }
+            );
 
             BackgroundFocused = FrameworkColour.BlueGreen;
             BackgroundUnfocused = FrameworkColour.BlueGreenDark;
@@ -93,20 +95,26 @@ namespace osu.Framework.Graphics.UserInterface
             background.FadeColour(BackgroundFocused, 200, Easing.Out);
         }
 
-        protected override Drawable GetDrawableCharacter(char c) => new FallingDownContainer
-        {
-            AutoSizeAxes = Axes.Both,
-            Child = new SpriteText { Text = c.ToString(), Font = FrameworkFont.Condensed.With(size: FontSize) }
-        };
+        protected override Drawable GetDrawableCharacter(char c) =>
+            new FallingDownContainer
+            {
+                AutoSizeAxes = Axes.Both,
+                Child = new SpriteText
+                {
+                    Text = c.ToString(),
+                    Font = FrameworkFont.Condensed.With(size: FontSize),
+                },
+            };
 
-        protected override SpriteText CreatePlaceholder() => new FadingPlaceholderText
-        {
-            Colour = FrameworkColour.YellowGreen,
-            Font = FrameworkFont.Condensed,
-            Anchor = Anchor.CentreLeft,
-            Origin = Anchor.CentreLeft,
-            X = CaretWidth,
-        };
+        protected override SpriteText CreatePlaceholder() =>
+            new FadingPlaceholderText
+            {
+                Colour = FrameworkColour.YellowGreen,
+                Font = FrameworkFont.Condensed,
+                Anchor = Anchor.CentreLeft,
+                Origin = Anchor.CentreLeft,
+                X = CaretWidth,
+            };
 
         public partial class FallingDownContainer : Container
         {
@@ -130,11 +138,8 @@ namespace osu.Framework.Graphics.UserInterface
             public override void Hide() => this.FadeOut(200);
         }
 
-        protected override Caret CreateCaret() => new BasicCaret
-        {
-            CaretWidth = CaretWidth,
-            SelectionColour = SelectionColour,
-        };
+        protected override Caret CreateCaret() =>
+            new BasicCaret { CaretWidth = CaretWidth, SelectionColour = SelectionColour };
 
         public partial class BasicCaret : Caret
         {
@@ -165,17 +170,22 @@ namespace osu.Framework.Graphics.UserInterface
                 if (selectionWidth != null)
                 {
                     this.MoveTo(new Vector2(position.X, position.Y), 60, Easing.Out);
-                    this.ResizeWidthTo(selectionWidth.Value + CaretWidth / 2, caret_move_time, Easing.Out);
-                    this
-                        .FadeTo(0.5f, 200, Easing.Out)
-                        .FadeColour(SelectionColour, 200, Easing.Out);
+                    this.ResizeWidthTo(
+                        selectionWidth.Value + CaretWidth / 2,
+                        caret_move_time,
+                        Easing.Out
+                    );
+                    this.FadeTo(0.5f, 200, Easing.Out).FadeColour(SelectionColour, 200, Easing.Out);
                 }
                 else
                 {
-                    this.MoveTo(new Vector2(position.X - CaretWidth / 2, position.Y), 60, Easing.Out);
+                    this.MoveTo(
+                        new Vector2(position.X - CaretWidth / 2, position.Y),
+                        60,
+                        Easing.Out
+                    );
                     this.ResizeWidthTo(CaretWidth, caret_move_time, Easing.Out);
-                    this
-                        .FadeColour(Color4.White, 200, Easing.Out)
+                    this.FadeColour(Color4.White, 200, Easing.Out)
                         .Loop(c => c.FadeTo(0.7f).FadeTo(0.4f, 500, Easing.InOutSine));
                 }
             }

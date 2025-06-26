@@ -20,24 +20,26 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            CreateMenu(() => new AnimatedMenu(Direction.Vertical)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                State = MenuState.Open,
-                Items = new[]
+            CreateMenu(() =>
+                new AnimatedMenu(Direction.Vertical)
                 {
-                    new MenuItem("Item #1")
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    State = MenuState.Open,
+                    Items = new[]
                     {
-                        Items = new[]
+                        new MenuItem("Item #1")
                         {
-                            new MenuItem("Sub-item #1"),
-                            new MenuItem("Sub-item #2", () => { }),
-                        }
+                            Items = new[]
+                            {
+                                new MenuItem("Sub-item #1"),
+                                new MenuItem("Sub-item #2", () => { }),
+                            },
+                        },
+                        new MenuItem("Item #2"),
                     },
-                    new MenuItem("Item #2"),
                 }
-            });
+            );
         }
 
         [Test]
@@ -45,35 +47,53 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             AddStep("click item", () => ClickItem(0, 0));
             AddStep("click item", () => ClickItem(1, 0));
-            AddAssert("no menus closed", () =>
-            {
-                for (int i = 1; i >= 0; --i)
+            AddAssert(
+                "no menus closed",
+                () =>
                 {
-                    if (Menus.GetSubMenu(i).State == MenuState.Closed)
-                        return false;
-                }
+                    for (int i = 1; i >= 0; --i)
+                    {
+                        if (Menus.GetSubMenu(i).State == MenuState.Closed)
+                            return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
 
         [Test]
         public void TestClickItemWithActionAssignedDuringNavigationClosesMenus()
         {
             AddStep("click item", () => ClickItem(0, 0));
-            AddStep("hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[0]));
-            AddStep("assign action", () => Menus.GetSubStructure(1).GetMenuItems().Cast<Menu.DrawableMenuItem>().First().Item.Action.Value = () => { });
+            AddStep(
+                "hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[0])
+            );
+            AddStep(
+                "assign action",
+                () =>
+                    Menus
+                        .GetSubStructure(1)
+                        .GetMenuItems()
+                        .Cast<Menu.DrawableMenuItem>()
+                        .First()
+                        .Item.Action.Value = () => { }
+            );
             AddStep("click item", () => InputManager.Click(MouseButton.Left));
-            AddAssert("all menus closed", () =>
-            {
-                for (int i = 1; i >= 0; --i)
+            AddAssert(
+                "all menus closed",
+                () =>
                 {
-                    if (Menus.GetSubMenu(i).State == MenuState.Open)
-                        return false;
-                }
+                    for (int i = 1; i >= 0; --i)
+                    {
+                        if (Menus.GetSubMenu(i).State == MenuState.Open)
+                            return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
 
         [Test]
@@ -81,16 +101,19 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             AddStep("click item", () => ClickItem(0, 0));
             AddStep("click item", () => ClickItem(1, 1));
-            AddAssert("all menus closed", () =>
-            {
-                for (int i = 1; i >= 0; --i)
+            AddAssert(
+                "all menus closed",
+                () =>
                 {
-                    if (Menus.GetSubMenu(i).State == MenuState.Open)
-                        return false;
-                }
+                    for (int i = 1; i >= 0; --i)
+                    {
+                        if (Menus.GetSubMenu(i).State == MenuState.Open)
+                            return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
 
         [Test]
@@ -112,12 +135,15 @@ namespace osu.Framework.Tests.Visual.UserInterface
             bool itemClicked = false;
             bool actionReceived = false;
 
-            AddStep("set item action", () => Menus.GetSubMenu(0).Items[0].Items[0].Action.Value = () => itemClicked = true);
-            AddStep("add mouse handler", () => Add(new MouseHandlingLayer
-            {
-                Action = () => actionReceived = true,
-                Depth = 1,
-            }));
+            AddStep(
+                "set item action",
+                () => Menus.GetSubMenu(0).Items[0].Items[0].Action.Value = () => itemClicked = true
+            );
+            AddStep(
+                "add mouse handler",
+                () =>
+                    Add(new MouseHandlingLayer { Action = () => actionReceived = true, Depth = 1 })
+            );
 
             AddStep("click item", () => ClickItem(0, 0));
             AddStep("click item", () => ClickItem(1, 0));
@@ -132,12 +158,15 @@ namespace osu.Framework.Tests.Visual.UserInterface
             bool item2Clicked = false;
             bool topLevelItemClicked = false;
 
-            AddStep("set item actions", () =>
-            {
-                Menus.GetSubMenu(0).Items[0].Items[0].Action.Value = () => item1Clicked = true;
-                Menus.GetSubMenu(0).Items[0].Items[1].Action.Value = () => item2Clicked = true;
-                Menus.GetSubMenu(0).Items[1].Action.Value = () => topLevelItemClicked = true;
-            });
+            AddStep(
+                "set item actions",
+                () =>
+                {
+                    Menus.GetSubMenu(0).Items[0].Items[0].Action.Value = () => item1Clicked = true;
+                    Menus.GetSubMenu(0).Items[0].Items[1].Action.Value = () => item2Clicked = true;
+                    Menus.GetSubMenu(0).Items[1].Action.Value = () => topLevelItemClicked = true;
+                }
+            );
 
             AddStep("click item", () => ClickItem(0, 0));
             AddStep("click item", () => ClickItem(1, 0));
@@ -170,9 +199,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
             public bool PressBlocked { get; set; }
 
             public AnimatedMenu(Direction direction)
-                : base(direction)
-            {
-            }
+                : base(direction) { }
 
             protected override bool OnKeyDown(KeyDownEvent e)
             {

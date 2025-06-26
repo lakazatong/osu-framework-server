@@ -16,7 +16,8 @@ namespace osu.Framework.Platform.Windows
     internal class WindowsGLRenderer : GLRenderer, IWindowsRenderer
     {
         public IBindable<FullscreenCapability> FullscreenCapability => fullscreenCapability;
-        private readonly Bindable<FullscreenCapability> fullscreenCapability = new Bindable<FullscreenCapability>();
+        private readonly Bindable<FullscreenCapability> fullscreenCapability =
+            new Bindable<FullscreenCapability>();
 
         private readonly WindowsGameHost host;
 
@@ -53,10 +54,15 @@ namespace osu.Framework.Platform.Windows
             fullscreenCapabilityDetectionCancellationSource?.Dispose();
             fullscreenCapabilityDetectionCancellationSource = null;
 
-            if (window.WindowState != WindowState.Fullscreen || !window.IsActive.Value || fullscreenCapability.Value != Windows.FullscreenCapability.Unknown)
+            if (
+                window.WindowState != WindowState.Fullscreen
+                || !window.IsActive.Value
+                || fullscreenCapability.Value != Windows.FullscreenCapability.Unknown
+            )
                 return;
 
-            var cancellationSource = fullscreenCapabilityDetectionCancellationSource = new CancellationTokenSource();
+            var cancellationSource = fullscreenCapabilityDetectionCancellationSource =
+                new CancellationTokenSource();
             var cancellationToken = cancellationSource.Token;
 
             // 50 attempts, 100ms apart = run the detection for a total of 5 seconds before yielding an incapable state.
@@ -66,40 +72,58 @@ namespace osu.Framework.Platform.Windows
 
             queueNextAttempt();
 
-            void queueNextAttempt() => Task.Delay(time_per_attempt, cancellationToken).ContinueWith(_ =>
-            {
-                if (cancellationToken.IsCancellationRequested || window.WindowState != WindowState.Fullscreen || !window.IsActive.Value)
-                    return;
+            void queueNextAttempt() =>
+                Task.Delay(time_per_attempt, cancellationToken)
+                    .ContinueWith(
+                        _ =>
+                        {
+                            if (
+                                cancellationToken.IsCancellationRequested
+                                || window.WindowState != WindowState.Fullscreen
+                                || !window.IsActive.Value
+                            )
+                                return;
 
-                attempts++;
+                            attempts++;
 
-                try
-                {
-                    SHQueryUserNotificationState(out var notificationState);
+                            try
+                            {
+                                SHQueryUserNotificationState(out var notificationState);
 
-                    var capability = notificationState == QueryUserNotificationState.QUNS_RUNNING_D3D_FULL_SCREEN
-                        ? Windows.FullscreenCapability.Capable
-                        : Windows.FullscreenCapability.Incapable;
+                                var capability =
+                                    notificationState
+                                    == QueryUserNotificationState.QUNS_RUNNING_D3D_FULL_SCREEN
+                                        ? Windows.FullscreenCapability.Capable
+                                        : Windows.FullscreenCapability.Incapable;
 
-                    if (capability == Windows.FullscreenCapability.Incapable && attempts < max_attempts)
-                    {
-                        queueNextAttempt();
-                        return;
-                    }
+                                if (
+                                    capability == Windows.FullscreenCapability.Incapable
+                                    && attempts < max_attempts
+                                )
+                                {
+                                    queueNextAttempt();
+                                    return;
+                                }
 
-                    fullscreenCapability.Value = capability;
-                    Logger.Log($"Exclusive fullscreen capability: {fullscreenCapability.Value} ({notificationState})");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "Failed to detect fullscreen capabilities.");
-                    fullscreenCapability.Value = Windows.FullscreenCapability.Capable;
-                }
-            }, cancellationToken);
+                                fullscreenCapability.Value = capability;
+                                Logger.Log(
+                                    $"Exclusive fullscreen capability: {fullscreenCapability.Value} ({notificationState})"
+                                );
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex, "Failed to detect fullscreen capabilities.");
+                                fullscreenCapability.Value = Windows.FullscreenCapability.Capable;
+                            }
+                        },
+                        cancellationToken
+                    );
         }
 
         [DllImport("shell32.dll")]
-        private static extern int SHQueryUserNotificationState(out QueryUserNotificationState state);
+        private static extern int SHQueryUserNotificationState(
+            out QueryUserNotificationState state
+        );
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private enum QueryUserNotificationState
@@ -109,7 +133,7 @@ namespace osu.Framework.Platform.Windows
             QUNS_RUNNING_D3D_FULL_SCREEN = 3,
             QUNS_PRESENTATION_MODE = 4,
             QUNS_ACCEPTS_NOTIFICATIONS = 5,
-            QUNS_QUIET_TIME = 6
+            QUNS_QUIET_TIME = 6,
         }
     }
 }

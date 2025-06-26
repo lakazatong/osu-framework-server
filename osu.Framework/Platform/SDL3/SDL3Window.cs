@@ -16,9 +16,9 @@ using osu.Framework.Threading;
 using SDL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using static SDL.SDL3;
 using Image = SixLabors.ImageSharp.Image;
 using Point = System.Drawing.Point;
-using static SDL.SDL3;
 
 namespace osu.Framework.Platform.SDL3
 {
@@ -94,25 +94,47 @@ namespace osu.Framework.Platform.SDL3
                 switch (RuntimeInfo.OS)
                 {
                     case RuntimeInfo.Platform.Windows:
-                        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, IntPtr.Zero);
+                        return SDL_GetPointerProperty(
+                            props,
+                            SDL_PROP_WINDOW_WIN32_HWND_POINTER,
+                            IntPtr.Zero
+                        );
 
                     case RuntimeInfo.Platform.Linux:
                         if (IsWayland)
-                            return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, IntPtr.Zero);
+                            return SDL_GetPointerProperty(
+                                props,
+                                SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER,
+                                IntPtr.Zero
+                            );
 
                         if (SDL_GetCurrentVideoDriver() == "x11")
-                            return new IntPtr(SDL_GetNumberProperty(props, SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0));
+                            return new IntPtr(
+                                SDL_GetNumberProperty(props, SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0)
+                            );
 
                         return IntPtr.Zero;
 
                     case RuntimeInfo.Platform.macOS:
-                        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, IntPtr.Zero);
+                        return SDL_GetPointerProperty(
+                            props,
+                            SDL_PROP_WINDOW_COCOA_WINDOW_POINTER,
+                            IntPtr.Zero
+                        );
 
                     case RuntimeInfo.Platform.iOS:
-                        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER, IntPtr.Zero);
+                        return SDL_GetPointerProperty(
+                            props,
+                            SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER,
+                            IntPtr.Zero
+                        );
 
                     case RuntimeInfo.Platform.Android:
-                        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER, IntPtr.Zero);
+                        return SDL_GetPointerProperty(
+                            props,
+                            SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER,
+                            IntPtr.Zero
+                        );
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -131,10 +153,18 @@ namespace osu.Framework.Platform.SDL3
                 var props = SDL_GetWindowProperties(SDLWindowHandle);
 
                 if (IsWayland)
-                    return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, IntPtr.Zero);
+                    return SDL_GetPointerProperty(
+                        props,
+                        SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER,
+                        IntPtr.Zero
+                    );
 
                 if (SDL_GetCurrentVideoDriver() == "x11")
-                    return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, IntPtr.Zero);
+                    return SDL_GetPointerProperty(
+                        props,
+                        SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
+                        IntPtr.Zero
+                    );
 
                 return IntPtr.Zero;
             }
@@ -164,12 +194,17 @@ namespace osu.Framework.Platform.SDL3
             }
 
             int version = SDL_GetVersion();
-            Logger.Log($@"SDL3 Initialized
+            Logger.Log(
+                $@"SDL3 Initialized
                           SDL3 Version: {SDL_VERSIONNUM_MAJOR(version)}.{SDL_VERSIONNUM_MINOR(version)}.{SDL_VERSIONNUM_MICRO(version)}
                           SDL3 Revision: {SDL_GetRevision()}
-                          SDL3 Video driver: {SDL_GetCurrentVideoDriver()}");
+                          SDL3 Video driver: {SDL_GetCurrentVideoDriver()}"
+            );
 
-            SDL_SetLogPriority(SDL_LogCategory.SDL_LOG_CATEGORY_ERROR, SDL_LogPriority.SDL_LOG_PRIORITY_DEBUG);
+            SDL_SetLogPriority(
+                SDL_LogCategory.SDL_LOG_CATEGORY_ERROR,
+                SDL_LogPriority.SDL_LOG_PRIORITY_DEBUG
+            );
             SDL_SetLogOutputFunction(&logOutput, IntPtr.Zero);
             SDL_SetEventFilter(&eventFilter, ObjectHandle.Handle);
 
@@ -185,11 +220,18 @@ namespace osu.Framework.Platform.SDL3
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-        private static void logOutput(IntPtr _, int category, SDL_LogPriority priority, byte* messagePtr)
+        private static void logOutput(
+            IntPtr _,
+            int category,
+            SDL_LogPriority priority,
+            byte* messagePtr
+        )
         {
             SDL_LogCategory categoryEnum = (SDL_LogCategory)category;
             string? message = PtrToStringUTF8(messagePtr);
-            Logger.Log($@"SDL {categoryEnum.ReadableName()} log [{priority.ReadableName()}]: {message}");
+            Logger.Log(
+                $@"SDL {categoryEnum.ReadableName()} log [{priority.ReadableName()}]: {message}"
+            );
         }
 
         public void SetupWindow(FrameworkConfigManager config)
@@ -200,9 +242,10 @@ namespace osu.Framework.Platform.SDL3
 
         public virtual void Create()
         {
-            SDL_WindowFlags flags = SDL_WindowFlags.SDL_WINDOW_RESIZABLE |
-                                    SDL_WindowFlags.SDL_WINDOW_HIGH_PIXEL_DENSITY |
-                                    SDL_WindowFlags.SDL_WINDOW_HIDDEN; // shown after first swap to avoid white flash on startup (windows)
+            SDL_WindowFlags flags =
+                SDL_WindowFlags.SDL_WINDOW_RESIZABLE
+                | SDL_WindowFlags.SDL_WINDOW_HIGH_PIXEL_DENSITY
+                | SDL_WindowFlags.SDL_WINDOW_HIDDEN; // shown after first swap to avoid white flash on startup (windows)
 
             flags |= WindowState.ToFlags();
             flags |= graphicsSurface.Type.ToFlags();
@@ -218,7 +261,9 @@ namespace osu.Framework.Platform.SDL3
             SDLWindowHandle = SDL_CreateWindow(title, Size.Width, Size.Height, flags);
 
             if (SDLWindowHandle == null)
-                throw new InvalidOperationException($"Failed to create SDL window. SDL Error: {SDL_GetError()}");
+                throw new InvalidOperationException(
+                    $"Failed to create SDL window. SDL Error: {SDL_GetError()}"
+                );
 
             // we want text input to only be active when SDL3DesktopWindowTextInput is active.
             // SDL activates it by default on some platforms: https://github.com/libsdl-org/SDL/blob/release-2.0.16/src/video/SDL_video.c#L573-L582
@@ -336,7 +381,8 @@ namespace osu.Framework.Platform.SDL3
                     // polling via SDL_PollEvent blocks on resizes (https://stackoverflow.com/a/50858339)
                     if (!updatingWindowStateAndSize)
                     {
-                        bool isUserResizing = SDL_GetGlobalMouseState(null, null).HasFlagFast(SDL_MouseButtonFlags.SDL_BUTTON_LMASK);
+                        bool isUserResizing = SDL_GetGlobalMouseState(null, null)
+                            .HasFlagFast(SDL_MouseButtonFlags.SDL_BUTTON_LMASK);
                         fetchWindowSize(storeToConfig: isUserResizing);
                     }
 
@@ -395,46 +441,54 @@ namespace osu.Framework.Platform.SDL3
             }
         }
 
-        public void Raise() => ScheduleCommand(() =>
-        {
-            var flags = SDL_GetWindowFlags(SDLWindowHandle);
+        public void Raise() =>
+            ScheduleCommand(() =>
+            {
+                var flags = SDL_GetWindowFlags(SDLWindowHandle);
 
-            if (flags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_MINIMIZED))
-                SDL_RestoreWindow(SDLWindowHandle);
+                if (flags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_MINIMIZED))
+                    SDL_RestoreWindow(SDLWindowHandle);
 
-            SDL_RaiseWindow(SDLWindowHandle);
-        });
+                SDL_RaiseWindow(SDLWindowHandle);
+            });
 
-        public void Hide() => ScheduleCommand(() =>
-        {
-            SDL_HideWindow(SDLWindowHandle);
-        });
+        public void Hide() =>
+            ScheduleCommand(() =>
+            {
+                SDL_HideWindow(SDLWindowHandle);
+            });
 
-        public void Show() => ScheduleCommand(() =>
-        {
-            SDL_ShowWindow(SDLWindowHandle);
-        });
+        public void Show() =>
+            ScheduleCommand(() =>
+            {
+                SDL_ShowWindow(SDLWindowHandle);
+            });
 
-        public void Flash(bool flashUntilFocused = false) => ScheduleCommand(() =>
-        {
-            if (isActive.Value)
-                return;
+        public void Flash(bool flashUntilFocused = false) =>
+            ScheduleCommand(() =>
+            {
+                if (isActive.Value)
+                    return;
 
-            if (!RuntimeInfo.IsDesktop)
-                return;
+                if (!RuntimeInfo.IsDesktop)
+                    return;
 
-            SDL_FlashWindow(SDLWindowHandle, flashUntilFocused
-                ? SDL_FlashOperation.SDL_FLASH_UNTIL_FOCUSED
-                : SDL_FlashOperation.SDL_FLASH_BRIEFLY);
-        });
+                SDL_FlashWindow(
+                    SDLWindowHandle,
+                    flashUntilFocused
+                        ? SDL_FlashOperation.SDL_FLASH_UNTIL_FOCUSED
+                        : SDL_FlashOperation.SDL_FLASH_BRIEFLY
+                );
+            });
 
-        public void CancelFlash() => ScheduleCommand(() =>
-        {
-            if (!RuntimeInfo.IsDesktop)
-                return;
+        public void CancelFlash() =>
+            ScheduleCommand(() =>
+            {
+                if (!RuntimeInfo.IsDesktop)
+                    return;
 
-            SDL_FlashWindow(SDLWindowHandle, SDL_FlashOperation.SDL_FLASH_CANCEL);
-        });
+                SDL_FlashWindow(SDLWindowHandle, SDL_FlashOperation.SDL_FLASH_CANCEL);
+            });
 
         public void EnableScreenSuspension() => ScheduleCommand(() => SDL_EnableScreenSaver());
 
@@ -457,8 +511,20 @@ namespace osu.Framework.Platform.SDL3
 
                 fixed (Rgba32* ptr = pixelSpan)
                 {
-                    var pixelFormat = SDL_GetPixelFormatForMasks(32, 0xff, 0xff00, 0xff0000, 0xff000000);
-                    surface = SDL_CreateSurfaceFrom(imageSize.Width, imageSize.Height, pixelFormat, new IntPtr(ptr), imageSize.Width * 4);
+                    var pixelFormat = SDL_GetPixelFormatForMasks(
+                        32,
+                        0xff,
+                        0xff00,
+                        0xff0000,
+                        0xff000000
+                    );
+                    surface = SDL_CreateSurfaceFrom(
+                        imageSize.Width,
+                        imageSize.Height,
+                        pixelFormat,
+                        new IntPtr(ptr),
+                        imageSize.Width * 4
+                    );
                 }
 
                 SDL_SetWindowIcon(SDLWindowHandle, surface);
@@ -490,7 +556,12 @@ namespace osu.Framework.Platform.SDL3
 
             do
             {
-                eventsRead = SDL_PeepEvents(events, SDL_EventAction.SDL_GETEVENT, SDL_EventType.SDL_EVENT_FIRST, SDL_EventType.SDL_EVENT_LAST);
+                eventsRead = SDL_PeepEvents(
+                    events,
+                    SDL_EventAction.SDL_GETEVENT,
+                    SDL_EventType.SDL_EVENT_FIRST,
+                    SDL_EventType.SDL_EVENT_LAST
+                );
                 for (int i = 0; i < eventsRead; i++)
                     HandleEvent(events[i]);
             } while (eventsRead == events_per_peep);
@@ -501,13 +572,19 @@ namespace osu.Framework.Platform.SDL3
         /// </summary>
         protected virtual void HandleEvent(SDL_Event e)
         {
-            if (e.Type >= SDL_EventType.SDL_EVENT_DISPLAY_FIRST && e.Type <= SDL_EventType.SDL_EVENT_DISPLAY_LAST)
+            if (
+                e.Type >= SDL_EventType.SDL_EVENT_DISPLAY_FIRST
+                && e.Type <= SDL_EventType.SDL_EVENT_DISPLAY_LAST
+            )
             {
                 handleDisplayEvent(e.display);
                 return;
             }
 
-            if (e.Type >= SDL_EventType.SDL_EVENT_WINDOW_FIRST && e.Type <= SDL_EventType.SDL_EVENT_WINDOW_LAST)
+            if (
+                e.Type >= SDL_EventType.SDL_EVENT_WINDOW_FIRST
+                && e.Type <= SDL_EventType.SDL_EVENT_WINDOW_LAST
+            )
             {
                 handleWindowEvent(e.window);
                 return;

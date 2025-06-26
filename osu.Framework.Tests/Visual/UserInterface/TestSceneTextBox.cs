@@ -24,155 +24,181 @@ namespace osu.Framework.Tests.Visual.UserInterface
         private FillFlowContainer textBoxes;
 
         [SetUp]
-        public new void SetUp() => Schedule(() =>
-        {
+        public new void SetUp() =>
             Schedule(() =>
             {
-                Child = textBoxes = new FillFlowContainer
+                Schedule(() =>
                 {
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(0, 50),
-                    Padding = new MarginPadding
+                    Child = textBoxes = new FillFlowContainer
                     {
-                        Top = 50,
-                    },
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.9f, 1)
-                };
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 50),
+                        Padding = new MarginPadding { Top = 50 },
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.9f, 1),
+                    };
+                });
             });
-        });
 
         [Test]
         public void VariousTextBoxes()
         {
-            AddStep("add textboxes", () =>
-            {
-                textBoxes.Add(new BasicTextBox
+            AddStep(
+                "add textboxes",
+                () =>
                 {
-                    Size = new Vector2(100, 16),
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            Size = new Vector2(100, 16),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new BasicTextBox
-                {
-                    Text = @"Limited length",
-                    Size = new Vector2(200, 20),
-                    LengthLimit = 20,
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            Text = @"Limited length",
+                            Size = new Vector2(200, 20),
+                            LengthLimit = 20,
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new BasicTextBox
-                {
-                    Text = @"Box with some more text",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            Text = @"Box with some more text",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new BasicTextBox
-                {
-                    PlaceholderText = @"Placeholder text",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            PlaceholderText = @"Placeholder text",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new BasicTextBox
-                {
-                    Text = @"prefilled placeholder",
-                    PlaceholderText = @"Placeholder text",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            Text = @"prefilled placeholder",
+                            PlaceholderText = @"Placeholder text",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new BasicTextBox
-                {
-                    Text = "Readonly textbox",
-                    Size = new Vector2(500, 30),
-                    ReadOnly = true,
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            Text = "Readonly textbox",
+                            Size = new Vector2(500, 30),
+                            ReadOnly = true,
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new CustomTextBox
-                {
-                    PlaceholderText = "Custom textbox",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new CustomTextBox
+                        {
+                            PlaceholderText = "Custom textbox",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                textBoxes.Add(new BasicTextBox
-                {
-                    InputProperties = new TextInputProperties(TextInputType.Text, AutoCapitalisation: true),
-                    Text = "Auto-capitalised textbox",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
+                    textBoxes.Add(
+                        new BasicTextBox
+                        {
+                            InputProperties = new TextInputProperties(
+                                TextInputType.Text,
+                                AutoCapitalisation: true
+                            ),
+                            Text = "Auto-capitalised textbox",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
 
-                FillFlowContainer otherTextBoxes = new FillFlowContainer
-                {
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(0, 50),
-                    Padding = new MarginPadding
+                    FillFlowContainer otherTextBoxes = new FillFlowContainer
                     {
-                        Top = 50,
-                        Left = 500
-                    },
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.8f, 1)
-                };
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 50),
+                        Padding = new MarginPadding { Top = 50, Left = 500 },
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.8f, 1),
+                    };
 
-                otherTextBoxes.Add(new BasicTextBox
-                {
-                    PlaceholderText = @"Textbox in separate container",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = otherTextBoxes
-                });
+                    otherTextBoxes.Add(
+                        new BasicTextBox
+                        {
+                            PlaceholderText = @"Textbox in separate container",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = otherTextBoxes,
+                        }
+                    );
 
-                otherTextBoxes.Add(new BasicTextBox
-                {
-                    InputProperties = new TextInputProperties(TextInputType.Password),
-                    PlaceholderText = @"Password textbox",
-                    Text = "Secret ;)",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = otherTextBoxes
-                });
+                    otherTextBoxes.Add(
+                        new BasicTextBox
+                        {
+                            InputProperties = new TextInputProperties(TextInputType.Password),
+                            PlaceholderText = @"Password textbox",
+                            Text = "Secret ;)",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = otherTextBoxes,
+                        }
+                    );
 
-                FillFlowContainer nestedTextBoxes = new FillFlowContainer
-                {
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(0, 50),
-                    Margin = new MarginPadding { Left = 50 },
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.8f, 1)
-                };
+                    FillFlowContainer nestedTextBoxes = new FillFlowContainer
+                    {
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 50),
+                        Margin = new MarginPadding { Left = 50 },
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.8f, 1),
+                    };
 
-                nestedTextBoxes.Add(new BasicTextBox
-                {
-                    PlaceholderText = @"Nested textbox 1",
-                    Size = new Vector2(457, 30),
-                    TabbableContentContainer = otherTextBoxes
-                });
+                    nestedTextBoxes.Add(
+                        new BasicTextBox
+                        {
+                            PlaceholderText = @"Nested textbox 1",
+                            Size = new Vector2(457, 30),
+                            TabbableContentContainer = otherTextBoxes,
+                        }
+                    );
 
-                nestedTextBoxes.Add(new BasicTextBox
-                {
-                    PlaceholderText = @"Nested textbox 2",
-                    Size = new Vector2(457, 30),
-                    TabbableContentContainer = otherTextBoxes
-                });
+                    nestedTextBoxes.Add(
+                        new BasicTextBox
+                        {
+                            PlaceholderText = @"Nested textbox 2",
+                            Size = new Vector2(457, 30),
+                            TabbableContentContainer = otherTextBoxes,
+                        }
+                    );
 
-                nestedTextBoxes.Add(new BasicTextBox
-                {
-                    PlaceholderText = @"Nested textbox 3",
-                    Size = new Vector2(457, 30),
-                    TabbableContentContainer = otherTextBoxes
-                });
+                    nestedTextBoxes.Add(
+                        new BasicTextBox
+                        {
+                            PlaceholderText = @"Nested textbox 3",
+                            Size = new Vector2(457, 30),
+                            TabbableContentContainer = otherTextBoxes,
+                        }
+                    );
 
-                otherTextBoxes.Add(nestedTextBoxes);
+                    otherTextBoxes.Add(nestedTextBoxes);
 
-                Add(otherTextBoxes);
-            });
+                    Add(otherTextBoxes);
+                }
+            );
         }
 
         [Test]
@@ -180,16 +206,21 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             BasicTextBox numbers = null;
 
-            AddStep("add number textbox", () =>
-            {
-                textBoxes.Add(numbers = new BasicTextBox
+            AddStep(
+                "add number textbox",
+                () =>
                 {
-                    InputProperties = new TextInputProperties(TextInputType.Number),
-                    PlaceholderText = @"Only numbers",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
-            });
+                    textBoxes.Add(
+                        numbers = new BasicTextBox
+                        {
+                            InputProperties = new TextInputProperties(TextInputType.Number),
+                            PlaceholderText = @"Only numbers",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
+                }
+            );
 
             // <c>U+FF11</c> is the Unicode FULLWIDTH DIGIT ONE character, treated as a number by char.IsNumber()
             AddStep(@"set number text", () => numbers.Text = "1h2e3l4l5o6\uFF11");
@@ -209,43 +240,54 @@ namespace osu.Framework.Tests.Visual.UserInterface
             bool wasNewText = false;
             int commitCount = 0;
 
-            AddStep("add commit on unfocus textbox", () =>
-            {
-                wasNewText = false;
-                commitCount = 0;
-
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add commit on unfocus textbox",
+                () =>
                 {
-                    CommitOnFocusLost = commitOnFocusLost,
-                    Size = new Vector2(500, 30),
-                });
+                    wasNewText = false;
+                    commitCount = 0;
 
-                if (withInitialText)
-                    textBox.Text = "Default Text";
+                    textBoxes.Add(
+                        textBox = new InsertableTextBox
+                        {
+                            CommitOnFocusLost = commitOnFocusLost,
+                            Size = new Vector2(500, 30),
+                        }
+                    );
 
-                textBox.OnCommit += (_, newText) =>
-                {
-                    commitCount++;
-                    wasNewText = newText;
-                };
-            });
+                    if (withInitialText)
+                        textBox.Text = "Default Text";
+
+                    textBox.OnCommit += (_, newText) =>
+                    {
+                        commitCount++;
+                        wasNewText = newText;
+                    };
+                }
+            );
 
             AddAssert("ensure no commits", () => commitCount == 0);
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             if (changeText)
                 AddStep("insert more text", () => textBox.InsertString(" Plus More"));
 
-            AddStep("click away", () =>
-            {
-                InputManager.MoveMouseTo(Vector2.One);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click away",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Vector2.One);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             if (commitOnFocusLost)
             {
@@ -255,20 +297,26 @@ namespace osu.Framework.Tests.Visual.UserInterface
             else
                 AddAssert("ensure no commits", () => commitCount == 0);
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             if (changeText)
                 AddStep("insert more text", () => textBox.InsertString(" Plus More"));
 
-            AddStep("commit via enter", () =>
-            {
-                InputManager.PressKey(Key.Enter);
-                InputManager.ReleaseKey(Key.Enter);
-            });
+            AddStep(
+                "commit via enter",
+                () =>
+                {
+                    InputManager.PressKey(Key.Enter);
+                    InputManager.ReleaseKey(Key.Enter);
+                }
+            );
 
             int expectedCount = 1 + (commitOnFocusLost ? 1 : 0);
 
@@ -281,37 +329,46 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("type character", () =>
-            {
-                // tests don't actually send consumable text, but this important part is that we fire the key event to begin consuming.
-                InputManager.Key(Key.A);
-                textBox.Text += "a";
-            });
+            AddStep(
+                "type character",
+                () =>
+                {
+                    // tests don't actually send consumable text, but this important part is that we fire the key event to begin consuming.
+                    InputManager.Key(Key.A);
+                    textBox.Text += "a";
+                }
+            );
 
             AddStep("backspace character", () => InputManager.Key(Key.BackSpace));
             AddAssert("character removed", () => textBox.Text == string.Empty);
 
             AddStep("shift down", () => InputManager.PressKey(Key.ShiftLeft));
 
-            AddStep("type character", () =>
-            {
-                InputManager.Key(Key.A);
-                textBox.Text += "A";
-            });
+            AddStep(
+                "type character",
+                () =>
+                {
+                    InputManager.Key(Key.A);
+                    textBox.Text += "A";
+                }
+            );
 
             AddStep("backspace character", () => InputManager.Key(Key.BackSpace));
             AddAssert("character removed", () => textBox.Text == string.Empty);
@@ -324,19 +381,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert three words", () => textBox.InsertString("some long text"));
             AddStep("delete last word", () => InputManager.Keys(PlatformAction.DeleteBackwardWord));
@@ -354,19 +414,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert three words", () => textBox.InsertString("a b c"));
             AddStep("delete last word", () => InputManager.Keys(PlatformAction.DeleteBackwardWord));
@@ -384,19 +447,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert text", () => textBox.InsertString("author=test123 $$$aaa 5.5..."));
             AddStep("delete last word", () => InputManager.Keys(PlatformAction.DeleteBackwardWord));
@@ -420,22 +486,28 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40)
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert three words", () => textBox.InsertString("some long text"));
-            AddStep("move caret to start", () => InputManager.Keys(PlatformAction.MoveBackwardLine));
+            AddStep(
+                "move caret to start",
+                () => InputManager.Keys(PlatformAction.MoveBackwardLine)
+            );
             AddStep("delete first word", () => InputManager.Keys(PlatformAction.DeleteForwardWord));
             AddAssert("two words remain", () => textBox.Text == " long text");
             AddStep("delete first word", () => InputManager.Keys(PlatformAction.DeleteForwardWord));
@@ -451,22 +523,28 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40)
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert three words", () => textBox.InsertString("a b c"));
-            AddStep("move caret to start", () => InputManager.Keys(PlatformAction.MoveBackwardLine));
+            AddStep(
+                "move caret to start",
+                () => InputManager.Keys(PlatformAction.MoveBackwardLine)
+            );
             AddStep("delete first word", () => InputManager.Keys(PlatformAction.DeleteForwardWord));
             AddAssert("two words remain", () => textBox.Text == " b c");
             AddStep("delete first word", () => InputManager.Keys(PlatformAction.DeleteForwardWord));
@@ -482,22 +560,28 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40)
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert text", () => textBox.InsertString("author=test123 $$$aaa 5.5..."));
-            AddStep("move caret to start", () => InputManager.Keys(PlatformAction.MoveBackwardLine));
+            AddStep(
+                "move caret to start",
+                () => InputManager.Keys(PlatformAction.MoveBackwardLine)
+            );
             AddStep("delete first word", () => InputManager.Keys(PlatformAction.DeleteForwardWord));
             AddAssert("some text remains", () => textBox.Text == "=test123 $$$aaa 5.5...");
             AddStep("delete first word", () => InputManager.Keys(PlatformAction.DeleteForwardWord));
@@ -522,19 +606,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert word", () => textBox.InsertString("eventext"));
             AddStep("remove 2 letters", () => removeFirstCharacters(2));
@@ -545,7 +632,10 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("append string", () => appendString(textBox, "te"));
             AddStep("remove 2 letters", () => removeFirstCharacters(2));
             AddStep("append string", () => appendString(textBox, "xt"));
-            AddAssert("is correct displayed text", () => textBox.FlowingText == "eventext" && textBox.FlowingText == textBox.Text);
+            AddAssert(
+                "is correct displayed text",
+                () => textBox.FlowingText == "eventext" && textBox.FlowingText == textBox.Text
+            );
         }
 
         /// <summary>
@@ -556,19 +646,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                });
-            });
+                    textBoxes.Add(textBox = new InsertableTextBox { Size = new Vector2(200, 40) });
+                }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("insert word", () => textBox.InsertString("eventext"));
             AddStep("remove 2 letters", () => removeLastCharacters(2));
@@ -579,7 +672,10 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("prepend string", () => prependString(textBox, "en"));
             AddStep("remove 2 letters", () => removeLastCharacters(2));
             AddStep("prepend string", () => prependString(textBox, "ev"));
-            AddAssert("is correct displayed text", () => textBox.FlowingText == "eventext" && textBox.FlowingText == textBox.Text);
+            AddAssert(
+                "is correct displayed text",
+                () => textBox.FlowingText == "eventext" && textBox.FlowingText == textBox.Text
+            );
         }
 
         [Test]
@@ -587,26 +683,37 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add limited textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add limited textbox",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                    Text = "some text",
-                });
+                    textBoxes.Add(
+                        textBox = new InsertableTextBox
+                        {
+                            Size = new Vector2(200, 40),
+                            Text = "some text",
+                        }
+                    );
 
-                textBox.LengthLimit = textBox.Text.Length;
-            });
+                    textBox.LengthLimit = textBox.Text.Length;
+                }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("select all", () => InputManager.Keys(PlatformAction.SelectAll));
             AddStep("insert string", () => textBox.InsertString("another"));
-            AddAssert("text replaced", () => textBox.FlowingText == "another" && textBox.FlowingText == textBox.Text);
+            AddAssert(
+                "text replaced",
+                () => textBox.FlowingText == "another" && textBox.FlowingText == textBox.Text
+            );
         }
 
         [Test]
@@ -615,61 +722,85 @@ namespace osu.Framework.Tests.Visual.UserInterface
             BasicTextBox firstTextBox = null;
             BasicTextBox secondTextBox = null;
 
-            AddStep("add textboxes", () => textBoxes.AddRange(new[]
-            {
-                firstTextBox = new BasicTextBox
-                {
-                    Text = "Readonly textbox",
-                    Size = new Vector2(500, 30),
-                    ReadOnly = true,
-                    TabbableContentContainer = textBoxes
-                },
-                secondTextBox = new BasicTextBox
-                {
-                    Text = "Standard textbox",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                }
-            }));
+            AddStep(
+                "add textboxes",
+                () =>
+                    textBoxes.AddRange(
+                        new[]
+                        {
+                            firstTextBox = new BasicTextBox
+                            {
+                                Text = "Readonly textbox",
+                                Size = new Vector2(500, 30),
+                                ReadOnly = true,
+                                TabbableContentContainer = textBoxes,
+                            },
+                            secondTextBox = new BasicTextBox
+                            {
+                                Text = "Standard textbox",
+                                Size = new Vector2(500, 30),
+                                TabbableContentContainer = textBoxes,
+                            },
+                        }
+                    )
+            );
 
-            AddStep("click first (readonly) textbox", () =>
-            {
-                InputManager.MoveMouseTo(firstTextBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first (readonly) textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(firstTextBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("first textbox has no focus", () => !firstTextBox.HasFocus);
 
-            AddStep("click second (editable) textbox", () =>
-            {
-                InputManager.MoveMouseTo(secondTextBox);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("try to tab backwards", () =>
-            {
-                InputManager.PressKey(Key.ShiftLeft);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.ShiftLeft);
-            });
+            AddStep(
+                "click second (editable) textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(secondTextBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "try to tab backwards",
+                () =>
+                {
+                    InputManager.PressKey(Key.ShiftLeft);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.ShiftLeft);
+                }
+            );
             AddAssert("first (readonly) has no focus", () => !firstTextBox.HasFocus);
 
-            AddStep("drag on first (readonly) textbox", () =>
-            {
-                InputManager.MoveMouseTo(firstTextBox.ScreenSpaceDrawQuad.Centre);
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.MoveMouseTo(firstTextBox.ScreenSpaceDrawQuad.TopLeft);
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "drag on first (readonly) textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(firstTextBox.ScreenSpaceDrawQuad.Centre);
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.MoveMouseTo(firstTextBox.ScreenSpaceDrawQuad.TopLeft);
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
             AddAssert("first textbox has no focus", () => !firstTextBox.HasFocus);
 
             AddStep("make first textbox non-readonly", () => firstTextBox.ReadOnly = false);
-            AddStep("click first textbox", () =>
-            {
-                InputManager.MoveMouseTo(firstTextBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click first textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(firstTextBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddStep("make first textbox readonly again", () => firstTextBox.ReadOnly = true);
             AddAssert("first textbox yielded focus", () => !firstTextBox.HasFocus);
-            AddStep("delete last character", () => InputManager.Keys(PlatformAction.DeleteBackwardChar));
+            AddStep(
+                "delete last character",
+                () => InputManager.Keys(PlatformAction.DeleteBackwardChar)
+            );
             AddAssert("no text removed", () => firstTextBox.Text == "Readonly textbox");
         }
 
@@ -678,42 +809,62 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () => textBoxes.AddRange(new[]
-            {
-                textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
+                    textBoxes.AddRange(
+                        new[]
+                        {
+                            textBox = new InsertableTextBox
+                            {
+                                Text = "24",
+                                Size = new Vector2(500, 30),
+                                TabbableContentContainer = textBoxes,
+                            },
+                        }
+                    )
+            );
+
+            AddStep(
+                "register current callback",
+                () =>
+                    textBox.Current.BindValueChanged(text =>
+                    {
+                        if (string.IsNullOrEmpty(text.NewValue))
+                            return;
+
+                        if (!int.TryParse(text.NewValue, out int value) || value > 100)
+                            textBox.Current.Value = "0";
+                    })
+            );
+
+            AddStep(
+                "click textbox",
+                () =>
                 {
-                    Text = "24",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                },
-            }));
-
-            AddStep("register current callback", () => textBox.Current.BindValueChanged(text =>
-            {
-                if (string.IsNullOrEmpty(text.NewValue))
-                    return;
-
-                if (!int.TryParse(text.NewValue, out int value) || value > 100)
-                    textBox.Current.Value = "0";
-            }));
-
-            AddStep("click textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddStep("insert digit", () => textBox.InsertString("9"));
             AddUntilStep("textbox value is 0", () => textBox.Current.Value == "0");
-            AddUntilStep("caret is in correct position", () =>
-            {
-                var spriteText = textBox.ChildrenOfType<SpriteText>().SingleOrDefault(text => text.Text == "0");
-                var caret = textBox.ChildrenOfType<Caret>().Single();
+            AddUntilStep(
+                "caret is in correct position",
+                () =>
+                {
+                    var spriteText = textBox
+                        .ChildrenOfType<SpriteText>()
+                        .SingleOrDefault(text => text.Text == "0");
+                    var caret = textBox.ChildrenOfType<Caret>().Single();
 
-                return spriteText != null && Precision.AlmostEquals(
-                    spriteText.ScreenSpaceDrawQuad.TopRight.X,
-                    caret.ScreenSpaceDrawQuad.TopLeft.X,
-                    5f);
-            });
+                    return spriteText != null
+                        && Precision.AlmostEquals(
+                            spriteText.ScreenSpaceDrawQuad.TopRight.X,
+                            caret.ScreenSpaceDrawQuad.TopLeft.X,
+                            5f
+                        );
+                }
+            );
         }
 
         [Test]
@@ -721,23 +872,31 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox overrideInputBox = null;
 
-            AddStep("add override textbox", () =>
-            {
-                textBoxes.Add(overrideInputBox = new InsertableTextBox
+            AddStep(
+                "add override textbox",
+                () =>
                 {
-                    Text = @"Override input textbox",
-                    Size = new Vector2(500, 30),
-                    TabbableContentContainer = textBoxes
-                });
-                overrideInputBox.Current.BindValueChanged(vce =>
-                {
-                    if (vce.NewValue != @"Input overridden!")
-                        overrideInputBox.Current.Value = @"Input overridden!";
-                });
-            });
+                    textBoxes.Add(
+                        overrideInputBox = new InsertableTextBox
+                        {
+                            Text = @"Override input textbox",
+                            Size = new Vector2(500, 30),
+                            TabbableContentContainer = textBoxes,
+                        }
+                    );
+                    overrideInputBox.Current.BindValueChanged(vce =>
+                    {
+                        if (vce.NewValue != @"Input overridden!")
+                            overrideInputBox.Current.Value = @"Input overridden!";
+                    });
+                }
+            );
 
             AddStep(@"set some text", () => overrideInputBox.Text = "smth");
-            AddAssert(@"verify display state", () => overrideInputBox.FlowingText == "Input overridden!");
+            AddAssert(
+                @"verify display state",
+                () => overrideInputBox.FlowingText == "Input overridden!"
+            );
         }
 
         [Test]
@@ -745,21 +904,29 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add text box", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add text box",
+                () =>
                 {
-                    Size = new Vector2(200, 40),
-                    Text = "hello"
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new InsertableTextBox
+                        {
+                            Size = new Vector2(200, 40),
+                            Text = "hello",
+                        }
+                    );
+                }
+            );
             AddAssert("text is hello", () => textBox.Text == "hello");
 
-            AddStep("set new text and disable", () =>
-            {
-                textBox.Text = "goodbye";
-                textBox.Current.Disabled = true;
-            });
+            AddStep(
+                "set new text and disable",
+                () =>
+                {
+                    textBox.Text = "goodbye";
+                    textBox.Current.Disabled = true;
+                }
+            );
             AddAssert("text is goodbye", () => textBox.Text == "goodbye");
 
             AddStep("attempt to set text", () => textBox.Text = "change!");
@@ -774,20 +941,40 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             PaddedTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new PaddedTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "hello",
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new PaddedTextBox { Size = new Vector2(300, 40), Text = "hello" }
+                    );
+                }
+            );
 
-            AddAssert("text container didn't move", () => Precision.AlmostEquals(textBox.TextContainerBounds.TopLeft.X, PaddedTextBox.LEFT_RIGHT_PADDING, 1));
+            AddAssert(
+                "text container didn't move",
+                () =>
+                    Precision.AlmostEquals(
+                        textBox.TextContainerBounds.TopLeft.X,
+                        PaddedTextBox.LEFT_RIGHT_PADDING,
+                        1
+                    )
+            );
 
             AddStep("set long text", () => textBox.Text = "this is very long text in a box");
-            AddUntilStep("wait for transforms to finish", () => textBox.TextContainerTransformsFinished);
-            AddAssert("text container moved to expected position", () => Precision.AlmostEquals(textBox.TextContainerBounds.TopRight.X, textBox.DrawWidth - PaddedTextBox.LEFT_RIGHT_PADDING, 1));
+            AddUntilStep(
+                "wait for transforms to finish",
+                () => textBox.TextContainerTransformsFinished
+            );
+            AddAssert(
+                "text container moved to expected position",
+                () =>
+                    Precision.AlmostEquals(
+                        textBox.TextContainerBounds.TopRight.X,
+                        textBox.DrawWidth - PaddedTextBox.LEFT_RIGHT_PADDING,
+                        1
+                    )
+            );
         }
 
         [Test]
@@ -795,31 +982,71 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             PaddedTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new PaddedTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "framework framework framework framework framework framework framework"
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new PaddedTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text =
+                                "framework framework framework framework framework framework framework",
+                        }
+                    );
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("move caret to start", () => InputManager.Keys(PlatformAction.MoveBackwardLine));
-            AddUntilStep("wait for transforms to finish", () => textBox.TextContainerTransformsFinished);
-            AddAssert("text container moved to start", () => Precision.AlmostEquals(textBox.TextContainerBounds.TopLeft.X, PaddedTextBox.LEFT_RIGHT_PADDING, 1));
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "move caret to start",
+                () => InputManager.Keys(PlatformAction.MoveBackwardLine)
+            );
+            AddUntilStep(
+                "wait for transforms to finish",
+                () => textBox.TextContainerTransformsFinished
+            );
+            AddAssert(
+                "text container moved to start",
+                () =>
+                    Precision.AlmostEquals(
+                        textBox.TextContainerBounds.TopLeft.X,
+                        PaddedTextBox.LEFT_RIGHT_PADDING,
+                        1
+                    )
+            );
 
             AddStep("move forward word", () => InputManager.Keys(PlatformAction.MoveForwardWord));
-            AddUntilStep("wait for transforms to finish", () => textBox.TextContainerTransformsFinished);
-            AddAssert("text container didn't move", () => Precision.AlmostEquals(textBox.TextContainerBounds.TopLeft.X, PaddedTextBox.LEFT_RIGHT_PADDING, 1));
+            AddUntilStep(
+                "wait for transforms to finish",
+                () => textBox.TextContainerTransformsFinished
+            );
+            AddAssert(
+                "text container didn't move",
+                () =>
+                    Precision.AlmostEquals(
+                        textBox.TextContainerBounds.TopLeft.X,
+                        PaddedTextBox.LEFT_RIGHT_PADDING,
+                        1
+                    )
+            );
 
             AddStep("move forward word", () => InputManager.Keys(PlatformAction.MoveForwardWord));
-            AddUntilStep("wait for transforms to finish", () => textBox.TextContainerTransformsFinished);
-            AddAssert("text container moved back", () => textBox.TextContainerBounds.TopLeft.X < PaddedTextBox.LEFT_RIGHT_PADDING);
+            AddUntilStep(
+                "wait for transforms to finish",
+                () => textBox.TextContainerTransformsFinished
+            );
+            AddAssert(
+                "text container moved back",
+                () => textBox.TextContainerBounds.TopLeft.X < PaddedTextBox.LEFT_RIGHT_PADDING
+            );
         }
 
         [Test]
@@ -827,31 +1054,68 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             PaddedTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new PaddedTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "this is very long text in a box that will scroll",
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new PaddedTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text = "this is very long text in a box that will scroll",
+                        }
+                    );
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("move caret to start", () => InputManager.Keys(PlatformAction.MoveBackwardLine));
-            AddUntilStep("wait for transforms to finish", () => textBox.TextContainerTransformsFinished);
-            AddAssert("text container moved to start", () => Precision.AlmostEquals(textBox.TextContainerBounds.TopLeft.X, PaddedTextBox.LEFT_RIGHT_PADDING, 1));
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "move caret to start",
+                () => InputManager.Keys(PlatformAction.MoveBackwardLine)
+            );
+            AddUntilStep(
+                "wait for transforms to finish",
+                () => textBox.TextContainerTransformsFinished
+            );
+            AddAssert(
+                "text container moved to start",
+                () =>
+                    Precision.AlmostEquals(
+                        textBox.TextContainerBounds.TopLeft.X,
+                        PaddedTextBox.LEFT_RIGHT_PADDING,
+                        1
+                    )
+            );
 
-            AddStep("click close to the right edge of textbox", () =>
-            {
-                InputManager.MoveMouseTo((textBox.ScreenSpaceDrawQuad.TopRight + textBox.ScreenSpaceDrawQuad.BottomRight) / 2 - new Vector2(1, 0));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddUntilStep("wait for transforms to finish", () => textBox.TextContainerTransformsFinished);
-            AddAssert("text container moved back", () => textBox.TextContainerBounds.TopLeft.X < PaddedTextBox.LEFT_RIGHT_PADDING);
+            AddStep(
+                "click close to the right edge of textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        (
+                            textBox.ScreenSpaceDrawQuad.TopRight
+                            + textBox.ScreenSpaceDrawQuad.BottomRight
+                        ) / 2
+                            - new Vector2(1, 0)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddUntilStep(
+                "wait for transforms to finish",
+                () => textBox.TextContainerTransformsFinished
+            );
+            AddAssert(
+                "text container moved back",
+                () => textBox.TextContainerBounds.TopLeft.X < PaddedTextBox.LEFT_RIGHT_PADDING
+            );
         }
 
         [Test]
@@ -859,20 +1123,28 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new BasicTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "initial text",
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new BasicTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text = "initial text",
+                        }
+                    );
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("set text", () => textBox.Text = "a longer string of text");
             // ideally, this should check the caret/selection position, but that is not exposed in TextBox.
@@ -888,28 +1160,39 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "initial text",
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new InsertableTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text = "initial text",
+                        }
+                    );
+                }
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("set text", () => textBox.Text = "aaaaaaaaaaaaaaaaaaaa");
 
-            AddStep("select word", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-                InputManager.PressButton(MouseButton.Left);
-            });
+            AddStep(
+                "select word",
+                () =>
+                {
+                    InputManager.Click(MouseButton.Left);
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
 
             AddStep("insert text", () => textBox.InsertString("a"));
             AddAssert("text overwritten", () => textBox.Text == "a");
@@ -922,26 +1205,42 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new BasicTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "initial text",
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new BasicTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text = "initial text",
+                        }
+                    );
+                }
+            );
 
             AddAssert("select all fails", () => textBox.SelectAll(), () => Is.False);
-            AddAssert("no text selected", () => textBox.SelectedText, () => Is.EqualTo(string.Empty));
+            AddAssert(
+                "no text selected",
+                () => textBox.SelectedText,
+                () => Is.EqualTo(string.Empty)
+            );
 
-            AddStep("click on textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click on textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("select all succeeds", () => textBox.SelectAll(), () => Is.True);
-            AddAssert("all text selected", () => textBox.SelectedText, () => Is.EqualTo(textBox.Text));
+            AddAssert(
+                "all text selected",
+                () => textBox.SelectedText,
+                () => Is.EqualTo(textBox.Text)
+            );
         }
 
         [Test]
@@ -949,51 +1248,86 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new BasicTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "cwm fjord glyphs vext bank quiz",
-                    ReadOnly = false
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new BasicTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text = "cwm fjord glyphs vext bank quiz",
+                            ReadOnly = false,
+                        }
+                    );
+                }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             // left char move should put cursor at left end of selection
             AddStep("select all", () => textBox.SelectAll());
-            AddStep("move cursor backward (char)", () => InputManager.Keys(PlatformAction.MoveBackwardChar));
+            AddStep(
+                "move cursor backward (char)",
+                () => InputManager.Keys(PlatformAction.MoveBackwardChar)
+            );
             AddStep("select next word", () => InputManager.Keys(PlatformAction.SelectForwardWord));
             AddAssert("first word selected", () => textBox.SelectedText == "cwm");
 
             // forward word move should put cursor at right end of selection
-            AddStep("move cursor forward (word)", () => InputManager.Keys(PlatformAction.MoveForwardWord));
+            AddStep(
+                "move cursor forward (word)",
+                () => InputManager.Keys(PlatformAction.MoveForwardWord)
+            );
             AddStep("select next word", () => InputManager.Keys(PlatformAction.SelectForwardWord));
             AddAssert("second word selected", () => textBox.SelectedText == " fjord");
 
             // same thing but for "back-facing" selection
-            AddStep("move cursor forward (word)", () => InputManager.Keys(PlatformAction.MoveForwardWord));
-            AddStep("select previous word", () => InputManager.Keys(PlatformAction.SelectBackwardWord));
+            AddStep(
+                "move cursor forward (word)",
+                () => InputManager.Keys(PlatformAction.MoveForwardWord)
+            );
+            AddStep(
+                "select previous word",
+                () => InputManager.Keys(PlatformAction.SelectBackwardWord)
+            );
             AddAssert("second word selected", () => textBox.SelectedText == "fjord");
 
             // right char move should put cursor at right end of selection
             AddStep("select all", () => textBox.SelectAll());
-            AddStep("move cursor forward (char)", () => InputManager.Keys(PlatformAction.MoveForwardChar));
-            AddStep("select previous word", () => InputManager.Keys(PlatformAction.SelectBackwardWord));
+            AddStep(
+                "move cursor forward (char)",
+                () => InputManager.Keys(PlatformAction.MoveForwardChar)
+            );
+            AddStep(
+                "select previous word",
+                () => InputManager.Keys(PlatformAction.SelectBackwardWord)
+            );
             AddAssert("last word selected", () => textBox.SelectedText == "quiz");
 
             // backward word move should put cursor at left end of selection
-            AddStep("move cursor backward (word)", () => InputManager.Keys(PlatformAction.MoveBackwardWord));
-            AddStep("select previous word", () => InputManager.Keys(PlatformAction.SelectBackwardWord));
+            AddStep(
+                "move cursor backward (word)",
+                () => InputManager.Keys(PlatformAction.MoveBackwardWord)
+            );
+            AddStep(
+                "select previous word",
+                () => InputManager.Keys(PlatformAction.SelectBackwardWord)
+            );
             AddAssert("second-from-last word selected", () => textBox.SelectedText == "bank ");
 
             // same thing but for "front-facing" selection
-            AddStep("move cursor backward (word)", () => InputManager.Keys(PlatformAction.MoveBackwardWord));
+            AddStep(
+                "move cursor backward (word)",
+                () => InputManager.Keys(PlatformAction.MoveBackwardWord)
+            );
             AddStep("select next word", () => InputManager.Keys(PlatformAction.SelectForwardWord));
             AddAssert("second-from-last word selected", () => textBox.SelectedText == "bank");
         }
@@ -1003,94 +1337,146 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             InsertableTextBox textBox = null;
 
-            AddStep("add textbox", () =>
-            {
-                textBoxes.Add(textBox = new InsertableTextBox
+            AddStep(
+                "add textbox",
+                () =>
                 {
-                    Size = new Vector2(300, 40),
-                    Text = "123",
-                    ReadOnly = false
-                });
-            });
+                    textBoxes.Add(
+                        textBox = new InsertableTextBox
+                        {
+                            Size = new Vector2(300, 40),
+                            Text = "123",
+                            ReadOnly = false,
+                        }
+                    );
+                }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             // drag text, insert, keep mouse held, drag more and ensure it's ignored
-            AddStep("hold from middle of textbox", () => InputManager.PressButton(MouseButton.Left));
-            AddStep("move mouse to left of textbox", () => InputManager.MoveMouseTo(textBox.ScreenSpaceDrawQuad.TopLeft - new Vector2(20f, 0f)));
+            AddStep(
+                "hold from middle of textbox",
+                () => InputManager.PressButton(MouseButton.Left)
+            );
+            AddStep(
+                "move mouse to left of textbox",
+                () =>
+                    InputManager.MoveMouseTo(
+                        textBox.ScreenSpaceDrawQuad.TopLeft - new Vector2(20f, 0f)
+                    )
+            );
             AddAssert("text selected by drag", () => textBox.SelectedText == "123");
             AddStep("insert character", () => textBox.InsertString("1"));
             AddAssert("text overwritten", () => textBox.Text == "1");
-            AddStep("move mouse a little", () => InputManager.MoveMouseTo(InputManager.CurrentState.Mouse.Position - new Vector2(10f, 0f)));
-            AddAssert("text not selected by drag", () => string.IsNullOrEmpty(textBox.SelectedText));
+            AddStep(
+                "move mouse a little",
+                () =>
+                    InputManager.MoveMouseTo(
+                        InputManager.CurrentState.Mouse.Position - new Vector2(10f, 0f)
+                    )
+            );
+            AddAssert(
+                "text not selected by drag",
+                () => string.IsNullOrEmpty(textBox.SelectedText)
+            );
             AddStep("release mouse", () => InputManager.ReleaseButton(MouseButton.Left));
 
             // drag text, release mouse, insert, drag again and ensure dragging still works
-            AddStep("hold from middle of textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.PressButton(MouseButton.Left);
-            });
-            AddStep("drag again", () => InputManager.MoveMouseTo(textBox.ScreenSpaceDrawQuad.TopLeft - new Vector2(20f, 0f)));
+            AddStep(
+                "hold from middle of textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "drag again",
+                () =>
+                    InputManager.MoveMouseTo(
+                        textBox.ScreenSpaceDrawQuad.TopLeft - new Vector2(20f, 0f)
+                    )
+            );
             AddAssert("text selected by drag", () => textBox.SelectedText == "1");
             AddStep("release mouse", () => InputManager.ReleaseButton(MouseButton.Left));
             AddStep("insert character", () => textBox.InsertString("1"));
             AddAssert("text overwritten", () => textBox.Text == "1");
-            AddStep("hold from middle of textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.PressButton(MouseButton.Left);
-            });
-            AddStep("drag again", () => InputManager.MoveMouseTo(textBox.ScreenSpaceDrawQuad.TopLeft - new Vector2(20f, 0f)));
+            AddStep(
+                "hold from middle of textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "drag again",
+                () =>
+                    InputManager.MoveMouseTo(
+                        textBox.ScreenSpaceDrawQuad.TopLeft - new Vector2(20f, 0f)
+                    )
+            );
             AddAssert("text selected by drag", () => textBox.SelectedText == "1");
         }
 
         [Test]
         public void TestTabbing()
         {
-            AddStep("add textboxes", () =>
-            {
-                textBoxes.AddRange([
-                    new InsertableTextBox
-                    {
-                        Size = new Vector2(300, 40),
-                        Text = "first!",
-                        ReadOnly = false,
-                        TabbableContentContainer = textBoxes,
-                    },
-                    new InsertableTextBox
-                    {
-                        Size = new Vector2(300, 40),
-                        Text = "second!",
-                        ReadOnly = false,
-                        TabbableContentContainer = textBoxes,
-                    },
-                    new InsertableTextBox
-                    {
-                        Size = new Vector2(300, 40),
-                        Text = "third! (readonly)",
-                        ReadOnly = true,
-                        TabbableContentContainer = textBoxes,
-                    },
-                    new InsertableTextBox
-                    {
-                        Size = new Vector2(300, 40),
-                        Text = "fourth!",
-                        ReadOnly = false,
-                        TabbableContentContainer = textBoxes,
-                    }
-                ]);
-            });
+            AddStep(
+                "add textboxes",
+                () =>
+                {
+                    textBoxes.AddRange(
+                        [
+                            new InsertableTextBox
+                            {
+                                Size = new Vector2(300, 40),
+                                Text = "first!",
+                                ReadOnly = false,
+                                TabbableContentContainer = textBoxes,
+                            },
+                            new InsertableTextBox
+                            {
+                                Size = new Vector2(300, 40),
+                                Text = "second!",
+                                ReadOnly = false,
+                                TabbableContentContainer = textBoxes,
+                            },
+                            new InsertableTextBox
+                            {
+                                Size = new Vector2(300, 40),
+                                Text = "third! (readonly)",
+                                ReadOnly = true,
+                                TabbableContentContainer = textBoxes,
+                            },
+                            new InsertableTextBox
+                            {
+                                Size = new Vector2(300, 40),
+                                Text = "fourth!",
+                                ReadOnly = false,
+                                TabbableContentContainer = textBoxes,
+                            },
+                        ]
+                    );
+                }
+            );
 
-            AddStep("focus first textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBoxes[0]);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus first textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBoxes[0]);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("press tab", () => InputManager.Key(Key.Tab));
             AddAssert("second textbox focused", () => textBoxes[1].HasFocus);
@@ -1101,21 +1487,27 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("press tab", () => InputManager.Key(Key.Tab));
             AddAssert("first textbox focused", () => textBoxes[0].HasFocus);
 
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.ShiftLeft);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.ShiftLeft);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.ShiftLeft);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.ShiftLeft);
+                }
+            );
             AddAssert("fourth textbox focused", () => textBoxes[3].HasFocus);
 
             AddStep("hide second textbox", () => textBoxes[1].Alpha = 0);
-            AddStep("press shift-tab", () =>
-            {
-                InputManager.PressKey(Key.ShiftLeft);
-                InputManager.Key(Key.Tab);
-                InputManager.ReleaseKey(Key.ShiftLeft);
-            });
+            AddStep(
+                "press shift-tab",
+                () =>
+                {
+                    InputManager.PressKey(Key.ShiftLeft);
+                    InputManager.Key(Key.Tab);
+                    InputManager.ReleaseKey(Key.ShiftLeft);
+                }
+            );
             AddAssert("first textbox focused", () => textBoxes[0].HasFocus);
         }
 
@@ -1154,14 +1546,20 @@ namespace osu.Framework.Tests.Visual.UserInterface
             /// <summary>
             /// Returns the shown-in-screen text.
             /// </summary>
-            public string FlowingText => string.Concat(TextFlow.FlowingChildren.OfType<FallingDownContainer>().Select(c => c.OfType<SpriteText>().Single().Text.ToString()[0]));
+            public string FlowingText =>
+                string.Concat(
+                    TextFlow
+                        .FlowingChildren.OfType<FallingDownContainer>()
+                        .Select(c => c.OfType<SpriteText>().Single().Text.ToString()[0])
+                );
 
             public new void InsertString(string text) => base.InsertString(text);
         }
 
         private partial class CustomTextBox : BasicTextBox
         {
-            protected override Drawable GetDrawableCharacter(char c) => new ScalingText(c, FontSize);
+            protected override Drawable GetDrawableCharacter(char c) =>
+                new ScalingText(c, FontSize);
 
             private partial class ScalingText : CompositeDrawable
             {
@@ -1169,13 +1567,15 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
                 public ScalingText(char c, float textSize)
                 {
-                    AddInternal(text = new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Text = c.ToString(),
-                        Font = FrameworkFont.Condensed.With(size: textSize),
-                    });
+                    AddInternal(
+                        text = new SpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Text = c.ToString(),
+                            Font = FrameworkFont.Condensed.With(size: textSize),
+                        }
+                    );
                 }
 
                 protected override void LoadComplete()
@@ -1236,9 +1636,14 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             protected override float LeftRightPadding => LEFT_RIGHT_PADDING;
 
-            public Quad TextContainerBounds => TextContainer.ToSpaceOfOtherDrawable(new RectangleF(Vector2.Zero, TextContainer.DrawSize), this);
+            public Quad TextContainerBounds =>
+                TextContainer.ToSpaceOfOtherDrawable(
+                    new RectangleF(Vector2.Zero, TextContainer.DrawSize),
+                    this
+                );
 
-            public bool TextContainerTransformsFinished => TextContainer.LatestTransformEndTime == TextContainer.TransformStartTime;
+            public bool TextContainerTransformsFinished =>
+                TextContainer.LatestTransformEndTime == TextContainer.TransformStartTime;
         }
     }
 }

@@ -18,7 +18,8 @@ namespace osu.Framework.Input
 {
     public partial class UserInputManager : PassThroughInputManager
     {
-        protected override ImmutableArray<InputHandler> InputHandlers => Host.AvailableInputHandlers;
+        protected override ImmutableArray<InputHandler> InputHandlers =>
+            Host.AvailableInputHandlers;
 
         public override bool HandleHoverEvents => Host.Window?.CursorInWindow.Value ?? true;
 
@@ -59,7 +60,13 @@ namespace osu.Framework.Input
                         }
 
                         if (cursorConfineRect.HasValue)
-                            mouse.Position = Vector2.Clamp(mouse.Position, cursorConfineRect.Value.Location, cursorConfineRect.Value.Location + cursorConfineRect.Value.Size - Vector2.One);
+                            mouse.Position = Vector2.Clamp(
+                                mouse.Position,
+                                cursorConfineRect.Value.Location,
+                                cursorConfineRect.Value.Location
+                                    + cursorConfineRect.Value.Size
+                                    - Vector2.One
+                            );
                     }
 
                     break;
@@ -68,7 +75,10 @@ namespace osu.Framework.Input
                     // presses registered when the mouse pointer is outside the window are ignored.
                     // however, releases registered when the mouse pointer is outside the window cannot be ignored;
                     // handling them is essential to correctly handling mouse capture (only applicable when relative mode is disabled).
-                    if (buttonChange.Kind == ButtonStateChangeKind.Pressed && Host.Window?.CursorInWindow.Value == false)
+                    if (
+                        buttonChange.Kind == ButtonStateChangeKind.Pressed
+                        && Host.Window?.CursorInWindow.Value == false
+                    )
                         return;
 
                     break;

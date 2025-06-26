@@ -55,34 +55,38 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             for (int i = 0; i < Rows * Cols; ++i)
             {
-                Cell(i).AddRange(new Drawable[]
-                {
-                    new SpriteText
-                    {
-                        Text = $"{nameof(CornerRadius)}={cornerRadii[i]} {nameof(Alpha)}={alphas[i]}",
-                        Font = new FontUsage(size: 20),
-                    },
-                    new Container
-                    {
-                        Size = new Vector2(size),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-
-                        Masking = true,
-                        EdgeEffect = edgeEffects[i],
-                        CornerRadius = cornerRadii[i] * size,
-
-                        Children = new Drawable[]
+                Cell(i)
+                    .AddRange(
+                        new Drawable[]
                         {
-                            new Box
+                            new SpriteText
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Aqua,
-                                Alpha = alphas[i],
+                                Text =
+                                    $"{nameof(CornerRadius)}={cornerRadii[i]} {nameof(Alpha)}={alphas[i]}",
+                                Font = new FontUsage(size: 20),
                             },
-                        },
-                    },
-                });
+                            new Container
+                            {
+                                Size = new Vector2(size),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+
+                                Masking = true,
+                                EdgeEffect = edgeEffects[i],
+                                CornerRadius = cornerRadii[i] * size,
+
+                                Children = new Drawable[]
+                                {
+                                    new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Colour = Color4.Aqua,
+                                        Alpha = alphas[i],
+                                    },
+                                },
+                            },
+                        }
+                    );
             }
         }
     }

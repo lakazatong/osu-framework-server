@@ -35,11 +35,7 @@ namespace osu.Framework.Graphics.Visualisation.Audio
                 AutoSizeAxes = Axes.X,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black.Opacity(0.2f)
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black.Opacity(0.2f) },
                     new SpriteText
                     {
                         Anchor = Anchor.BottomCentre,
@@ -54,22 +50,14 @@ namespace osu.Framework.Graphics.Visualisation.Audio
                         RelativeSizeAxes = Axes.Y,
                         AutoSizeAxes = Axes.X,
                         Direction = FillDirection.Horizontal,
-                        Padding = new MarginPadding
-                        {
-                            Horizontal = 10,
-                            Bottom = 20
-                        },
+                        Padding = new MarginPadding { Horizontal = 10, Bottom = 20 },
                         Children = new Drawable[]
                         {
                             outputChannelContainer = new Container
                             {
                                 RelativeSizeAxes = Axes.Y,
                                 AutoSizeAxes = Axes.X,
-                                Padding = new MarginPadding
-                                {
-                                    Left = 10,
-                                    Bottom = 20
-                                }
+                                Padding = new MarginPadding { Left = 10, Bottom = 20 },
                             },
                             mixerChannelsContainer = new FillFlowContainer<AudioChannelDisplay>
                             {
@@ -77,15 +65,11 @@ namespace osu.Framework.Graphics.Visualisation.Audio
                                 AutoSizeAxes = Axes.X,
                                 Direction = FillDirection.Horizontal,
                                 Spacing = new Vector2(10),
-                                Padding = new MarginPadding
-                                {
-                                    Horizontal = 10,
-                                    Bottom = 20
-                                }
-                            }
-                        }
-                    }
-                }
+                                Padding = new MarginPadding { Horizontal = 10, Bottom = 20 },
+                            },
+                        },
+                    },
+                },
             };
 
             if (Mixer is BassAudioMixer bassMixer)

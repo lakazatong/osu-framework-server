@@ -28,10 +28,16 @@ namespace osu.Framework.Tests.Visual.Performance
         [BackgroundDependencyLoader]
         private void load(Game game, TextureStore store, GameHost host)
         {
-            textureLoaderStore = host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(game.Resources, @"Textures"));
+            textureLoaderStore = host.CreateTextureLoaderStore(
+                new NamespacedResourceStore<byte[]>(game.Resources, @"Textures")
+            );
 
             mipmappedSampleTexture = store.Get(@"sample-texture");
-            nonMipmappedSampleTexture = new TextureStore(renderer, textureLoaderStore, manualMipmaps: true).Get(@"sample-texture");
+            nonMipmappedSampleTexture = new TextureStore(
+                renderer,
+                textureLoaderStore,
+                manualMipmaps: true
+            ).Get(@"sample-texture");
         }
 
         protected override void LoadComplete()
@@ -45,11 +51,12 @@ namespace osu.Framework.Tests.Visual.Performance
 
         protected override double TimePerAction => 100;
 
-        protected override Drawable CreateDrawable() => new TestSprite(mipmappedSampleTexture, nonMipmappedSampleTexture)
-        {
-            DisableMipmaps = { BindTarget = disableMipmaps },
-            UniqueTextures = { BindTarget = uniqueTextures },
-        };
+        protected override Drawable CreateDrawable() =>
+            new TestSprite(mipmappedSampleTexture, nonMipmappedSampleTexture)
+            {
+                DisableMipmaps = { BindTarget = disableMipmaps },
+                UniqueTextures = { BindTarget = uniqueTextures },
+            };
 
         private partial class TestSprite : Sprite
         {
@@ -70,13 +77,22 @@ namespace osu.Framework.Tests.Visual.Performance
             [BackgroundDependencyLoader]
             private void load(IRenderer renderer, GameHost host, Game game)
             {
-                DisableMipmaps.BindValueChanged(v =>
-                {
-                    spriteLocalStore?.Dispose();
-                    spriteLocalStore = new TextureStore(renderer, host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(game.Resources, @"Textures")), manualMipmaps: v.NewValue);
+                DisableMipmaps.BindValueChanged(
+                    v =>
+                    {
+                        spriteLocalStore?.Dispose();
+                        spriteLocalStore = new TextureStore(
+                            renderer,
+                            host.CreateTextureLoaderStore(
+                                new NamespacedResourceStore<byte[]>(game.Resources, @"Textures")
+                            ),
+                            manualMipmaps: v.NewValue
+                        );
 
-                    updateTexture();
-                }, true);
+                        updateTexture();
+                    },
+                    true
+                );
 
                 UniqueTextures.BindValueChanged(v => updateTexture(), true);
             }

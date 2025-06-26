@@ -18,7 +18,12 @@ namespace osu.Framework.Input.StateChanges.Events
         /// </summary>
         public readonly ButtonStateChangeKind Kind;
 
-        public ButtonStateChangeEvent(InputState state, IInput input, TButton button, ButtonStateChangeKind kind)
+        public ButtonStateChangeEvent(
+            InputState state,
+            IInput input,
+            TButton button,
+            ButtonStateChangeKind kind
+        )
             : base(state, input)
         {
             Button = button;

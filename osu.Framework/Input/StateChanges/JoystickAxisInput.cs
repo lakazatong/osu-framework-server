@@ -19,14 +19,15 @@ namespace osu.Framework.Input.StateChanges
         public readonly IEnumerable<JoystickAxis> Axes;
 
         public JoystickAxisInput(JoystickAxis axis)
-            : this(axis.Yield())
-        {
-        }
+            : this(axis.Yield()) { }
 
         public JoystickAxisInput(IEnumerable<JoystickAxis> axes)
         {
             if (axes.Count() > JoystickState.MAX_AXES)
-                throw new ArgumentException($"The length of the provided axes collection ({axes.Count()}) exceeds the maximum length ({JoystickState.MAX_AXES})", nameof(axes));
+                throw new ArgumentException(
+                    $"The length of the provided axes collection ({axes.Count()}) exceeds the maximum length ({JoystickState.MAX_AXES})",
+                    nameof(axes)
+                );
 
             Axes = axes;
         }
@@ -38,20 +39,29 @@ namespace osu.Framework.Input.StateChanges
                 float oldValue = state.Joystick.AxesValues[(int)a.Source];
 
                 // Not enough movement, don't fire event (unless returning to zero).
-                if (oldValue == a.Value || (a.Value != 0 && Precision.AlmostEquals(oldValue, a.Value)))
+                if (
+                    oldValue == a.Value
+                    || (a.Value != 0 && Precision.AlmostEquals(oldValue, a.Value))
+                )
                     continue;
 
                 applyButtonInputsIfNeeded(state, handler, a);
 
                 state.Joystick.AxesValues[(int)a.Source] = a.Value;
-                handler.HandleInputStateChange(new JoystickAxisChangeEvent(state, this, a, oldValue));
+                handler.HandleInputStateChange(
+                    new JoystickAxisChangeEvent(state, this, a, oldValue)
+                );
             }
         }
 
         /// <summary>
         /// Applies <see cref="JoystickButtonInput"/> events depending on whether the axis has changed direction.
         /// </summary>
-        private void applyButtonInputsIfNeeded(InputState state, IInputStateChangeHandler handler, JoystickAxis axis)
+        private void applyButtonInputsIfNeeded(
+            InputState state,
+            IInputStateChangeHandler handler,
+            JoystickAxis axis
+        )
         {
             int index = (int)axis.Source;
             var currentButton = state.Joystick.AxisDirectionButtons[index];

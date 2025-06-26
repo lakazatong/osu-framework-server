@@ -13,7 +13,6 @@
     <!-- No lib content for target framework. The warning is meaningless for template packages. -->
     <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
     <Compile Remove="**\*" />

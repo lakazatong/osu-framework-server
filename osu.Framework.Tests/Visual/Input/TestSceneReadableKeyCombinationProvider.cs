@@ -21,32 +21,82 @@ namespace osu.Framework.Tests.Visual.Input
         {
             new[]
             {
-                InputKey.Grave, InputKey.Number1, InputKey.Number2, InputKey.Number3, InputKey.Number4, InputKey.Number5, InputKey.Number6,
-                InputKey.Number7, InputKey.Number8, InputKey.Number9, InputKey.Number0, InputKey.Minus, InputKey.Plus, InputKey.BackSpace
+                InputKey.Grave,
+                InputKey.Number1,
+                InputKey.Number2,
+                InputKey.Number3,
+                InputKey.Number4,
+                InputKey.Number5,
+                InputKey.Number6,
+                InputKey.Number7,
+                InputKey.Number8,
+                InputKey.Number9,
+                InputKey.Number0,
+                InputKey.Minus,
+                InputKey.Plus,
+                InputKey.BackSpace,
             },
             new[]
             {
-                InputKey.Tab, InputKey.Q, InputKey.W, InputKey.E, InputKey.R, InputKey.T, InputKey.Y, InputKey.U,
-                InputKey.I, InputKey.O, InputKey.P, InputKey.BracketLeft, InputKey.BracketRight, InputKey.BackSlash
+                InputKey.Tab,
+                InputKey.Q,
+                InputKey.W,
+                InputKey.E,
+                InputKey.R,
+                InputKey.T,
+                InputKey.Y,
+                InputKey.U,
+                InputKey.I,
+                InputKey.O,
+                InputKey.P,
+                InputKey.BracketLeft,
+                InputKey.BracketRight,
+                InputKey.BackSlash,
             },
             new[]
             {
-                InputKey.CapsLock, InputKey.A, InputKey.S, InputKey.D, InputKey.F, InputKey.G, InputKey.H,
-                InputKey.J, InputKey.K, InputKey.L, InputKey.Semicolon, InputKey.Quote, InputKey.Enter
+                InputKey.CapsLock,
+                InputKey.A,
+                InputKey.S,
+                InputKey.D,
+                InputKey.F,
+                InputKey.G,
+                InputKey.H,
+                InputKey.J,
+                InputKey.K,
+                InputKey.L,
+                InputKey.Semicolon,
+                InputKey.Quote,
+                InputKey.Enter,
             },
             new[]
             {
-                InputKey.LShift, InputKey.NonUSBackSlash, InputKey.Z, InputKey.X, InputKey.C, InputKey.V, InputKey.B,
-                InputKey.N, InputKey.M, InputKey.Comma, InputKey.Period, InputKey.Slash, InputKey.RShift
+                InputKey.LShift,
+                InputKey.NonUSBackSlash,
+                InputKey.Z,
+                InputKey.X,
+                InputKey.C,
+                InputKey.V,
+                InputKey.B,
+                InputKey.N,
+                InputKey.M,
+                InputKey.Comma,
+                InputKey.Period,
+                InputKey.Slash,
+                InputKey.RShift,
             },
             new[]
             {
-                InputKey.LControl, InputKey.LSuper, InputKey.LAlt, InputKey.Space, InputKey.RAlt, InputKey.RSuper, InputKey.Menu, InputKey.RControl
+                InputKey.LControl,
+                InputKey.LSuper,
+                InputKey.LAlt,
+                InputKey.Space,
+                InputKey.RAlt,
+                InputKey.RSuper,
+                InputKey.Menu,
+                InputKey.RControl,
             },
-            new[]
-            {
-                InputKey.Control, InputKey.Super, InputKey.Alt
-            }
+            new[] { InputKey.Control, InputKey.Super, InputKey.Alt },
         };
 
         protected override void LoadComplete()
@@ -75,14 +125,16 @@ namespace osu.Framework.Tests.Visual.Input
 
                 foreach (var key in row)
                 {
-                    fillRow.Add(new Key(key)
-                    {
-                        Anchor = Anchor.TopLeft,
-                        Origin = Anchor.TopLeft,
-                        Height = 50,
-                        RelativeSizeAxes = Axes.X,
-                        Width = keyWidth,
-                    });
+                    fillRow.Add(
+                        new Key(key)
+                        {
+                            Anchor = Anchor.TopLeft,
+                            Origin = Anchor.TopLeft,
+                            Height = 50,
+                            RelativeSizeAxes = Axes.X,
+                            Width = keyWidth,
+                        }
+                    );
                 }
 
                 fillFlow.Add(fillRow);
@@ -102,7 +154,8 @@ namespace osu.Framework.Tests.Visual.Input
         public partial class Key : CompositeDrawable
         {
             [Resolved]
-            private ReadableKeyCombinationProvider readableKeyCombinationProvider { get; set; } = null!;
+            private ReadableKeyCombinationProvider readableKeyCombinationProvider { get; set; } =
+                null!;
 
             private readonly Box box;
             private readonly SpriteText text;
@@ -121,11 +174,7 @@ namespace osu.Framework.Tests.Visual.Input
                         Colour = Color4.DarkGray,
                         Alpha = 0.6f,
                     },
-                    text = new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
+                    text = new SpriteText { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                 };
             }
 
@@ -139,7 +188,13 @@ namespace osu.Framework.Tests.Visual.Input
 
             protected override bool OnKeyDown(KeyDownEvent e)
             {
-                if (keyCombination.IsPressed(new KeyCombination(KeyCombination.FromKey(e.Key)), e.CurrentState, KeyCombinationMatchingMode.Any))
+                if (
+                    keyCombination.IsPressed(
+                        new KeyCombination(KeyCombination.FromKey(e.Key)),
+                        e.CurrentState,
+                        KeyCombinationMatchingMode.Any
+                    )
+                )
                     box.Colour = Color4.Navy;
 
                 return base.OnKeyDown(e);
@@ -147,7 +202,13 @@ namespace osu.Framework.Tests.Visual.Input
 
             protected override void OnKeyUp(KeyUpEvent e)
             {
-                if (keyCombination.IsPressed(new KeyCombination(KeyCombination.FromKey(e.Key)), e.CurrentState, KeyCombinationMatchingMode.Any))
+                if (
+                    keyCombination.IsPressed(
+                        new KeyCombination(KeyCombination.FromKey(e.Key)),
+                        e.CurrentState,
+                        KeyCombinationMatchingMode.Any
+                    )
+                )
                     box.Colour = Color4.DarkGray;
 
                 base.OnKeyUp(e);
@@ -175,7 +236,8 @@ namespace osu.Framework.Tests.Visual.Input
         public partial class PressedKeyCombinationDisplay : CompositeDrawable
         {
             [Resolved]
-            private ReadableKeyCombinationProvider readableKeyCombinationProvider { get; set; } = null!;
+            private ReadableKeyCombinationProvider readableKeyCombinationProvider { get; set; } =
+                null!;
 
             private readonly SpriteText text;
 
@@ -187,11 +249,7 @@ namespace osu.Framework.Tests.Visual.Input
 
                 InternalChildren = new[]
                 {
-                    text = new SpriteText
-                    {
-                        Font = new FontUsage(size: 20),
-                        Text = "press a key",
-                    }
+                    text = new SpriteText { Font = new FontUsage(size: 20), Text = "press a key" },
                 };
             }
 

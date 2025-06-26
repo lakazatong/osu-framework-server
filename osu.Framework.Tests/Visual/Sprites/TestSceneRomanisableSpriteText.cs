@@ -31,9 +31,9 @@ namespace osu.Framework.Tests.Visual.Sprites
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
                             Direction = FillDirection.Vertical,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
             flow.Add(new SpriteText { Text = new RomanisableString("ongaku", "music") });
@@ -48,10 +48,22 @@ namespace osu.Framework.Tests.Visual.Sprites
         public void TestToggleRomanisedState()
         {
             AddStep("prefer romanised", () => config.SetValue(FrameworkSetting.ShowUnicode, false));
-            AddAssert("check strings correct", () => flow.OfType<SpriteText>().Select(st => st.Current.Value).SequenceEqual(new[] { "music", "music", "ongaku" }));
+            AddAssert(
+                "check strings correct",
+                () =>
+                    flow.OfType<SpriteText>()
+                        .Select(st => st.Current.Value)
+                        .SequenceEqual(new[] { "music", "music", "ongaku" })
+            );
 
             AddStep("prefer unicode", () => config.SetValue(FrameworkSetting.ShowUnicode, true));
-            AddAssert("check strings correct", () => flow.OfType<SpriteText>().Select(st => st.Current.Value).SequenceEqual(new[] { "ongaku", "music", "ongaku" }));
+            AddAssert(
+                "check strings correct",
+                () =>
+                    flow.OfType<SpriteText>()
+                        .Select(st => st.Current.Value)
+                        .SequenceEqual(new[] { "ongaku", "music", "ongaku" })
+            );
         }
     }
 }

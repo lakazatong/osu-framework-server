@@ -11,14 +11,16 @@ namespace osu.Framework.SourceGeneration.Analysers
         // Read more: https://github.com/dotnet/roslyn-analyzers/blob/main/src/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md
 #pragma warning disable RS2008
 
-        public static readonly DiagnosticDescriptor MAKE_DI_CLASS_PARTIAL = new DiagnosticDescriptor(
-            "OFSG001",
-            "This type, or a nested type, is a candidate for dependency injection and should be partial",
-            "This type, or a nested type, is a candidate for dependency injection and should be partial",
-            "Performance",
-            DiagnosticSeverity.Warning,
-            true,
-            "Types that are candidates for dependency injection should be made partial to benefit from compile-time optimisations.");
+        public static readonly DiagnosticDescriptor MAKE_DI_CLASS_PARTIAL =
+            new DiagnosticDescriptor(
+                "OFSG001",
+                "This type, or a nested type, is a candidate for dependency injection and should be partial",
+                "This type, or a nested type, is a candidate for dependency injection and should be partial",
+                "Performance",
+                DiagnosticSeverity.Warning,
+                true,
+                "Types that are candidates for dependency injection should be made partial to benefit from compile-time optimisations."
+            );
 
 #pragma warning restore RS2008
     }

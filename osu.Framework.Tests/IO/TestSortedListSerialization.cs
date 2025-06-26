@@ -16,7 +16,9 @@ namespace osu.Framework.Tests.IO
             var original = new SortedList<int>();
             original.AddRange(new[] { 1, 2, 3, 4, 5, 6 });
 
-            var deserialized = JsonConvert.DeserializeObject<SortedList<int>>(JsonConvert.SerializeObject(original));
+            var deserialized = JsonConvert.DeserializeObject<SortedList<int>>(
+                JsonConvert.SerializeObject(original)
+            );
 
             Assert.AreEqual(original.Count, deserialized?.Count, "Counts are not equal");
             for (int i = 0; i < original.Count; i++)
@@ -29,7 +31,9 @@ namespace osu.Framework.Tests.IO
             var original = new SortedList<int>();
             original.AddRange(new[] { 6, 5, 4, 3, 2, 1 });
 
-            var deserialized = JsonConvert.DeserializeObject<SortedList<int>>(JsonConvert.SerializeObject(original));
+            var deserialized = JsonConvert.DeserializeObject<SortedList<int>>(
+                JsonConvert.SerializeObject(original)
+            );
 
             Assert.AreEqual(original.Count, deserialized?.Count, "Counts are not equal");
             for (int i = 0; i < original.Count; i++)
@@ -40,7 +44,9 @@ namespace osu.Framework.Tests.IO
         public void TestEmptySerialization()
         {
             var original = new SortedList<int>();
-            var deserialized = JsonConvert.DeserializeObject<SortedList<int>>(JsonConvert.SerializeObject(original));
+            var deserialized = JsonConvert.DeserializeObject<SortedList<int>>(
+                JsonConvert.SerializeObject(original)
+            );
 
             Assert.AreEqual(original.Count, deserialized?.Count, "Counts are not equal");
         }

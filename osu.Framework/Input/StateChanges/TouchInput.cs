@@ -29,9 +29,7 @@ namespace osu.Framework.Input.StateChanges
         /// <param name="touch">The <see cref="Touch"/>.</param>
         /// <param name="activate">Whether to activate the provided <param ref="touch"/>, must be true if changing position only.</param>
         public TouchInput(Touch touch, bool activate)
-            : this(touch.Yield(), activate)
-        {
-        }
+            : this(touch.Yield(), activate) { }
 
         /// <summary>
         /// Constructs a new <see cref="TouchInput"/>.
@@ -58,10 +56,15 @@ namespace osu.Framework.Input.StateChanges
 
                 if (activityChanged || positionChanged)
                 {
-                    handler.HandleInputStateChange(new TouchStateChangeEvent(state, this, touch,
-                        !activityChanged ? null : Activate,
-                        !positionChanged ? null : lastPosition
-                    ));
+                    handler.HandleInputStateChange(
+                        new TouchStateChangeEvent(
+                            state,
+                            this,
+                            touch,
+                            !activityChanged ? null : Activate,
+                            !positionChanged ? null : lastPosition
+                        )
+                    );
                 }
             }
         }

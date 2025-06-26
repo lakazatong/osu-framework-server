@@ -13,48 +13,92 @@ namespace osu.Framework.SourceGeneration
 {
     public static class SyntaxHelpers
     {
-        public static InvocationExpressionSyntax CacheDependencyInvocation(string callerType, ExpressionSyntax objSyntax, string? asType, string? cachedName, string? propertyName)
+        public static InvocationExpressionSyntax CacheDependencyInvocation(
+            string callerType,
+            ExpressionSyntax objSyntax,
+            string? asType,
+            string? cachedName,
+            string? propertyName
+        )
         {
-            ExpressionSyntax asTypeSyntax = asType == null
-                ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
-                : SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(asType));
+            ExpressionSyntax asTypeSyntax =
+                asType == null
+                    ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+                    : SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(asType));
 
-            LiteralExpressionSyntax cachedNameSyntax = cachedName == null
-                ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
-                : SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(cachedName));
+            LiteralExpressionSyntax cachedNameSyntax =
+                cachedName == null
+                    ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+                    : SyntaxFactory.LiteralExpression(
+                        SyntaxKind.StringLiteralExpression,
+                        SyntaxFactory.Literal(cachedName)
+                    );
 
-            LiteralExpressionSyntax memberNameSyntax = propertyName == null
-                ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
-                : SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(propertyName));
+            LiteralExpressionSyntax memberNameSyntax =
+                propertyName == null
+                    ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+                    : SyntaxFactory.LiteralExpression(
+                        SyntaxKind.StringLiteralExpression,
+                        SyntaxFactory.Literal(propertyName)
+                    );
 
-            return SyntaxFactory.InvocationExpression(
-                                    SyntaxFactory.MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.ParseTypeName("global::osu.Framework.Utils.SourceGeneratorUtils"),
-                                        SyntaxFactory.IdentifierName("CacheDependency")))
-                                .WithArgumentList(
-                                    SyntaxFactory.ArgumentList(
-                                        SyntaxFactory.SeparatedList(new[]
-                                        {
-                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName(DependenciesFileEmitter.LOCAL_DEPENDENCIES_VAR_NAME)),
-                                            SyntaxFactory.Argument(TypeOf(callerType)),
-                                            SyntaxFactory.Argument(objSyntax),
-                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName(DependenciesFileEmitter.CACHE_INFO_PARAMETER_NAME)),
-                                            SyntaxFactory.Argument(asTypeSyntax),
-                                            SyntaxFactory.Argument(cachedNameSyntax),
-                                            SyntaxFactory.Argument(memberNameSyntax)
-                                        })));
+            return SyntaxFactory
+                .InvocationExpression(
+                    SyntaxFactory.MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        SyntaxFactory.ParseTypeName(
+                            "global::osu.Framework.Utils.SourceGeneratorUtils"
+                        ),
+                        SyntaxFactory.IdentifierName("CacheDependency")
+                    )
+                )
+                .WithArgumentList(
+                    SyntaxFactory.ArgumentList(
+                        SyntaxFactory.SeparatedList(
+                            new[]
+                            {
+                                SyntaxFactory.Argument(
+                                    SyntaxFactory.IdentifierName(
+                                        DependenciesFileEmitter.LOCAL_DEPENDENCIES_VAR_NAME
+                                    )
+                                ),
+                                SyntaxFactory.Argument(TypeOf(callerType)),
+                                SyntaxFactory.Argument(objSyntax),
+                                SyntaxFactory.Argument(
+                                    SyntaxFactory.IdentifierName(
+                                        DependenciesFileEmitter.CACHE_INFO_PARAMETER_NAME
+                                    )
+                                ),
+                                SyntaxFactory.Argument(asTypeSyntax),
+                                SyntaxFactory.Argument(cachedNameSyntax),
+                                SyntaxFactory.Argument(memberNameSyntax),
+                            }
+                        )
+                    )
+                );
         }
 
-        public static InvocationExpressionSyntax GetDependencyInvocation(string callerType, string requestedType, string? name, string? parent, bool canBeNull, bool rebindBindables)
+        public static InvocationExpressionSyntax GetDependencyInvocation(
+            string callerType,
+            string requestedType,
+            string? name,
+            string? parent,
+            bool canBeNull,
+            bool rebindBindables
+        )
         {
-            LiteralExpressionSyntax nameSyntax = name == null
-                ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
-                : SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(name));
+            LiteralExpressionSyntax nameSyntax =
+                name == null
+                    ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+                    : SyntaxFactory.LiteralExpression(
+                        SyntaxKind.StringLiteralExpression,
+                        SyntaxFactory.Literal(name)
+                    );
 
-            ExpressionSyntax parentSyntax = parent == null
-                ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
-                : SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(parent));
+            ExpressionSyntax parentSyntax =
+                parent == null
+                    ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+                    : SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(parent));
 
             LiteralExpressionSyntax canBeNullSyntax = canBeNull
                 ? SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)
@@ -64,62 +108,85 @@ namespace osu.Framework.SourceGeneration
                 ? SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)
                 : SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression);
 
-            return SyntaxFactory.InvocationExpression(
-                                    SyntaxFactory.MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.ParseTypeName("global::osu.Framework.Utils.SourceGeneratorUtils"),
-                                        SyntaxFactory.GenericName("GetDependency")
-                                                     .WithTypeArgumentList(
-                                                         SyntaxFactory.TypeArgumentList(
-                                                             SyntaxFactory.SeparatedList(new[]
-                                                             {
-                                                                 SyntaxFactory.ParseTypeName(requestedType)
-                                                             })))))
-                                .WithArgumentList(
-                                    SyntaxFactory.ArgumentList(
-                                        SyntaxFactory.SeparatedList(new[]
-                                        {
-                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName(DependenciesFileEmitter.DEPENDENCIES_PARAMETER_NAME)),
-                                            SyntaxFactory.Argument(TypeOf(callerType)),
-                                            SyntaxFactory.Argument(nameSyntax),
-                                            SyntaxFactory.Argument(parentSyntax),
-                                            SyntaxFactory.Argument(canBeNullSyntax),
-                                            SyntaxFactory.Argument(rebindBindablesSyntax)
-                                        })));
+            return SyntaxFactory
+                .InvocationExpression(
+                    SyntaxFactory.MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        SyntaxFactory.ParseTypeName(
+                            "global::osu.Framework.Utils.SourceGeneratorUtils"
+                        ),
+                        SyntaxFactory
+                            .GenericName("GetDependency")
+                            .WithTypeArgumentList(
+                                SyntaxFactory.TypeArgumentList(
+                                    SyntaxFactory.SeparatedList(
+                                        new[] { SyntaxFactory.ParseTypeName(requestedType) }
+                                    )
+                                )
+                            )
+                    )
+                )
+                .WithArgumentList(
+                    SyntaxFactory.ArgumentList(
+                        SyntaxFactory.SeparatedList(
+                            new[]
+                            {
+                                SyntaxFactory.Argument(
+                                    SyntaxFactory.IdentifierName(
+                                        DependenciesFileEmitter.DEPENDENCIES_PARAMETER_NAME
+                                    )
+                                ),
+                                SyntaxFactory.Argument(TypeOf(callerType)),
+                                SyntaxFactory.Argument(nameSyntax),
+                                SyntaxFactory.Argument(parentSyntax),
+                                SyntaxFactory.Argument(canBeNullSyntax),
+                                SyntaxFactory.Argument(rebindBindablesSyntax),
+                            }
+                        )
+                    )
+                );
         }
 
-        public static TypeOfExpressionSyntax TypeOf(string typeName)
-            => SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(typeName));
+        public static TypeOfExpressionSyntax TypeOf(string typeName) =>
+            SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(typeName));
 
-        public static bool IsBackgroundDependencyLoaderAttribute(AttributeData? attribute)
-            => IsBackgroundDependencyLoaderAttribute(attribute?.AttributeClass);
+        public static bool IsBackgroundDependencyLoaderAttribute(AttributeData? attribute) =>
+            IsBackgroundDependencyLoaderAttribute(attribute?.AttributeClass);
 
-        public static bool IsResolvedAttribute(AttributeData? attribute)
-            => IsResolvedAttribute(attribute?.AttributeClass);
+        public static bool IsResolvedAttribute(AttributeData? attribute) =>
+            IsResolvedAttribute(attribute?.AttributeClass);
 
-        public static bool IsCachedAttribute(AttributeData? attribute)
-            => IsCachedAttribute(attribute?.AttributeClass);
+        public static bool IsCachedAttribute(AttributeData? attribute) =>
+            IsCachedAttribute(attribute?.AttributeClass);
 
-        public static bool IsLongRunningLoadAttribute(AttributeData? attribute)
-            => IsLongRunningLoadAttribute(attribute?.AttributeClass);
+        public static bool IsLongRunningLoadAttribute(AttributeData? attribute) =>
+            IsLongRunningLoadAttribute(attribute?.AttributeClass);
 
-        public static bool IsBackgroundDependencyLoaderAttribute(ITypeSymbol? type)
-            => type != null && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.BackgroundDependencyLoaderAttribute";
+        public static bool IsBackgroundDependencyLoaderAttribute(ITypeSymbol? type) =>
+            type != null
+            && GetFullyQualifiedTypeName(type)
+                == "osu.Framework.Allocation.BackgroundDependencyLoaderAttribute";
 
-        public static bool IsResolvedAttribute(ITypeSymbol? type)
-            => type != null && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.ResolvedAttribute";
+        public static bool IsResolvedAttribute(ITypeSymbol? type) =>
+            type != null
+            && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.ResolvedAttribute";
 
-        public static bool IsCachedAttribute(ITypeSymbol? type)
-            => type != null && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.CachedAttribute";
+        public static bool IsCachedAttribute(ITypeSymbol? type) =>
+            type != null
+            && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.CachedAttribute";
 
-        public static bool IsLongRunningLoadAttribute(ITypeSymbol? type)
-            => type != null && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.LongRunningLoadAttribute";
+        public static bool IsLongRunningLoadAttribute(ITypeSymbol? type) =>
+            type != null
+            && GetFullyQualifiedTypeName(type)
+                == "osu.Framework.Allocation.LongRunningLoadAttribute";
 
-        public static bool IsIDependencyInjectionCandidateInterface(ITypeSymbol? type)
-            => type != null && GetFullyQualifiedTypeName(type) == "osu.Framework.Allocation.IDependencyInjectionCandidate";
+        public static bool IsIDependencyInjectionCandidateInterface(ITypeSymbol? type) =>
+            type != null
+            && GetFullyQualifiedTypeName(type)
+                == "osu.Framework.Allocation.IDependencyInjectionCandidate";
 
-        public static string GetFullyQualifiedTypeName(ITypeSymbol type)
-            => type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
+        public static string GetFullyQualifiedTypeName(ITypeSymbol type) =>
+            type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
 
         /// <summary>
         /// Returns a fully-qualified name for the supplied <paramref name="type"/>, with the <c>global::</c> prefix included.
@@ -133,12 +200,13 @@ namespace osu.Framework.SourceGeneration
         /// This cannot be expressed via <c>NotNullWhenNotNullAttribute</c> due to targeting .NET Standard 2.0.
         /// </para>
         /// </remarks>
-        public static string? GetGlobalPrefixedTypeName(ITypeSymbol? type)
-            => type?.ToDisplayString(fullyQualifiedFormatWithNullableAnnotations);
+        public static string? GetGlobalPrefixedTypeName(ITypeSymbol? type) =>
+            type?.ToDisplayString(fullyQualifiedFormatWithNullableAnnotations);
 
         private static SymbolDisplayFormat fullyQualifiedFormatWithNullableAnnotations { get; } =
-            SymbolDisplayFormat.FullyQualifiedFormat
-                               .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
+            SymbolDisplayFormat.FullyQualifiedFormat.AddMiscellaneousOptions(
+                SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier
+            );
 
         public static string GetFullyQualifiedSyntaxName(TypeDeclarationSyntax syntax)
         {
@@ -156,7 +224,9 @@ namespace osu.Framework.SourceGeneration
                         sb.Append(cls.Identifier.ToString());
 
                         if (cls.TypeParameterList != null)
-                            sb.Append($"{{{string.Join(",", cls.TypeParameterList.Parameters.Select(p => p.Identifier.ToString()))}}}");
+                            sb.Append(
+                                $"{{{string.Join(",", cls.TypeParameterList.Parameters.Select(p => p.Identifier.ToString()))}}}"
+                            );
                         break;
 
                     default:

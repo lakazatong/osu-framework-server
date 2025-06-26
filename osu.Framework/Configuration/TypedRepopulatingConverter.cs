@@ -19,10 +19,18 @@ namespace osu.Framework.Configuration
     /// <typeparam name="T">The type of objects contained in the <see cref="IReadOnlyList{T}"/> this attribute is attached to.</typeparam>
     internal class TypedRepopulatingConverter<T> : JsonConverter<IReadOnlyList<T>>
     {
-        public override IReadOnlyList<T> ReadJson(JsonReader reader, Type objectType, IReadOnlyList<T> existingList, bool hasExistingValue, JsonSerializer serializer)
+        public override IReadOnlyList<T> ReadJson(
+            JsonReader reader,
+            Type objectType,
+            IReadOnlyList<T> existingList,
+            bool hasExistingValue,
+            JsonSerializer serializer
+        )
         {
             if (!hasExistingValue)
-                throw new InvalidOperationException($"This converter is only meant to be used via {nameof(JsonConvert.PopulateObject)}");
+                throw new InvalidOperationException(
+                    $"This converter is only meant to be used via {nameof(JsonConvert.PopulateObject)}"
+                );
 
             var obj = JToken.ReadFrom(reader);
 
@@ -33,7 +41,9 @@ namespace osu.Framework.Configuration
                 if (typeName == null)
                     throw new JsonException("Expected $type token.");
 
-                var existing = existingList.FirstOrDefault(h => h.GetType() == Type.GetType(typeName));
+                var existing = existingList.FirstOrDefault(h =>
+                    h.GetType() == Type.GetType(typeName)
+                );
 
                 if (existing != null)
                     serializer.Populate(tok.CreateReader(), existing);
@@ -42,7 +52,11 @@ namespace osu.Framework.Configuration
             return existingList;
         }
 
-        public override void WriteJson(JsonWriter writer, IReadOnlyList<T> value, JsonSerializer serializer)
+        public override void WriteJson(
+            JsonWriter writer,
+            IReadOnlyList<T> value,
+            JsonSerializer serializer
+        )
         {
             var objects = new List<JObject>();
 

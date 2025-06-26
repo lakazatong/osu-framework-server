@@ -28,9 +28,7 @@ namespace osu.Framework.Testing
             {
                 DeleteDirectory(string.Empty);
             }
-            catch
-            {
-            }
+            catch { }
         }
     }
 }

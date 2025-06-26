@@ -106,18 +106,14 @@ namespace osu.Framework.Platform
 
                         pipe.Disconnect();
                     }
-                    catch (OperationCanceledException)
-                    {
-                    }
+                    catch (OperationCanceledException) { }
                     catch (Exception e)
                     {
                         Logger.Error(e, "Error handling incoming IPC request.");
                     }
                 }
             }
-            catch (OperationCanceledException)
-            {
-            }
+            catch (OperationCanceledException) { }
             finally
             {
                 try
@@ -125,9 +121,7 @@ namespace osu.Framework.Platform
                     if (pipe.IsConnected)
                         pipe.Disconnect();
                 }
-                catch
-                {
-                }
+                catch { }
             }
         }
 
@@ -170,13 +164,18 @@ namespace osu.Framework.Platform
             await stream.FlushAsync().ConfigureAwait(false);
         }
 
-        private static async Task<IpcMessage?> receive(Stream stream, CancellationToken cancellationToken = default)
+        private static async Task<IpcMessage?> receive(
+            Stream stream,
+            CancellationToken cancellationToken = default
+        )
         {
             const int header_length = sizeof(int);
 
             byte[] header = new byte[header_length];
 
-            int read = await stream.ReadAsync(header.AsMemory(), cancellationToken).ConfigureAwait(false);
+            int read = await stream
+                .ReadAsync(header.AsMemory(), cancellationToken)
+                .ConfigureAwait(false);
 
             if (read < header_length)
                 return null;
@@ -186,7 +185,9 @@ namespace osu.Framework.Platform
             if (contentLength == 0)
                 return null;
 
-            byte[] data = await stream.ReadBytesToArrayAsync(contentLength, cancellationToken).ConfigureAwait(false);
+            byte[] data = await stream
+                .ReadBytesToArrayAsync(contentLength, cancellationToken)
+                .ConfigureAwait(false);
 
             string str = Encoding.UTF8.GetString(data);
 
@@ -194,13 +195,18 @@ namespace osu.Framework.Platform
 
             string? typeName = json["Type"]?.Value<string>();
 
-            if (typeName == null) throw new InvalidOperationException("Response JSON has missing Type field.");
+            if (typeName == null)
+                throw new InvalidOperationException("Response JSON has missing Type field.");
 
             var type = Type.GetType(typeName);
             var value = json["Value"];
 
-            if (type == null) throw new InvalidOperationException($"Response type could not be mapped ({typeName}).");
-            if (value == null) throw new InvalidOperationException("Response JSON has missing Value field.");
+            if (type == null)
+                throw new InvalidOperationException(
+                    $"Response type could not be mapped ({typeName})."
+                );
+            if (value == null)
+                throw new InvalidOperationException("Response JSON has missing Value field.");
 
             return new IpcMessage
             {
@@ -226,7 +232,11 @@ namespace osu.Framework.Platform
                 }
                 catch
                 {
-                    Logger.Log($"IPC thread failed to exit in allocated time ({thread_join_timeout}ms).", LoggingTarget.Runtime, LogLevel.Important);
+                    Logger.Log(
+                        $"IPC thread failed to exit in allocated time ({thread_join_timeout}ms).",
+                        LoggingTarget.Runtime,
+                        LogLevel.Important
+                    );
                 }
             }
         }

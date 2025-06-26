@@ -34,6 +34,7 @@ namespace osu.Framework.Testing.Drawables.Steps
                 Success();
         }
 
-        public override string ToString() => $"Toggle: {base.ToString()} ({(state ? "on" : "off")})";
+        public override string ToString() =>
+            $"Toggle: {base.ToString()} ({(state ? "on" : "off")})";
     }
 }

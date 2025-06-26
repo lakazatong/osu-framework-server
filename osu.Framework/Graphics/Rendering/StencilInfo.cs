@@ -48,8 +48,15 @@ namespace osu.Framework.Graphics.Rendering
         /// </summary>
         public readonly StencilOperation TestPassedOperation;
 
-        public StencilInfo(bool stencilTest = true, BufferTestFunction testFunction = BufferTestFunction.Always, int testValue = 1, int mask = 0xff,
-                           StencilOperation stencilFailed = StencilOperation.Keep, StencilOperation depthFailed = StencilOperation.Keep, StencilOperation passed = StencilOperation.Replace)
+        public StencilInfo(
+            bool stencilTest = true,
+            BufferTestFunction testFunction = BufferTestFunction.Always,
+            int testValue = 1,
+            int mask = 0xff,
+            StencilOperation stencilFailed = StencilOperation.Keep,
+            StencilOperation depthFailed = StencilOperation.Keep,
+            StencilOperation passed = StencilOperation.Replace
+        )
         {
             StencilTest = stencilTest;
             TestFunction = testFunction;
@@ -61,12 +68,12 @@ namespace osu.Framework.Graphics.Rendering
         }
 
         public bool Equals(StencilInfo other) =>
-            other.StencilTest == StencilTest &&
-            other.TestFunction == TestFunction &&
-            other.TestValue == TestValue &&
-            other.Mask == Mask &&
-            other.StencilTestFailOperation == StencilTestFailOperation &&
-            other.DepthTestFailOperation == DepthTestFailOperation &&
-            other.TestPassedOperation == TestPassedOperation;
+            other.StencilTest == StencilTest
+            && other.TestFunction == TestFunction
+            && other.TestValue == TestValue
+            && other.Mask == Mask
+            && other.StencilTestFailOperation == StencilTestFailOperation
+            && other.DepthTestFailOperation == DepthTestFailOperation
+            && other.TestPassedOperation == TestPassedOperation;
     }
 }

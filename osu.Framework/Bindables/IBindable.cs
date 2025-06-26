@@ -12,7 +12,12 @@ namespace osu.Framework.Bindables
     /// <summary>
     /// An interface which can be bound to other <see cref="IBindable"/>s in order to watch for (and react to) <see cref="ICanBeDisabled.Disabled">Disabled</see> changes.
     /// </summary>
-    public interface IBindable : ICanBeDisabled, IHasDefaultValue, IUnbindable, IHasDescription, IFormattable
+    public interface IBindable
+        : ICanBeDisabled,
+            IHasDefaultValue,
+            IUnbindable,
+            IHasDescription,
+            IFormattable
     {
         /// <summary>
         /// Binds ourselves to another bindable such that we receive any value limitations of the bindable we bind with.
@@ -57,8 +62,10 @@ namespace osu.Framework.Bindables
 
             if (copy.GetType() != source.GetType())
             {
-                ThrowHelper.ThrowInvalidOperationException($"Attempted to create a copy of {source.GetType().ReadableName()}, but the returned instance type was {copy.GetType().ReadableName()}. "
-                                                           + $"Override {source.GetType().ReadableName()}.{nameof(CreateInstance)}() for {nameof(GetBoundCopy)}() to function properly.");
+                ThrowHelper.ThrowInvalidOperationException(
+                    $"Attempted to create a copy of {source.GetType().ReadableName()}, but the returned instance type was {copy.GetType().ReadableName()}. "
+                        + $"Override {source.GetType().ReadableName()}.{nameof(CreateInstance)}() for {nameof(GetBoundCopy)}() to function properly."
+                );
             }
 
             copy.BindTo(source);
@@ -70,7 +77,12 @@ namespace osu.Framework.Bindables
     /// An interface which can be bound to other <see cref="IBindable{T}"/>s in order to watch for (and react to) <see cref="ICanBeDisabled.Disabled">Disabled</see> and <see cref="IBindable{T}.Value">Value</see> changes.
     /// </summary>
     /// <typeparam name="T">The type of value encapsulated by this <see cref="IBindable{T}"/>.</typeparam>
-    public interface IBindable<T> : ICanBeDisabled, IHasDefaultValue, IUnbindable, IHasDescription, IFormattable
+    public interface IBindable<T>
+        : ICanBeDisabled,
+            IHasDefaultValue,
+            IUnbindable,
+            IHasDescription,
+            IFormattable
     {
         /// <summary>
         /// An event which is raised when <see cref="Value"/> has changed.
@@ -107,7 +119,10 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="onChange">The action to perform when <see cref="Value"/> changes.</param>
         /// <param name="runOnceImmediately">Whether the action provided in <paramref name="onChange"/> should be run once immediately.</param>
-        void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool runOnceImmediately = false);
+        void BindValueChanged(
+            Action<ValueChangedEvent<T>> onChange,
+            bool runOnceImmediately = false
+        );
 
         /// <inheritdoc cref="IBindable.GetBoundCopy"/>
         IBindable<T> GetBoundCopy();

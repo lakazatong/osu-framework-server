@@ -8,9 +8,7 @@ namespace osu.Framework.Bindables
     public class BindableBool : Bindable<bool>
     {
         public BindableBool(bool value = false)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         public override void Parse(object? input, IFormatProvider provider)
         {

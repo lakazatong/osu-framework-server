@@ -12,8 +12,6 @@ namespace osu.Framework.Graphics.Veldrid.Batches
         where T : unmanaged, IEquatable<T>, IVertex
     {
         public VeldridLinearBatch(VeldridRenderer renderer, int size, PrimitiveTopology type)
-            : base(renderer, size, type, VeldridIndexLayout.Linear)
-        {
-        }
+            : base(renderer, size, type, VeldridIndexLayout.Linear) { }
     }
 }

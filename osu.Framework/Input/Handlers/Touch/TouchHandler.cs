@@ -9,7 +9,8 @@ namespace osu.Framework.Input.Handlers.Touch
 {
     public class TouchHandler : InputHandler
     {
-        private static readonly GlobalStatistic<ulong> statistic_total_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<TouchHandler>(), "Total events");
+        private static readonly GlobalStatistic<ulong> statistic_total_events =
+            GlobalStatistics.Get<ulong>(StatisticGroupFor<TouchHandler>(), "Total events");
 
         public override bool IsActive => true;
 
@@ -21,19 +22,22 @@ namespace osu.Framework.Input.Handlers.Touch
             if (!(host.Window is ISDLWindow window))
                 return false;
 
-            Enabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+            Enabled.BindValueChanged(
+                enabled =>
                 {
-                    window.TouchDown += handleTouchDown;
-                    window.TouchUp += handleTouchUp;
-                }
-                else
-                {
-                    window.TouchDown -= handleTouchDown;
-                    window.TouchUp -= handleTouchUp;
-                }
-            }, true);
+                    if (enabled.NewValue)
+                    {
+                        window.TouchDown += handleTouchDown;
+                        window.TouchUp += handleTouchUp;
+                    }
+                    else
+                    {
+                        window.TouchDown -= handleTouchDown;
+                        window.TouchUp -= handleTouchUp;
+                    }
+                },
+                true
+            );
 
             return true;
         }

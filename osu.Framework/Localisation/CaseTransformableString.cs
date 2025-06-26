@@ -9,7 +9,9 @@ namespace osu.Framework.Localisation
     /// <summary>
     /// A string which can apply case transformations to underlying localisable string.
     /// </summary>
-    public class CaseTransformableString : IEquatable<CaseTransformableString>, ILocalisableStringData
+    public class CaseTransformableString
+        : IEquatable<CaseTransformableString>,
+            ILocalisableStringData
     {
         /// <summary>
         /// The case to apply to the underlying data.
@@ -35,7 +37,9 @@ namespace osu.Framework.Localisation
         public string GetLocalised(LocalisationParameters parameters)
         {
             string stringData = getStringData(parameters);
-            var cultureText = parameters.Store?.EffectiveCulture?.TextInfo ?? CultureInfo.InvariantCulture.TextInfo;
+            var cultureText =
+                parameters.Store?.EffectiveCulture?.TextInfo
+                ?? CultureInfo.InvariantCulture.TextInfo;
 
             switch (Casing)
             {
@@ -70,12 +74,15 @@ namespace osu.Framework.Localisation
 
         public override string ToString() => GetLocalised(LocalisationParameters.DEFAULT);
 
-        public bool Equals(ILocalisableStringData? other) => other is CaseTransformableString transformable && Equals(transformable);
+        public bool Equals(ILocalisableStringData? other) =>
+            other is CaseTransformableString transformable && Equals(transformable);
 
         public bool Equals(CaseTransformableString? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return Casing == other.Casing && String.Equals(other.String);
         }
@@ -124,6 +131,6 @@ namespace osu.Framework.Localisation
         /// <summary>
         /// Transform the string data to sentence case.
         /// </summary>
-        SentenceCase
+        SentenceCase,
     }
 }

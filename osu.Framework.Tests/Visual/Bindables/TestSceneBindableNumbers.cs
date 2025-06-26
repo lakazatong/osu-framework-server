@@ -20,11 +20,14 @@ namespace osu.Framework.Tests.Visual.Bindables
 
         public TestSceneBindableNumbers()
         {
-            AddStep("Reset", () =>
-            {
-                setValue(0);
-                setPrecision(1);
-            });
+            AddStep(
+                "Reset",
+                () =>
+                {
+                    setValue(0);
+                    setPrecision(1);
+                }
+            );
 
             testBasic();
             testPrecision3();
@@ -53,8 +56,8 @@ namespace osu.Framework.Tests.Visual.Bindables
                     {
                         new BindableDisplayContainer<float>(bindableFloat),
                         new BindableDisplayContainer<double>(bindableDouble),
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -125,31 +128,37 @@ namespace osu.Framework.Tests.Visual.Bindables
         /// </summary>
         private void testInvalidPrecision()
         {
-            AddAssert("Precision = 0 throws", () =>
-            {
-                try
+            AddAssert(
+                "Precision = 0 throws",
+                () =>
                 {
-                    setPrecision(0);
-                    return false;
+                    try
+                    {
+                        setPrecision(0);
+                        return false;
+                    }
+                    catch (Exception)
+                    {
+                        return true;
+                    }
                 }
-                catch (Exception)
-                {
-                    return true;
-                }
-            });
+            );
 
-            AddAssert("Precision = -1 throws", () =>
-            {
-                try
+            AddAssert(
+                "Precision = -1 throws",
+                () =>
                 {
-                    setPrecision(-1);
-                    return false;
+                    try
+                    {
+                        setPrecision(-1);
+                        return false;
+                    }
+                    catch (Exception)
+                    {
+                        return true;
+                    }
                 }
-                catch (Exception)
-                {
-                    return true;
-                }
-            });
+            );
         }
 
         /// <summary>
@@ -167,13 +176,14 @@ namespace osu.Framework.Tests.Visual.Bindables
 
         private bool checkExact(decimal value) => checkExact(value, value);
 
-        private bool checkExact(decimal floatValue, decimal intValue)
-            => bindableInt.Value == (int)intValue
-               && bindableLong.Value == (long)intValue
-               && bindableFloat.Value == (float)floatValue
-               && bindableDouble.Value == (double)floatValue;
+        private bool checkExact(decimal floatValue, decimal intValue) =>
+            bindableInt.Value == (int)intValue
+            && bindableLong.Value == (long)intValue
+            && bindableFloat.Value == (float)floatValue
+            && bindableDouble.Value == (double)floatValue;
 
-        private void setMin<T>(T value) where T : INumber<T>
+        private void setMin<T>(T value)
+            where T : INumber<T>
         {
             bindableInt.MinValue = int.CreateTruncating(value);
             bindableLong.MinValue = long.CreateTruncating(value);
@@ -181,7 +191,8 @@ namespace osu.Framework.Tests.Visual.Bindables
             bindableDouble.MinValue = double.CreateTruncating(value);
         }
 
-        private void setMax<T>(T value) where T : INumber<T>
+        private void setMax<T>(T value)
+            where T : INumber<T>
         {
             bindableInt.MaxValue = int.CreateTruncating(value);
             bindableLong.MaxValue = long.CreateTruncating(value);
@@ -189,7 +200,8 @@ namespace osu.Framework.Tests.Visual.Bindables
             bindableDouble.MaxValue = double.CreateTruncating(value);
         }
 
-        private void setValue<T>(T value) where T : INumber<T>
+        private void setValue<T>(T value)
+            where T : INumber<T>
         {
             bindableInt.Value = int.CreateTruncating(value);
             bindableLong.Value = long.CreateTruncating(value);
@@ -197,7 +209,8 @@ namespace osu.Framework.Tests.Visual.Bindables
             bindableDouble.Value = double.CreateTruncating(value);
         }
 
-        private void setPrecision<T>(T precision) where T : INumber<T>
+        private void setPrecision<T>(T precision)
+            where T : INumber<T>
         {
             bindableInt.Precision = int.CreateTruncating(precision);
             bindableLong.Precision = long.CreateTruncating(precision);
@@ -221,11 +234,15 @@ namespace osu.Framework.Tests.Visual.Bindables
                     Children = new Drawable[]
                     {
                         new SpriteText { Text = $"{typeof(T).Name} value:" },
-                        valueText = new SpriteText { Text = bindable.Value.ToString(CultureInfo.InvariantCulture) }
-                    }
+                        valueText = new SpriteText
+                        {
+                            Text = bindable.Value.ToString(CultureInfo.InvariantCulture),
+                        },
+                    },
                 };
 
-                bindable.ValueChanged += e => valueText.Text = e.NewValue.ToString(CultureInfo.InvariantCulture);
+                bindable.ValueChanged += e =>
+                    valueText.Text = e.NewValue.ToString(CultureInfo.InvariantCulture);
             }
         }
     }

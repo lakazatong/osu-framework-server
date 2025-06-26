@@ -19,7 +19,11 @@ namespace osu.Framework.Allocation
     public class CachedModelDependencyContainer<TModel> : IReadOnlyDependencyContainer
         where TModel : class?, IDependencyInjectionCandidate?, new()
     {
-        private const BindingFlags activator_flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        private const BindingFlags activator_flags =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.DeclaredOnly;
 
         /// <summary>
         /// The <typeparamref name="TModel"/> that provides the cached values.
@@ -37,7 +41,11 @@ namespace osu.Framework.Allocation
         {
             this.parent = parent;
 
-            shadowDependencies = DependencyActivator.MergeDependencies(shadowModel, null, new CacheInfo(parent: typeof(TModel)));
+            shadowDependencies = DependencyActivator.MergeDependencies(
+                shadowModel,
+                null,
+                new CacheInfo(parent: typeof(TModel))
+            );
 
             TModel? currentModel = null;
             Model.BindValueChanged(e =>
@@ -65,8 +73,8 @@ namespace osu.Framework.Allocation
         }
 
         public void Inject<T>(T instance)
-            where T : class, IDependencyInjectionCandidate
-            => DependencyActivator.Activate(instance, this);
+            where T : class, IDependencyInjectionCandidate =>
+            DependencyActivator.Activate(instance, this);
 
         /// <summary>
         /// Creates a new shadow model bound to <see cref="shadowModel"/>.
@@ -91,21 +99,36 @@ namespace osu.Framework.Allocation
                 foreach (var type in typeof(TModel).EnumerateBaseTypes())
                 {
                     foreach (var field in type.GetFields(activator_flags))
-                        perform(field, targetShadowModel, lastModel, (shadowProp, modelProp) => shadowProp.UnbindFrom(modelProp));
+                        perform(
+                            field,
+                            targetShadowModel,
+                            lastModel,
+                            (shadowProp, modelProp) => shadowProp.UnbindFrom(modelProp)
+                        );
                 }
             }
 
             foreach (var type in typeof(TModel).EnumerateBaseTypes())
             {
                 foreach (var field in type.GetFields(activator_flags))
-                    perform(field, targetShadowModel, newModel, (shadowProp, modelProp) => shadowProp.BindTo(modelProp));
+                    perform(
+                        field,
+                        targetShadowModel,
+                        newModel,
+                        (shadowProp, modelProp) => shadowProp.BindTo(modelProp)
+                    );
             }
         }
 
         /// <summary>
         /// Perform an arbitrary action across a shadow model and model.
         /// </summary>
-        private static void perform(FieldInfo field, TModel shadowModel, TModel targetModel, Action<IBindable, IBindable> action)
+        private static void perform(
+            FieldInfo field,
+            TModel shadowModel,
+            TModel targetModel,
+            Action<IBindable, IBindable> action
+        )
         {
             IBindable? shadowBindable = null;
             IBindable? targetBindable = null;
@@ -115,9 +138,7 @@ namespace osu.Framework.Allocation
                 shadowBindable = field.GetValue(shadowModel) as IBindable;
                 targetBindable = field.GetValue(targetModel) as IBindable;
             }
-            catch
-            {
-            }
+            catch { }
 
             if (shadowBindable != null && targetBindable != null)
                 action(shadowBindable, targetBindable);

@@ -27,7 +27,9 @@ namespace osu.Framework.Graphics.Textures
             get
             {
                 if (!Available)
-                    throw new InvalidOperationException($"Attempting to access a {nameof(TextureWithRefCount)}'s underlying texture after all references are lost.");
+                    throw new InvalidOperationException(
+                        $"Attempting to access a {nameof(TextureWithRefCount)}'s underlying texture after all references are lost."
+                    );
 
                 return base.NativeTexture;
             }

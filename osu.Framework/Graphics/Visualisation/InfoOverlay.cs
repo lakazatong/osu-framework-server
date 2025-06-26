@@ -3,10 +3,10 @@
 
 #nullable disable
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.Visualisation
 {
@@ -19,7 +19,8 @@ namespace osu.Framework.Graphics.Visualisation
             get => target;
             set
             {
-                if (target == value) return;
+                if (target == value)
+                    return;
 
                 target = value;
 
@@ -58,21 +59,29 @@ namespace osu.Framework.Graphics.Visualisation
                     Colour = Color4.Blue,
                     Alpha = 0.5f,
                 },
-                childShape = new FlashyBox(delegate(Drawable d)
-                {
-                    if (!(d is CompositeDrawable c))
-                        return d.ScreenSpaceDrawQuad;
+                childShape = new FlashyBox(
+                    delegate(Drawable d)
+                    {
+                        if (!(d is CompositeDrawable c))
+                            return d.ScreenSpaceDrawQuad;
 
-                    RectangleF rect = new RectangleF(c.ChildOffset, c.ChildSize);
-                    return d.ToScreenSpace(rect);
-                })
+                        RectangleF rect = new RectangleF(c.ChildOffset, c.ChildSize);
+                        return d.ToScreenSpace(rect);
+                    }
+                )
                 {
                     Colour = Color4.Red,
                     Alpha = 0.5f,
                 },
                 // We're adding this guy twice to get a border in a somewhat hacky way.
-                new FlashyBox(d => quadAroundPosition(d.ToScreenSpace(d.OriginPosition), 5)) { Colour = Color4.Blue, },
-                new FlashyBox(d => quadAroundPosition(d.ToScreenSpace(d.OriginPosition), 3)) { Colour = Color4.Yellow, },
+                new FlashyBox(d => quadAroundPosition(d.ToScreenSpace(d.OriginPosition), 5))
+                {
+                    Colour = Color4.Blue,
+                },
+                new FlashyBox(d => quadAroundPosition(d.ToScreenSpace(d.OriginPosition), 3))
+                {
+                    Colour = Color4.Yellow,
+                },
             };
         }
 

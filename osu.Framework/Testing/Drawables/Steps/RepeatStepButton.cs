@@ -27,7 +27,8 @@ namespace osu.Framework.Testing.Drawables.Steps
 
         public override void PerformStep(bool userTriggered = false)
         {
-            if (invocations == Count && !userTriggered) throw new InvalidOperationException("Repeat step was invoked too many times");
+            if (invocations == Count && !userTriggered)
+                throw new InvalidOperationException("Repeat step was invoked too many times");
 
             invocations++;
 

@@ -22,11 +22,30 @@ namespace osu.Framework.Text
         /// <param name="neverFixedWidthCharacters">The characters for which fixed width should never be applied.</param>
         /// <param name="fallbackCharacter">The character to use if a glyph lookup fails.</param>
         /// <param name="fixedWidthReferenceCharacter">The character to use to calculate the fixed width width. Defaults to 'm'.</param>
-        public MultilineTextBuilder(ITexturedGlyphLookupStore store, FontUsage font, float maxWidth, bool useFontSizeAsHeight = true, Vector2 startOffset = default, Vector2 spacing = default,
-                                    List<TextBuilderGlyph>? characterList = null, char[]? neverFixedWidthCharacters = null, char fallbackCharacter = '?', char fixedWidthReferenceCharacter = 'm')
-            : base(store, font, maxWidth, useFontSizeAsHeight, startOffset, spacing, characterList, neverFixedWidthCharacters, fallbackCharacter, fixedWidthReferenceCharacter)
-        {
-        }
+        public MultilineTextBuilder(
+            ITexturedGlyphLookupStore store,
+            FontUsage font,
+            float maxWidth,
+            bool useFontSizeAsHeight = true,
+            Vector2 startOffset = default,
+            Vector2 spacing = default,
+            List<TextBuilderGlyph>? characterList = null,
+            char[]? neverFixedWidthCharacters = null,
+            char fallbackCharacter = '?',
+            char fixedWidthReferenceCharacter = 'm'
+        )
+            : base(
+                store,
+                font,
+                maxWidth,
+                useFontSizeAsHeight,
+                startOffset,
+                spacing,
+                characterList,
+                neverFixedWidthCharacters,
+                fallbackCharacter,
+                fixedWidthReferenceCharacter
+            ) { }
 
         protected override void OnWidthExceeded() => AddNewLine();
     }

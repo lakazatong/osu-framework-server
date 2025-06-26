@@ -56,7 +56,8 @@ namespace osu.Framework.Graphics.UserInterface
             get => pinned;
             set
             {
-                if (pinned == value) return;
+                if (pinned == value)
+                    return;
 
                 pinned = value;
                 PinnedChanged?.Invoke(this);
@@ -80,9 +81,7 @@ namespace osu.Framework.Graphics.UserInterface
         /// <remarks>
         /// This is defined for implementations to add sound feedback as a result of the user selecting this tab item.
         /// </remarks>
-        protected internal virtual void OnActivatedByUser()
-        {
-        }
+        protected internal virtual void OnActivatedByUser() { }
 
         protected override bool OnClick(ClickEvent e)
         {

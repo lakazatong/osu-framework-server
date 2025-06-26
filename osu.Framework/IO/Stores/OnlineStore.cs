@@ -15,7 +15,10 @@ namespace osu.Framework.IO.Stores
 {
     public class OnlineStore : IResourceStore<byte[]>
     {
-        public async Task<byte[]> GetAsync(string url, CancellationToken cancellationToken = default)
+        public async Task<byte[]> GetAsync(
+            string url,
+            CancellationToken cancellationToken = default
+        )
         {
             if (!validateScheme(url))
                 return null;
@@ -61,7 +64,8 @@ namespace osu.Framework.IO.Stores
         {
             byte[] ret = Get(url);
 
-            if (ret == null) return null;
+            if (ret == null)
+                return null;
 
             return new MemoryStream(ret);
         }
@@ -84,9 +88,7 @@ namespace osu.Framework.IO.Stores
 
         #region IDisposable Support
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         #endregion
     }

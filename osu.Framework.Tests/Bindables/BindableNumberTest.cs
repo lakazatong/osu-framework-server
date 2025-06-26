@@ -25,7 +25,7 @@ namespace osu.Framework.Tests.Bindables
             typeof(long),
             typeof(ulong),
             typeof(float),
-            typeof(double)
+            typeof(double),
         };
 
         /// <summary>
@@ -47,10 +47,21 @@ namespace osu.Framework.Tests.Bindables
 
             object bindable = createBindable(type);
 
-            MethodInfo setMethod = bindable.GetType().GetMethod(nameof(BindableNumber<int>.Set), BindingFlags.Public | BindingFlags.Instance)?.MakeGenericMethod(type);
+            MethodInfo setMethod = bindable
+                .GetType()
+                .GetMethod(
+                    nameof(BindableNumber<int>.Set),
+                    BindingFlags.Public | BindingFlags.Instance
+                )
+                ?.MakeGenericMethod(type);
             setMethod?.Invoke(bindable, new[] { expectedValue });
 
-            PropertyInfo valueProperty = bindable.GetType().GetProperty(nameof(BindableNumber<int>.Value), BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo valueProperty = bindable
+                .GetType()
+                .GetProperty(
+                    nameof(BindableNumber<int>.Value),
+                    BindingFlags.Public | BindingFlags.Instance
+                );
             object value = valueProperty?.GetValue(bindable);
 
             Assert.That(Convert.ChangeType(value, typeof(int)), Is.EqualTo(expectedValue));
@@ -66,11 +77,7 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestDecimalPrecision()
         {
-            var bindable = new BindableNumber<float>
-            {
-                Precision = 0.1f,
-                Value = 5.2f
-            };
+            var bindable = new BindableNumber<float> { Precision = 0.1f, Value = 5.2f };
             Assert.That(bindable.Value, Is.EqualTo(5.2f));
 
             bindable.Value = 4.3f;
@@ -93,10 +100,21 @@ namespace osu.Framework.Tests.Bindables
 
             object bindable = createBindable(type);
 
-            MethodInfo addMethod = bindable.GetType().GetMethod(nameof(BindableNumber<int>.Add), BindingFlags.Public | BindingFlags.Instance)?.MakeGenericMethod(type);
+            MethodInfo addMethod = bindable
+                .GetType()
+                .GetMethod(
+                    nameof(BindableNumber<int>.Add),
+                    BindingFlags.Public | BindingFlags.Instance
+                )
+                ?.MakeGenericMethod(type);
             addMethod?.Invoke(bindable, new[] { expectedValue });
 
-            PropertyInfo valueProperty = bindable.GetType().GetProperty(nameof(BindableNumber<int>.Value), BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo valueProperty = bindable
+                .GetType()
+                .GetProperty(
+                    nameof(BindableNumber<int>.Value),
+                    BindingFlags.Public | BindingFlags.Instance
+                );
             object value = valueProperty?.GetValue(bindable);
 
             Assert.That(Convert.ChangeType(value, typeof(int)), Is.EqualTo(expectedValue));
@@ -108,10 +126,7 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestValueUpdatedOnPrecisionChange()
         {
-            var bindable = new BindableInt(2)
-            {
-                Precision = 3
-            };
+            var bindable = new BindableInt(2) { Precision = 3 };
 
             Assert.That(bindable.Value, Is.EqualTo(3));
         }
@@ -125,7 +140,11 @@ namespace osu.Framework.Tests.Bindables
         {
             var bindable1 = new BindableInt(2);
             var bindable2 = new BindableInt { BindTarget = bindable1 };
-            int counter = 0, bindable1ValueChange = 0, bindable1PrecisionChange = 0, bindable2ValueChange = 0, bindable2PrecisionChange = 0;
+            int counter = 0,
+                bindable1ValueChange = 0,
+                bindable1PrecisionChange = 0,
+                bindable2ValueChange = 0,
+                bindable2PrecisionChange = 0;
             bindable1.ValueChanged += _ => bindable1ValueChange = ++counter;
             bindable1.PrecisionChanged += _ => bindable1PrecisionChange = ++counter;
             bindable2.ValueChanged += _ => bindable2ValueChange = ++counter;
@@ -139,6 +158,10 @@ namespace osu.Framework.Tests.Bindables
             Assert.That(bindable1ValueChange, Is.EqualTo(4));
         }
 
-        private object createBindable(Type type) => Activator.CreateInstance(typeof(BindableNumber<>).MakeGenericType(type), Convert.ChangeType(0, type));
+        private object createBindable(Type type) =>
+            Activator.CreateInstance(
+                typeof(BindableNumber<>).MakeGenericType(type),
+                Convert.ChangeType(0, type)
+            );
     }
 }

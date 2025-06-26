@@ -12,10 +12,9 @@ namespace osu.Framework.Graphics.OpenGL.Batches
         where T : unmanaged, IEquatable<T>, IVertex
     {
         public GLQuadBatch(GLRenderer renderer, int size, int maxBuffers)
-            : base(renderer, size, maxBuffers)
-        {
-        }
+            : base(renderer, size, maxBuffers) { }
 
-        protected override GLVertexBuffer<T> CreateVertexBuffer(GLRenderer renderer) => new GLQuadBuffer<T>(renderer, Size, BufferUsageHint.DynamicDraw);
+        protected override GLVertexBuffer<T> CreateVertexBuffer(GLRenderer renderer) =>
+            new GLQuadBuffer<T>(renderer, Size, BufferUsageHint.DynamicDraw);
     }
 }

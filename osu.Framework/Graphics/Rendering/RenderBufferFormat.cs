@@ -23,6 +23,6 @@ namespace osu.Framework.Graphics.Rendering
         /// <summary>
         /// 32-bit depth + 8-bit stencil format.
         /// </summary>
-        D32S8
+        D32S8,
     }
 }

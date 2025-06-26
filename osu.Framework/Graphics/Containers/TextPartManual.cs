@@ -26,8 +26,6 @@ namespace osu.Framework.Graphics.Containers
             Drawables = drawables.ToImmutableArray();
         }
 
-        public void RecreateDrawablesFor(TextFlowContainer textFlowContainer)
-        {
-        }
+        public void RecreateDrawablesFor(TextFlowContainer textFlowContainer) { }
     }
 }

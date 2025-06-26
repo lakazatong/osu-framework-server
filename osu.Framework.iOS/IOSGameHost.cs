@@ -33,9 +33,7 @@ namespace osu.Framework.iOS
         public override bool OnScreenKeyboardOverlapsGameWindow => true;
 
         public IOSGameHost()
-            : base(string.Empty)
-        {
-        }
+            : base(string.Empty) { }
 
         protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface)
         {
@@ -64,18 +62,25 @@ namespace osu.Framework.iOS
 
         public override bool PresentFileExternally(string filename)
         {
-            UIApplication.SharedApplication.InvokeOnMainThread(() => presenter.PresentFile(filename));
+            UIApplication.SharedApplication.InvokeOnMainThread(() =>
+                presenter.PresentFile(filename)
+            );
             return true;
         }
 
         public override void OpenUrlExternally(string url)
         {
-            if (!url.CheckIsValidUrl()
+            if (
+                !url.CheckIsValidUrl()
                 // App store links
                 && !url.StartsWith("itms-apps://", StringComparison.Ordinal)
                 // Testflight links
-                && !url.StartsWith("itms-beta://", StringComparison.Ordinal))
-                throw new ArgumentException("The provided URL must be one of either http://, https:// or mailto: protocols.", nameof(url));
+                && !url.StartsWith("itms-beta://", StringComparison.Ordinal)
+            )
+                throw new ArgumentException(
+                    "The provided URL must be one of either http://, https:// or mailto: protocols.",
+                    nameof(url)
+                );
 
             try
             {
@@ -92,11 +97,12 @@ namespace osu.Framework.iOS
             }
         }
 
-        public override IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore)
-            => new IOSTextureLoaderStore(underlyingStore);
+        public override IResourceStore<TextureUpload> CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => new IOSTextureLoaderStore(underlyingStore);
 
-        public override VideoDecoder CreateVideoDecoder(Stream stream)
-            => new IOSVideoDecoder(Renderer, stream);
+        public override VideoDecoder CreateVideoDecoder(Stream stream) =>
+            new IOSVideoDecoder(Renderer, stream);
 
         protected override IEnumerable<InputHandler> CreateAvailableInputHandlers()
         {

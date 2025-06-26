@@ -22,10 +22,7 @@ namespace osu.Framework.Tests.Visual.Input
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new TestPlatformActionHandler
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            Add(new TestPlatformActionHandler { RelativeSizeAxes = Axes.Both });
         }
 
         private partial class TestPlatformActionHandler : CompositeDrawable
@@ -39,13 +36,15 @@ namespace osu.Framework.Tests.Visual.Input
                     Padding = new MarginPadding(20),
                     Spacing = new Vector2(10),
                     ChildrenEnumerable = Enum.GetValues(typeof(PlatformAction))
-                                             .Cast<PlatformAction>()
-                                             .Select(action => new PlatformBindingBox(action))
+                        .Cast<PlatformAction>()
+                        .Select(action => new PlatformBindingBox(action)),
                 };
             }
         }
 
-        private partial class PlatformBindingBox : CompositeDrawable, IKeyBindingHandler<PlatformAction>
+        private partial class PlatformBindingBox
+            : CompositeDrawable,
+                IKeyBindingHandler<PlatformAction>
         {
             private readonly PlatformAction platformAction;
 
@@ -65,13 +64,13 @@ namespace osu.Framework.Tests.Visual.Input
                     background = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = FrameworkColour.GreenDarker
+                        Colour = FrameworkColour.GreenDarker,
                     },
                     new SpriteText
                     {
                         Text = platformAction.ToString(),
-                        Margin = new MarginPadding(10)
-                    }
+                        Margin = new MarginPadding(10),
+                    },
                 };
             }
 
@@ -84,9 +83,7 @@ namespace osu.Framework.Tests.Visual.Input
                 return e.Action == PlatformAction.Exit;
             }
 
-            public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-            {
-            }
+            public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
         }
     }
 }

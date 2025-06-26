@@ -9,7 +9,10 @@ using osu.Framework.Bindables;
 namespace osu.Framework.Tests.Dependencies.Reflection
 {
     [TestFixture]
-    [SuppressMessage("Performance", "OFSG001:Class contributes to dependency injection and should be partial")]
+    [SuppressMessage(
+        "Performance",
+        "OFSG001:Class contributes to dependency injection and should be partial"
+    )]
     public class CachedModelDependenciesTest
     {
         [Test]
@@ -29,7 +32,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var resolver = new FieldModelResolver();
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel { Bindable = { Value = 2 } } }
+                Model = { Value = new FieldModel { Bindable = { Value = 2 } } },
             };
 
             dependencies.Inject(resolver);
@@ -43,7 +46,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var resolver = new FieldModelResolver();
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel { Bindable = { Value = 2 } } }
+                Model = { Value = new FieldModel { Bindable = { Value = 2 } } },
             };
 
             dependencies.Inject(resolver);
@@ -57,7 +60,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var resolver = new FieldModelResolver();
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel { Bindable = { Value = 2 } } }
+                Model = { Value = new FieldModel { Bindable = { Value = 2 } } },
             };
 
             dependencies.Inject(resolver);
@@ -80,9 +83,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
                     Value = new DerivedFieldModel
                     {
                         Bindable = { Value = 2 },
-                        BindableString = { Value = "2" }
-                    }
-                }
+                        BindableString = { Value = "2" },
+                    },
+                },
             };
 
             dependencies.Inject(resolver);
@@ -105,7 +108,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             var dependencies = new CachedModelDependencyContainer<CrossDependentFieldModel>(null)
             {
-                Model = { Value = model1 }
+                Model = { Value = model1 },
             };
 
             Assert.AreEqual(2, model1.Bindable.Value);
@@ -147,7 +150,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = model1 }
+                Model = { Value = model1 },
             };
 
             dependencies.Inject(resolver);
@@ -176,7 +179,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             var dependencies = new CachedModelDependencyContainer<FieldModel?>(null)
             {
-                Model = { Value = model }
+                Model = { Value = model },
             };
 
             dependencies.Inject(resolver);
@@ -201,7 +204,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             var dependencies = new CachedModelDependencyContainer<FieldModel>(null)
             {
-                Model = { Value = new FieldModel() }
+                Model = { Value = new FieldModel() },
             };
 
             dependencies.Inject(resolver1);
@@ -218,18 +221,18 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var model1 = new DerivedFieldModel
             {
                 Bindable = { Value = 2 },
-                BindableString = { Value = "2" }
+                BindableString = { Value = "2" },
             };
 
             var model2 = new DerivedFieldModel
             {
                 Bindable = { Value = 3 },
-                BindableString = { Value = "3" }
+                BindableString = { Value = "3" },
             };
 
             var dependencies = new CachedModelDependencyContainer<DerivedFieldModel?>(null)
             {
-                Model = { Value = model1 }
+                Model = { Value = model1 },
             };
 
             dependencies.Inject(resolver);

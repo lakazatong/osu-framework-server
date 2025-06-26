@@ -16,7 +16,8 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
             (string filename, string content)[] commonSources,
             (string filename, string content)[] sources,
             (string filename, string content)[] commonGenerated,
-            (string filename, string content)[] generated)
+            (string filename, string content)[] generated
+        )
         {
             var test = new Test();
 
@@ -27,10 +28,22 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                 test.TestState.Sources.Add((s.filename, SourceText.From(s.content, Encoding.UTF8)));
 
             foreach (var e in commonGenerated)
-                test.TestState.GeneratedSources.Add((typeof(TSourceGenerator), e.filename, SourceText.From(e.content, Encoding.UTF8)));
+                test.TestState.GeneratedSources.Add(
+                    (
+                        typeof(TSourceGenerator),
+                        e.filename,
+                        SourceText.From(e.content, Encoding.UTF8)
+                    )
+                );
 
             foreach (var e in generated)
-                test.TestState.GeneratedSources.Add((typeof(TSourceGenerator), e.filename, SourceText.From(e.content, Encoding.UTF8)));
+                test.TestState.GeneratedSources.Add(
+                    (
+                        typeof(TSourceGenerator),
+                        e.filename,
+                        SourceText.From(e.content, Encoding.UTF8)
+                    )
+                );
 
             await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }

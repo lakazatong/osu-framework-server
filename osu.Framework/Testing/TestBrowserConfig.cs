@@ -11,9 +11,7 @@ namespace osu.Framework.Testing
         protected override string Filename => @"visualtests.cfg";
 
         public TestBrowserConfig(Storage storage)
-            : base(storage)
-        {
-        }
+            : base(storage) { }
 
         protected override void InitialiseDefaults()
         {

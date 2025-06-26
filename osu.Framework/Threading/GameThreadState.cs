@@ -30,6 +30,6 @@ namespace osu.Framework.Threading
         /// <summary>
         /// This thread has permanently exited.
         /// </summary>
-        Exited
+        Exited,
     }
 }

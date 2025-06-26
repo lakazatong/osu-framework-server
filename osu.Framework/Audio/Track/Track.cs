@@ -1,11 +1,11 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Statistics;
 using System;
 using System.Threading.Tasks;
 using osu.Framework.Audio.Mixing;
 using osu.Framework.Extensions;
+using osu.Framework.Statistics;
 
 namespace osu.Framework.Audio.Track
 {
@@ -15,6 +15,7 @@ namespace osu.Framework.Audio.Track
         public event Action? Failed;
 
         protected void RaiseCompleted() => Completed?.Invoke();
+
         protected void RaiseFailed() => Failed?.Invoke();
 
         public virtual bool IsDummyDevice => true;
@@ -48,12 +49,13 @@ namespace osu.Framework.Audio.Track
         /// </summary>
         public void Restart() => RestartAsync().WaitSafely();
 
-        public Task RestartAsync() => EnqueueAction(() =>
-        {
-            Stop();
-            Seek(RestartPoint);
-            Start();
-        });
+        public Task RestartAsync() =>
+            EnqueueAction(() =>
+            {
+                Stop();
+                Seek(RestartPoint);
+                Start();
+            });
 
         public virtual void ResetSpeedAdjustments()
         {
@@ -110,7 +112,10 @@ namespace osu.Framework.Audio.Track
         public virtual double Rate
         {
             get => AggregateFrequency.Value * AggregateTempo.Value;
-            set => throw new InvalidOperationException($"Setting {nameof(Rate)} directly on a {nameof(Track)} is not supported. Set {nameof(Tempo)} or {nameof(Frequency)} instead.");
+            set =>
+                throw new InvalidOperationException(
+                    $"Setting {nameof(Rate)} directly on a {nameof(Track)} is not supported. Set {nameof(Tempo)} or {nameof(Frequency)} instead."
+                );
         }
 
         public bool IsReversed => Rate < 0;

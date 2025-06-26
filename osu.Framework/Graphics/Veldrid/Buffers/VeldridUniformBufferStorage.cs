@@ -22,7 +22,12 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
         {
             this.renderer = renderer;
 
-            buffer = renderer.Factory.CreateBuffer(new BufferDescription((uint)Marshal.SizeOf(default(TData)), BufferUsage.UniformBuffer));
+            buffer = renderer.Factory.CreateBuffer(
+                new BufferDescription(
+                    (uint)Marshal.SizeOf(default(TData)),
+                    BufferUsage.UniformBuffer
+                )
+            );
             memoryLease = NativeMemoryTracker.AddMemory(this, buffer.SizeInBytes);
         }
 
@@ -37,7 +42,8 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
             }
         }
 
-        public ResourceSet GetResourceSet(ResourceLayout layout) => set ??= renderer.Factory.CreateResourceSet(new ResourceSetDescription(layout, buffer));
+        public ResourceSet GetResourceSet(ResourceLayout layout) =>
+            set ??= renderer.Factory.CreateResourceSet(new ResourceSetDescription(layout, buffer));
 
         public void Dispose()
         {

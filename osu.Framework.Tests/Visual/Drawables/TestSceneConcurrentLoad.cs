@@ -36,15 +36,23 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Ignore("pointless with LoadComponentAsync concurrency limiting")]
         public void LoadManyThreaded()
         {
-            AddStep("load many thread", () =>
-            {
-                for (int i = 0; i < panel_count; i++)
-                    LoadComponentAsync(new DelayedTestBox(), flow.Add);
-            });
+            AddStep(
+                "load many thread",
+                () =>
+                {
+                    for (int i = 0; i < panel_count; i++)
+                        LoadComponentAsync(new DelayedTestBox(), flow.Add);
+                }
+            );
 
             AddAssert("check none loaded", () => !flow.Children.OfType<DelayedTestBox>().Any());
 
-            AddUntilStep("check not all loaded", () => flow.Children.OfType<DelayedTestBox>().Any() && flow.Children.OfType<DelayedTestBox>().Count() < panel_count);
+            AddUntilStep(
+                "check not all loaded",
+                () =>
+                    flow.Children.OfType<DelayedTestBox>().Any()
+                    && flow.Children.OfType<DelayedTestBox>().Count() < panel_count
+            );
 
             AddUntilStep("wait all loaded", () => flow.Children.Count == panel_count);
         }
@@ -53,18 +61,30 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Ignore("pointless with LoadComponentAsync concurrency limiting")]
         public void LoadManyAsync()
         {
-            AddStep("load many async", () =>
-            {
-                for (int i = 0; i < panel_count; i++)
-                    LoadComponentAsync(new DelayedTestBoxAsync(), flow.Add);
-            });
+            AddStep(
+                "load many async",
+                () =>
+                {
+                    for (int i = 0; i < panel_count; i++)
+                        LoadComponentAsync(new DelayedTestBoxAsync(), flow.Add);
+                }
+            );
 
-            AddAssert("check none loaded", () => !flow.Children.OfType<DelayedTestBoxAsync>().Any());
+            AddAssert(
+                "check none loaded",
+                () => !flow.Children.OfType<DelayedTestBoxAsync>().Any()
+            );
 
-            AddUntilStep("wait some loaded", () => flow.Children.OfType<DelayedTestBoxAsync>().Any());
+            AddUntilStep(
+                "wait some loaded",
+                () => flow.Children.OfType<DelayedTestBoxAsync>().Any()
+            );
 
             // due to thread yielding all should be loaded straight after any are loaded.
-            AddAssert("check all loaded", () => flow.Children.OfType<DelayedTestBoxAsync>().Count() == panel_count);
+            AddAssert(
+                "check all loaded",
+                () => flow.Children.OfType<DelayedTestBoxAsync>().Count() == panel_count
+            );
         }
 
         public partial class DelayedTestBox : Box

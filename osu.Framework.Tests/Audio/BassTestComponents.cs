@@ -22,8 +22,10 @@ namespace osu.Framework.Tests.Audio
         internal readonly TrackStore TrackStore;
         internal readonly SampleStore SampleStore;
 
-        private readonly AudioCollectionManager<AudioComponent> allComponents = new AudioCollectionManager<AudioComponent>();
-        private readonly AudioCollectionManager<AudioComponent> mixerComponents = new AudioCollectionManager<AudioComponent>();
+        private readonly AudioCollectionManager<AudioComponent> allComponents =
+            new AudioCollectionManager<AudioComponent>();
+        private readonly AudioCollectionManager<AudioComponent> mixerComponents =
+            new AudioCollectionManager<AudioComponent>();
 
         public BassTestComponents(bool init = true)
         {
@@ -73,14 +75,18 @@ namespace osu.Framework.Tests.Audio
         /// <param name="action">The action to run on the audio thread.</param>
         public void RunOnAudioThread(Action action) => AudioTestHelper.RunOnAudioThread(action);
 
-        internal TrackBass GetTrack() => (TrackBass)TrackStore.Get("Resources.Tracks.sample-track.mp3");
-        internal SampleBass GetSample() => (SampleBass)SampleStore.Get("Resources.Tracks.sample-track.mp3");
+        internal TrackBass GetTrack() =>
+            (TrackBass)TrackStore.Get("Resources.Tracks.sample-track.mp3");
 
-        public void Dispose() => RunOnAudioThread(() =>
-        {
-            allComponents.Dispose();
-            allComponents.Update(); // Actually runs the disposal.
-            Bass.Free();
-        });
+        internal SampleBass GetSample() =>
+            (SampleBass)SampleStore.Get("Resources.Tracks.sample-track.mp3");
+
+        public void Dispose() =>
+            RunOnAudioThread(() =>
+            {
+                allComponents.Dispose();
+                allComponents.Update(); // Actually runs the disposal.
+                Bass.Free();
+            });
     }
 }

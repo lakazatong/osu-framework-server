@@ -46,44 +46,47 @@ namespace osu.Framework.Tests.Visual.Platform
             {
                 RelativeSizeAxes = Axes.Both,
                 Padding = new MarginPadding(70),
-                Child = paddedContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = screenContainer = new Container
+                Child = paddedContainer =
+                    new Container
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Child = windowContainer = new Container
-                        {
-                            BorderColour = window_stroke,
-                            BorderThickness = 20,
-                            Masking = true,
-                            Depth = -10,
-                            Alpha = 0.7f,
-                            Children = new Drawable[]
+                        RelativeSizeAxes = Axes.Both,
+                        Child = screenContainer =
+                            new Container
                             {
-                                new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = window_fill
-                                },
-                                windowCaption = new TextFlowContainer(sprite =>
-                                {
-                                    sprite.Font = sprite.Font.With(size: FONT_SIZE);
-                                    sprite.Colour = Color4.White;
-                                })
-                                {
-                                    Anchor = Anchor.BottomLeft,
-                                    Origin = Anchor.BottomLeft,
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Padding = new MarginPadding(50),
-                                    Colour = Color4.White
-                                }
-                            }
-                        }
-                    }
-                }
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Child = windowContainer =
+                                    new Container
+                                    {
+                                        BorderColour = window_stroke,
+                                        BorderThickness = 20,
+                                        Masking = true,
+                                        Depth = -10,
+                                        Alpha = 0.7f,
+                                        Children = new Drawable[]
+                                        {
+                                            new Box
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Colour = window_fill,
+                                            },
+                                            windowCaption = new TextFlowContainer(sprite =>
+                                            {
+                                                sprite.Font = sprite.Font.With(size: FONT_SIZE);
+                                                sprite.Colour = Color4.White;
+                                            })
+                                            {
+                                                Anchor = Anchor.BottomLeft,
+                                                Origin = Anchor.BottomLeft,
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Padding = new MarginPadding(50),
+                                                Colour = Color4.White,
+                                            },
+                                        },
+                                    },
+                            },
+                    },
             };
         }
 
@@ -97,7 +100,9 @@ namespace osu.Framework.Tests.Visual.Platform
             {
                 window.DisplaysChanged += onDisplaysChanged;
                 currentDisplay.BindTo(window.CurrentDisplayBindable);
-                currentDisplay.BindValueChanged(_ => Scheduler.AddOnce(() => refreshScreens(window.Displays)));
+                currentDisplay.BindValueChanged(_ =>
+                    Scheduler.AddOnce(() => refreshScreens(window.Displays))
+                );
 
                 refreshScreens(window.Displays);
             }
@@ -116,8 +121,18 @@ namespace osu.Framework.Tests.Visual.Platform
 
             foreach (var display in displays)
             {
-                screenContainer.Add(createScreen(display, window.AsNonNull().CurrentDisplayBindable.Value.Index));
-                bounds = RectangleI.Union(bounds, new RectangleI(display.Bounds.X, display.Bounds.Y, display.Bounds.Width, display.Bounds.Height));
+                screenContainer.Add(
+                    createScreen(display, window.AsNonNull().CurrentDisplayBindable.Value.Index)
+                );
+                bounds = RectangleI.Union(
+                    bounds,
+                    new RectangleI(
+                        display.Bounds.X,
+                        display.Bounds.Y,
+                        display.Bounds.Width,
+                        display.Bounds.Height
+                    )
+                );
             }
 
             screenContainerOffset = bounds.Location;
@@ -150,7 +165,7 @@ namespace osu.Framework.Tests.Visual.Platform
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = isActive ? active_fill : screen_fill
+                        Colour = isActive ? active_fill : screen_fill,
                     },
                     new TextFlowContainer(sprite =>
                     {
@@ -159,20 +174,23 @@ namespace osu.Framework.Tests.Visual.Platform
                     })
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Text = $"{display.Name}\n"
-                               + $"{display.Bounds.Width}x{display.Bounds.Height}\n"
-                               + $"Mode: {modeName(display.DisplayModes.FirstOrDefault())}",
+                        Text =
+                            $"{display.Name}\n"
+                            + $"{display.Bounds.Width}x{display.Bounds.Height}\n"
+                            + $"Mode: {modeName(display.DisplayModes.FirstOrDefault())}",
                         Padding = new MarginPadding(50),
-                    }
-                }
+                    },
+                },
             };
         }
 
-        private string modeName(DisplayMode mode) => $"{mode.Size.Width}x{mode.Size.Height}@{mode.RefreshRate}";
+        private string modeName(DisplayMode mode) =>
+            $"{mode.Size.Width}x{mode.Size.Height}@{mode.RefreshRate}";
 
         private void updateWindowContainer()
         {
-            if (window == null) return;
+            if (window == null)
+                return;
 
             bool fullscreen = window.WindowMode.Value == WindowMode.Fullscreen;
             var currentBounds = window.CurrentDisplayBindable.Value.Bounds;
@@ -182,7 +200,8 @@ namespace osu.Framework.Tests.Visual.Platform
             windowContainer.Width = fullscreen ? currentBounds.Width : window.Size.Width;
             windowContainer.Height = fullscreen ? currentBounds.Height : window.Size.Height;
             windowContainer.Position -= screenContainerOffset;
-            windowCaption.Text = $"{windowMode}\nSize: {window.Size.Width}x{window.Size.Height}\nClient: {window.ClientSize.Width}x{window.ClientSize.Height}";
+            windowCaption.Text =
+                $"{windowMode}\nSize: {window.Size.Width}x{window.Size.Height}\nClient: {window.ClientSize.Width}x{window.ClientSize.Height}";
         }
 
         protected override void Update()

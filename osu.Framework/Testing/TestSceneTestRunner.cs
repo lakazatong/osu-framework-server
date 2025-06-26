@@ -49,7 +49,10 @@ namespace osu.Framework.Testing
             /// <param name="test">The <see cref="TestScene"/> to run.</param>
             public void RunTestBlocking(TestScene test)
             {
-                Trace.Assert(host != null, $"Ensure this runner has been loaded before calling {nameof(RunTestBlocking)}");
+                Trace.Assert(
+                    host != null,
+                    $"Ensure this runner has been loaded before calling {nameof(RunTestBlocking)}"
+                );
 
                 bool completed = false;
                 ExceptionDispatchInfo exception = null;
@@ -73,14 +76,17 @@ namespace osu.Framework.Testing
                     // Nunit will run the tests in the TestScene with the same TestScene instance so the TestScene
                     // needs to be removed before the host is exited, otherwise it will end up disposed
 
-                    test.RunAllSteps(() =>
-                    {
-                        Scheduler.AddDelayed(complete, time_between_tests);
-                    }, (_, e) =>
-                    {
-                        exception = ExceptionDispatchInfo.Capture(e);
-                        complete();
-                    });
+                    test.RunAllSteps(
+                        () =>
+                        {
+                            Scheduler.AddDelayed(complete, time_between_tests);
+                        },
+                        (_, e) =>
+                        {
+                            exception = ExceptionDispatchInfo.Capture(e);
+                            complete();
+                        }
+                    );
                 });
 
                 while (!completed && host.ExecutionState == ExecutionState.Running)

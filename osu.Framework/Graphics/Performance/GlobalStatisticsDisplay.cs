@@ -85,23 +85,25 @@ namespace osu.Framework.Graphics.Performance
                 listener?.Dispose();
         }
 
-        private void remove(IEnumerable<IGlobalStatistic> stats) => Schedule(() =>
-        {
-            foreach (var stat in stats)
-                groups.FirstOrDefault(g => g.GroupName == stat.Group)?.Remove(stat);
-        });
-
-        private void add(IEnumerable<IGlobalStatistic> stats) => Schedule(() =>
-        {
-            foreach (var stat in stats)
+        private void remove(IEnumerable<IGlobalStatistic> stats) =>
+            Schedule(() =>
             {
-                var group = groups.FirstOrDefault(g => g.GroupName == stat.Group);
+                foreach (var stat in stats)
+                    groups.FirstOrDefault(g => g.GroupName == stat.Group)?.Remove(stat);
+            });
 
-                if (group == null)
-                    groups.Add(group = new StatisticsGroup(stat.Group));
-                group.Add(stat);
-            }
-        });
+        private void add(IEnumerable<IGlobalStatistic> stats) =>
+            Schedule(() =>
+            {
+                foreach (var stat in stats)
+                {
+                    var group = groups.FirstOrDefault(g => g.GroupName == stat.Group);
+
+                    if (group == null)
+                        groups.Add(group = new StatisticsGroup(stat.Group));
+                    group.Add(stat);
+                }
+            });
 
         private partial class StatisticsGroup : CompositeDrawable, IAlphabeticalSort
         {
@@ -128,7 +130,7 @@ namespace osu.Framework.Graphics.Performance
                             new SpriteText
                             {
                                 Text = GroupName,
-                                Font = FrameworkFont.Regular.With(weight: "Bold")
+                                Font = FrameworkFont.Regular.With(weight: "Bold"),
                             },
                             items = new AlphabeticalFlow<StatisticsItem>
                             {
@@ -137,7 +139,7 @@ namespace osu.Framework.Graphics.Performance
                                 AutoSizeAxes = Axes.Y,
                                 Direction = FillDirection.Vertical,
                             },
-                        }
+                        },
                     },
                 };
             }
@@ -206,9 +208,11 @@ namespace osu.Framework.Graphics.Performance
             string SortString { get; }
         }
 
-        private partial class AlphabeticalFlow<T> : FillFlowContainer<T> where T : Drawable, IAlphabeticalSort
+        private partial class AlphabeticalFlow<T> : FillFlowContainer<T>
+            where T : Drawable, IAlphabeticalSort
         {
-            public override IEnumerable<Drawable> FlowingChildren => base.FlowingChildren.Cast<T>().OrderBy(d => d.SortString);
+            public override IEnumerable<Drawable> FlowingChildren =>
+                base.FlowingChildren.Cast<T>().OrderBy(d => d.SortString);
         }
 
         protected override void Dispose(bool isDisposing)

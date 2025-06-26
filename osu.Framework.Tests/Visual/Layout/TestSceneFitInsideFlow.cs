@@ -19,27 +19,24 @@ namespace osu.Framework.Tests.Visual.Layout
         private Box fitBox;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Child = new FillFlowContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Y,
-                Width = container_width,
-                Direction = FillDirection.Vertical,
-                Children = new Drawable[]
+                Child = new FillFlowContainer
                 {
-                    fitBox = new Box
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AutoSizeAxes = Axes.Y,
+                    Width = container_width,
+                    Direction = FillDirection.Vertical,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        FillMode = FillMode.Fit
+                        fitBox = new Box { RelativeSizeAxes = Axes.Both, FillMode = FillMode.Fit },
+                        // A box which forces the minimum dimension of the autosize flow container to be the horizontal dimension
+                        new Box { Size = new Vector2(container_width, container_width * 2) },
                     },
-                    // A box which forces the minimum dimension of the autosize flow container to be the horizontal dimension
-                    new Box { Size = new Vector2(container_width, container_width * 2) }
-                }
-            };
-        });
+                };
+            });
 
         /// <summary>
         /// Tests that using <see cref="FillMode.Fit"/> inside a <see cref="FlowContainer{T}"/> that is autosizing in one axis doesn't result in autosize feedback loops.

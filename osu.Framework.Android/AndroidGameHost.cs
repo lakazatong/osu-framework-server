@@ -39,7 +39,8 @@ namespace osu.Framework.Android
             base.SetupConfig(defaultOverrides);
         }
 
-        protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface) => new AndroidGameWindow(preferredSurface, Options.FriendlyGameName);
+        protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface) =>
+            new AndroidGameWindow(preferredSurface, Options.FriendlyGameName);
 
         protected override void DrawFrame()
         {
@@ -59,7 +60,8 @@ namespace osu.Framework.Android
 
         public override IEnumerable<string> UserStoragePaths
             // not null as internal "external storage" is always available.
-            => Application.Context.GetExternalFilesDir(string.Empty).AsNonNull().ToString().Yield();
+            =>
+            Application.Context.GetExternalFilesDir(string.Empty).AsNonNull().ToString().Yield();
 
         public override bool OpenFileExternally(string filename) => false;
 
@@ -68,7 +70,10 @@ namespace osu.Framework.Android
         public override void OpenUrlExternally(string url)
         {
             if (!url.CheckIsValidUrl())
-                throw new ArgumentException("The provided URL must be one of either http://, https:// or mailto: protocols.", nameof(url));
+                throw new ArgumentException(
+                    "The provided URL must be one of either http://, https:// or mailto: protocols.",
+                    nameof(url)
+                );
 
             try
             {
@@ -85,11 +90,12 @@ namespace osu.Framework.Android
             }
         }
 
-        public override IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore)
-            => new AndroidTextureLoaderStore(underlyingStore);
+        public override IResourceStore<TextureUpload> CreateTextureLoaderStore(
+            IResourceStore<byte[]> underlyingStore
+        ) => new AndroidTextureLoaderStore(underlyingStore);
 
-        public override VideoDecoder CreateVideoDecoder(Stream stream)
-            => new AndroidVideoDecoder(Renderer, stream);
+        public override VideoDecoder CreateVideoDecoder(Stream stream) =>
+            new AndroidVideoDecoder(Renderer, stream);
 
         public override bool SuspendToBackground()
         {

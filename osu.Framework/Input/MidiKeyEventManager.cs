@@ -11,11 +11,13 @@ namespace osu.Framework.Input
     public class MidiKeyEventManager : ButtonEventManager<MidiKey>
     {
         public MidiKeyEventManager(MidiKey button)
-            : base(button)
-        {
-        }
+            : base(button) { }
 
-        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) => PropagateButtonEvent(targets, new MidiDownEvent(state, Button, state.Midi.Velocities[Button]));
+        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) =>
+            PropagateButtonEvent(
+                targets,
+                new MidiDownEvent(state, Button, state.Midi.Velocities[Button])
+            );
 
         protected override void HandleButtonUp(InputState state, List<Drawable> targets) =>
             PropagateButtonEvent(targets, new MidiUpEvent(state, Button));

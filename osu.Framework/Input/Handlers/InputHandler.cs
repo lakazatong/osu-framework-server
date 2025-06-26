@@ -26,7 +26,8 @@ namespace osu.Framework.Input.Handlers
         /// Gets the appropriate statistic group for use in <see cref="GlobalStatistics.Get{T}"/>.
         /// </summary>
         /// <typeparam name="T">Calling class</typeparam>
-        protected static string StatisticGroupFor<T>() where T : InputHandler => $"{STATISTIC_GROUP} - {typeof(T).ReadableName()}";
+        protected static string StatisticGroupFor<T>()
+            where T : InputHandler => $"{STATISTIC_GROUP} - {typeof(T).ReadableName()}";
 
         private static readonly Logger logger = Logger.GetLogger(LoggingTarget.Input);
 
@@ -52,9 +53,7 @@ namespace osu.Framework.Input.Handlers
         /// An example would be a user setting the sensitivity too high to turn it back down, or restricting the navigable screen area too small.
         /// Calling this would attempt to return the user to a sane state so they could re-attempt configuration changes.
         /// </remarks>
-        public virtual void Reset()
-        {
-        }
+        public virtual void Reset() { }
 
         protected ConcurrentQueue<IInput> PendingInputs = new ConcurrentQueue<IInput>();
 
@@ -94,7 +93,11 @@ namespace osu.Framework.Input.Handlers
         /// <param name="message">The message to log. Can include newline (\n) characters to split into multiple lines.</param>
         /// <param name="level">The verbosity level.</param>
         /// <param name="exception">An optional related exception.</param>
-        protected void Log(string message, LogLevel level = LogLevel.Verbose, Exception exception = null) => logger.Add($"[{Description}] {message}", level, exception);
+        protected void Log(
+            string message,
+            LogLevel level = LogLevel.Verbose,
+            Exception exception = null
+        ) => logger.Add($"[{Description}] {message}", level, exception);
 
         public override string ToString() => GetType().Name;
 

@@ -14,21 +14,23 @@ namespace osu.Framework.Graphics.Shaders.Types
     {
         public UniformVector4 Value;
 
-        public static implicit operator Vector3(UniformVector3 value) => new Vector3
-        {
-            X = value.Value.X,
-            Y = value.Value.Y,
-            Z = value.Value.Z
-        };
-
-        public static implicit operator UniformVector3(Vector3 value) => new UniformVector3
-        {
-            Value =
+        public static implicit operator Vector3(UniformVector3 value) =>
+            new Vector3
             {
-                X = value.X,
-                Y = value.Y,
-                Z = value.Z
-            }
-        };
+                X = value.Value.X,
+                Y = value.Value.Y,
+                Z = value.Value.Z,
+            };
+
+        public static implicit operator UniformVector3(Vector3 value) =>
+            new UniformVector3
+            {
+                Value =
+                {
+                    X = value.X,
+                    Y = value.Y,
+                    Z = value.Z,
+                },
+            };
     }
 }

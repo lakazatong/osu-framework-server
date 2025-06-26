@@ -39,25 +39,17 @@ namespace osu.Framework.Tests.Visual.Sprites
                 Font = new FontUsage(size: 15),
             };
 
-            Cell(2, 0).Child = new SpriteText
-            {
-                Text = "Colour = green",
-                Colour = Color4.Green
-            };
+            Cell(2, 0).Child = new SpriteText { Text = "Colour = green", Colour = Color4.Green };
 
             Cell(3, 0).Child = new SpriteText
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Text = "Rotation = 45",
-                Rotation = 45
+                Rotation = 45,
             };
 
-            Cell(0, 1).Child = new SpriteText
-            {
-                Text = "Scale = 2",
-                Scale = new Vector2(2)
-            };
+            Cell(0, 1).Child = new SpriteText { Text = "Scale = 2", Scale = new Vector2(2) };
 
             Cell(1, 1).Child = new CircularContainer
             {
@@ -68,25 +60,17 @@ namespace osu.Framework.Tests.Visual.Sprites
                 Children = new Drawable[]
                 {
                     new Box { RelativeSizeAxes = Axes.Both },
-                    new SpriteText
-                    {
-                        Colour = Color4.Red,
-                        Text = "||MASKED||"
-                    }
-                }
+                    new SpriteText { Colour = Color4.Red, Text = "||MASKED||" },
+                },
             };
 
-            Cell(2, 1).Child = new SpriteText
-            {
-                Text = "Explicit width",
-                Width = 50
-            };
+            Cell(2, 1).Child = new SpriteText { Text = "Explicit width", Width = 50 };
 
             Cell(3, 1).Child = new SpriteText
             {
                 Text = "AllowMultiline = false",
                 Width = 50,
-                AllowMultiline = false
+                AllowMultiline = false,
             };
 
             Cell(0, 2).Child = new Container
@@ -95,11 +79,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                 Origin = Anchor.Centre,
                 Width = 50,
                 AutoSizeAxes = Axes.Y,
-                Child = new SpriteText
-                {
-                    Text = "Relative size",
-                    RelativeSizeAxes = Axes.X
-                }
+                Child = new SpriteText { Text = "Relative size", RelativeSizeAxes = Axes.X },
             };
 
             Cell(1, 2).Child = new Container
@@ -112,8 +92,8 @@ namespace osu.Framework.Tests.Visual.Sprites
                 {
                     Text = "GlyphHeight = false",
                     RelativeSizeAxes = Axes.X,
-                    UseFullGlyphHeight = false
-                }
+                    UseFullGlyphHeight = false,
+                },
             };
 
             Cell(2, 2).Child = new SpriteText
@@ -126,7 +106,7 @@ namespace osu.Framework.Tests.Visual.Sprites
             {
                 Text = "Scale = -1",
                 Y = 20,
-                Scale = new Vector2(-1)
+                Scale = new Vector2(-1),
             };
 
             Cell(0, 3).Child = new Container
@@ -137,12 +117,8 @@ namespace osu.Framework.Tests.Visual.Sprites
                 Children = new Drawable[]
                 {
                     new Box { RelativeSizeAxes = Axes.Both },
-                    new SpriteText
-                    {
-                        Text = "Shadow = true",
-                        Shadow = true
-                    }
-                }
+                    new SpriteText { Text = "Shadow = true", Shadow = true },
+                },
             };
 
             Cell(1, 3).Child = new Container
@@ -152,17 +128,9 @@ namespace osu.Framework.Tests.Visual.Sprites
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.SlateGray
-                    },
-                    new SpriteText
-                    {
-                        Text = "Padded (autosize)",
-                        Padding = new MarginPadding(10)
-                    },
-                }
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.SlateGray },
+                    new SpriteText { Text = "Padded (autosize)", Padding = new MarginPadding(10) },
+                },
             };
 
             Cell(2, 3).Child = new Container
@@ -172,18 +140,14 @@ namespace osu.Framework.Tests.Visual.Sprites
                 AutoSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.SlateGray
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.SlateGray },
                     new SpriteText
                     {
                         Text = "Padded (fixed size)",
                         Width = 50,
-                        Padding = new MarginPadding(10)
+                        Padding = new MarginPadding(10),
                     },
-                }
+                },
             };
 
             Cell(3, 3).Child = new Container
@@ -199,9 +163,9 @@ namespace osu.Framework.Tests.Visual.Sprites
                         Text = "Red text + pink shadow",
                         Shadow = true,
                         Colour = Color4.Red,
-                        ShadowColour = Color4.Pink.Opacity(0.5f)
-                    }
-                }
+                        ShadowColour = Color4.Pink.Opacity(0.5f),
+                    },
+                },
             };
 
             Cell(0, 4).Child = new NoFixedWidthSpaceText { Text = "No fixed width spaces" };
@@ -217,9 +181,15 @@ namespace osu.Framework.Tests.Visual.Sprites
                     Children = new[]
                     {
                         new SpriteText { Text = FakeStorage.LOCALISABLE_STRING_EN },
-                        new SpriteText { Text = new TranslatableString(FakeStorage.LOCALISABLE_STRING_EN, FakeStorage.LOCALISABLE_STRING_EN) },
-                    }
-                }
+                        new SpriteText
+                        {
+                            Text = new TranslatableString(
+                                FakeStorage.LOCALISABLE_STRING_EN,
+                                FakeStorage.LOCALISABLE_STRING_EN
+                            ),
+                        },
+                    },
+                },
             };
 
             Bindable<string> boundString = new Bindable<string>("bindable: 0");
@@ -231,7 +201,11 @@ namespace osu.Framework.Tests.Visual.Sprites
                 Child = new SpriteText { Current = boundString },
             };
 
-            Scheduler.AddDelayed(() => boundString.Value = $"bindable: {++boundStringValue}", 200, true);
+            Scheduler.AddDelayed(
+                () => boundString.Value = $"bindable: {++boundStringValue}",
+                200,
+                true
+            );
         }
 
         private partial class NoFixedWidthSpaceText : SpriteText
@@ -272,9 +246,7 @@ namespace osu.Framework.Tests.Visual.Sprites
             protected override string Filename => null;
 
             public FakeFrameworkConfigManager()
-                : base(null)
-            {
-            }
+                : base(null) { }
 
             protected override void InitialiseDefaults()
             {
@@ -298,8 +270,10 @@ namespace osu.Framework.Tests.Visual.Sprites
                 EffectiveCulture = new CultureInfo(locale);
             }
 
-            public async Task<string> GetAsync(string name, CancellationToken cancellationToken = default) =>
-                await Task.Run(() => Get(name), cancellationToken).ConfigureAwait(false);
+            public async Task<string> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            ) => await Task.Run(() => Get(name), cancellationToken).ConfigureAwait(false);
 
             public string Get(string name)
             {
@@ -322,9 +296,7 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             public Stream GetStream(string name) => throw new NotSupportedException();
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
 
             public IEnumerable<string> GetAvailableResources() => Enumerable.Empty<string>();
         }

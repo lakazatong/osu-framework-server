@@ -6,7 +6,8 @@ using osu.Framework.Graphics.Shapes;
 
 namespace osu.Framework.Tests.Visual.Performance
 {
-    public sealed partial class TestSceneFastCircleBoxAlternatePerformance : RepeatedDrawablePerformanceTestScene
+    public sealed partial class TestSceneFastCircleBoxAlternatePerformance
+        : RepeatedDrawablePerformanceTestScene
     {
         private int index;
 

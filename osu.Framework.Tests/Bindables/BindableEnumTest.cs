@@ -48,8 +48,12 @@ namespace osu.Framework.Tests.Bindables
             var bindable = new Bindable<TestEnum>();
             var nullable = new Bindable<TestEnum?>();
 
-            Assert.Throws<ArgumentException>(() => bindable.Parse(value, CultureInfo.InvariantCulture));
-            Assert.Throws<ArgumentException>(() => nullable.Parse(value, CultureInfo.InvariantCulture));
+            Assert.Throws<ArgumentException>(() =>
+                bindable.Parse(value, CultureInfo.InvariantCulture)
+            );
+            Assert.Throws<ArgumentException>(() =>
+                nullable.Parse(value, CultureInfo.InvariantCulture)
+            );
         }
 
         [Test]
@@ -58,7 +62,9 @@ namespace osu.Framework.Tests.Bindables
             var bindable = new Bindable<TestEnum>();
             var nullable = new Bindable<TestEnum?>();
 
-            Assert.Throws<ArgumentException>(() => bindable.Parse(string.Empty, CultureInfo.InvariantCulture));
+            Assert.Throws<ArgumentException>(() =>
+                bindable.Parse(string.Empty, CultureInfo.InvariantCulture)
+            );
             nullable.Parse(string.Empty, CultureInfo.InvariantCulture);
 
             Assert.That(nullable.Value, Is.Null);
@@ -67,7 +73,7 @@ namespace osu.Framework.Tests.Bindables
         public enum TestEnum
         {
             Value1 = 0,
-            Value2 = 1
+            Value2 = 1,
         }
     }
 }

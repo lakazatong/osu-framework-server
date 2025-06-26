@@ -36,34 +36,47 @@ namespace osu.Framework.Tests.Visual.Sprites
         [Test]
         public void TestNonSynchronisedQuad() => createTest(10, 0, false, false);
 
-        private void createTest(float originalBlur, float viewBlur, bool originalEffects, bool synchronisedQuad = true)
+        private void createTest(
+            float originalBlur,
+            float viewBlur,
+            bool originalEffects,
+            bool synchronisedQuad = true
+        )
         {
-            AddStep("create container", () =>
-            {
-                BufferedContainer container = new BufferedContainer
+            AddStep(
+                "create container",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Scale = new Vector2(0.75f),
-                    BlurSigma = new Vector2(originalBlur),
-                    Child = new TestSceneCachedBufferedContainer()
-                };
-
-                Children = new Drawable[]
-                {
-                    container,
-                    new BlurView(container, viewBlur, originalEffects, synchronisedQuad)
+                    BufferedContainer container = new BufferedContainer
                     {
-                        Position = new Vector2(100, 100)
-                    }
-                };
-            });
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Scale = new Vector2(0.75f),
+                        BlurSigma = new Vector2(originalBlur),
+                        Child = new TestSceneCachedBufferedContainer(),
+                    };
+
+                    Children = new Drawable[]
+                    {
+                        container,
+                        new BlurView(container, viewBlur, originalEffects, synchronisedQuad)
+                        {
+                            Position = new Vector2(100, 100),
+                        },
+                    };
+                }
+            );
         }
 
         private partial class BlurView : CompositeDrawable
         {
-            public BlurView(BufferedContainer buffer, float blur, bool displayEffects, bool synchronisedQuad)
+            public BlurView(
+                BufferedContainer buffer,
+                float blur,
+                bool displayEffects,
+                bool synchronisedQuad
+            )
             {
                 Size = new Vector2(200);
                 Masking = true;
@@ -88,7 +101,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                                         new Box
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Colour = Color4.Magenta
+                                            Colour = Color4.Magenta,
                                         },
                                         new SpriteText
                                         {
@@ -96,9 +109,9 @@ namespace osu.Framework.Tests.Visual.Sprites
                                             Origin = Anchor.Centre,
                                             Text = "You can drag this view.",
                                             Font = new FontUsage(size: 16),
-                                        }
-                                    }
-                                }
+                                        },
+                                    },
+                                },
                             },
                             new Drawable[]
                             {
@@ -107,20 +120,19 @@ namespace osu.Framework.Tests.Visual.Sprites
                                     RelativeSizeAxes = Axes.Both,
                                     BackgroundColour = Color4.Black,
                                     BlurSigma = new Vector2(blur),
-                                    Child = buffer.CreateView().With(d =>
-                                    {
-                                        d.RelativeSizeAxes = Axes.Both;
-                                        d.SynchronisedDrawQuad = synchronisedQuad;
-                                        d.DisplayOriginalEffects = displayEffects;
-                                    })
-                                }
+                                    Child = buffer
+                                        .CreateView()
+                                        .With(d =>
+                                        {
+                                            d.RelativeSizeAxes = Axes.Both;
+                                            d.SynchronisedDrawQuad = synchronisedQuad;
+                                            d.DisplayOriginalEffects = displayEffects;
+                                        }),
+                                },
                             },
                         },
-                        RowDimensions = new[]
-                        {
-                            new Dimension(GridSizeMode.Absolute, 20),
-                        }
-                    }
+                        RowDimensions = new[] { new Dimension(GridSizeMode.Absolute, 20) },
+                    },
                 };
             }
 

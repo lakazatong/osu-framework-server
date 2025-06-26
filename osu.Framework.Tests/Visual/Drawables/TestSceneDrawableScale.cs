@@ -20,13 +20,18 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             Box box = null!;
 
-            AddStep("set child", () => Child = box = new Box
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(100),
-                Scale = new Vector2(scale)
-            });
+            AddStep(
+                "set child",
+                () =>
+                    Child = box =
+                        new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(100),
+                            Scale = new Vector2(scale),
+                        }
+            );
 
             AddAssert("box is present", () => box.IsPresent, () => Is.EqualTo(shouldBePresent));
         }
@@ -40,22 +45,35 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             Container container = null!;
 
-            AddStep("set container", () => Child = container = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Both,
-                Child = new Box
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100),
-                    Scale = new Vector2(scale)
-                }
-            });
+            AddStep(
+                "set container",
+                () =>
+                    Child = container =
+                        new Container
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            AutoSizeAxes = Axes.Both,
+                            Child = new Box
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(100),
+                                Scale = new Vector2(scale),
+                            },
+                        }
+            );
 
-            AddAssert("width is correct", () => container.DrawSize.X, () => Is.EqualTo(expectedSize).Within(1));
-            AddAssert("height is correct", () => container.DrawSize.Y, () => Is.EqualTo(expectedSize).Within(1));
+            AddAssert(
+                "width is correct",
+                () => container.DrawSize.X,
+                () => Is.EqualTo(expectedSize).Within(1)
+            );
+            AddAssert(
+                "height is correct",
+                () => container.DrawSize.Y,
+                () => Is.EqualTo(expectedSize).Within(1)
+            );
         }
 
         [TestCase(1)]
@@ -67,21 +85,32 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             Box box = null!;
 
-            AddStep("set child", () => Child = box = new Box
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(100),
-                Scale = new Vector2(scale)
-            });
+            AddStep(
+                "set child",
+                () =>
+                    Child = box =
+                        new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(100),
+                            Scale = new Vector2(scale),
+                        }
+            );
 
-            AddAssert("passed through input X position is correct",
-                () => box.ToParentSpace(box.ToLocalSpace(box.Parent!.ToScreenSpace(Vector2.Zero))).X,
-                () => Is.Zero.Within(1));
+            AddAssert(
+                "passed through input X position is correct",
+                () =>
+                    box.ToParentSpace(box.ToLocalSpace(box.Parent!.ToScreenSpace(Vector2.Zero))).X,
+                () => Is.Zero.Within(1)
+            );
 
-            AddAssert("passed through input Y position is correct",
-                () => box.ToParentSpace(box.ToLocalSpace(box.Parent!.ToScreenSpace(Vector2.Zero))).Y,
-                () => Is.Zero.Within(1));
+            AddAssert(
+                "passed through input Y position is correct",
+                () =>
+                    box.ToParentSpace(box.ToLocalSpace(box.Parent!.ToScreenSpace(Vector2.Zero))).Y,
+                () => Is.Zero.Within(1)
+            );
         }
     }
 }

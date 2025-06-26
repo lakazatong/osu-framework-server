@@ -26,7 +26,12 @@ namespace osu.Framework.Input.Events
         /// </summary>
         public Vector2 Delta => Touch.Position - LastTouchPosition;
 
-        public TouchMoveEvent(InputState state, Touch touch, Vector2? screenSpaceTouchDownPosition, Vector2 screenSpaceLastTouchPosition)
+        public TouchMoveEvent(
+            InputState state,
+            Touch touch,
+            Vector2? screenSpaceTouchDownPosition,
+            Vector2 screenSpaceLastTouchPosition
+        )
             : base(state, touch, screenSpaceTouchDownPosition)
         {
             ScreenSpaceLastTouchPosition = screenSpaceLastTouchPosition;

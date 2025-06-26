@@ -26,9 +26,7 @@ namespace osu.Framework.Input
         public Drawable HeldDrawable { get; private set; }
 
         public TouchEventManager(TouchSource source)
-            : base(source)
-        {
-        }
+            : base(source) { }
 
         public void HandlePositionChange(InputState state, Vector2 lastPosition)
         {
@@ -37,7 +35,15 @@ namespace osu.Framework.Input
 
         private void handleTouchMove(InputState state, Vector2 position, Vector2 lastPosition)
         {
-            PropagateButtonEvent(ButtonDownInputQueue!.Where(d => d.IsRootedAt(InputManager)), new TouchMoveEvent(state, new Touch(Button, position), TouchDownPosition, lastPosition));
+            PropagateButtonEvent(
+                ButtonDownInputQueue!.Where(d => d.IsRootedAt(InputManager)),
+                new TouchMoveEvent(
+                    state,
+                    new Touch(Button, position),
+                    TouchDownPosition,
+                    lastPosition
+                )
+            );
         }
 
         protected override Drawable HandleButtonDown(InputState state, List<Drawable> targets)
@@ -48,13 +54,19 @@ namespace osu.Framework.Input
             TouchDownPosition = state.Touch.GetTouchPosition(Button);
             Debug.Assert(TouchDownPosition != null);
 
-            return HeldDrawable = PropagateButtonEvent(targets, new TouchDownEvent(state, new Touch(Button, (Vector2)TouchDownPosition)));
+            return HeldDrawable = PropagateButtonEvent(
+                targets,
+                new TouchDownEvent(state, new Touch(Button, (Vector2)TouchDownPosition))
+            );
         }
 
         protected override void HandleButtonUp(InputState state, List<Drawable> targets)
         {
             var currentPosition = state.Touch.TouchPositions[(int)Button];
-            PropagateButtonEvent(targets, new TouchUpEvent(state, new Touch(Button, currentPosition), TouchDownPosition));
+            PropagateButtonEvent(
+                targets,
+                new TouchUpEvent(state, new Touch(Button, currentPosition), TouchDownPosition)
+            );
 
             HeldDrawable = null;
             TouchDownPosition = null;

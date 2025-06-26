@@ -4,7 +4,8 @@ namespace FlappyDon.Game.Tests.Visual
 {
     public abstract partial class FlappyDonTestScene : TestScene
     {
-        protected override ITestSceneTestRunner CreateRunner() => new FlappyDonTestSceneTestRunner();
+        protected override ITestSceneTestRunner CreateRunner() =>
+            new FlappyDonTestSceneTestRunner();
 
         private partial class FlappyDonTestSceneTestRunner : FlappyDonGameBase, ITestSceneTestRunner
         {

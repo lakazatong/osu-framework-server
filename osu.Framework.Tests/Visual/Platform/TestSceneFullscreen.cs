@@ -60,18 +60,20 @@ namespace osu.Framework.Tests.Visual.Platform
                         currentWindowMode,
                         currentWindowState,
                         supportedWindowModes,
-                        displaysDropdown = new BasicDropdown<Display> { Width = 800 }
-                    }
+                        displaysDropdown = new BasicDropdown<Display> { Width = 800 },
+                    },
                 },
                 new WindowDisplaysPreview
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Top = 230 }
-                }
+                    Padding = new MarginPadding { Top = 230 },
+                },
             };
 
-            sizeFullscreen.ValueChanged += newSize => currentBindableSize.Text = $"Fullscreen size: {newSize.NewValue}";
-            windowMode.ValueChanged += newMode => currentWindowMode.Text = $"Window Mode: {newMode.NewValue}";
+            sizeFullscreen.ValueChanged += newSize =>
+                currentBindableSize.Text = $"Fullscreen size: {newSize.NewValue}";
+            windowMode.ValueChanged += newMode =>
+                currentWindowMode.Text = $"Window Mode: {newMode.NewValue}";
         }
 
         [Resolved]
@@ -93,7 +95,8 @@ namespace osu.Framework.Tests.Visual.Platform
 
             displaysDropdown.Current.BindTo(window.CurrentDisplayBindable);
 
-            supportedWindowModes.Text = $"Supported Window Modes: {string.Join(", ", window.SupportedWindowModes)}";
+            supportedWindowModes.Text =
+                $"Supported Window Modes: {string.Join(", ", window.SupportedWindowModes)}";
         }
 
         private void onDisplaysChanged(IEnumerable<Display> displays)
@@ -101,14 +104,17 @@ namespace osu.Framework.Tests.Visual.Platform
             Scheduler.AddOnce(updateDisplays, displays);
         }
 
-        private void updateDisplays(IEnumerable<Display> displays) => displaysDropdown.Items = displays;
+        private void updateDisplays(IEnumerable<Display> displays) =>
+            displaysDropdown.Items = displays;
 
         [Test]
         public void TestScreenModeSwitch()
         {
             if (window == null)
             {
-                Assert.Ignore("This test cannot run in headless mode (a window instance is required).");
+                Assert.Ignore(
+                    "This test cannot run in headless mode (a window instance is required)."
+                );
                 return;
             }
 
@@ -118,7 +124,10 @@ namespace osu.Framework.Tests.Visual.Platform
             if (window.SupportedWindowModes.Contains(WindowMode.Windowed))
             {
                 AddStep("change to windowed", () => windowMode.Value = WindowMode.Windowed);
-                AddStep("change window size", () => config.SetValue(FrameworkSetting.WindowedSize, new Size(640, 640)));
+                AddStep(
+                    "change window size",
+                    () => config.SetValue(FrameworkSetting.WindowedSize, new Size(640, 640))
+                );
             }
 
             // if we support borderless, test that it can be used
@@ -129,30 +138,46 @@ namespace osu.Framework.Tests.Visual.Platform
             if (window.SupportedWindowModes.Contains(WindowMode.Fullscreen))
             {
                 AddStep("change to fullscreen", () => windowMode.Value = WindowMode.Fullscreen);
-                AddAssert("window position updated", () => window.Position, () => Is.EqualTo(window.CurrentDisplayBindable.Value.Bounds.Location));
+                AddAssert(
+                    "window position updated",
+                    () => window.Position,
+                    () => Is.EqualTo(window.CurrentDisplayBindable.Value.Bounds.Location)
+                );
                 testResolution(1920, 1080);
                 testResolution(1280, 960);
                 testResolution(9999, 9999);
             }
 
             // go back to initial window mode
-            AddStep($"revert to {initialWindowMode.ToString()}", () => windowMode.Value = initialWindowMode);
+            AddStep(
+                $"revert to {initialWindowMode.ToString()}",
+                () => windowMode.Value = initialWindowMode
+            );
 
             // show the available displays
-            AddStep("query Window.Displays", () =>
-            {
-                var displaysArray = window.Displays.ToArray();
-                Logger.Log($"Available displays: {displaysArray.Length}");
-                displaysArray.ForEach(display =>
+            AddStep(
+                "query Window.Displays",
+                () =>
                 {
-                    Logger.Log(display.ToString());
-                    display.DisplayModes.ForEach(mode => Logger.Log($"-- {mode}"));
-                });
-            });
+                    var displaysArray = window.Displays.ToArray();
+                    Logger.Log($"Available displays: {displaysArray.Length}");
+                    displaysArray.ForEach(display =>
+                    {
+                        Logger.Log(display.ToString());
+                        display.DisplayModes.ForEach(mode => Logger.Log($"-- {mode}"));
+                    });
+                }
+            );
 
-            AddStep("query Window.CurrentDisplay", () => Logger.Log(window.CurrentDisplayBindable.ToString()));
+            AddStep(
+                "query Window.CurrentDisplay",
+                () => Logger.Log(window.CurrentDisplayBindable.ToString())
+            );
 
-            AddStep("query Window.CurrentDisplayMode", () => Logger.Log(window.CurrentDisplayMode.ToString()));
+            AddStep(
+                "query Window.CurrentDisplayMode",
+                () => Logger.Log(window.CurrentDisplayMode.ToString())
+            );
 
             AddStep("set default display", () => window.CurrentDisplayBindable.SetDefault());
         }
@@ -160,9 +185,19 @@ namespace osu.Framework.Tests.Visual.Platform
         [Test]
         public void TestConfineModes()
         {
-            AddStep("set confined to never", () => config.SetValue(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Never));
-            AddStep("set confined to fullscreen", () => config.SetValue(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Fullscreen));
-            AddStep("set confined to always", () => config.SetValue(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Always));
+            AddStep(
+                "set confined to never",
+                () => config.SetValue(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Never)
+            );
+            AddStep(
+                "set confined to fullscreen",
+                () =>
+                    config.SetValue(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Fullscreen)
+            );
+            AddStep(
+                "set confined to always",
+                () => config.SetValue(FrameworkSetting.ConfineMouseMode, ConfineMouseMode.Always)
+            );
         }
 
         [Test]
@@ -170,12 +205,17 @@ namespace osu.Framework.Tests.Visual.Platform
         {
             if (window == null)
             {
-                Assert.Ignore("This test cannot run in headless mode (a window instance is required).");
+                Assert.Ignore(
+                    "This test cannot run in headless mode (a window instance is required)."
+                );
                 return;
             }
 
             AddStep($"set to {mode}", () => windowMode.Value = mode);
-            AddStep($"set minimise on focus: {enabled}", () => config.SetValue(FrameworkSetting.MinimiseOnFocusLossInFullscreen, enabled));
+            AddStep(
+                $"set minimise on focus: {enabled}",
+                () => config.SetValue(FrameworkSetting.MinimiseOnFocusLossInFullscreen, enabled)
+            );
             AddUntilStep("wait for window to lose focus", () => !window.IsActive.Value);
 
             switch (mode)
@@ -196,9 +236,17 @@ namespace osu.Framework.Tests.Visual.Platform
             void assertMinimised(bool minimised)
             {
                 if (minimised)
-                    AddAssert("window is minimised", () => window.WindowState, () => Is.EqualTo(WindowState.Minimised));
+                    AddAssert(
+                        "window is minimised",
+                        () => window.WindowState,
+                        () => Is.EqualTo(WindowState.Minimised)
+                    );
                 else
-                    AddAssert("window not minimised", () => window.WindowState, () => Is.Not.EqualTo(WindowState.Minimised));
+                    AddAssert(
+                        "window not minimised",
+                        () => window.WindowState,
+                        () => Is.Not.EqualTo(WindowState.Minimised)
+                    );
             }
         }
 

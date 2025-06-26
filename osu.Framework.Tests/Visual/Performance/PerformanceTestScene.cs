@@ -40,19 +40,26 @@ namespace osu.Framework.Tests.Visual.Performance
             base.Content.Child = buffer = new BufferedContainer(pixelSnapping: true)
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
+                Child = content =
+                    new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    },
             };
 
             AddLabel("General");
 
             AddToggleStep("hide content", v => Content.Alpha = v ? 0 : 1);
             AddToggleStep("enable front to back", v => bypassFrontToBack.Value = !v);
-            AddSliderStep("render scale", 0.01f, 1f, 1f, v => buffer.FrameBufferScale = new Vector2(v));
+            AddSliderStep(
+                "render scale",
+                0.01f,
+                1f,
+                1f,
+                v => buffer.FrameBufferScale = new Vector2(v)
+            );
             AddToggleStep("rotate everything", v => rotation = v);
             AddToggleStep("cycle colour", v => cycleColour = v);
         }
@@ -74,7 +81,13 @@ namespace osu.Framework.Tests.Visual.Performance
 
             if (cycleColour)
             {
-                var col = Interpolation.ValueAt((MathF.Sin((float)Time.Current / 1000) + 1) / 2, Color4.Red, Color4.SkyBlue, 0f, 1f);
+                var col = Interpolation.ValueAt(
+                    (MathF.Sin((float)Time.Current / 1000) + 1) / 2,
+                    Color4.Red,
+                    Color4.SkyBlue,
+                    0f,
+                    1f
+                );
 
                 content.Colour = col;
             }

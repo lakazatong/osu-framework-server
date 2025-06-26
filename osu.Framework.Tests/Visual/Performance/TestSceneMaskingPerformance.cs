@@ -14,7 +14,8 @@ namespace osu.Framework.Tests.Visual.Performance
     {
         private readonly BindableFloat cornerRadius = new BindableFloat();
         private readonly BindableFloat cornerExponent = new BindableFloat(2f);
-        private readonly Bindable<EdgeEffectParameters> edgeEffectParameters = new Bindable<EdgeEffectParameters>();
+        private readonly Bindable<EdgeEffectParameters> edgeEffectParameters =
+            new Bindable<EdgeEffectParameters>();
 
         protected override void LoadComplete()
         {
@@ -23,35 +24,70 @@ namespace osu.Framework.Tests.Visual.Performance
             AddLabel("Masking & Edge Effects");
             AddSliderStep("corner radius", 0f, 100f, 0f, v => cornerRadius.Value = v);
             AddSliderStep("corner exponent", 1f, 10f, 2f, v => cornerExponent.Value = v);
-            AddStep("disable edge effect", () => edgeEffectParameters.Value = edgeEffectParameters.Value with { Type = EdgeEffectType.None });
-            AddStep("glow edge effect", () => edgeEffectParameters.Value = edgeEffectParameters.Value with { Type = EdgeEffectType.Glow });
-            AddStep("shadow edge effect", () => edgeEffectParameters.Value = edgeEffectParameters.Value with { Type = EdgeEffectType.Shadow });
-            AddSliderStep("edge effect roundedness", 0f, 100f, 0f, v => edgeEffectParameters.Value = edgeEffectParameters.Value with { Roundness = v });
-            AddSliderStep("edge effect radius", 0f, 100f, 0f, v => edgeEffectParameters.Value = edgeEffectParameters.Value with { Radius = v });
-            AddToggleStep("edge effect hollow", v => edgeEffectParameters.Value = edgeEffectParameters.Value with { Hollow = v });
+            AddStep(
+                "disable edge effect",
+                () =>
+                    edgeEffectParameters.Value = edgeEffectParameters.Value with
+                    {
+                        Type = EdgeEffectType.None,
+                    }
+            );
+            AddStep(
+                "glow edge effect",
+                () =>
+                    edgeEffectParameters.Value = edgeEffectParameters.Value with
+                    {
+                        Type = EdgeEffectType.Glow,
+                    }
+            );
+            AddStep(
+                "shadow edge effect",
+                () =>
+                    edgeEffectParameters.Value = edgeEffectParameters.Value with
+                    {
+                        Type = EdgeEffectType.Shadow,
+                    }
+            );
+            AddSliderStep(
+                "edge effect roundedness",
+                0f,
+                100f,
+                0f,
+                v => edgeEffectParameters.Value = edgeEffectParameters.Value with { Roundness = v }
+            );
+            AddSliderStep(
+                "edge effect radius",
+                0f,
+                100f,
+                0f,
+                v => edgeEffectParameters.Value = edgeEffectParameters.Value with { Radius = v }
+            );
+            AddToggleStep(
+                "edge effect hollow",
+                v => edgeEffectParameters.Value = edgeEffectParameters.Value with { Hollow = v }
+            );
         }
 
-        protected override Drawable CreateDrawable() => new TestContainer
-        {
-            CornerRadiusBindable = { BindTarget = cornerRadius },
-            CornerExponentBindable = { BindTarget = cornerExponent },
-            EdgeEffectParameters = { BindTarget = edgeEffectParameters },
-        };
+        protected override Drawable CreateDrawable() =>
+            new TestContainer
+            {
+                CornerRadiusBindable = { BindTarget = cornerRadius },
+                CornerExponentBindable = { BindTarget = cornerExponent },
+                EdgeEffectParameters = { BindTarget = edgeEffectParameters },
+            };
 
         private partial class TestContainer : Container
         {
             public readonly Bindable<float> CornerRadiusBindable = new BindableFloat();
             public readonly Bindable<float> CornerExponentBindable = new BindableFloat();
-            public readonly Bindable<EdgeEffectParameters> EdgeEffectParameters = new Bindable<EdgeEffectParameters>();
+            public readonly Bindable<EdgeEffectParameters> EdgeEffectParameters =
+                new Bindable<EdgeEffectParameters>();
 
             private readonly Drawable box;
 
             public TestContainer()
             {
-                Child = box = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                };
+                Child = box = new Box { RelativeSizeAxes = Axes.Both };
             }
 
             [BackgroundDependencyLoader]

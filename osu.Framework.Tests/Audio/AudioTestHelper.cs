@@ -18,9 +18,7 @@ namespace osu.Framework.Tests.Audio
         /// <param name="action">The action to run on the audio thread.</param>
         public static void RunOnAudioThread(Action action)
         {
-            using (var _ = StartNewAudioThread(action))
-            {
-            }
+            using (var _ = StartNewAudioThread(action)) { }
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace osu.Framework.Tests.Audio
                 resetEvent.Set();
             })
             {
-                Name = GameThread.SuffixedThreadNameFor("Audio")
+                Name = GameThread.SuffixedThreadNameFor("Audio"),
             }.Start();
 
             return new InvokeOnDisposal(() =>

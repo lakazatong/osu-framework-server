@@ -47,18 +47,33 @@ namespace osu.Framework.Platform.SDL2
                 return;
             }
 
-            ButtonBindings = Enumerable.Range(0, (int)SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_MAX)
-                                       .Select(i => SDL_GameControllerGetBindForButton(ControllerHandle, (SDL_GameControllerButton)i)).ToArray();
+            ButtonBindings = Enumerable
+                .Range(0, (int)SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_MAX)
+                .Select(i =>
+                    SDL_GameControllerGetBindForButton(
+                        ControllerHandle,
+                        (SDL_GameControllerButton)i
+                    )
+                )
+                .ToArray();
 
-            AxisBindings = Enumerable.Range(0, (int)SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_MAX)
-                                     .Select(i => SDL_GameControllerGetBindForAxis(ControllerHandle, (SDL_GameControllerAxis)i)).ToArray();
+            AxisBindings = Enumerable
+                .Range(0, (int)SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_MAX)
+                .Select(i =>
+                    SDL_GameControllerGetBindForAxis(ControllerHandle, (SDL_GameControllerAxis)i)
+                )
+                .ToArray();
         }
 
         public bool IsJoystickButtonBound(byte buttonIndex)
         {
             for (int i = 0; i < ButtonBindings.Length; i++)
             {
-                if (ButtonBindings[i].bindType != SDL_GameControllerBindType.SDL_CONTROLLER_BINDTYPE_NONE && ButtonBindings[i].value.button == buttonIndex)
+                if (
+                    ButtonBindings[i].bindType
+                        != SDL_GameControllerBindType.SDL_CONTROLLER_BINDTYPE_NONE
+                    && ButtonBindings[i].value.button == buttonIndex
+                )
                     return true;
             }
 
@@ -69,7 +84,11 @@ namespace osu.Framework.Platform.SDL2
         {
             for (int i = 0; i < AxisBindings.Length; i++)
             {
-                if (AxisBindings[i].bindType != SDL_GameControllerBindType.SDL_CONTROLLER_BINDTYPE_NONE && AxisBindings[i].value.axis == axisIndex)
+                if (
+                    AxisBindings[i].bindType
+                        != SDL_GameControllerBindType.SDL_CONTROLLER_BINDTYPE_NONE
+                    && AxisBindings[i].value.axis == axisIndex
+                )
                     return true;
             }
 

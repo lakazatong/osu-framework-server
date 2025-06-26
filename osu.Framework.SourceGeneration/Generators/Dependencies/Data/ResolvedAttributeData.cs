@@ -15,7 +15,13 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Data
         public readonly string? CachedName;
         public readonly bool CanBeNull;
 
-        public ResolvedAttributeData(string globalPrefixedTypeName, string propertyName, string? globalPrefixedParentTypeName, string? cachedName, bool canBeNull)
+        public ResolvedAttributeData(
+            string globalPrefixedTypeName,
+            string propertyName,
+            string? globalPrefixedParentTypeName,
+            string? cachedName,
+            bool canBeNull
+        )
         {
             GlobalPrefixedTypeName = globalPrefixedTypeName;
             PropertyName = propertyName;
@@ -30,26 +36,41 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Data
                 CachedName ??= propertyName;
         }
 
-        public static ResolvedAttributeData FromProperty(IPropertySymbol symbol, AttributeData attributeData)
+        public static ResolvedAttributeData FromProperty(
+            IPropertySymbol symbol,
+            AttributeData attributeData
+        )
         {
             object? parentTypeCandidate =
                 attributeData.NamedArguments.SingleOrDefault(arg => arg.Key == "Parent").Value.Value
                 ?? attributeData.ConstructorArguments.ElementAtOrDefault(0).Value;
 
-            string? globalPrefixedParentTypeName = SyntaxHelpers.GetGlobalPrefixedTypeName(parentTypeCandidate as ITypeSymbol);
+            string? globalPrefixedParentTypeName = SyntaxHelpers.GetGlobalPrefixedTypeName(
+                parentTypeCandidate as ITypeSymbol
+            );
 
-            string? name = (string?)
-                (attributeData.NamedArguments.SingleOrDefault(arg => arg.Key == "Name").Value.Value
-                 ?? attributeData.ConstructorArguments.ElementAtOrDefault(1).Value);
+            string? name = (string?)(
+                attributeData.NamedArguments.SingleOrDefault(arg => arg.Key == "Name").Value.Value
+                ?? attributeData.ConstructorArguments.ElementAtOrDefault(1).Value
+            );
 
-            bool canBeNull = (bool)
-                (attributeData.NamedArguments.SingleOrDefault(arg => arg.Key == "CanBeNull").Value.Value
-                 ?? attributeData.ConstructorArguments.ElementAtOrDefault(2).Value
-                 ?? false);
+            bool canBeNull = (bool)(
+                attributeData
+                    .NamedArguments.SingleOrDefault(arg => arg.Key == "CanBeNull")
+                    .Value.Value
+                ?? attributeData.ConstructorArguments.ElementAtOrDefault(2).Value
+                ?? false
+            );
 
             canBeNull |= symbol.NullableAnnotation == NullableAnnotation.Annotated;
 
-            return new ResolvedAttributeData(SyntaxHelpers.GetGlobalPrefixedTypeName(symbol.Type)!, symbol.Name, globalPrefixedParentTypeName, name, canBeNull);
+            return new ResolvedAttributeData(
+                SyntaxHelpers.GetGlobalPrefixedTypeName(symbol.Type)!,
+                symbol.Name,
+                globalPrefixedParentTypeName,
+                name,
+                canBeNull
+            );
         }
     }
 }

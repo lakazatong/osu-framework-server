@@ -12,7 +12,10 @@ using Veldrid;
 
 namespace osu.Framework.Graphics.Rendering.Deferred
 {
-    internal class DeferredShaderStorageBufferObject<TData> : IShaderStorageBufferObject<TData>, IDeferredShaderStorageBufferObject, IVeldridUniformBuffer
+    internal class DeferredShaderStorageBufferObject<TData>
+        : IShaderStorageBufferObject<TData>,
+            IDeferredShaderStorageBufferObject,
+            IVeldridUniformBuffer
         where TData : unmanaged, IEquatable<TData>
     {
         public int Size { get; }
@@ -31,7 +34,14 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             elementSize = Unsafe.SizeOf<TData>();
 
             Size = ssboSize;
-            buffer = renderer.Factory.CreateBuffer(new BufferDescription((uint)(elementSize * Size), BufferUsage.StructuredBufferReadOnly | BufferUsage.Dynamic, (uint)elementSize, true));
+            buffer = renderer.Factory.CreateBuffer(
+                new BufferDescription(
+                    (uint)(elementSize * Size),
+                    BufferUsage.StructuredBufferReadOnly | BufferUsage.Dynamic,
+                    (uint)elementSize,
+                    true
+                )
+            );
 
             data = new TData[Size];
         }
@@ -45,21 +55,20 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                     return;
 
                 data[index] = value;
-                renderer.Context.EnqueueEvent(SetShaderStorageBufferObjectDataEvent.Create(renderer, this, index, value));
+                renderer.Context.EnqueueEvent(
+                    SetShaderStorageBufferObjectDataEvent.Create(renderer, this, index, value)
+                );
             }
         }
 
-        public void Write(int index, MemoryReference memory)
-            => memory.WriteTo(renderer.Context, buffer, index * elementSize);
+        public void Write(int index, MemoryReference memory) =>
+            memory.WriteTo(renderer.Context, buffer, index * elementSize);
 
-        public ResourceSet GetResourceSet(ResourceLayout layout)
-            => renderer.Factory.CreateResourceSet(new ResourceSetDescription(layout, buffer));
+        public ResourceSet GetResourceSet(ResourceLayout layout) =>
+            renderer.Factory.CreateResourceSet(new ResourceSetDescription(layout, buffer));
 
-        public void ResetCounters()
-        {
-        }
+        public void ResetCounters() { }
 
-        public void Dispose()
-            => buffer.Dispose();
+        public void Dispose() => buffer.Dispose();
     }
 }

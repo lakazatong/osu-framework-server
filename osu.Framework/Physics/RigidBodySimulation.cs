@@ -1,19 +1,17 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osu.Framework.Graphics;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using osu.Framework.Graphics;
+using osuTK;
 
 namespace osu.Framework.Physics
 {
     /// <summary>
     /// Applies rigid body simulation to all children.
     /// </summary>
-    public partial class RigidBodySimulation : RigidBodySimulation<Drawable>
-    {
-    }
+    public partial class RigidBodySimulation : RigidBodySimulation<Drawable> { }
 
     /// <summary>
     /// Applies rigid body simulation to all children.
@@ -88,7 +86,10 @@ namespace osu.Framework.Physics
         public override float Mass
         {
             get => float.MaxValue;
-            set => throw new InvalidOperationException($"May not set the {nameof(Mass)} of a {nameof(RigidBodySimulation<T>)}.");
+            set =>
+                throw new InvalidOperationException(
+                    $"May not set the {nameof(Mass)} of a {nameof(RigidBodySimulation<T>)}."
+                );
         }
 
         protected override void UpdateVertices()
@@ -101,7 +102,8 @@ namespace osu.Framework.Physics
         }
 
         // For hollow-box behavior we want to be contained whenever we are _not_ inside
-        public override bool BodyContains(Vector2 screenSpacePos) => !base.BodyContains(screenSpacePos);
+        public override bool BodyContains(Vector2 screenSpacePos) =>
+            !base.BodyContains(screenSpacePos);
 
         public override void ApplyImpulse(Vector2 impulse, Vector2 pos)
         {

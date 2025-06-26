@@ -45,9 +45,14 @@ namespace osu.Framework.Input.States
         /// </summary>
         /// <param name="other">The <see cref="InputState"/> to take the individual input states from. Note that states are not cloned and will remain as references to the same objects.</param>
         public InputState(InputState other)
-            : this(other.Mouse, other.Keyboard, other.Touch, other.Joystick, other.Midi, other.Tablet)
-        {
-        }
+            : this(
+                other.Mouse,
+                other.Keyboard,
+                other.Touch,
+                other.Joystick,
+                other.Midi,
+                other.Tablet
+            ) { }
 
         /// <summary>
         /// Creates a new <see cref="InputState"/> using given individual input states.
@@ -58,7 +63,14 @@ namespace osu.Framework.Input.States
         /// <param name="joystick">The joystick state.</param>
         /// <param name="midi">The midi state.</param>
         /// <param name="tablet">The tablet state.</param>
-        public InputState(MouseState mouse = null, KeyboardState keyboard = null, TouchState touch = null, JoystickState joystick = null, MidiState midi = null, TabletState tablet = null)
+        public InputState(
+            MouseState mouse = null,
+            KeyboardState keyboard = null,
+            TouchState touch = null,
+            JoystickState joystick = null,
+            MidiState midi = null,
+            TabletState tablet = null
+        )
         {
             Mouse = mouse ?? new MouseState();
             Keyboard = keyboard ?? new KeyboardState();

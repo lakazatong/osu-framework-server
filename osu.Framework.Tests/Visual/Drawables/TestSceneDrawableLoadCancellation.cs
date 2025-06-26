@@ -25,20 +25,42 @@ namespace osu.Framework.Tests.Visual.Drawables
         private readonly List<SlowLoader> loaders = new List<SlowLoader>();
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            loaders.Clear();
-            Child = createLoader();
-        });
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                loaders.Clear();
+                Child = createLoader();
+            });
 
         [Test]
         public void TestConcurrentLoad()
         {
-            AddStep("replace slow loader", () => { Child = createLoader(); });
-            AddStep("replace slow loader", () => { Child = createLoader(); });
-            AddStep("replace slow loader", () => { Child = createLoader(); });
+            AddStep(
+                "replace slow loader",
+                () =>
+                {
+                    Child = createLoader();
+                }
+            );
+            AddStep(
+                "replace slow loader",
+                () =>
+                {
+                    Child = createLoader();
+                }
+            );
+            AddStep(
+                "replace slow loader",
+                () =>
+                {
+                    Child = createLoader();
+                }
+            );
 
-            AddUntilStep("all but last loader cancelled", () => loaders.AsEnumerable().Reverse().Skip(1).All(l => l.WasCancelled));
+            AddUntilStep(
+                "all but last loader cancelled",
+                () => loaders.AsEnumerable().Reverse().Skip(1).All(l => l.WasCancelled)
+            );
 
             AddUntilStep("last loader began loading", () => !loaders.Last().WasCancelled);
 
@@ -55,7 +77,15 @@ namespace osu.Framework.Tests.Visual.Drawables
             PausableLoadDrawable loader = null;
             CancellationTokenSource cancellationSource = null;
 
-            AddStep("start async load", () => LoadComponentAsync(loader = new PausableLoadDrawable(0), _ => loaded = true, (cancellationSource = new CancellationTokenSource()).Token));
+            AddStep(
+                "start async load",
+                () =>
+                    LoadComponentAsync(
+                        loader = new PausableLoadDrawable(0),
+                        _ => loaded = true,
+                        (cancellationSource = new CancellationTokenSource()).Token
+                    )
+            );
 
             AddUntilStep("load started", () => loader.IsLoading);
 
@@ -96,11 +126,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Navy,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Navy, RelativeSizeAxes = Axes.Both },
                 };
             }
 
@@ -132,19 +158,15 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.NavajoWhite,
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    new Box { Colour = Color4.NavajoWhite, RelativeSizeAxes = Axes.Both },
                     new SpriteText
                     {
                         Text = id.ToString(),
                         Colour = Color4.Black,
                         Font = new FontUsage(size: 50),
                         Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre
-                    }
+                        Origin = Anchor.Centre,
+                    },
                 };
             }
 
@@ -155,7 +177,12 @@ namespace osu.Framework.Tests.Visual.Drawables
             {
                 IsLoading = true;
 
-                using (var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(ourSource.Token, cancellation ?? CancellationToken.None))
+                using (
+                    var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(
+                        ourSource.Token,
+                        cancellation ?? CancellationToken.None
+                    )
+                )
                 {
                     try
                     {

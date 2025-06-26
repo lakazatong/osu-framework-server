@@ -40,13 +40,15 @@ namespace osu.Framework.Benchmarks
         public bool BenchmarkStringEquals() => string1.Equals(string2, StringComparison.Ordinal);
 
         [Benchmark]
-        public bool BenchmarkLocalisableStringEquals() => localisableString1.Equals(localisableString2);
+        public bool BenchmarkLocalisableStringEquals() =>
+            localisableString1.Equals(localisableString2);
 
         [Benchmark]
         public bool BenchmarkRomanisableEquals() => romanisableString1.Equals(romanisableString2);
 
         [Benchmark]
-        public bool BenchmarkTranslatableEquals() => translatableString1.Equals(translatableString2);
+        public bool BenchmarkTranslatableEquals() =>
+            translatableString1.Equals(translatableString2);
 
         [Benchmark]
         public bool BenchmarkFormattableEquals() => formattableString1.Equals(formattableString2);

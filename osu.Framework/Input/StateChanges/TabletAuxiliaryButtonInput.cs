@@ -8,21 +8,21 @@ namespace osu.Framework.Input.StateChanges
 {
     public class TabletAuxiliaryButtonInput : ButtonInput<TabletAuxiliaryButton>
     {
-        public TabletAuxiliaryButtonInput(IEnumerable<ButtonInputEntry<TabletAuxiliaryButton>> entries)
-            : base(entries)
-        {
-        }
+        public TabletAuxiliaryButtonInput(
+            IEnumerable<ButtonInputEntry<TabletAuxiliaryButton>> entries
+        )
+            : base(entries) { }
 
         public TabletAuxiliaryButtonInput(TabletAuxiliaryButton button, bool isPressed)
-            : base(button, isPressed)
-        {
-        }
+            : base(button, isPressed) { }
 
-        public TabletAuxiliaryButtonInput(ButtonStates<TabletAuxiliaryButton> current, ButtonStates<TabletAuxiliaryButton> previous)
-            : base(current, previous)
-        {
-        }
+        public TabletAuxiliaryButtonInput(
+            ButtonStates<TabletAuxiliaryButton> current,
+            ButtonStates<TabletAuxiliaryButton> previous
+        )
+            : base(current, previous) { }
 
-        protected override ButtonStates<TabletAuxiliaryButton> GetButtonStates(InputState state) => state.Tablet.AuxiliaryButtons;
+        protected override ButtonStates<TabletAuxiliaryButton> GetButtonStates(InputState state) =>
+            state.Tablet.AuxiliaryButtons;
     }
 }

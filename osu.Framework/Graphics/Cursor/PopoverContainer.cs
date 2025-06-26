@@ -27,14 +27,11 @@ namespace osu.Framework.Graphics.Cursor
         {
             InternalChildren = new Drawable[]
             {
-                content = new Container
+                content = new Container { RelativeSizeAxes = Axes.Both },
+                dismissOnMouseDownContainer = new DismissOnMouseDownContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                 },
-                dismissOnMouseDownContainer = new DismissOnMouseDownContainer
-                {
-                    RelativeSizeAxes = Axes.Both
-                }
             };
         }
 
@@ -66,7 +63,10 @@ namespace osu.Framework.Graphics.Cursor
         {
             base.UpdateAfterChildren();
 
-            if ((target as Drawable)?.FindClosestParent<PopoverContainer>() != this || target?.IsPresent != true)
+            if (
+                (target as Drawable)?.FindClosestParent<PopoverContainer>() != this
+                || target?.IsPresent != true
+            )
             {
                 SetTarget(null);
                 return;
@@ -107,7 +107,10 @@ namespace osu.Framework.Graphics.Cursor
                 float area = availableSize.X * availableSize.Y / totalSize;
 
                 // If the free space is insufficient for the popover to fit in, do not consider this anchor further.
-                if (availableSize.X < currentPopover.BoundingBoxContainer.DrawWidth || availableSize.Y < currentPopover.BoundingBoxContainer.DrawHeight)
+                if (
+                    availableSize.X < currentPopover.BoundingBoxContainer.DrawWidth
+                    || availableSize.Y < currentPopover.BoundingBoxContainer.DrawHeight
+                )
                     continue;
 
                 // The heuristic used to find the "best" anchor is the biggest area of free space available in the popover container
@@ -122,7 +125,10 @@ namespace osu.Framework.Graphics.Cursor
             currentPopover.PopoverAnchor = bestAnchor.Opposite();
 
             var positionOnQuad = bestAnchor.PositionOnQuad(targetLocalQuad);
-            currentPopover.Position = new Vector2(positionOnQuad.X - Padding.Left, positionOnQuad.Y - Padding.Top);
+            currentPopover.Position = new Vector2(
+                positionOnQuad.X - Padding.Left,
+                positionOnQuad.Y - Padding.Top
+            );
 
             // While the side has been chosen to maximise the area of free space available, that doesn't mean that the popover's body
             // will still fit in its entirety in the default configuration.

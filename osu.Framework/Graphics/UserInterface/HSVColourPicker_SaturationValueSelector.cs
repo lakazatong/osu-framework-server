@@ -23,23 +23,13 @@ namespace osu.Framework.Graphics.UserInterface
         {
             public readonly Bindable<Colour4> Current = new Bindable<Colour4>();
 
-            public Bindable<float> Hue { get; } = new BindableFloat
-            {
-                MinValue = 0,
-                MaxValue = 1
-            };
+            public Bindable<float> Hue { get; } = new BindableFloat { MinValue = 0, MaxValue = 1 };
 
-            public Bindable<float> Saturation { get; } = new BindableFloat
-            {
-                MinValue = 0,
-                MaxValue = 1
-            };
+            public Bindable<float> Saturation { get; } =
+                new BindableFloat { MinValue = 0, MaxValue = 1 };
 
-            public Bindable<float> Value { get; } = new BindableFloat
-            {
-                MinValue = 0,
-                MaxValue = 1
-            };
+            public Bindable<float> Value { get; } =
+                new BindableFloat { MinValue = 0, MaxValue = 1 };
 
             /// <summary>
             /// The gradiented box serving as the selection area.
@@ -58,18 +48,20 @@ namespace osu.Framework.Graphics.UserInterface
                     SelectionArea = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = box = new SaturationBox
-                        {
-                            Colour = ColourInfo.GradientHorizontal(Color4.White, Color4.Red)
-                        }
+                        Child = box =
+                            new SaturationBox
+                            {
+                                Colour = ColourInfo.GradientHorizontal(Color4.White, Color4.Red),
+                            },
                     },
-                    marker = CreateMarker().With(d =>
-                    {
-                        d.Current.BindTo(Current);
+                    marker = CreateMarker()
+                        .With(d =>
+                        {
+                            d.Current.BindTo(Current);
 
-                        d.Origin = Anchor.Centre;
-                        d.RelativePositionAxes = Axes.Both;
-                    })
+                            d.Origin = Anchor.Centre;
+                            d.RelativePositionAxes = Axes.Both;
+                        }),
                 };
             }
 
@@ -144,12 +136,15 @@ namespace osu.Framework.Graphics.UserInterface
                 // in those cases, just keep the hue as it was, as the colour will still be roughly the same to the point of being imperceptible,
                 // and doing this will prevent UX idiosyncrasies (such as the hue slider jumping to 0 for no apparent reason).
                 return Precision.DefinitelyBigger(Saturation.Value, 0)
-                       && !Precision.AlmostEquals(Hue.Value - newHue, 1);
+                    && !Precision.AlmostEquals(Hue.Value - newHue, 1);
             }
 
             private void hueChanged()
             {
-                box.Colour = ColourInfo.GradientHorizontal(Color4.White, Colour4.FromHSV(Hue.Value, 1f, 1f));
+                box.Colour = ColourInfo.GradientHorizontal(
+                    Color4.White,
+                    Colour4.FromHSV(Hue.Value, 1f, 1f)
+                );
                 updateCurrent();
             }
 
@@ -220,7 +215,10 @@ namespace osu.Framework.Graphics.UserInterface
                 [BackgroundDependencyLoader]
                 private void load(ShaderManager shaders)
                 {
-                    TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "SaturationSelectorBackground");
+                    TextureShader = shaders.Load(
+                        VertexShaderDescriptor.TEXTURE_2,
+                        "SaturationSelectorBackground"
+                    );
                 }
             }
         }

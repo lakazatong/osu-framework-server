@@ -47,11 +47,17 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
             }
         }
 
-        public VeldridFrameBuffer(VeldridRenderer renderer, PixelFormat[]? formats = null, SamplerFilter filteringMode = SamplerFilter.MinLinearMagLinearMipLinear)
+        public VeldridFrameBuffer(
+            VeldridRenderer renderer,
+            PixelFormat[]? formats = null,
+            SamplerFilter filteringMode = SamplerFilter.MinLinearMagLinearMipLinear
+        )
         {
             // todo: we probably want the arguments separated to "PixelFormat[] colorFormats, PixelFormat depthFormat".
             if (formats?.Length > 1)
-                throw new ArgumentException("Veldrid framebuffer cannot contain more than one depth target.");
+                throw new ArgumentException(
+                    "Veldrid framebuffer cannot contain more than one depth target."
+                );
 
             this.renderer = renderer;
 
@@ -63,7 +69,11 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
             recreateResources();
         }
 
-        internal VeldridFrameBuffer(VeldridRenderer renderer, VeldridTexture colourTarget, int mipLevel)
+        internal VeldridFrameBuffer(
+            VeldridRenderer renderer,
+            VeldridTexture colourTarget,
+            int mipLevel
+        )
         {
             this.renderer = renderer;
             this.colourTarget = colourTarget;
@@ -83,14 +93,31 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
 
             if (depthFormat is PixelFormat depth)
             {
-                var depthDescription = TextureDescription.Texture2D((uint)colourTarget.Width, (uint)colourTarget.Height, 1, 1, depth, TextureUsage.DepthStencil);
+                var depthDescription = TextureDescription.Texture2D(
+                    (uint)colourTarget.Width,
+                    (uint)colourTarget.Height,
+                    1,
+                    1,
+                    depth,
+                    TextureUsage.DepthStencil
+                );
                 depthTarget = renderer.Factory.CreateTexture(ref depthDescription);
             }
 
             FramebufferDescription description = new FramebufferDescription
             {
-                ColorTargets = new[] { new FramebufferAttachmentDescription(colourTarget.GetResourceList().Single().Texture, 0, (uint)mipLevel) },
-                DepthTarget = depthTarget == null ? null : new FramebufferAttachmentDescription(depthTarget, 0)
+                ColorTargets = new[]
+                {
+                    new FramebufferAttachmentDescription(
+                        colourTarget.GetResourceList().Single().Texture,
+                        0,
+                        (uint)mipLevel
+                    ),
+                },
+                DepthTarget =
+                    depthTarget == null
+                        ? null
+                        : new FramebufferAttachmentDescription(depthTarget, 0),
             };
 
             Framebuffer = renderer.Factory.CreateFramebuffer(ref description);
@@ -119,6 +146,7 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
         }
 
         public void Bind() => renderer.BindFrameBuffer(this);
+
         public void Unbind() => renderer.UnbindFrameBuffer(this);
 
         ~VeldridFrameBuffer()
@@ -147,7 +175,10 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
         {
             protected override TextureUsage Usages => base.Usages | TextureUsage.RenderTarget;
 
-            public FrameBufferTexture(VeldridRenderer renderer, SamplerFilter filteringMode = SamplerFilter.MinLinearMagLinearMipLinear)
+            public FrameBufferTexture(
+                VeldridRenderer renderer,
+                SamplerFilter filteringMode = SamplerFilter.MinLinearMagLinearMipLinear
+            )
                 : base(renderer, 1, 1, true, filteringMode)
             {
                 BypassTextureUploadQueueing = true;

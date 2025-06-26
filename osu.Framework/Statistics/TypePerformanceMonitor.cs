@@ -14,7 +14,8 @@ namespace osu.Framework.Statistics
 
         private static readonly Stack<Type> current_collection_type_stack = new Stack<Type>();
 
-        private static readonly Dictionary<Type, Collection> collected_times = new Dictionary<Type, Collection>();
+        private static readonly Dictionary<Type, Collection> collected_times =
+            new Dictionary<Type, Collection>();
 
         private static double consumptionTime;
 
@@ -27,7 +28,8 @@ namespace osu.Framework.Statistics
         /// </summary>
         internal static void BeginCollecting(object obj)
         {
-            if (!active) return;
+            if (!active)
+                return;
 
             var type = obj.GetType();
 
@@ -49,7 +51,8 @@ namespace osu.Framework.Statistics
         /// </summary>
         internal static void EndCollecting(object obj)
         {
-            if (!active) return;
+            if (!active)
+                return;
 
             var type = obj.GetType();
 
@@ -94,12 +97,20 @@ namespace osu.Framework.Statistics
 
                 int i = 0;
 
-                foreach (var t in collected_times.OrderByDescending(t => t.Value.TotalMilliseconds).Take(5))
+                foreach (
+                    var t in collected_times
+                        .OrderByDescending(t => t.Value.TotalMilliseconds)
+                        .Take(5)
+                )
                 {
-                    string runCount = t.Value.Count / framesSinceLastReport > 1 ? $" ({t.Value.Count / framesSinceLastReport} instances)" : string.Empty;
+                    string runCount =
+                        t.Value.Count / framesSinceLastReport > 1
+                            ? $" ({t.Value.Count / framesSinceLastReport} instances)"
+                            : string.Empty;
 
-                    GlobalStatistics.Get<string>(group_name, $"{++i}. {t.Key.Name}{runCount}").Value =
-                        $"{t.Value.TotalMilliseconds / framesSinceLastReport:N1}ms";
+                    GlobalStatistics
+                        .Get<string>(group_name, $"{++i}. {t.Key.Name}{runCount}")
+                        .Value = $"{t.Value.TotalMilliseconds / framesSinceLastReport:N1}ms";
                 }
 
                 collected_times.Clear();

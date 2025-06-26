@@ -28,7 +28,10 @@ namespace osu.Framework.Configuration.Tracking
         /// </summary>
         /// <param name="setting">The config setting to be tracked.</param>
         /// <param name="generateDescription">A function that generates the description for the setting, invoked every time the value changes.</param>
-        protected TrackedSetting(object setting, Func<TValue, SettingDescription> generateDescription)
+        protected TrackedSetting(
+            object setting,
+            Func<TValue, SettingDescription> generateDescription
+        )
         {
             this.setting = setting;
             this.generateDescription = generateDescription;
@@ -46,6 +49,7 @@ namespace osu.Framework.Configuration.Tracking
             bindable.ValueChanged -= displaySetting;
         }
 
-        private void displaySetting(ValueChangedEvent<TValue> args) => SettingChanged?.Invoke(generateDescription(args.NewValue));
+        private void displaySetting(ValueChangedEvent<TValue> args) =>
+            SettingChanged?.Invoke(generateDescription(args.NewValue));
     }
 }

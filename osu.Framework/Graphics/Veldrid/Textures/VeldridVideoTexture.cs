@@ -18,9 +18,7 @@ namespace osu.Framework.Graphics.Veldrid.Textures
         private VeldridTextureResources[]? resourceList;
 
         public VeldridVideoTexture(IVeldridRenderer renderer, int width, int height)
-            : base(renderer, width, height, true)
-        {
-        }
+            : base(renderer, width, height, true) { }
 
         private NativeMemoryTracker.NativeMemoryLease? memoryLease;
 
@@ -46,19 +44,29 @@ namespace osu.Framework.Graphics.Veldrid.Textures
                     int height = videoUpload.GetPlaneHeight(i);
                     int countPixels = width * height;
 
-                    resourceList[i] = new VeldridTextureResources
-                    (
-                        Renderer.Factory.CreateTexture(TextureDescription.Texture2D((uint)width, (uint)height, 1, 1, PixelFormat.R8UNorm, Usages)),
-                        Renderer.Factory.CreateSampler(new SamplerDescription
-                        {
-                            AddressModeU = SamplerAddressMode.Clamp,
-                            AddressModeV = SamplerAddressMode.Clamp,
-                            AddressModeW = SamplerAddressMode.Clamp,
-                            Filter = SamplerFilter.MinLinearMagLinearMipLinear,
-                            MinimumLod = 0,
-                            MaximumLod = IRenderer.MAX_MIPMAP_LEVELS,
-                            MaximumAnisotropy = 0,
-                        })
+                    resourceList[i] = new VeldridTextureResources(
+                        Renderer.Factory.CreateTexture(
+                            TextureDescription.Texture2D(
+                                (uint)width,
+                                (uint)height,
+                                1,
+                                1,
+                                PixelFormat.R8UNorm,
+                                Usages
+                            )
+                        ),
+                        Renderer.Factory.CreateSampler(
+                            new SamplerDescription
+                            {
+                                AddressModeU = SamplerAddressMode.Clamp,
+                                AddressModeV = SamplerAddressMode.Clamp,
+                                AddressModeW = SamplerAddressMode.Clamp,
+                                Filter = SamplerFilter.MinLinearMagLinearMipLinear,
+                                MinimumLod = 0,
+                                MaximumLod = IRenderer.MAX_MIPMAP_LEVELS,
+                                MaximumAnisotropy = 0,
+                            }
+                        )
                     );
 
                     textureSize += countPixels;
@@ -75,11 +83,13 @@ namespace osu.Framework.Graphics.Veldrid.Textures
                     videoUpload.GetPlaneHeight(i),
                     0,
                     new IntPtr(videoUpload.Frame->data[i]),
-                    videoUpload.Frame->linesize[i]);
+                    videoUpload.Frame->linesize[i]
+                );
             }
         }
 
-        public override IReadOnlyList<VeldridTextureResources> GetResourceList() => resourceList.AsNonNull();
+        public override IReadOnlyList<VeldridTextureResources> GetResourceList() =>
+            resourceList.AsNonNull();
 
         #region Disposal
 
@@ -87,18 +97,21 @@ namespace osu.Framework.Graphics.Veldrid.Textures
         {
             base.Dispose(isDisposing);
 
-            Renderer.ScheduleDisposal(texture =>
-            {
-                texture.memoryLease?.Dispose();
-
-                if (texture.resourceList != null)
+            Renderer.ScheduleDisposal(
+                texture =>
                 {
-                    foreach (var res in texture.resourceList)
-                        res.Dispose();
-                }
+                    texture.memoryLease?.Dispose();
 
-                texture.resourceList = null;
-            }, this);
+                    if (texture.resourceList != null)
+                    {
+                        foreach (var res in texture.resourceList)
+                            res.Dispose();
+                    }
+
+                    texture.resourceList = null;
+                },
+                this
+            );
         }
 
         #endregion

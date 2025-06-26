@@ -25,7 +25,10 @@ namespace osu.Framework.Benchmarks
 
             Bass.Init();
 
-            var store = new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(FrameworkTestScene).Assembly), "Resources");
+            var store = new NamespacedResourceStore<byte[]>(
+                new DllResourceStore(typeof(FrameworkTestScene).Assembly),
+                "Resources"
+            );
 
             data = store.Get("Tracks/sample-track.mp3");
 
@@ -53,7 +56,9 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public async Task TestResample(int size)
         {
-            var resampled = await preloadedWaveform.GenerateResampledAsync(size).ConfigureAwait(false);
+            var resampled = await preloadedWaveform
+                .GenerateResampledAsync(size)
+                .ConfigureAwait(false);
             var resampledPoints = await resampled.GetPointsAsync().ConfigureAwait(false);
 
             Debug.Assert(resampledPoints.Length > 0);

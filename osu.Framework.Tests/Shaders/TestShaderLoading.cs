@@ -17,11 +17,20 @@ namespace osu.Framework.Tests.Shaders
         [Test]
         public void TestFetchNonExistentShader()
         {
-            var manager = new ShaderManager(new TestGLRenderer(), new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(Game).Assembly), @"Resources/Shaders"));
+            var manager = new ShaderManager(
+                new TestGLRenderer(),
+                new NamespacedResourceStore<byte[]>(
+                    new DllResourceStore(typeof(Game).Assembly),
+                    @"Resources/Shaders"
+                )
+            );
 
             // fetch non-existent shader throws an arbitrary exception type.
             // not sure this is the best way to have things (other stores return null instead), but is what it is for now so let's ensure we don't change behaviour.
-            Assert.That(() => manager.Load("unknown", "unknown"), Throws.Exception.TypeOf<FileNotFoundException>());
+            Assert.That(
+                () => manager.Load("unknown", "unknown"),
+                Throws.Exception.TypeOf<FileNotFoundException>()
+            );
         }
 
         [Test]
@@ -29,40 +38,63 @@ namespace osu.Framework.Tests.Shaders
         {
             IShader lookup1;
 
-            var manager = new ShaderManager(new TestGLRenderer(), new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(Game).Assembly), @"Resources/Shaders"));
+            var manager = new ShaderManager(
+                new TestGLRenderer(),
+                new NamespacedResourceStore<byte[]>(
+                    new DllResourceStore(typeof(Game).Assembly),
+                    @"Resources/Shaders"
+                )
+            );
 
             // fetch existent shader.
-            Assert.That(lookup1 = manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE), Is.Not.Null);
+            Assert.That(
+                lookup1 = manager.Load(
+                    VertexShaderDescriptor.TEXTURE_2,
+                    FragmentShaderDescriptor.TEXTURE
+                ),
+                Is.Not.Null
+            );
 
             // ensure cached
-            Assert.That(manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE), Is.SameAs(lookup1));
+            Assert.That(
+                manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE),
+                Is.SameAs(lookup1)
+            );
         }
 
         private class TestGLRenderer : GLRenderer
         {
-            protected override IShader CreateShader(string name, IShaderPart[] parts, ShaderCompilationStore compilationStore)
-                => new TestGLShader(this, name, parts.Cast<GLShaderPart>().ToArray(), compilationStore);
+            protected override IShader CreateShader(
+                string name,
+                IShaderPart[] parts,
+                ShaderCompilationStore compilationStore
+            ) =>
+                new TestGLShader(
+                    this,
+                    name,
+                    parts.Cast<GLShaderPart>().ToArray(),
+                    compilationStore
+                );
 
             private class TestGLShader : GLShader
             {
-                internal TestGLShader(GLRenderer renderer, string name, GLShaderPart[] parts, ShaderCompilationStore compilationStore)
-                    : base(renderer, name, parts, compilationStore)
-                {
-                }
+                internal TestGLShader(
+                    GLRenderer renderer,
+                    string name,
+                    GLShaderPart[] parts,
+                    ShaderCompilationStore compilationStore
+                )
+                    : base(renderer, name, parts, compilationStore) { }
 
                 private protected override int CreateProgram() => 1337;
 
                 private protected override bool CompileInternal() => true;
 
-                public override void BindUniformBlock(string blockName, IUniformBuffer buffer)
-                {
-                }
+                public override void BindUniformBlock(string blockName, IUniformBuffer buffer) { }
 
                 private protected override string GetProgramLog() => string.Empty;
 
-                private protected override void DeleteProgram(int id)
-                {
-                }
+                private protected override void DeleteProgram(int id) { }
             }
         }
     }

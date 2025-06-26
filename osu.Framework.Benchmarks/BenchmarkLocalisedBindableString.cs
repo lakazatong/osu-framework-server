@@ -39,7 +39,9 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void BenchmarkLocalised()
         {
-            var bindable = manager.GetLocalisedBindableString(new TranslatableString("test", "test"));
+            var bindable = manager.GetLocalisedBindableString(
+                new TranslatableString("test", "test")
+            );
             bindable.UnbindAll();
         }
     }

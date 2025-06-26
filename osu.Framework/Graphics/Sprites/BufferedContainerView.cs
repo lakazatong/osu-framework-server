@@ -23,7 +23,10 @@ namespace osu.Framework.Graphics.Sprites
         private BufferedContainer<T> container;
         private BufferedDrawNodeSharedData sharedData;
 
-        internal BufferedContainerView(BufferedContainer<T> container, BufferedDrawNodeSharedData sharedData)
+        internal BufferedContainerView(
+            BufferedContainer<T> container,
+            BufferedDrawNodeSharedData sharedData
+        )
         {
             this.container = container;
             this.sharedData = sharedData;
@@ -34,7 +37,10 @@ namespace osu.Framework.Graphics.Sprites
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders?.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            TextureShader = shaders?.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         protected override DrawNode CreateDrawNode() => new BufferSpriteDrawNode(this);
@@ -114,15 +120,15 @@ namespace osu.Framework.Graphics.Sprites
             private EffectPlacement sourceEffectPlacement;
 
             public BufferSpriteDrawNode(BufferedContainerView<T> source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
                 base.ApplyState();
 
-                screenSpaceDrawQuad = Source.synchronisedDrawQuad ? Source.container.ScreenSpaceDrawQuad : Source.ScreenSpaceDrawQuad;
+                screenSpaceDrawQuad = Source.synchronisedDrawQuad
+                    ? Source.container.ScreenSpaceDrawQuad
+                    : Source.ScreenSpaceDrawQuad;
                 shared = Source.sharedData;
 
                 displayOriginalEffects = Source.displayOriginalEffects;
@@ -161,7 +167,11 @@ namespace osu.Framework.Graphics.Sprites
                     return;
 
                 renderer.SetBlend(DrawColourInfo.Blending);
-                renderer.DrawFrameBuffer(shared.MainBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour);
+                renderer.DrawFrameBuffer(
+                    shared.MainBuffer,
+                    screenSpaceDrawQuad,
+                    DrawColourInfo.Colour
+                );
             }
 
             private void drawEffectBuffer(IRenderer renderer)
@@ -173,7 +183,11 @@ namespace osu.Framework.Graphics.Sprites
                 ColourInfo finalEffectColour = DrawColourInfo.Colour;
                 finalEffectColour.ApplyChild(sourceEffectColour);
 
-                renderer.DrawFrameBuffer(shared.CurrentEffectBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour);
+                renderer.DrawFrameBuffer(
+                    shared.CurrentEffectBuffer,
+                    screenSpaceDrawQuad,
+                    DrawColourInfo.Colour
+                );
             }
 
             /// <summary>
@@ -181,7 +195,8 @@ namespace osu.Framework.Graphics.Sprites
             /// This is true if we explicitly want to draw it or if no effects were drawn by the source. In the case that no effects were drawn by the source,
             /// the current effect buffer will be the main buffer, and what will be drawn is the main buffer with the effect blending applied.
             /// </summary>
-            private bool shouldDrawEffectBuffer => displayOriginalEffects || shared.CurrentEffectBuffer == shared.MainBuffer;
+            private bool shouldDrawEffectBuffer =>
+                displayOriginalEffects || shared.CurrentEffectBuffer == shared.MainBuffer;
         }
     }
 }

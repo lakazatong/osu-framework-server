@@ -26,7 +26,11 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
         private int currentDrawCount;
 
-        public DeferredVertexBatch(DeferredRenderer renderer, PrimitiveTopology topology, VeldridIndexLayout indexLayout)
+        public DeferredVertexBatch(
+            DeferredRenderer renderer,
+            PrimitiveTopology topology,
+            VeldridIndexLayout indexLayout
+        )
         {
             this.renderer = renderer;
 
@@ -51,7 +55,9 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
                     case PrimitiveTopology.LineStrip:
                     case PrimitiveTopology.TriangleStrip:
-                        throw new NotImplementedException($"Topology '{topology}' is not yet implemented for this renderer.");
+                        throw new NotImplementedException(
+                            $"Topology '{topology}' is not yet implemented for this renderer."
+                        );
 
                     default:
                         throw new ArgumentOutOfRangeException(nameof(topology));
@@ -63,14 +69,18 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             AddAction = ((IVertexBatch<TVertex>)this).Add;
         }
 
-        public void Write(in MemoryReference primitive)
-            => renderer.Context.VertexManager.Write<TVertex>(primitive);
+        public void Write(in MemoryReference primitive) =>
+            renderer.Context.VertexManager.Write<TVertex>(primitive);
 
-        public void Draw(int count)
-            => renderer.Context.VertexManager.Draw<TVertex>(count, topology, indexLayout, primitiveSize);
+        public void Draw(int count) =>
+            renderer.Context.VertexManager.Draw<TVertex>(
+                count,
+                topology,
+                indexLayout,
+                primitiveSize
+            );
 
-        int IVertexBatch.Size
-            => int.MaxValue;
+        int IVertexBatch.Size => int.MaxValue;
 
         int IVertexBatch.Draw()
         {
@@ -99,15 +109,19 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
             if (++currentPrimitiveSize == primitiveSize)
             {
-                renderer.Context.EnqueueEvent(AddPrimitiveToBatchEvent.Create(renderer, this, current_primitive.AsSpan()[..primitiveSize]));
+                renderer.Context.EnqueueEvent(
+                    AddPrimitiveToBatchEvent.Create(
+                        renderer,
+                        this,
+                        current_primitive.AsSpan()[..primitiveSize]
+                    )
+                );
                 currentPrimitiveSize = 0;
             }
 
             currentDrawCount++;
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

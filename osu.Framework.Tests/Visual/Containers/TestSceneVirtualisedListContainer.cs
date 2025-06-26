@@ -21,58 +21,71 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestNaiveList()
         {
-            AddStep("create list", () => Child = new BasicScrollContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Direction = FillDirection.Vertical,
-                    ChildrenEnumerable = Enumerable.Range(1, 10000).Select(i => new DrawableItem { Current = { Value = $"Item #{i}" } })
-                }
-            });
+            AddStep(
+                "create list",
+                () =>
+                    Child = new BasicScrollContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = new FillFlowContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            ChildrenEnumerable = Enumerable
+                                .Range(1, 10000)
+                                .Select(i => new DrawableItem
+                                {
+                                    Current = { Value = $"Item #{i}" },
+                                }),
+                        },
+                    }
+            );
         }
 
         [Test]
         public void TestVirtualisedList()
         {
             ExampleVirtualisedList list = null!;
-            AddStep("create list", () =>
-            {
-                Child = list = new ExampleVirtualisedList
+            AddStep(
+                "create list",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                };
-                list.RowData.AddRange(Enumerable.Range(1, 10000).Select(i => $"Item #{i}"));
-            });
-            AddStep("replace items", () =>
-            {
-                list.RowData.Clear();
-                list.RowData.AddRange(Enumerable.Range(10001, 10000).Select(i => $"Item #{i}"));
-            });
+                    Child = list = new ExampleVirtualisedList { RelativeSizeAxes = Axes.Both };
+                    list.RowData.AddRange(Enumerable.Range(1, 10000).Select(i => $"Item #{i}"));
+                }
+            );
+            AddStep(
+                "replace items",
+                () =>
+                {
+                    list.RowData.Clear();
+                    list.RowData.AddRange(Enumerable.Range(10001, 10000).Select(i => $"Item #{i}"));
+                }
+            );
         }
 
         [Test]
         public void TestVirtualisedListDisposal()
         {
             ExampleVirtualisedList list = null!;
-            AddStep("create list nested in container", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create list nested in container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
                     Child = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = list = new ExampleVirtualisedList
+                        Child = new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                        }
-                    }
-                };
-                list.RowData.AddRange(Enumerable.Range(1, 10000).Select(i => $"Item #{i}"));
-            });
+                            Child = list =
+                                new ExampleVirtualisedList { RelativeSizeAxes = Axes.Both },
+                        },
+                    };
+                    list.RowData.AddRange(Enumerable.Range(1, 10000).Select(i => $"Item #{i}"));
+                }
+            );
             AddStep("clear", Clear);
             AddUntilStep("wait for async disposal", () => list.IsDisposed);
         }
@@ -82,14 +95,14 @@ namespace osu.Framework.Tests.Visual.Containers
         {
             ExampleVirtualisedList list = null!;
 
-            AddStep("create list", () =>
-            {
-                Child = list = new ExampleVirtualisedList
+            AddStep(
+                "create list",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                };
-                list.RowData.AddRange(Enumerable.Range(1, 10).Select(i => $"Item #{i}"));
-            });
+                    Child = list = new ExampleVirtualisedList { RelativeSizeAxes = Axes.Both };
+                    list.RowData.AddRange(Enumerable.Range(1, 10).Select(i => $"Item #{i}"));
+                }
+            );
 
             AddStep("insert at start", () => list.RowData.Insert(0, "first"));
             AddStep("insert at end", () => list.RowData.Add("last"));
@@ -104,7 +117,8 @@ namespace osu.Framework.Tests.Visual.Containers
         {
             public const int HEIGHT = 25;
 
-            private readonly BindableWithCurrent<string> current = new BindableWithCurrent<string>();
+            private readonly BindableWithCurrent<string> current =
+                new BindableWithCurrent<string>();
 
             private Box background = null!;
             private SpriteText text = null!;
@@ -130,10 +144,10 @@ namespace osu.Framework.Tests.Visual.Containers
                     text = new SpriteText
                     {
                         RelativeSizeAxes = Axes.X,
-                        Margin = new MarginPadding { Left = 10, },
+                        Margin = new MarginPadding { Left = 10 },
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                    }
+                    },
                 };
             }
 
@@ -152,7 +166,8 @@ namespace osu.Framework.Tests.Visual.Containers
                 return true;
             }
 
-            private void updateState() => background.FadeTo(IsHovered ? 1 : 0, 300, Easing.OutQuint);
+            private void updateState() =>
+                background.FadeTo(IsHovered ? 1 : 0, 300, Easing.OutQuint);
 
             protected override void OnHoverLost(HoverLostEvent e)
             {
@@ -160,14 +175,14 @@ namespace osu.Framework.Tests.Visual.Containers
             }
         }
 
-        private partial class ExampleVirtualisedList : VirtualisedListContainer<string, DrawableItem>
+        private partial class ExampleVirtualisedList
+            : VirtualisedListContainer<string, DrawableItem>
         {
             public ExampleVirtualisedList()
-                : base(DrawableItem.HEIGHT, 50)
-            {
-            }
+                : base(DrawableItem.HEIGHT, 50) { }
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer() => new BasicScrollContainer();
+            protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+                new BasicScrollContainer();
         }
     }
 }

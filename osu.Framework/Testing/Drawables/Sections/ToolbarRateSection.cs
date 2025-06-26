@@ -37,29 +37,33 @@ namespace osu.Framework.Testing.Drawables.Sections
                         {
                             Padding = new MarginPadding(5) { Right = 0 },
                             Text = "Rate:",
-                            Font = FrameworkFont.Condensed
+                            Font = FrameworkFont.Condensed,
                         },
                         clickableReset = new ClickableContainer
                         {
                             AutoSizeAxes = Axes.Both,
-                            Child = rateText = new SpriteText
-                            {
-                                Padding = new MarginPadding(5),
-                                Width = 45,
-                                Colour = FrameworkColour.Yellow,
-                                Font = FrameworkFont.Condensed
-                            },
+                            Child = rateText =
+                                new SpriteText
+                                {
+                                    Padding = new MarginPadding(5),
+                                    Width = 45,
+                                    Colour = FrameworkColour.Yellow,
+                                    Font = FrameworkFont.Condensed,
+                                },
                         },
                         rateAdjustSlider = new BasicSliderBar<double>
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Current = browser.PlaybackRate
+                            Current = browser.PlaybackRate,
                         },
-                    }
-                }
+                    },
+                },
             };
 
-            rateAdjustSlider.Current.BindValueChanged(e => rateText.Text = e.NewValue.ToString("0%"), true);
+            rateAdjustSlider.Current.BindValueChanged(
+                e => rateText.Text = e.NewValue.ToString("0%"),
+                true
+            );
             clickableReset.Action = () => rateAdjustSlider.Current.SetDefault();
         }
     }

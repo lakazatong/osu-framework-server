@@ -50,11 +50,8 @@ namespace osu.Framework.Graphics.UserInterface
 
                 protected override void PopOut() => this.FadeOut();
 
-                protected override TextBox CreateTextBox() => new BasicTextBox
-                {
-                    PlaceholderText = "type to search",
-                    FontSize = font.Size,
-                };
+                protected override TextBox CreateTextBox() =>
+                    new BasicTextBox { PlaceholderText = "type to search", FontSize = font.Size };
             }
         }
 
@@ -62,9 +59,13 @@ namespace osu.Framework.Graphics.UserInterface
         {
             protected override Menu CreateSubMenu() => new BasicMenu(Direction.Vertical);
 
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new DrawableBasicDropdownMenuItem(item);
+            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(
+                MenuItem item
+            ) => new DrawableBasicDropdownMenuItem(item);
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);
+            protected override ScrollContainer<Drawable> CreateScrollContainer(
+                Direction direction
+            ) => new BasicScrollContainer(direction);
 
             private partial class DrawableBasicDropdownMenuItem : DrawableDropdownMenuItem
             {
@@ -77,10 +78,8 @@ namespace osu.Framework.Graphics.UserInterface
                     BackgroundColourSelected = FrameworkColour.GreenDark;
                 }
 
-                protected override Drawable CreateContent() => new SpriteText
-                {
-                    Font = FrameworkFont.Condensed
-                };
+                protected override Drawable CreateContent() =>
+                    new SpriteText { Font = FrameworkFont.Condensed };
             }
         }
     }

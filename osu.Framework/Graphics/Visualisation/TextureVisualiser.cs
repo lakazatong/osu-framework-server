@@ -27,7 +27,11 @@ namespace osu.Framework.Graphics.Visualisation
         private readonly FillFlowContainer<TexturePanel> atlasFlow;
         private readonly FillFlowContainer<TexturePanel> textureFlow;
 
-        private readonly BindableInt visualisedMipLevel = new BindableInt(-1) { MinValue = -1, MaxValue = IRenderer.MAX_MIPMAP_LEVELS };
+        private readonly BindableInt visualisedMipLevel = new BindableInt(-1)
+        {
+            MinValue = -1,
+            MaxValue = IRenderer.MAX_MIPMAP_LEVELS,
+        };
 
         [Resolved]
         private IRenderer renderer { get; set; }
@@ -45,7 +49,7 @@ namespace osu.Framework.Graphics.Visualisation
                     {
                         Text = "Atlases",
                         Padding = new MarginPadding(5),
-                        Font = FrameworkFont.Condensed.With(weight: "Bold")
+                        Font = FrameworkFont.Condensed.With(weight: "Bold"),
                     },
                     atlasFlow = new FillFlowContainer<TexturePanel>
                     {
@@ -58,7 +62,7 @@ namespace osu.Framework.Graphics.Visualisation
                     {
                         Text = "Textures",
                         Padding = new MarginPadding(5),
-                        Font = FrameworkFont.Condensed.With(weight: "Bold")
+                        Font = FrameworkFont.Condensed.With(weight: "Bold"),
                     },
                     textureFlow = new FillFlowContainer<TexturePanel>
                     {
@@ -66,30 +70,35 @@ namespace osu.Framework.Graphics.Visualisation
                         AutoSizeAxes = Axes.Y,
                         Spacing = new Vector2(22),
                         Padding = new MarginPadding(10),
-                    }
-                }
+                    },
+                },
             };
 
             SpriteText mipLevelText;
 
-            ToolbarContent.AddRange(new Drawable[]
-            {
-                new SpriteText { Text = "Mip level" },
-                new BasicSliderBar<int>
+            ToolbarContent.AddRange(
+                new Drawable[]
                 {
-                    Height = 20,
-                    Width = 250,
-                    Current = visualisedMipLevel,
-                },
-                mipLevelText = new SpriteText(),
-            });
+                    new SpriteText { Text = "Mip level" },
+                    new BasicSliderBar<int>
+                    {
+                        Height = 20,
+                        Width = 250,
+                        Current = visualisedMipLevel,
+                    },
+                    mipLevelText = new SpriteText(),
+                }
+            );
 
-            visualisedMipLevel.BindValueChanged(val =>
-            {
-                mipLevelText.Text = val.NewValue == -1 ? "Auto" : $"{val.NewValue}";
-                atlasFlow.Invalidate();
-                textureFlow.Invalidate();
-            }, true);
+            visualisedMipLevel.BindValueChanged(
+                val =>
+                {
+                    mipLevelText.Text = val.NewValue == -1 ? "Auto" : $"{val.NewValue}";
+                    atlasFlow.Invalidate();
+                    textureFlow.Invalidate();
+                },
+                true
+            );
         }
 
         protected override void PopIn()
@@ -112,15 +121,16 @@ namespace osu.Framework.Graphics.Visualisation
             renderer.TextureCreated -= addTexture;
         }
 
-        private void addTexture(Texture texture) => Schedule(() =>
-        {
-            var target = texture.IsAtlasTexture ? atlasFlow : textureFlow;
+        private void addTexture(Texture texture) =>
+            Schedule(() =>
+            {
+                var target = texture.IsAtlasTexture ? atlasFlow : textureFlow;
 
-            if (target.Any(p => p.Texture == texture))
-                return;
+                if (target.Any(p => p.Texture == texture))
+                    return;
 
-            target.Add(new TexturePanel(texture, visualisedMipLevel));
-        });
+                target.Add(new TexturePanel(texture, visualisedMipLevel));
+            });
 
         private partial class TexturePanel : CompositeDrawable
         {
@@ -150,7 +160,7 @@ namespace osu.Framework.Graphics.Visualisation
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
-                            Font = FrameworkFont.Regular.With(size: 16)
+                            Font = FrameworkFont.Regular.With(size: 16),
                         },
                         new Container
                         {
@@ -162,7 +172,7 @@ namespace osu.Framework.Graphics.Visualisation
                             {
                                 usage = new UsageBackground(textureReference, visualisedMipLevel)
                                 {
-                                    Size = new Vector2(100)
+                                    Size = new Vector2(100),
                                 },
                             },
                         },
@@ -172,7 +182,7 @@ namespace osu.Framework.Graphics.Visualisation
                             Origin = Anchor.TopCentre,
                             Font = FrameworkFont.Regular.With(size: 16),
                         },
-                    }
+                    },
                 };
             }
 
@@ -191,7 +201,9 @@ namespace osu.Framework.Graphics.Visualisation
                     }
 
                     titleText.Text = $"{texture.Identifier}. {texture.Width}x{texture.Height} ";
-                    footerText.Text = Precision.AlmostBigger(usage.AverageUsagesPerFrame, 1) ? $"{usage.AverageUsagesPerFrame:N0} binds" : string.Empty;
+                    footerText.Text = Precision.AlmostBigger(usage.AverageUsagesPerFrame, 1)
+                        ? $"{usage.AverageUsagesPerFrame:N0} binds"
+                        : string.Empty;
                 }
                 catch { }
             }
@@ -206,7 +218,10 @@ namespace osu.Framework.Graphics.Visualisation
 
             public float AverageUsagesPerFrame { get; private set; }
 
-            public UsageBackground(WeakReference<Texture> textureReference, BindableInt visualisedMipLevel)
+            public UsageBackground(
+                WeakReference<Texture> textureReference,
+                BindableInt visualisedMipLevel
+            )
             {
                 this.textureReference = textureReference;
                 this.visualisedMipLevel = visualisedMipLevel.GetBoundCopy();
@@ -225,9 +240,7 @@ namespace osu.Framework.Graphics.Visualisation
                 private int visualisedMipLevel;
 
                 public UsageBackgroundDrawNode(Box source)
-                    : base(source)
-                {
-                }
+                    : base(source) { }
 
                 public override void ApplyState()
                 {
@@ -247,13 +260,21 @@ namespace osu.Framework.Graphics.Visualisation
 
                     ulong delta = texture.NativeTexture.TotalBindCount - Source.lastBindCount;
 
-                    Source.AverageUsagesPerFrame = Source.AverageUsagesPerFrame * 0.9f + delta * 0.1f;
+                    Source.AverageUsagesPerFrame =
+                        Source.AverageUsagesPerFrame * 0.9f + delta * 0.1f;
 
                     drawColour = DrawColourInfo.Colour;
                     drawColour.ApplyChild(
                         Precision.AlmostBigger(Source.AverageUsagesPerFrame, 1)
-                            ? Interpolation.ValueAt(Source.AverageUsagesPerFrame, Color4.DarkGray, Color4.Red, 0, 200)
-                            : Color4.Transparent);
+                            ? Interpolation.ValueAt(
+                                Source.AverageUsagesPerFrame,
+                                Color4.DarkGray,
+                                Color4.Red,
+                                0,
+                                200
+                            )
+                            : Color4.Transparent
+                    );
 
                     base.Draw(renderer);
 

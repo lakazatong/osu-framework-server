@@ -26,12 +26,14 @@ namespace osu.Framework.Tests.Visual.Graphics
 
         public TestSceneTripleBufferOccupancy()
         {
-            Add(text = new TextFlowContainer
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                AutoSizeAxes = Axes.Both
-            });
+            Add(
+                text = new TextFlowContainer
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    AutoSizeAxes = Axes.Both,
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -67,17 +69,29 @@ namespace osu.Framework.Tests.Visual.Graphics
                 }
             }).Start();
 
-            AddSliderStep("write lag", 0, 16, 0, v =>
-            {
-                writeLag = v;
-                reset();
-            });
+            AddSliderStep(
+                "write lag",
+                0,
+                16,
+                0,
+                v =>
+                {
+                    writeLag = v;
+                    reset();
+                }
+            );
 
-            AddSliderStep("read lag", 0, 16, 0, v =>
-            {
-                readLag = v;
-                reset();
-            });
+            AddSliderStep(
+                "read lag",
+                0,
+                16,
+                0,
+                v =>
+                {
+                    readLag = v;
+                    reset();
+                }
+            );
 
             reset();
         }
@@ -100,17 +114,23 @@ namespace osu.Framework.Tests.Visual.Graphics
 
             info.AppendLine("write occupancy:");
             for (int i = 0; i < writes.Length; i++)
-                info.AppendLine($"{i}:   {writes[i] / totalWrites,-10:P}({writes[i]} / {totalWrites})");
+                info.AppendLine(
+                    $"{i}:   {writes[i] / totalWrites, -10:P}({writes[i]} / {totalWrites})"
+                );
 
             info.AppendLine();
 
             info.AppendLine("read occupancy:");
             for (int i = 0; i < reads.Length; i++)
-                info.AppendLine($"{i}:   {reads[i] / totalReads,-10:P}({reads[i]} / {totalReads})");
+                info.AppendLine(
+                    $"{i}:   {reads[i] / totalReads, -10:P}({reads[i]} / {totalReads})"
+                );
 
             info.AppendLine();
 
-            info.AppendLine($"Speed: {stopwatch.Elapsed.TotalMicroseconds / totalReads:0.00}us/read");
+            info.AppendLine(
+                $"Speed: {stopwatch.Elapsed.TotalMicroseconds / totalReads:0.00}us/read"
+            );
 
             text.Text = info.ToString();
         }

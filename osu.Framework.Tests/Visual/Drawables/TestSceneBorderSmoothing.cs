@@ -27,30 +27,19 @@ namespace osu.Framework.Tests.Visual.Drawables
                     Spacing = new Vector2(0, 10),
                     Children = new Drawable[]
                     {
-                        new IssueButton
-                        {
-                            Text = "no fill"
-                        },
+                        new IssueButton { Text = "no fill" },
                         new IssueButton
                         {
                             OverlayColour = Color4.White.Opacity(0.0001f),
-                            Text = "very transparent fill"
+                            Text = "very transparent fill",
                         },
-                        new IssueButton
-                        {
-                            OverlayColour = Color4.Gray,
-                            Text = "gray bg"
-                        },
+                        new IssueButton { OverlayColour = Color4.Gray, Text = "gray bg" },
                         new IssueButton
                         {
                             OverlayColour = Color4.White.Opacity(0.5f),
-                            Text = "0.5 white bg"
+                            Text = "0.5 white bg",
                         },
-                        new IssueButton
-                        {
-                            OverlayColour = Color4.White,
-                            Text = "white bg"
-                        },
+                        new IssueButton { OverlayColour = Color4.White, Text = "white bg" },
                         new IssueButton(false)
                         {
                             BackgroundColour = Color4.Gray,
@@ -65,15 +54,15 @@ namespace osu.Framework.Tests.Visual.Drawables
                         new IssueButton(borderColour: Color4.Gray)
                         {
                             OverlayColour = Color4.Gray,
-                            Text = "gray to gray bg"
+                            Text = "gray to gray bg",
                         },
                         new IssueButton(borderColour: Color4.Gray)
                         {
                             OverlayColour = Color4.White.Opacity(0.5f),
-                            Text = "gray to transparent white bg"
+                            Text = "gray to transparent white bg",
                         },
-                    }
-                }
+                    },
+                },
             };
 
             AddSliderStep("adjust alpha", 0f, 1f, 1, val => Child.Alpha = val);
@@ -103,16 +92,18 @@ namespace osu.Framework.Tests.Visual.Drawables
             [BackgroundDependencyLoader]
             private void load()
             {
-                Add(new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new Box
+                Add(
+                    new Container
                     {
-                        Alpha = OverlayColour.HasValue ? 1 : 0,
                         RelativeSizeAxes = Axes.Both,
-                        Colour = OverlayColour ?? Color4.Transparent,
+                        Child = new Box
+                        {
+                            Alpha = OverlayColour.HasValue ? 1 : 0,
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = OverlayColour ?? Color4.Transparent,
+                        },
                     }
-                });
+                );
             }
         }
     }

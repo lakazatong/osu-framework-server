@@ -82,7 +82,11 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="parent">The other <see cref="Texture"/>.</param>
         /// <param name="wrapModeS">The texture wrap mode in horizontal direction.</param>
         /// <param name="wrapModeT">The texture wrap mode in vertical direction.</param>
-        public Texture(Texture parent, WrapMode wrapModeS = WrapMode.None, WrapMode wrapModeT = WrapMode.None)
+        public Texture(
+            Texture parent,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None
+        )
             : this(parent.NativeTexture, wrapModeS, wrapModeT)
         {
             IsAtlasTexture = parent.IsAtlasTexture;
@@ -96,7 +100,12 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="wrapModeS">The texture wrap mode in horizontal direction.</param>
         /// <param name="wrapModeT">The texture wrap mode in vertical direction.</param>
         /// <returns>The cropped texture.</returns>
-        public Texture Crop(RectangleF cropRectangle, Axes relativeSizeAxes = Axes.None, WrapMode wrapModeS = WrapMode.None, WrapMode wrapModeT = WrapMode.None)
+        public Texture Crop(
+            RectangleF cropRectangle,
+            Axes relativeSizeAxes = Axes.None,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None
+        )
         {
             if (relativeSizeAxes != Axes.None)
             {
@@ -117,7 +126,11 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="stream">The data stream containing the texture data.</param>
         /// <param name="atlas">The atlas to add the texture to.</param>
         /// <returns>The created texture.</returns>
-        public static Texture? FromStream(IRenderer renderer, Stream? stream, TextureAtlas? atlas = null)
+        public static Texture? FromStream(
+            IRenderer renderer,
+            Stream? stream,
+            TextureAtlas? atlas = null
+        )
         {
             if (stream == null || stream.Length == 0)
                 return null;
@@ -125,7 +138,9 @@ namespace osu.Framework.Graphics.Textures
             try
             {
                 var data = new TextureUpload(stream);
-                Texture tex = atlas?.Add(data.Width, data.Height) ?? renderer.CreateTexture(data.Width, data.Height);
+                Texture tex =
+                    atlas?.Add(data.Width, data.Height)
+                    ?? renderer.CreateTexture(data.Width, data.Height);
                 tex.SetData(data);
                 return tex;
             }
@@ -178,7 +193,8 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="wrapModeS">The horizontal wrap mode.</param>
         /// <param name="wrapModeT">The vertical wrap mode.</param>
         /// <returns>Whether the texture was successfully bound.</returns>
-        public bool Bind(int unit, WrapMode wrapModeS, WrapMode wrapModeT) => NativeTexture.Renderer.BindTexture(this, unit, wrapModeS, wrapModeT);
+        public bool Bind(int unit, WrapMode wrapModeS, WrapMode wrapModeT) =>
+            NativeTexture.Renderer.BindTexture(this, unit, wrapModeS, wrapModeT);
 
         /// <summary>
         /// Queue a <see cref="TextureUpload"/> to be uploaded on the draw thread.
@@ -193,13 +209,22 @@ namespace osu.Framework.Graphics.Textures
         /// </summary>
         /// <param name="upload">The texture data to upload.</param>
         /// <param name="opacity">The texture's opacity, if known.</param>
-        public void SetData(ITextureUpload upload, Opacity opacity) => SetData(upload, WrapModeS, WrapModeT, opacity);
+        public void SetData(ITextureUpload upload, Opacity opacity) =>
+            SetData(upload, WrapModeS, WrapModeT, opacity);
 
-        internal virtual void SetData(ITextureUpload upload, WrapMode wrapModeS, WrapMode wrapModeT, Opacity? opacity)
+        internal virtual void SetData(
+            ITextureUpload upload,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT,
+            Opacity? opacity
+        )
         {
             ObjectDisposedException.ThrowIf(!Available, this);
 
-            if (upload.Bounds.Width > NativeTexture.MaxSize || upload.Bounds.Height > NativeTexture.MaxSize)
+            if (
+                upload.Bounds.Width > NativeTexture.MaxSize
+                || upload.Bounds.Height > NativeTexture.MaxSize
+            )
                 throw new TextureTooLargeForGLException();
 
             if (upload.Bounds.IsEmpty && upload.Data.Length > 0)
@@ -209,7 +234,8 @@ namespace osu.Framework.Graphics.Textures
                 if (upload.Bounds.Width * upload.Bounds.Height > upload.Data.Length)
                 {
                     throw new InvalidOperationException(
-                        $"Size of texture upload ({upload.Bounds.Width}x{upload.Bounds.Height}) does not contain enough data ({upload.Data.Length} < {upload.Bounds.Width * upload.Bounds.Height})");
+                        $"Size of texture upload ({upload.Bounds.Width}x{upload.Bounds.Height}) does not contain enough data ({upload.Data.Length} < {upload.Bounds.Width * upload.Bounds.Height})"
+                    );
                 }
             }
 
@@ -343,9 +369,7 @@ namespace osu.Framework.Graphics.Textures
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool isDisposing)
-        {
-        }
+        protected virtual void Dispose(bool isDisposing) { }
 
         #endregion
     }

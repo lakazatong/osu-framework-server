@@ -21,9 +21,12 @@ namespace osu.Framework.Graphics.Transforms
         // constants used to fix expo and elastic curves to start/end at 0/1
         private static readonly double expo_offset = Math.Pow(2, -10);
         private static readonly double elastic_offset_full = Math.Pow(2, -11);
-        private static readonly double elastic_offset_half = Math.Pow(2, -10) * Math.Sin((.5 - elastic_const2) * elastic_const);
-        private static readonly double elastic_offset_quarter = Math.Pow(2, -10) * Math.Sin((.25 - elastic_const2) * elastic_const);
-        private static readonly double in_out_elastic_offset = Math.Pow(2, -10) * Math.Sin((1 - elastic_const2 * 1.5) * elastic_const / 1.5);
+        private static readonly double elastic_offset_half =
+            Math.Pow(2, -10) * Math.Sin((.5 - elastic_const2) * elastic_const);
+        private static readonly double elastic_offset_quarter =
+            Math.Pow(2, -10) * Math.Sin((.25 - elastic_const2) * elastic_const);
+        private static readonly double in_out_elastic_offset =
+            Math.Pow(2, -10) * Math.Sin((1 - elastic_const2 * 1.5) * elastic_const / 1.5);
 
         private readonly Easing easing;
 
@@ -52,7 +55,8 @@ namespace osu.Framework.Graphics.Transforms
                     return time * (2 - time);
 
                 case Easing.InOutQuad:
-                    if (time < .5) return time * time * 2;
+                    if (time < .5)
+                        return time * time * 2;
 
                     return --time * time * -2 + 1;
 
@@ -63,7 +67,8 @@ namespace osu.Framework.Graphics.Transforms
                     return --time * time * time + 1;
 
                 case Easing.InOutCubic:
-                    if (time < .5) return time * time * time * 4;
+                    if (time < .5)
+                        return time * time * time * 4;
 
                     return --time * time * time * 4 + 1;
 
@@ -74,7 +79,8 @@ namespace osu.Framework.Graphics.Transforms
                     return 1 - --time * time * time * time;
 
                 case Easing.InOutQuart:
-                    if (time < .5) return time * time * time * time * 8;
+                    if (time < .5)
+                        return time * time * time * time * 8;
 
                     return --time * time * time * time * -8 + 1;
 
@@ -85,7 +91,8 @@ namespace osu.Framework.Graphics.Transforms
                     return --time * time * time * time * time + 1;
 
                 case Easing.InOutQuint:
-                    if (time < .5) return time * time * time * time * time * 16;
+                    if (time < .5)
+                        return time * time * time * time * time * 16;
 
                     return --time * time * time * time * time * 16 + 1;
 
@@ -105,7 +112,8 @@ namespace osu.Framework.Graphics.Transforms
                     return -Math.Pow(2, -10 * time) + 1 + expo_offset * time;
 
                 case Easing.InOutExpo:
-                    if (time < .5) return .5 * (Math.Pow(2, 20 * time - 10) + expo_offset * (2 * time - 1));
+                    if (time < .5)
+                        return .5 * (Math.Pow(2, 20 * time - 10) + expo_offset * (2 * time - 1));
 
                     return 1 - .5 * (Math.Pow(2, -20 * time + 10) + expo_offset * (-2 * time + 1));
 
@@ -116,31 +124,54 @@ namespace osu.Framework.Graphics.Transforms
                     return Math.Sqrt(1 - --time * time);
 
                 case Easing.InOutCirc:
-                    if ((time *= 2) < 1) return .5 - .5 * Math.Sqrt(1 - time * time);
+                    if ((time *= 2) < 1)
+                        return .5 - .5 * Math.Sqrt(1 - time * time);
 
                     return .5 * Math.Sqrt(1 - (time -= 2) * time) + .5;
 
                 case Easing.InElastic:
-                    return -Math.Pow(2, -10 + 10 * time) * Math.Sin((1 - elastic_const2 - time) * elastic_const) + elastic_offset_full * (1 - time);
+                    return -Math.Pow(2, -10 + 10 * time)
+                            * Math.Sin((1 - elastic_const2 - time) * elastic_const)
+                        + elastic_offset_full * (1 - time);
 
                 case Easing.OutElastic:
-                    return Math.Pow(2, -10 * time) * Math.Sin((time - elastic_const2) * elastic_const) + 1 - elastic_offset_full * time;
+                    return Math.Pow(2, -10 * time)
+                            * Math.Sin((time - elastic_const2) * elastic_const)
+                        + 1
+                        - elastic_offset_full * time;
 
                 case Easing.OutElasticHalf:
-                    return Math.Pow(2, -10 * time) * Math.Sin((.5 * time - elastic_const2) * elastic_const) + 1 - elastic_offset_half * time;
+                    return Math.Pow(2, -10 * time)
+                            * Math.Sin((.5 * time - elastic_const2) * elastic_const)
+                        + 1
+                        - elastic_offset_half * time;
 
                 case Easing.OutElasticQuarter:
-                    return Math.Pow(2, -10 * time) * Math.Sin((.25 * time - elastic_const2) * elastic_const) + 1 - elastic_offset_quarter * time;
+                    return Math.Pow(2, -10 * time)
+                            * Math.Sin((.25 * time - elastic_const2) * elastic_const)
+                        + 1
+                        - elastic_offset_quarter * time;
 
                 case Easing.InOutElastic:
                     if ((time *= 2) < 1)
                     {
-                        return -.5 * (Math.Pow(2, -10 + 10 * time) * Math.Sin((1 - elastic_const2 * 1.5 - time) * elastic_const / 1.5)
-                                      - in_out_elastic_offset * (1 - time));
+                        return -.5
+                            * (
+                                Math.Pow(2, -10 + 10 * time)
+                                    * Math.Sin(
+                                        (1 - elastic_const2 * 1.5 - time) * elastic_const / 1.5
+                                    )
+                                - in_out_elastic_offset * (1 - time)
+                            );
                     }
 
-                    return .5 * (Math.Pow(2, -10 * --time) * Math.Sin((time - elastic_const2 * 1.5) * elastic_const / 1.5)
-                                 - in_out_elastic_offset * time) + 1;
+                    return .5
+                            * (
+                                Math.Pow(2, -10 * --time)
+                                    * Math.Sin((time - elastic_const2 * 1.5) * elastic_const / 1.5)
+                                - in_out_elastic_offset * time
+                            )
+                        + 1;
 
                 case Easing.InBack:
                     return time * time * ((back_const + 1) * time - back_const);
@@ -149,7 +180,8 @@ namespace osu.Framework.Graphics.Transforms
                     return --time * time * ((back_const + 1) * time + back_const) + 1;
 
                 case Easing.InOutBack:
-                    if ((time *= 2) < 1) return .5 * time * time * ((back_const2 + 1) * time - back_const2);
+                    if ((time *= 2) < 1)
+                        return .5 * time * time * ((back_const2 + 1) * time - back_const2);
 
                     return .5 * ((time -= 2) * time * ((back_const2 + 1) * time + back_const2) + 2);
 
@@ -175,9 +207,16 @@ namespace osu.Framework.Graphics.Transforms
                     return 7.5625 * (time -= 2.625 * bounce_const) * time + .984375;
 
                 case Easing.InOutBounce:
-                    if (time < .5) return .5 - .5 * new DefaultEasingFunction(Easing.OutBounce).ApplyEasing(1 - time * 2);
+                    if (time < .5)
+                        return .5
+                            - .5
+                                * new DefaultEasingFunction(Easing.OutBounce).ApplyEasing(
+                                    1 - time * 2
+                                );
 
-                    return new DefaultEasingFunction(Easing.OutBounce).ApplyEasing((time - .5) * 2) * .5 + .5;
+                    return new DefaultEasingFunction(Easing.OutBounce).ApplyEasing((time - .5) * 2)
+                            * .5
+                        + .5;
 
                 case Easing.OutPow10:
                     return --time * Math.Pow(time, 10) + 1;

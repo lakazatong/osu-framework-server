@@ -48,7 +48,8 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         protected IReadOnlyDictionary<TModel, RearrangeableListItem<TModel>> ItemMap => itemMap;
 
-        private readonly Dictionary<TModel, RearrangeableListItem<TModel>> itemMap = new Dictionary<TModel, RearrangeableListItem<TModel>>();
+        private readonly Dictionary<TModel, RearrangeableListItem<TModel>> itemMap =
+            new Dictionary<TModel, RearrangeableListItem<TModel>>();
         private RearrangeableListItem<TModel>? currentlyDraggedItem;
         private Vector2 screenSpaceDragPosition;
 
@@ -57,18 +58,20 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         protected RearrangeableListContainer()
         {
-            ListContainer = CreateListFillFlowContainer().With(d =>
-            {
-                d.RelativeSizeAxes = Axes.X;
-                d.AutoSizeAxes = Axes.Y;
-                d.Direction = FillDirection.Vertical;
-            });
+            ListContainer = CreateListFillFlowContainer()
+                .With(d =>
+                {
+                    d.RelativeSizeAxes = Axes.X;
+                    d.AutoSizeAxes = Axes.Y;
+                    d.Direction = FillDirection.Vertical;
+                });
 
-            InternalChild = ScrollContainer = CreateScrollContainer().With(d =>
-            {
-                d.RelativeSizeAxes = Axes.Both;
-                d.Child = ListContainer;
-            });
+            InternalChild = ScrollContainer = CreateScrollContainer()
+                .With(d =>
+                {
+                    d.RelativeSizeAxes = Axes.Both;
+                    d.Child = ListContainer;
+                });
 
             Items.CollectionChanged += collectionChanged;
         }
@@ -76,9 +79,7 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// Fired whenever new drawable items are added or removed from <see cref="ListContainer"/>.
         /// </summary>
-        protected virtual void OnItemsChanged()
-        {
-        }
+        protected virtual void OnItemsChanged() { }
 
         private void collectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
@@ -123,7 +124,10 @@ namespace osu.Framework.Graphics.Containers
         {
             foreach (var item in items)
             {
-                if (currentlyDraggedItem != null && EqualityComparer<TModel>.Default.Equals(currentlyDraggedItem.Model, item))
+                if (
+                    currentlyDraggedItem != null
+                    && EqualityComparer<TModel>.Default.Equals(currentlyDraggedItem.Model, item)
+                )
                     currentlyDraggedItem = null;
 
                 var drawableItem = itemMap[item];
@@ -147,15 +151,17 @@ namespace osu.Framework.Graphics.Containers
                 if (itemMap.ContainsKey(item))
                 {
                     throw new InvalidOperationException(
-                        $"Duplicate items cannot be added to a {nameof(BindableList<TModel>)} that is currently bound with a {nameof(RearrangeableListContainer<TModel>)}.");
+                        $"Duplicate items cannot be added to a {nameof(BindableList<TModel>)} that is currently bound with a {nameof(RearrangeableListContainer<TModel>)}."
+                    );
                 }
 
-                var drawable = CreateDrawable(item).With(d =>
-                {
-                    d.StartArrangement += startArrangement;
-                    d.Arrange += arrange;
-                    d.EndArrangement += endArrangement;
-                });
+                var drawable = CreateDrawable(item)
+                    .With(d =>
+                    {
+                        d.StartArrangement += startArrangement;
+                        d.Arrange += arrange;
+                        d.EndArrangement += endArrangement;
+                    });
 
                 drawablesToAdd.Add(drawable);
                 itemMap[item] = drawable;
@@ -202,9 +208,11 @@ namespace osu.Framework.Graphics.Containers
             screenSpaceDragPosition = e.ScreenSpaceMousePosition;
         }
 
-        private void arrange(RearrangeableListItem<TModel> item, DragEvent e) => screenSpaceDragPosition = e.ScreenSpaceMousePosition;
+        private void arrange(RearrangeableListItem<TModel> item, DragEvent e) =>
+            screenSpaceDragPosition = e.ScreenSpaceMousePosition;
 
-        private void endArrangement(RearrangeableListItem<TModel> item, DragEndEvent e) => currentlyDraggedItem = null;
+        private void endArrangement(RearrangeableListItem<TModel> item, DragEndEvent e) =>
+            currentlyDraggedItem = null;
 
         protected override void Update()
         {
@@ -232,11 +240,17 @@ namespace osu.Framework.Graphics.Containers
             }
             else if (localPos.Y > ScrollContainer.DrawHeight)
             {
-                float power = Math.Min(MaxExponent, Math.Abs(ScrollContainer.DrawHeight - localPos.Y));
+                float power = Math.Min(
+                    MaxExponent,
+                    Math.Abs(ScrollContainer.DrawHeight - localPos.Y)
+                );
                 scrollSpeed = (float)(MathF.Pow(exp_base, power) * Clock.ElapsedFrameTime * 0.1);
             }
 
-            if ((scrollSpeed < 0 && !ScrollContainer.IsScrolledToStart()) || (scrollSpeed > 0 && !ScrollContainer.IsScrolledToEnd()))
+            if (
+                (scrollSpeed < 0 && !ScrollContainer.IsScrolledToStart())
+                || (scrollSpeed > 0 && !ScrollContainer.IsScrolledToEnd())
+            )
                 ScrollContainer.ScrollBy(scrollSpeed);
         }
 
@@ -298,7 +312,9 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// Creates the <see cref="FillFlowContainer{DrawableRearrangeableListItem}"/> for the items.
         /// </summary>
-        protected virtual FillFlowContainer<RearrangeableListItem<TModel>> CreateListFillFlowContainer() => new FillFlowContainer<RearrangeableListItem<TModel>>();
+        protected virtual FillFlowContainer<
+            RearrangeableListItem<TModel>
+        > CreateListFillFlowContainer() => new FillFlowContainer<RearrangeableListItem<TModel>>();
 
         /// <summary>
         /// Creates the <see cref="ScrollContainer"/> for the list of items.

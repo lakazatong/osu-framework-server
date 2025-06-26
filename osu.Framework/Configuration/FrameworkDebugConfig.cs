@@ -8,9 +8,7 @@ namespace osu.Framework.Configuration
         protected override string Filename => string.Empty;
 
         public FrameworkDebugConfigManager()
-            : base(null)
-        {
-        }
+            : base(null) { }
 
         protected override void InitialiseDefaults()
         {

@@ -24,26 +24,40 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestClickDismiss()
         {
-            AddStep("create container", () => { Child = overlayContainer = new TestFocusedOverlayContainer(); });
+            AddStep(
+                "create container",
+                () =>
+                {
+                    Child = overlayContainer = new TestFocusedOverlayContainer();
+                }
+            );
 
             AddStep("show", () => overlayContainer.Show());
             AddAssert("has focus", () => overlayContainer.HasFocus);
 
-            AddStep("click inside", () =>
-            {
-                InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.Centre);
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "click inside",
+                () =>
+                {
+                    InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.Centre);
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
 
             AddAssert("still has focus", () => overlayContainer.HasFocus);
 
-            AddStep("click outside", () =>
-            {
-                InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20));
-                InputManager.PressButton(MouseButton.Left);
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep(
+                "click outside",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20)
+                    );
+                    InputManager.PressButton(MouseButton.Left);
+                    InputManager.ReleaseButton(MouseButton.Left);
+                }
+            );
 
             AddAssert("lost focus", () => !overlayContainer.HasFocus);
             AddAssert("not visible", () => overlayContainer.State.Value == Visibility.Hidden);
@@ -53,17 +67,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [TestCase(false)]
         public void TestPositionalBlocking(bool isBlocking)
         {
-            AddStep("create container", () =>
-            {
-                Child = parentContainer = new ParentContainer
+            AddStep(
+                "create container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = parentContainer = new ParentContainer
                     {
-                        overlayContainer = new TestFocusedOverlayContainer(blockPositionalInput: isBlocking)
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
+                        {
+                            overlayContainer = new TestFocusedOverlayContainer(
+                                blockPositionalInput: isBlocking
+                            ),
+                        },
+                    };
+                }
+            );
 
             AddStep("show", () => overlayContainer.Show());
 
@@ -72,37 +91,64 @@ namespace osu.Framework.Tests.Visual.UserInterface
             int initialMoveCount = 0;
             int initialHoverCount = 0;
 
-            AddStep("move inside", () =>
-            {
-                initialMoveCount = parentContainer.MouseMoveReceived;
-                initialHoverCount = parentContainer.HoverReceived;
-                InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.Centre);
-            });
+            AddStep(
+                "move inside",
+                () =>
+                {
+                    initialMoveCount = parentContainer.MouseMoveReceived;
+                    initialHoverCount = parentContainer.HoverReceived;
+                    InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.Centre);
+                }
+            );
 
             if (isBlocking)
             {
-                AddAssert("move not received by parent", () =>
-                    parentContainer.MouseMoveReceived == initialMoveCount &&
-                    parentContainer.HoverReceived == initialHoverCount);
+                AddAssert(
+                    "move not received by parent",
+                    () =>
+                        parentContainer.MouseMoveReceived == initialMoveCount
+                        && parentContainer.HoverReceived == initialHoverCount
+                );
 
-                AddStep("move outside", () => InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20)));
+                AddStep(
+                    "move outside",
+                    () =>
+                        InputManager.MoveMouseTo(
+                            overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20)
+                        )
+                );
 
                 // we block positional input screen-wide, therefore parent should still not receive input outside overlay's bounds.
-                AddAssert("move not received by parent", () =>
-                    parentContainer.MouseMoveReceived == initialMoveCount &&
-                    parentContainer.HoverReceived == initialHoverCount);
+                AddAssert(
+                    "move not received by parent",
+                    () =>
+                        parentContainer.MouseMoveReceived == initialMoveCount
+                        && parentContainer.HoverReceived == initialHoverCount
+                );
             }
             else
             {
-                AddAssert("move and hover received by parent", () =>
-                    parentContainer.MouseMoveReceived == ++initialMoveCount &&
-                    parentContainer.HoverReceived == ++initialHoverCount);
+                AddAssert(
+                    "move and hover received by parent",
+                    () =>
+                        parentContainer.MouseMoveReceived == ++initialMoveCount
+                        && parentContainer.HoverReceived == ++initialHoverCount
+                );
 
-                AddStep("move outside", () => InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20)));
+                AddStep(
+                    "move outside",
+                    () =>
+                        InputManager.MoveMouseTo(
+                            overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20)
+                        )
+                );
 
-                AddAssert("only move received by parent", () =>
-                    parentContainer.MouseMoveReceived == ++initialMoveCount &&
-                    parentContainer.HoverReceived == initialHoverCount);
+                AddAssert(
+                    "only move received by parent",
+                    () =>
+                        parentContainer.MouseMoveReceived == ++initialMoveCount
+                        && parentContainer.HoverReceived == initialHoverCount
+                );
             }
         }
 
@@ -110,17 +156,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [TestCase(false)]
         public void TestScrollBlocking(bool isBlocking)
         {
-            AddStep("create container", () =>
-            {
-                Child = parentContainer = new ParentContainer
+            AddStep(
+                "create container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = parentContainer = new ParentContainer
                     {
-                        overlayContainer = new TestFocusedOverlayContainer(blockScrollInput: isBlocking)
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
+                        {
+                            overlayContainer = new TestFocusedOverlayContainer(
+                                blockScrollInput: isBlocking
+                            ),
+                        },
+                    };
+                }
+            );
 
             AddStep("show", () => overlayContainer.Show());
 
@@ -128,25 +179,42 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             int initialScrollCount = 0;
 
-            AddStep("scroll inside", () =>
-            {
-                initialScrollCount = parentContainer.ScrollReceived;
-                InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.Centre);
-                InputManager.ScrollVerticalBy(1);
-            });
+            AddStep(
+                "scroll inside",
+                () =>
+                {
+                    initialScrollCount = parentContainer.ScrollReceived;
+                    InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.Centre);
+                    InputManager.ScrollVerticalBy(1);
+                }
+            );
 
             if (isBlocking)
-                AddAssert("scroll not received by parent", () => parentContainer.ScrollReceived == initialScrollCount);
+                AddAssert(
+                    "scroll not received by parent",
+                    () => parentContainer.ScrollReceived == initialScrollCount
+                );
             else
-                AddAssert("scroll received by parent", () => parentContainer.ScrollReceived == ++initialScrollCount);
+                AddAssert(
+                    "scroll received by parent",
+                    () => parentContainer.ScrollReceived == ++initialScrollCount
+                );
 
-            AddStep("scroll outside", () =>
-            {
-                InputManager.MoveMouseTo(overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20));
-                InputManager.ScrollVerticalBy(1);
-            });
+            AddStep(
+                "scroll outside",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        overlayContainer.ScreenSpaceDrawQuad.TopLeft - new Vector2(20)
+                    );
+                    InputManager.ScrollVerticalBy(1);
+                }
+            );
 
-            AddAssert("scroll received by parent", () => parentContainer.ScrollReceived == ++initialScrollCount);
+            AddAssert(
+                "scroll received by parent",
+                () => parentContainer.ScrollReceived == ++initialScrollCount
+            );
         }
 
         private partial class TestFocusedOverlayContainer : FocusedOverlayContainer
@@ -159,7 +227,11 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             protected override bool BlockScrollInput { get; }
 
-            public TestFocusedOverlayContainer(bool startHidden = true, bool blockPositionalInput = true, bool blockScrollInput = true)
+            public TestFocusedOverlayContainer(
+                bool startHidden = true,
+                bool blockPositionalInput = true,
+                bool blockScrollInput = true
+            )
             {
                 BlockPositionalInput = blockPositionalInput;
                 BlockScrollInput = blockScrollInput;
@@ -174,11 +246,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Cyan,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Cyan, RelativeSizeAxes = Axes.Both },
                 };
 
                 State.ValueChanged += _ => FireCount++;
@@ -186,7 +254,8 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             public int FireCount { get; private set; }
 
-            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => BlockPositionalInput || base.ReceivePositionalInputAt(screenSpacePos);
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) =>
+                BlockPositionalInput || base.ReceivePositionalInputAt(screenSpacePos);
 
             protected override bool OnClick(ClickEvent e)
             {

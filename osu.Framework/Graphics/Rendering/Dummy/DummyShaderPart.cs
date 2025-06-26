@@ -5,8 +5,6 @@ namespace osu.Framework.Graphics.Rendering.Dummy
 {
     internal class DummyShaderPart : IShaderPart
     {
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

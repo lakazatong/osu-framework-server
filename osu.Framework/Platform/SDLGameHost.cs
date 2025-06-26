@@ -21,12 +21,11 @@ namespace osu.Framework.Platform
     {
         public override bool CapsLockEnabled => (Window as ISDLWindow)?.CapsLockPressed == true;
 
-        public override bool OnScreenKeyboardOverlapsGameWindow => (Window as ISDLWindow)?.KeyboardAttached == false;
+        public override bool OnScreenKeyboardOverlapsGameWindow =>
+            (Window as ISDLWindow)?.KeyboardAttached == false;
 
         protected SDLGameHost(string gameName, HostOptions? options = null)
-            : base(gameName, options)
-        {
-        }
+            : base(gameName, options) { }
 
         protected override TextInputSource CreateTextInput()
         {
@@ -36,8 +35,8 @@ namespace osu.Framework.Platform
             return base.CreateTextInput();
         }
 
-        protected override Clipboard CreateClipboard()
-            => FrameworkEnvironment.UseSDL3
+        protected override Clipboard CreateClipboard() =>
+            FrameworkEnvironment.UseSDL3
                 ? new SDL3Clipboard(PngFormat.Instance) // PNG works well on linux
                 : new SDL2Clipboard();
 

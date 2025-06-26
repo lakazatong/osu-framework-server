@@ -11,7 +11,9 @@ namespace osu.Framework.Platform.Apple.Native
         internal IntPtr Handle { get; }
 
         private static readonly IntPtr class_pointer = Class.Get("NSString");
-        private static readonly IntPtr sel_string_with_characters = Selector.Get("stringWithCharacters:length:");
+        private static readonly IntPtr sel_string_with_characters = Selector.Get(
+            "stringWithCharacters:length:"
+        );
         private static readonly IntPtr sel_utf8_string = Selector.Get("UTF8String");
 
         internal NSString(IntPtr handle)
@@ -19,12 +21,20 @@ namespace osu.Framework.Platform.Apple.Native
             Handle = handle;
         }
 
-        public override string ToString() => Marshal.PtrToStringUTF8(Interop.SendIntPtr(Handle, sel_utf8_string))!;
+        public override string ToString() =>
+            Marshal.PtrToStringUTF8(Interop.SendIntPtr(Handle, sel_utf8_string))!;
 
         internal static unsafe NSString FromString(string str)
         {
             fixed (char* strPtr = str)
-                return new NSString(Interop.SendIntPtr(class_pointer, sel_string_with_characters, (IntPtr)strPtr, str.Length));
+                return new NSString(
+                    Interop.SendIntPtr(
+                        class_pointer,
+                        sel_string_with_characters,
+                        (IntPtr)strPtr,
+                        str.Length
+                    )
+                );
         }
     }
 }

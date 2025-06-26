@@ -71,7 +71,16 @@ namespace osu.Framework.Graphics.Veldrid
         /// <param name="level">The texture level.</param>
         /// <param name="data">The texture data.</param>
         /// <typeparam name="T">The pixel type.</typeparam>
-        void UpdateTexture<T>(Texture texture, int x, int y, int width, int height, int level, ReadOnlySpan<T> data) where T : unmanaged;
+        void UpdateTexture<T>(
+            Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int level,
+            ReadOnlySpan<T> data
+        )
+            where T : unmanaged;
 
         /// <summary>
         /// Updates a <see cref="global::Veldrid.Texture"/> with a <paramref name="data"/> at the specified coordinates.
@@ -84,7 +93,16 @@ namespace osu.Framework.Graphics.Veldrid
         /// <param name="level">The texture level.</param>
         /// <param name="data">The texture data.</param>
         /// <param name="rowLengthInBytes">The number of bytes per row of the image to read from <paramref name="data"/>.</param>
-        void UpdateTexture(Texture texture, int x, int y, int width, int height, int level, IntPtr data, int rowLengthInBytes);
+        void UpdateTexture(
+            Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int level,
+            IntPtr data,
+            int rowLengthInBytes
+        );
 
         /// <summary>
         /// Enqueues as texture to be uploaded.

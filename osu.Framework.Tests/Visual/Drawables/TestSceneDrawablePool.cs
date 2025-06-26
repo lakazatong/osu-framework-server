@@ -32,7 +32,10 @@ namespace osu.Framework.Tests.Visual.Drawables
             resetWithNewPool(() => new TestPool(TimePerAction, pool_size));
 
             for (int i = 0; i < 3; i++)
-                AddAssert("check drawable is in ready state", () => pool.Get().LoadState == LoadState.Ready);
+                AddAssert(
+                    "check drawable is in ready state",
+                    () => pool.Get().LoadState == LoadState.Ready
+                );
         }
 
         [Test]
@@ -46,7 +49,10 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             AddUntilStep("all returned to pool", () => pool.CountAvailable == pool_size);
 
-            AddAssert("consumed drawables report returned to pool", () => consumed.All(d => d.IsInPool));
+            AddAssert(
+                "consumed drawables report returned to pool",
+                () => consumed.All(d => d.IsInPool)
+            );
             AddAssert("consumed drawables not disposed", () => consumed.All(d => !d.IsDisposed));
 
             AddAssert("consumed less than pool size", () => consumed.Count < pool_size);
@@ -65,7 +71,10 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             AddAssert("pool grew in size", () => pool.CountAvailable > pool_size);
 
-            AddAssert("consumed drawables report returned to pool", () => consumed.All(d => d.IsInPool));
+            AddAssert(
+                "consumed drawables report returned to pool",
+                () => consumed.All(d => d.IsInPool)
+            );
             AddAssert("consumed drawables not disposed", () => consumed.All(d => !d.IsDisposed));
         }
 
@@ -75,7 +84,10 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             resetWithNewPool(() => new TestPool(TimePerAction * 20, initialPoolSize));
 
-            AddUntilStep("available count is correct", () => pool.CountAvailable == initialPoolSize);
+            AddUntilStep(
+                "available count is correct",
+                () => pool.CountAvailable == initialPoolSize
+            );
         }
 
         [Test]
@@ -92,18 +104,21 @@ namespace osu.Framework.Tests.Visual.Drawables
             AddUntilStep("free was run", () => drawable.FreedCount == 1);
             AddUntilStep("was returned", () => pool.CountAvailable == 1);
 
-            AddAssert("manually return twice throws", () =>
-            {
-                try
+            AddAssert(
+                "manually return twice throws",
+                () =>
                 {
-                    drawable.Return();
-                    return false;
+                    try
+                    {
+                        drawable.Return();
+                        return false;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        return true;
+                    }
                 }
-                catch (InvalidOperationException)
-                {
-                    return true;
-                }
-            });
+            );
         }
 
         [Test]
@@ -111,17 +126,21 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             resetWithNewPool(() => new TestPool(TimePerAction * 20, 1, 1));
 
-            TestDrawable first = null!, second = null!;
+            TestDrawable first = null!,
+                second = null!;
 
             AddStep("consume item", () => first = consumeDrawable());
 
             AddAssert("pool is empty", () => pool.CountAvailable == 0);
 
-            AddStep("consume and return another item", () =>
-            {
-                second = pool.Get();
-                second.Return();
-            });
+            AddStep(
+                "consume and return another item",
+                () =>
+                {
+                    second = pool.Get();
+                    second.Return();
+                }
+            );
 
             AddAssert("first item still in use", () => first.IsInUse);
 
@@ -205,14 +224,20 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             resetWithNewPool(() => new TestPool(TimePerAction * 20, 10, pool_size));
 
-            AddStep("get many pooled drawables", () =>
-            {
-                retrieved.Clear();
-                for (int i = 0; i < pool_size * 2; i++)
-                    retrieved.Add(pool.Get());
-            });
+            AddStep(
+                "get many pooled drawables",
+                () =>
+                {
+                    retrieved.Clear();
+                    for (int i = 0; i < pool_size * 2; i++)
+                        retrieved.Add(pool.Get());
+                }
+            );
 
-            AddAssert("all drawables in ready state", () => retrieved.All(d => d.LoadState == LoadState.Ready));
+            AddAssert(
+                "all drawables in ready state",
+                () => retrieved.All(d => d.LoadState == LoadState.Ready)
+            );
         }
 
         [Test]
@@ -223,19 +248,32 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             resetWithNewPool(() => new TestPool(TimePerAction * 20, initial_size));
 
-            AddStep("get many pooled drawables", () =>
-            {
-                for (int i = 0; i < requested_drawables; i++)
-                    consumeDrawable();
-            });
+            AddStep(
+                "get many pooled drawables",
+                () =>
+                {
+                    for (int i = 0; i < requested_drawables; i++)
+                        consumeDrawable();
+                }
+            );
 
             AddAssert("pool saturated", () => pool.CountAvailable, () => Is.EqualTo(0));
 
-            AddUntilStep("pool size returned to correct maximum", () => pool.CountAvailable == requested_drawables);
+            AddUntilStep(
+                "pool size returned to correct maximum",
+                () => pool.CountAvailable == requested_drawables
+            );
 
-            AddUntilStep("excess constructed zero", () => pool.CountExcessConstructed, () => Is.Zero);
+            AddUntilStep(
+                "excess constructed zero",
+                () => pool.CountExcessConstructed,
+                () => Is.Zero
+            );
 
-            AddUntilStep("count in pool is correct", () => consumed.Count(d => d.IsInPool) == requested_drawables);
+            AddUntilStep(
+                "count in pool is correct",
+                () => consumed.Count(d => d.IsInPool) == requested_drawables
+            );
             AddAssert("all drawables in pool", () => consumed.All(d => d.IsInPool));
         }
 
@@ -245,20 +283,35 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             resetWithNewPool(() => new TestPool(TimePerAction * 20, 10, maxPoolSize));
 
-            AddStep("get many pooled drawables", () =>
-            {
-                for (int i = 0; i < maxPoolSize * 2; i++)
-                    consumeDrawable();
-            });
+            AddStep(
+                "get many pooled drawables",
+                () =>
+                {
+                    for (int i = 0; i < maxPoolSize * 2; i++)
+                        consumeDrawable();
+                }
+            );
 
             AddAssert("pool saturated", () => pool.CountAvailable, () => Is.EqualTo(0));
 
-            AddUntilStep("pool size returned to correct maximum", () => pool.CountAvailable == maxPoolSize);
-            AddUntilStep("excess constructed count correct", () => pool.CountExcessConstructed == maxPoolSize);
+            AddUntilStep(
+                "pool size returned to correct maximum",
+                () => pool.CountAvailable == maxPoolSize
+            );
+            AddUntilStep(
+                "excess constructed count correct",
+                () => pool.CountExcessConstructed == maxPoolSize
+            );
 
-            AddUntilStep("count in pool is correct", () => consumed.Count(d => d.IsInPool) == maxPoolSize);
+            AddUntilStep(
+                "count in pool is correct",
+                () => consumed.Count(d => d.IsInPool) == maxPoolSize
+            );
             AddAssert("excess drawables were used", () => consumed.Any(d => !d.IsInPool));
-            AddUntilStep("non-returned drawables disposed", () => consumed.Where(d => !d.IsInPool).All(d => d.IsDisposed));
+            AddUntilStep(
+                "non-returned drawables disposed",
+                () => consumed.Where(d => !d.IsInPool).All(d => d.IsDisposed)
+            );
         }
 
         [Test]
@@ -294,19 +347,24 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             TestDrawable drawable = null!;
 
-            AddStep("consume item and rewind clock", () =>
-            {
-                var clock = new ManualClock { CurrentTime = Time.Current };
-
-                Add(new Container
+            AddStep(
+                "consume item and rewind clock",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Clock = new FramedClock(clock),
-                    Child = drawable = consumeDrawable(false)
-                });
+                    var clock = new ManualClock { CurrentTime = Time.Current };
 
-                clock.CurrentTime = 0;
-            });
+                    Add(
+                        new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Clock = new FramedClock(clock),
+                            Child = drawable = consumeDrawable(false),
+                        }
+                    );
+
+                    clock.CurrentTime = 0;
+                }
+            );
 
             AddAssert("child prepared", () => drawable.PreparedCount == 1);
         }
@@ -343,16 +401,15 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             AddStep("reset stats", () => consumed.Clear());
 
-            AddStep("create pool", () =>
-            {
-                pool = createPool();
-
-                Children = new Drawable[]
+            AddStep(
+                "create pool",
+                () =>
                 {
-                    pool,
-                    count = new SpriteText(),
-                };
-            });
+                    pool = createPool();
+
+                    Children = new Drawable[] { pool, count = new SpriteText() };
+                }
+            );
         }
 
         private partial class TestPool : DrawablePool<TestDrawable>
@@ -383,9 +440,7 @@ namespace osu.Framework.Tests.Visual.Drawables
             }
 
             public TestDrawable()
-                : this(1000)
-            {
-            }
+                : this(1000) { }
 
             public TestDrawable(double fadeTime)
             {
@@ -397,11 +452,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Green,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Green, RelativeSizeAxes = Axes.Both },
                     text = new SpriteText
                     {
                         Text = "-",

@@ -20,89 +20,155 @@ namespace osu.Framework.Tests.Visual.Bindables
         [Test]
         public void TestBindableAutoUnbindingAssign()
         {
-            TestExposedBindableDrawable drawable1 = null, drawable2 = null, drawable3 = null, drawable4 = null;
+            TestExposedBindableDrawable drawable1 = null,
+                drawable2 = null,
+                drawable3 = null,
+                drawable4 = null;
 
-            AddStep("add drawables", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "add drawables",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(5),
-                    Children = new Drawable[]
+                    Child = new FillFlowContainer
                     {
-                        drawable1 = new TestExposedBindableDrawable { Bindable = new Bindable<int>() },
-                        drawable2 = new TestExposedBindableDrawable { Bindable = drawable1.Bindable.GetBoundCopy() },
-                        drawable3 = new TestExposedBindableDrawable(true) { Bindable = drawable1.Bindable }, // an example of a bad usage of bindables
-                        drawable4 = new TestExposedBindableDrawable { Bindable = drawable1.Bindable.GetBoundCopy() },
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(5),
+                        Children = new Drawable[]
+                        {
+                            drawable1 = new TestExposedBindableDrawable
+                            {
+                                Bindable = new Bindable<int>(),
+                            },
+                            drawable2 = new TestExposedBindableDrawable
+                            {
+                                Bindable = drawable1.Bindable.GetBoundCopy(),
+                            },
+                            drawable3 = new TestExposedBindableDrawable(true)
+                            {
+                                Bindable = drawable1.Bindable,
+                            }, // an example of a bad usage of bindables
+                            drawable4 = new TestExposedBindableDrawable
+                            {
+                                Bindable = drawable1.Bindable.GetBoundCopy(),
+                            },
+                        },
+                    };
+                }
+            );
 
             AddStep("attempt value transfer", () => drawable1.Bindable.Value = 10);
 
-            AddAssert("transfer 1-2 completed", () => drawable1.Bindable.Value == drawable2.Bindable.Value);
-            AddAssert("transfer 1-3 completed", () => drawable1.Bindable.Value == drawable3.Bindable.Value);
-            AddAssert("transfer 1-4 completed", () => drawable1.Bindable.Value == drawable4.Bindable.Value);
+            AddAssert(
+                "transfer 1-2 completed",
+                () => drawable1.Bindable.Value == drawable2.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-3 completed",
+                () => drawable1.Bindable.Value == drawable3.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-4 completed",
+                () => drawable1.Bindable.Value == drawable4.Bindable.Value
+            );
 
             AddStep("expire child 4", () => drawable4.Expire());
 
             AddStep("attempt value transfer", () => drawable1.Bindable.Value = 20);
 
-            AddAssert("transfer 1-2 completed", () => drawable1.Bindable.Value == drawable2.Bindable.Value);
-            AddAssert("transfer 1-3 completed", () => drawable1.Bindable.Value == drawable3.Bindable.Value);
-            AddAssert("transfer 1-4 skipped", () => drawable1.Bindable.Value != drawable4.Bindable.Value);
+            AddAssert(
+                "transfer 1-2 completed",
+                () => drawable1.Bindable.Value == drawable2.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-3 completed",
+                () => drawable1.Bindable.Value == drawable3.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-4 skipped",
+                () => drawable1.Bindable.Value != drawable4.Bindable.Value
+            );
 
             AddStep("expire child 3", () => drawable3.Expire());
 
             AddStep("attempt value transfer", () => drawable1.Bindable.Value = 10);
 
             // fails due to drawable3 being expired/disposed with a direct reference to drawable1's bindable.
-            AddAssert("transfer 1-2 fails", () => drawable1.Bindable.Value != drawable2.Bindable.Value);
+            AddAssert(
+                "transfer 1-2 fails",
+                () => drawable1.Bindable.Value != drawable2.Bindable.Value
+            );
         }
 
         [Test]
         public void TestBindableAutoUnbindingResolution()
         {
-            TestResolvedBindableDrawable drawable1 = null, drawable2 = null, drawable3 = null, drawable4 = null;
+            TestResolvedBindableDrawable drawable1 = null,
+                drawable2 = null,
+                drawable3 = null,
+                drawable4 = null;
 
-            AddStep("add drawables", () =>
-            {
-                Child = new BindableExposingFillFlowContainer
+            AddStep(
+                "add drawables",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(5),
-                    Children = new Drawable[]
+                    Child = new BindableExposingFillFlowContainer
                     {
-                        drawable1 = new TestResolvedBindableDrawable(),
-                        drawable2 = new TestResolvedBindableDrawable(),
-                        drawable3 = new TestResolvedBindableDrawable(true), // an example of a bad usage of bindables
-                        drawable4 = new TestResolvedBindableDrawable(),
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(5),
+                        Children = new Drawable[]
+                        {
+                            drawable1 = new TestResolvedBindableDrawable(),
+                            drawable2 = new TestResolvedBindableDrawable(),
+                            drawable3 = new TestResolvedBindableDrawable(true), // an example of a bad usage of bindables
+                            drawable4 = new TestResolvedBindableDrawable(),
+                        },
+                    };
+                }
+            );
 
             AddStep("attempt value transfer", () => drawable1.Bindable.Value = 10);
 
-            AddAssert("transfer 1-2 completed", () => drawable1.Bindable.Value == drawable2.Bindable.Value);
-            AddAssert("transfer 1-3 completed", () => drawable1.Bindable.Value == drawable3.Bindable.Value);
-            AddAssert("transfer 1-4 completed", () => drawable1.Bindable.Value == drawable4.Bindable.Value);
+            AddAssert(
+                "transfer 1-2 completed",
+                () => drawable1.Bindable.Value == drawable2.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-3 completed",
+                () => drawable1.Bindable.Value == drawable3.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-4 completed",
+                () => drawable1.Bindable.Value == drawable4.Bindable.Value
+            );
 
             AddStep("expire child 4", () => drawable4.Expire());
 
             AddStep("attempt value transfer", () => drawable1.Bindable.Value = 20);
 
-            AddAssert("transfer 1-2 completed", () => drawable1.Bindable.Value == drawable2.Bindable.Value);
-            AddAssert("transfer 1-3 completed", () => drawable1.Bindable.Value == drawable3.Bindable.Value);
-            AddAssert("transfer 1-4 skipped", () => drawable1.Bindable.Value != drawable4.Bindable.Value);
+            AddAssert(
+                "transfer 1-2 completed",
+                () => drawable1.Bindable.Value == drawable2.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-3 completed",
+                () => drawable1.Bindable.Value == drawable3.Bindable.Value
+            );
+            AddAssert(
+                "transfer 1-4 skipped",
+                () => drawable1.Bindable.Value != drawable4.Bindable.Value
+            );
 
             AddStep("expire child 3", () => drawable3.Expire());
 
             AddStep("attempt value transfer", () => drawable1.Bindable.Value = 10);
 
             // fails due to drawable3 being expired/disposed with a direct reference to drawable1's bindable.
-            AddAssert("transfer 1-2 fails", () => drawable1.Bindable.Value != drawable2.Bindable.Value);
+            AddAssert(
+                "transfer 1-2 fails",
+                () => drawable1.Bindable.Value != drawable2.Bindable.Value
+            );
         }
 
         public partial class BindableExposingFillFlowContainer : FillFlowContainer
@@ -152,11 +218,7 @@ namespace osu.Framework.Tests.Visual.Bindables
                         Colour = badActor ? Color4.Red : Color4.Green,
                         RelativeSizeAxes = Axes.Both,
                     },
-                    spriteText = new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    }
+                    spriteText = new SpriteText { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                 };
             }
 

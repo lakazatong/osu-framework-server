@@ -40,7 +40,11 @@ namespace osu.Framework.Statistics
         /// <param name="targetThread">The thread to monitor.</param>
         /// <param name="clock">The clock to use for elapsed time checks.</param>
         /// <param name="threadName">A name used for tracking purposes. Can be used to track potentially changing threads under a single name.</param>
-        public BackgroundStackTraceCollector(Thread targetThread, StopwatchClock clock, string threadName = null)
+        public BackgroundStackTraceCollector(
+            Thread targetThread,
+            StopwatchClock clock,
+            string threadName = null
+        )
         {
             if (Debugger.IsAttached)
                 return;
@@ -51,7 +55,9 @@ namespace osu.Framework.Statistics
 
             logger = new Lazy<Logger>(() =>
             {
-                var l = Logger.GetLogger($"performance-{threadName?.ToLowerInvariant() ?? "unknown"}");
+                var l = Logger.GetLogger(
+                    $"performance-{threadName?.ToLowerInvariant() ?? "unknown"}"
+                );
                 l.OutputToListeners = false;
                 return l;
             });
@@ -65,7 +71,8 @@ namespace osu.Framework.Statistics
             get => enabled;
             set
             {
-                if (value == enabled || targetThread == null) return;
+                if (value == enabled || targetThread == null)
+                    return;
 
                 enabled = value;
                 if (enabled)
@@ -108,11 +115,18 @@ namespace osu.Framework.Statistics
                 double elapsed = clock.ElapsedMilliseconds - LastConsumptionTime;
                 double threshold = spikeRecordThreshold / 2;
 
-                if (targetThread.IsAlive && isCollecting && clock.ElapsedMilliseconds - LastConsumptionTime > spikeRecordThreshold / 2 && backgroundMonitorStackTrace == null)
+                if (
+                    targetThread.IsAlive
+                    && isCollecting
+                    && clock.ElapsedMilliseconds - LastConsumptionTime > spikeRecordThreshold / 2
+                    && backgroundMonitorStackTrace == null
+                )
                 {
                     try
                     {
-                        Logger.Log($"Retrieving background stack trace on {threadName} thread ({elapsed:N0}ms over threshold of {threshold:N0}ms)...");
+                        Logger.Log(
+                            $"Retrieving background stack trace on {threadName} thread ({elapsed:N0}ms over threshold of {threshold:N0}ms)..."
+                        );
                         backgroundMonitorStackTrace = getStackTrace(targetThread);
                         Logger.Log("Done!");
 
@@ -138,7 +152,8 @@ namespace osu.Framework.Statistics
 
         internal void NewFrame(double elapsedFrameTime, double newSpikeThreshold)
         {
-            if (targetThread == null) return;
+            if (targetThread == null)
+                return;
 
             isCollecting = true;
 
@@ -157,7 +172,9 @@ namespace osu.Framework.Statistics
             logMessage.AppendLine($@"| Slow frame on thread ""{threadName}""");
             logMessage.AppendLine(@"|");
             logMessage.AppendLine($@"| * Thread time  : {clock.CurrentTime:#0,#}ms");
-            logMessage.AppendLine($@"| * Frame length : {elapsedFrameTime:#0,#}ms (allowable: {currentThreshold:#0,#}ms)");
+            logMessage.AppendLine(
+                $@"| * Frame length : {elapsedFrameTime:#0,#}ms (allowable: {currentThreshold:#0,#}ms)"
+            );
 
             logMessage.AppendLine(@"|");
 
@@ -187,10 +204,13 @@ namespace osu.Framework.Statistics
                 {
                     using (var runtime = target.ClrVersions[0].CreateRuntime())
                     {
-                        return runtime.Threads
-                                      .FirstOrDefault(t => t.ManagedThreadId == targetThread.ManagedThreadId)?
-                                      .EnumerateStackTrace().Select(f => f.ToString())
-                                      .ToArray();
+                        return runtime
+                            .Threads.FirstOrDefault(t =>
+                                t.ManagedThreadId == targetThread.ManagedThreadId
+                            )
+                            ?.EnumerateStackTrace()
+                            .Select(f => f.ToString())
+                            .ToArray();
                     }
                 }
             }

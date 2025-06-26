@@ -33,12 +33,9 @@ namespace osu.Framework.Tests.Visual.Graphics
                     Background = new Sprite
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Texture = textures.Get("sample-texture")
+                        Texture = textures.Get("sample-texture"),
                     },
-                    Stencil = circlesContainer = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }
+                    Stencil = circlesContainer = new Container { RelativeSizeAxes = Axes.Both },
                 },
                 new BufferedContainer(new[] { RenderBufferFormat.D32S8 })
                 {
@@ -53,20 +50,18 @@ namespace osu.Framework.Tests.Visual.Graphics
                         Background = new Sprite
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Texture = textures.Get("sample-texture")
+                            Texture = textures.Get("sample-texture"),
                         },
-                        Stencil = circlesContainerBuffered = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
-                    }
+                        Stencil = circlesContainerBuffered =
+                            new Container { RelativeSizeAxes = Axes.Both },
+                    },
                 },
                 new Label("Container"),
                 new Label("BufferedContainer")
                 {
                     Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight
-                }
+                    Origin = Anchor.TopRight,
+                },
             };
 
             const float circle_radius = 0.05f;
@@ -76,23 +71,27 @@ namespace osu.Framework.Tests.Visual.Graphics
             {
                 for (float yPos = 0; yPos < 1; yPos += circle_radius + spacing)
                 {
-                    circlesContainer.Add(new CircularProgress
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(circle_radius),
-                        RelativePositionAxes = Axes.Both,
-                        Position = new Vector2(xPos, yPos),
-                        Progress = 1
-                    });
+                    circlesContainer.Add(
+                        new CircularProgress
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(circle_radius),
+                            RelativePositionAxes = Axes.Both,
+                            Position = new Vector2(xPos, yPos),
+                            Progress = 1,
+                        }
+                    );
 
-                    circlesContainerBuffered.Add(new CircularProgress
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(circle_radius),
-                        RelativePositionAxes = Axes.Both,
-                        Position = new Vector2(xPos, yPos),
-                        Progress = 1
-                    });
+                    circlesContainerBuffered.Add(
+                        new CircularProgress
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(circle_radius),
+                            RelativePositionAxes = Axes.Both,
+                            Position = new Vector2(xPos, yPos),
+                            Progress = 1,
+                        }
+                    );
                 }
             }
         }
@@ -117,7 +116,7 @@ namespace osu.Framework.Tests.Visual.Graphics
                 InternalChildren = new Drawable[]
                 {
                     backgroundContainer = new Container { RelativeSizeAxes = Axes.Both },
-                    stencilContainer = new Container { RelativeSizeAxes = Axes.Both }
+                    stencilContainer = new Container { RelativeSizeAxes = Axes.Both },
                 };
             }
 
@@ -127,9 +126,7 @@ namespace osu.Framework.Tests.Visual.Graphics
         private class StencilDrawNode : DrawNode, ICompositeDrawNode
         {
             public StencilDrawNode(IDrawable source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             protected override void Draw(IRenderer renderer)
             {
@@ -149,20 +146,25 @@ namespace osu.Framework.Tests.Visual.Graphics
             private void drawStencil(IRenderer renderer, DrawNode drawNode)
             {
                 // Populate the stencil buffer with 255 in places defined by the draw node.
-                renderer.PushStencilInfo(new StencilInfo(
-                    stencilTest: true,
-                    testFunction: BufferTestFunction.Always,
-                    255,
-                    passed: StencilOperation.Replace));
+                renderer.PushStencilInfo(
+                    new StencilInfo(
+                        stencilTest: true,
+                        testFunction: BufferTestFunction.Always,
+                        255,
+                        passed: StencilOperation.Replace
+                    )
+                );
 
                 // Don't write colour.
-                renderer.SetBlend(new BlendingParameters
-                {
-                    Source = BlendingType.Zero,
-                    Destination = BlendingType.One,
-                    SourceAlpha = BlendingType.Zero,
-                    DestinationAlpha = BlendingType.One,
-                });
+                renderer.SetBlend(
+                    new BlendingParameters
+                    {
+                        Source = BlendingType.Zero,
+                        Destination = BlendingType.One,
+                        SourceAlpha = BlendingType.Zero,
+                        DestinationAlpha = BlendingType.One,
+                    }
+                );
 
                 DrawOther(drawNode, renderer);
 
@@ -173,14 +175,16 @@ namespace osu.Framework.Tests.Visual.Graphics
             private void drawBackground(IRenderer renderer, DrawNode drawNode)
             {
                 // Only pass the stencil test where the stencil buffer value is 255.
-                renderer.PushStencilInfo(new StencilInfo(
-                    stencilTest: true,
-                    testFunction: BufferTestFunction.Equal,
-                    mask: 255,
-                    testValue: 255,
-                    stencilFailed: StencilOperation.Keep,
-                    passed: StencilOperation.Keep
-                ));
+                renderer.PushStencilInfo(
+                    new StencilInfo(
+                        stencilTest: true,
+                        testFunction: BufferTestFunction.Equal,
+                        mask: 255,
+                        testValue: 255,
+                        stencilFailed: StencilOperation.Keep,
+                        passed: StencilOperation.Keep
+                    )
+                );
 
                 DrawOther(drawNode, renderer);
 
@@ -200,16 +204,8 @@ namespace osu.Framework.Tests.Visual.Graphics
                 Margin = new MarginPadding(10);
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black
-                    },
-                    new SpriteText
-                    {
-                        Text = text,
-                        Margin = new MarginPadding(10)
-                    }
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Black },
+                    new SpriteText { Text = text, Margin = new MarginPadding(10) },
                 };
             }
         }

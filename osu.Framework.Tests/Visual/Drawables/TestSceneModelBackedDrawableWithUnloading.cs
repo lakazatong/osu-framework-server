@@ -22,48 +22,78 @@ namespace osu.Framework.Tests.Visual.Drawables
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup drawable", () =>
-            {
-                Child = backedDrawable = new TestUnloadingModelBackedDrawable(TimePerAction)
+            AddStep(
+                "setup drawable",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(200f),
-                    RelativePositionAxes = Axes.Both,
-                };
-            });
+                    Child = backedDrawable = new TestUnloadingModelBackedDrawable(TimePerAction)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(200f),
+                        RelativePositionAxes = Axes.Both,
+                    };
+                }
+            );
 
             AddUntilStep("wait for load", () => backedDrawable.DisplayedDrawable != null);
-            AddStep("get displayed drawable", () => initialDrawable = backedDrawable.DisplayedDrawable);
+            AddStep(
+                "get displayed drawable",
+                () => initialDrawable = backedDrawable.DisplayedDrawable
+            );
         }
 
         [Test]
         public void TestUnloading()
         {
             AddStep("mask away", () => backedDrawable.Position = new Vector2(-2));
-            AddUntilStep("drawable unloaded", () => initialDrawable?.IsDisposed == true && backedDrawable.DisplayedDrawable == null);
+            AddUntilStep(
+                "drawable unloaded",
+                () =>
+                    initialDrawable?.IsDisposed == true && backedDrawable.DisplayedDrawable == null
+            );
 
             AddStep("return back", () => backedDrawable.Position = Vector2.Zero);
-            AddUntilStep("new drawable displayed", () => backedDrawable.DisplayedDrawable != null && backedDrawable.DisplayedDrawable != initialDrawable);
+            AddUntilStep(
+                "new drawable displayed",
+                () =>
+                    backedDrawable.DisplayedDrawable != null
+                    && backedDrawable.DisplayedDrawable != initialDrawable
+            );
         }
 
         [Test]
         public void TestUnloadingWithNullAfterUnload()
         {
             AddStep("mask away", () => backedDrawable.Position = new Vector2(-2));
-            AddUntilStep("drawable unloaded", () => initialDrawable?.IsDisposed == true && backedDrawable.DisplayedDrawable == null);
+            AddUntilStep(
+                "drawable unloaded",
+                () =>
+                    initialDrawable?.IsDisposed == true && backedDrawable.DisplayedDrawable == null
+            );
 
-            AddStep("set providing drawable to null", () => backedDrawable.ReturnNullDrawable = true);
+            AddStep(
+                "set providing drawable to null",
+                () => backedDrawable.ReturnNullDrawable = true
+            );
 
             AddStep("return back", () => backedDrawable.Position = Vector2.Zero);
-            AddUntilStep("new drawable displayed", () => backedDrawable.DisplayedDrawable != null && backedDrawable.DisplayedDrawable != initialDrawable);
+            AddUntilStep(
+                "new drawable displayed",
+                () =>
+                    backedDrawable.DisplayedDrawable != null
+                    && backedDrawable.DisplayedDrawable != initialDrawable
+            );
         }
 
         [Test]
         public void TestChangeWhileMaskedAway()
         {
             AddStep("mask away", () => backedDrawable.Position = new Vector2(-2));
-            AddUntilStep("wait for drawable unload", () => backedDrawable.DisplayedDrawable == null);
+            AddUntilStep(
+                "wait for drawable unload",
+                () => backedDrawable.DisplayedDrawable == null
+            );
 
             AddStep("change model", () => backedDrawable.Model = 1);
             AddWaitStep("wait a bit", 5);
@@ -77,16 +107,25 @@ namespace osu.Framework.Tests.Visual.Drawables
         public void TestTransformsAppliedOnReloading()
         {
             AddStep("mask away", () => backedDrawable.Position = new Vector2(-2));
-            AddUntilStep("wait for drawable unload", () => backedDrawable.DisplayedDrawable == null);
+            AddUntilStep(
+                "wait for drawable unload",
+                () => backedDrawable.DisplayedDrawable == null
+            );
 
             AddStep("reset transform counters", () => backedDrawable.ResetTransformCounters());
             AddStep("return back", () => backedDrawable.Position = Vector2.Zero);
-            AddUntilStep("wait for new drawable", () => backedDrawable.DisplayedDrawable?.IsLoaded == true);
+            AddUntilStep(
+                "wait for new drawable",
+                () => backedDrawable.DisplayedDrawable?.IsLoaded == true
+            );
 
             // on loading, ModelBackedDrawable applies immediate hide transform on new drawable then applies show transform.
             AddAssert("initial hide transform applied", () => backedDrawable.HideTransforms == 1);
             AddAssert("show transform applied", () => backedDrawable.ShowTransforms == 1);
-            AddUntilStep("new drawable alpha = 1", () => backedDrawable.DisplayedDrawable?.Alpha == 1);
+            AddUntilStep(
+                "new drawable alpha = 1",
+                () => backedDrawable.DisplayedDrawable?.Alpha == 1
+            );
         }
 
         private partial class TestUnloadingModelBackedDrawable : ModelBackedDrawable<int>
@@ -115,7 +154,10 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             public void ResetTransformCounters() => ShowTransforms = HideTransforms = 0;
 
-            protected override DelayedLoadWrapper CreateDelayedLoadWrapper(Func<Drawable> createContentFunc, double timeBeforeLoad)
+            protected override DelayedLoadWrapper CreateDelayedLoadWrapper(
+                Func<Drawable> createContentFunc,
+                double timeBeforeLoad
+            )
             {
                 return new DelayedLoadUnloadWrapper(createContentFunc, timeBeforeLoad, UnloadDelay);
             }
@@ -142,18 +184,14 @@ namespace osu.Framework.Tests.Visual.Drawables
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Gray,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray },
                         new SpriteText
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Text = $"unload-wrapped model {model}",
-                        }
-                    }
+                        },
+                    },
                 };
             }
         }

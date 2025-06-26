@@ -16,7 +16,8 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
         public TestSceneCheckboxes()
         {
-            BasicCheckbox swap, rotate;
+            BasicCheckbox swap,
+                rotate;
 
             Children = new Drawable[]
             {
@@ -30,25 +31,12 @@ namespace osu.Framework.Tests.Visual.UserInterface
                     AutoSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        basic = new BasicCheckbox
-                        {
-                            LabelText = @"Basic Test"
-                        },
-                        new BasicCheckbox
-                        {
-                            LabelText = @"FadeDuration Test",
-                            FadeDuration = 300
-                        },
-                        swap = new BasicCheckbox
-                        {
-                            LabelText = @"Checkbox Position",
-                        },
-                        rotate = new BasicCheckbox
-                        {
-                            LabelText = @"Enabled/Disabled Actions Test",
-                        },
-                    }
-                }
+                        basic = new BasicCheckbox { LabelText = @"Basic Test" },
+                        new BasicCheckbox { LabelText = @"FadeDuration Test", FadeDuration = 300 },
+                        swap = new BasicCheckbox { LabelText = @"Checkbox Position" },
+                        rotate = new BasicCheckbox { LabelText = @"Enabled/Disabled Actions Test" },
+                    },
+                },
             };
 
             swap.Current.ValueChanged += check => swap.RightHandedCheckbox = check.NewValue;

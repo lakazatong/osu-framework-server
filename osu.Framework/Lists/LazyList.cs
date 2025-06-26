@@ -41,7 +41,9 @@ namespace osu.Framework.Lists
             this.map = map;
         }
 
-        IEnumerator<TTarget> IEnumerable<TTarget>.GetEnumerator() => source.Select(s => map(s)).GetEnumerator();
+        IEnumerator<TTarget> IEnumerable<TTarget>.GetEnumerator() =>
+            source.Select(s => map(s)).GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<TTarget>)this).GetEnumerator();
     }
 }

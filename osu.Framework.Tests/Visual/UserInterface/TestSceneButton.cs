@@ -17,33 +17,39 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
         public TestSceneButton()
         {
-            Add(button = new BasicButton
-            {
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
-                Text = "this is a button",
-                Size = new Vector2(200, 40),
-                Margin = new MarginPadding(10),
-                FlashColour = FrameworkColour.Green,
-                Action = () => clickCount++
-            });
+            Add(
+                button = new BasicButton
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    Text = "this is a button",
+                    Size = new Vector2(200, 40),
+                    Margin = new MarginPadding(10),
+                    FlashColour = FrameworkColour.Green,
+                    Action = () => clickCount++,
+                }
+            );
         }
 
         [SetUp]
-        public new void SetUp() => Schedule(() =>
-        {
-            clickCount = 0;
-            button.Enabled.Value = true;
-        });
+        public new void SetUp() =>
+            Schedule(() =>
+            {
+                clickCount = 0;
+                button.Enabled.Value = true;
+            });
 
         [Test]
         public void Button()
         {
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(button.ScreenSpaceDrawQuad.Centre);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(button.ScreenSpaceDrawQuad.Centre);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("action was executed", () => clickCount == 1);
         }
 
@@ -51,11 +57,14 @@ namespace osu.Framework.Tests.Visual.UserInterface
         public void DisabledButton()
         {
             AddStep("disable button", () => button.Enabled.Value = false);
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(button.ScreenSpaceDrawQuad.Centre);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(button.ScreenSpaceDrawQuad.Centre);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("action was not executed", () => clickCount == 0);
         }
     }

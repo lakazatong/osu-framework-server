@@ -76,7 +76,8 @@ namespace osu.Framework.Benchmarks
 
         private partial class TestGame : Game
         {
-            public readonly List<TestFillFlowContainer> Containers = new List<TestFillFlowContainer>();
+            public readonly List<TestFillFlowContainer> Containers =
+                new List<TestFillFlowContainer>();
 
             public int Mode;
 
@@ -90,7 +91,7 @@ namespace osu.Framework.Benchmarks
                     {
                         Direction = FillDirection.Full,
                         AutoSizeAxes = Axes.Y,
-                        Width = 1000
+                        Width = 1000,
                     };
                     Containers.Add(container);
                     Add(container);

@@ -10,11 +10,9 @@ namespace osu.Framework.Graphics.UserInterface
 {
     public partial class BasicTabControl<T> : TabControl<T>
     {
-        protected override Dropdown<T> CreateDropdown()
-            => new BasicTabControlDropdown();
+        protected override Dropdown<T> CreateDropdown() => new BasicTabControlDropdown();
 
-        protected override TabItem<T> CreateTabItem(T value)
-            => new BasicTabItem(value);
+        protected override TabItem<T> CreateTabItem(T value) => new BasicTabItem(value);
 
         public partial class BasicTabItem : TabItem<T>
         {
@@ -25,19 +23,19 @@ namespace osu.Framework.Graphics.UserInterface
             {
                 AutoSizeAxes = Axes.Both;
 
-                Add(text = new SpriteText
-                {
-                    Margin = new MarginPadding(2),
-                    Text = value.ToString(),
-                    Font = FrameworkFont.Regular.With(size: 18),
-                });
+                Add(
+                    text = new SpriteText
+                    {
+                        Margin = new MarginPadding(2),
+                        Text = value.ToString(),
+                        Font = FrameworkFont.Regular.With(size: 18),
+                    }
+                );
             }
 
-            protected override void OnActivated()
-                => text.Colour = Color4.MediumPurple;
+            protected override void OnActivated() => text.Colour = Color4.MediumPurple;
 
-            protected override void OnDeactivated()
-                => text.Colour = Color4.White;
+            protected override void OnDeactivated() => text.Colour = Color4.White;
         }
 
         public partial class BasicTabControlDropdown : BasicDropdown<T>
@@ -63,11 +61,7 @@ namespace osu.Framework.Graphics.UserInterface
                     Foreground.RelativeSizeAxes = Axes.None;
                     Foreground.AutoSizeAxes = Axes.Both;
 
-                    Foreground.Child = new SpriteText
-                    {
-                        Text = "…",
-                        Font = FrameworkFont.Regular
-                    };
+                    Foreground.Child = new SpriteText { Text = "…", Font = FrameworkFont.Regular };
                 }
             }
         }

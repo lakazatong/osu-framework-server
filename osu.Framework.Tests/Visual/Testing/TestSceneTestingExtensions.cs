@@ -19,12 +19,18 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             Container container = null;
 
-            AddStep("create children", () =>
-            {
-                Child = container = new Container { Child = new Box() };
-            });
+            AddStep(
+                "create children",
+                () =>
+                {
+                    Child = container = new Container { Child = new Box() };
+                }
+            );
 
-            AddAssert("ChildrenOfType returns 2 children", () => container.ChildrenOfType<Drawable>().Count() == 2);
+            AddAssert(
+                "ChildrenOfType returns 2 children",
+                () => container.ChildrenOfType<Drawable>().Count() == 2
+            );
         }
     }
 }

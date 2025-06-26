@@ -12,7 +12,12 @@ namespace osu.Framework.Tests.Visual
         [BackgroundDependencyLoader]
         private void load()
         {
-            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(FrameworkTestScene).Assembly), "Resources"));
+            Resources.AddStore(
+                new NamespacedResourceStore<byte[]>(
+                    new DllResourceStore(typeof(FrameworkTestScene).Assembly),
+                    "Resources"
+                )
+            );
         }
     }
 }

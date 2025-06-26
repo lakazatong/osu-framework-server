@@ -23,7 +23,11 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
         /// </summary>
         public int VertexCapacity { get; }
 
-        public VeldridIndexBuffer(BasicPipeline pipeline, VeldridIndexLayout layout, int verticesCount)
+        public VeldridIndexBuffer(
+            BasicPipeline pipeline,
+            VeldridIndexLayout layout,
+            int verticesCount
+        )
         {
             Layout = layout;
 
@@ -38,7 +42,11 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
                     break;
 
                 case VeldridIndexLayout.Quad:
-                    for (ushort i = 0, j = 0; j < indices.Length; i += IRenderer.VERTICES_PER_QUAD, j += IRenderer.INDICES_PER_QUAD)
+                    for (
+                        ushort i = 0, j = 0;
+                        j < indices.Length;
+                        i += IRenderer.VERTICES_PER_QUAD, j += IRenderer.INDICES_PER_QUAD
+                    )
                     {
                         indices[j] = i;
                         indices[j + 1] = (ushort)(i + 1);
@@ -51,7 +59,12 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
                     break;
             }
 
-            Buffer = pipeline.Factory.CreateBuffer(new BufferDescription((uint)indices.Length * sizeof(ushort), BufferUsage.IndexBuffer));
+            Buffer = pipeline.Factory.CreateBuffer(
+                new BufferDescription(
+                    (uint)indices.Length * sizeof(ushort),
+                    BufferUsage.IndexBuffer
+                )
+            );
             VertexCapacity = verticesCount;
 
             pipeline.Commands.UpdateBuffer(Buffer, 0, indices);

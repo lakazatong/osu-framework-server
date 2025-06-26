@@ -16,7 +16,15 @@ namespace osu.Framework.Platform.Apple.Native
         }
 
         [LibraryImport(Interop.LIB_CORE_GRAPHICS, EntryPoint = "CGBitmapContextCreate")]
-        public static partial CGBitmapContext Create(IntPtr data, nuint width, nuint height, nuint bitsPerComponent, nuint bytesPerRow, CGColorSpace colorSpace, CGBitmapInfo bitmapInfo);
+        public static partial CGBitmapContext Create(
+            IntPtr data,
+            nuint width,
+            nuint height,
+            nuint bitsPerComponent,
+            nuint bytesPerRow,
+            CGColorSpace colorSpace,
+            CGBitmapInfo bitmapInfo
+        );
 
         [LibraryImport(Interop.LIB_CORE_GRAPHICS, EntryPoint = "CGContextDrawImage")]
         public static partial void DrawImage(CGBitmapContext context, CGRect rect, CGImage image);

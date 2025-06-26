@@ -20,7 +20,8 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             Resource = shader;
         }
 
-        IReadOnlyDictionary<string, IUniform> IShader.Uniforms { get; } = new Dictionary<string, IUniform>();
+        IReadOnlyDictionary<string, IUniform> IShader.Uniforms { get; } =
+            new Dictionary<string, IUniform>();
 
         public void Bind()
         {
@@ -40,19 +41,16 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             IsBound = false;
         }
 
-        public bool IsLoaded
-            => Resource.IsLoaded;
+        public bool IsLoaded => Resource.IsLoaded;
 
         public bool IsBound { get; private set; }
 
         public Uniform<T> GetUniform<T>(string name)
-            where T : unmanaged, IEquatable<T>
-            => throw new NotSupportedException();
+            where T : unmanaged, IEquatable<T> => throw new NotSupportedException();
 
-        public void BindUniformBlock(string blockName, IUniformBuffer buffer)
-            => renderer.BindUniformBuffer(blockName, buffer);
+        public void BindUniformBlock(string blockName, IUniformBuffer buffer) =>
+            renderer.BindUniformBuffer(blockName, buffer);
 
-        public void Dispose()
-            => Resource.Dispose();
+        public void Dispose() => Resource.Dispose();
     }
 }

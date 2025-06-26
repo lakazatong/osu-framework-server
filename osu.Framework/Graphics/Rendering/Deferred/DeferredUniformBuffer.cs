@@ -16,10 +16,12 @@ namespace osu.Framework.Graphics.Rendering.Deferred
     internal class DeferredUniformBuffer<TData> : IUniformBuffer<TData>, IDeferredUniformBuffer
         where TData : unmanaged, IEquatable<TData>
     {
-        private static readonly List<(ChunkReference, ResourceLayout)> dead_chunks = new List<(ChunkReference, ResourceLayout)>();
+        private static readonly List<(ChunkReference, ResourceLayout)> dead_chunks =
+            new List<(ChunkReference, ResourceLayout)>();
 
         private readonly DeferredRenderer renderer;
-        private readonly Dictionary<(ChunkReference, ResourceLayout), ResourceSet> bufferChunks = new Dictionary<(ChunkReference, ResourceLayout), ResourceSet>();
+        private readonly Dictionary<(ChunkReference, ResourceLayout), ResourceSet> bufferChunks =
+            new Dictionary<(ChunkReference, ResourceLayout), ResourceSet>();
 
         private TData data;
         private ChunkReference currentChunk;
@@ -38,18 +40,20 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             {
                 data = value;
 
-                renderer.Context.EnqueueEvent(SetUniformBufferDataEvent.Create(renderer, this, value));
+                renderer.Context.EnqueueEvent(
+                    SetUniformBufferDataEvent.Create(renderer, this, value)
+                );
                 renderer.RegisterUniformBufferForReset(this);
 
                 FrameStatistics.Increment(StatisticsCounterType.UniformUpl);
             }
         }
 
-        public UniformBufferReference Write(in MemoryReference memory)
-            => renderer.Context.UniformBufferManager.Write(memory);
+        public UniformBufferReference Write(in MemoryReference memory) =>
+            renderer.Context.UniformBufferManager.Write(memory);
 
-        public void Activate(UniformBufferChunk chunk)
-            => currentChunk = new ChunkReference(renderer, chunk);
+        public void Activate(UniformBufferChunk chunk) =>
+            currentChunk = new ChunkReference(renderer, chunk);
 
         ResourceSet IVeldridUniformBuffer.GetResourceSet(ResourceLayout layout)
         {
@@ -62,12 +66,17 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                     new DeviceBufferRange(
                         currentChunk.Buffer,
                         currentChunk.Offset,
-                        currentChunk.Size)));
+                        currentChunk.Size
+                    )
+                )
+            );
         }
 
         void IVeldridUniformBuffer.ResetCounters()
         {
-            foreach (((ChunkReference chunk, ResourceLayout layout) key, ResourceSet set) in bufferChunks)
+            foreach (
+                ((ChunkReference chunk, ResourceLayout layout) key, ResourceSet set) in bufferChunks
+            )
             {
                 if (key.chunk.Buffer.IsDisposed)
                 {
@@ -104,11 +113,14 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
             isDisposed = true;
 
-            renderer.ScheduleDisposal(static b =>
-            {
-                foreach ((_, ResourceSet set) in b.bufferChunks)
-                    set.Dispose();
-            }, this);
+            renderer.ScheduleDisposal(
+                static b =>
+                {
+                    foreach ((_, ResourceSet set) in b.bufferChunks)
+                        set.Dispose();
+                },
+                this
+            );
         }
 
         private readonly record struct ChunkReference

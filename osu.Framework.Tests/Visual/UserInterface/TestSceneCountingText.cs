@@ -29,10 +29,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
                     Position = new Vector2(10),
                     Width = 150,
                 },
-                counter = new TestTextCounter(createResult)
-                {
-                    Position = new Vector2(180)
-                }
+                counter = new TestTextCounter(createResult) { Position = new Vector2(180) },
             };
 
             typeDropdown.Items = (CountType[])Enum.GetValues(typeof(CountType));
@@ -43,18 +40,28 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("1 -> 4 | 3 sec", beginStep(() => counter.CountTo(1).CountTo(4, 3000)));
             AddStep("4 -> 1 | 1 sec", beginStep(() => counter.CountTo(4).CountTo(1, 1000)));
             AddStep("4 -> 1 | 3 sec", beginStep(() => counter.CountTo(4).CountTo(1, 3000)));
-            AddStep("1 -> 4 -> 1 | 6 sec", beginStep(() => counter.CountTo(1).CountTo(4, 3000).Then().CountTo(1, 3000)));
-            AddStep("1 -> 4 -> 1 | 2 sec", beginStep(() => counter.CountTo(1).CountTo(4, 1000).Then().CountTo(1, 1000)));
-            AddStep("1 -> 100 | 5 sec | OutQuint", beginStep(() => counter.CountTo(1).CountTo(100, 5000, Easing.OutQuint)));
+            AddStep(
+                "1 -> 4 -> 1 | 6 sec",
+                beginStep(() => counter.CountTo(1).CountTo(4, 3000).Then().CountTo(1, 3000))
+            );
+            AddStep(
+                "1 -> 4 -> 1 | 2 sec",
+                beginStep(() => counter.CountTo(1).CountTo(4, 1000).Then().CountTo(1, 1000))
+            );
+            AddStep(
+                "1 -> 100 | 5 sec | OutQuint",
+                beginStep(() => counter.CountTo(1).CountTo(100, 5000, Easing.OutQuint))
+            );
         }
 
         private Action lastStep;
 
-        private Action beginStep(Action stepAction) => () =>
-        {
-            lastStep = stepAction;
-            stepAction?.Invoke();
-        };
+        private Action beginStep(Action stepAction) =>
+            () =>
+            {
+                lastStep = stepAction;
+                stepAction?.Invoke();
+            };
 
         private string createResult(double value)
         {

@@ -9,7 +9,8 @@ namespace osu.Framework.Input.Events
     /// An event representing a change of a key binding's associated mouse wheel direction.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class KeyBindingScrollEvent<T> : KeyBindingEvent<T> where T : struct
+    public class KeyBindingScrollEvent<T> : KeyBindingEvent<T>
+        where T : struct
     {
         /// <summary>
         /// The relative change in scroll associated with this event.
@@ -24,7 +25,12 @@ namespace osu.Framework.Input.Events
         /// </remarks>
         public readonly bool IsPrecise;
 
-        public KeyBindingScrollEvent(InputState state, T action, float amount, bool isPrecise = false)
+        public KeyBindingScrollEvent(
+            InputState state,
+            T action,
+            float amount,
+            bool isPrecise = false
+        )
             : base(state, action)
         {
             ScrollAmount = amount;

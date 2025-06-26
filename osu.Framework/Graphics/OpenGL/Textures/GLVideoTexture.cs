@@ -15,9 +15,7 @@ namespace osu.Framework.Graphics.OpenGL.Textures
         public int[]? TextureIds { get; private set; }
 
         public GLVideoTexture(GLRenderer renderer, int width, int height)
-            : base(renderer, width, height, true)
-        {
-        }
+            : base(renderer, width, height, true) { }
 
         private NativeMemoryTracker.NativeMemoryLease? memoryLease;
 
@@ -52,14 +50,39 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
                     GL.ActiveTexture(TextureUnit.Texture0 + (int)i);
 
-                    GL.TexImage2D(TextureTarget2d.Texture2D, 0, TextureComponentCount.R8, width, height,
-                        0, PixelFormat.Red, PixelType.UnsignedByte, IntPtr.Zero);
+                    GL.TexImage2D(
+                        TextureTarget2d.Texture2D,
+                        0,
+                        TextureComponentCount.R8,
+                        width,
+                        height,
+                        0,
+                        PixelFormat.Red,
+                        PixelType.UnsignedByte,
+                        IntPtr.Zero
+                    );
 
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureMinFilter,
+                        (int)All.Linear
+                    );
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureMagFilter,
+                        (int)All.Linear
+                    );
 
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureWrapS,
+                        (int)TextureWrapMode.ClampToEdge
+                    );
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureWrapT,
+                        (int)TextureWrapMode.ClampToEdge
+                    );
                 }
             }
 
@@ -71,8 +94,17 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
                 GL.PixelStore(PixelStoreParameter.UnpackRowLength, videoUpload.Frame->linesize[i]);
 
-                GL.TexSubImage2D(TextureTarget2d.Texture2D, 0, 0, 0, videoUpload.GetPlaneWidth(i), videoUpload.GetPlaneHeight(i),
-                    PixelFormat.Red, PixelType.UnsignedByte, (IntPtr)videoUpload.Frame->data[i]);
+                GL.TexSubImage2D(
+                    TextureTarget2d.Texture2D,
+                    0,
+                    0,
+                    0,
+                    videoUpload.GetPlaneWidth(i),
+                    videoUpload.GetPlaneHeight(i),
+                    PixelFormat.Red,
+                    PixelType.UnsignedByte,
+                    (IntPtr)videoUpload.Frame->data[i]
+                );
 
                 GL.PixelStore(PixelStoreParameter.UnpackRowLength, 0);
             }
@@ -86,19 +118,22 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
             memoryLease?.Dispose();
 
-            Renderer.ScheduleDisposal(v =>
-            {
-                int[]? ids = v.TextureIds;
-
-                if (ids == null)
-                    return;
-
-                for (int i = 0; i < ids.Length; i++)
+            Renderer.ScheduleDisposal(
+                v =>
                 {
-                    if (ids[i] >= 0)
-                        GL.DeleteTextures(1, new[] { ids[i] });
-                }
-            }, this);
+                    int[]? ids = v.TextureIds;
+
+                    if (ids == null)
+                        return;
+
+                    for (int i = 0; i < ids.Length; i++)
+                    {
+                        if (ids[i] >= 0)
+                            GL.DeleteTextures(1, new[] { ids[i] });
+                    }
+                },
+                this
+            );
         }
 
         #endregion

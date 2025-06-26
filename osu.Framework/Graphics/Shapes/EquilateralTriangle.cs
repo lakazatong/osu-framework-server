@@ -22,7 +22,8 @@ namespace osu.Framework.Graphics.Shapes
         /// When setting the size, the Y-value is ignored (use <see cref="Height"/> if you desire a specific height instead).
         /// </para>
         /// </summary>
-        public override Vector2 Size => new Vector2(base.Size.X, base.Size.X * sidelength_to_height_factor);
+        public override Vector2 Size =>
+            new Vector2(base.Size.X, base.Size.X * sidelength_to_height_factor);
 
         /// <summary>
         /// Sets the height of the triangle, adjusting the width as appropriate.

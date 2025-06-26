@@ -20,7 +20,10 @@ namespace osu.Framework.Extensions
         public static Anchor Opposite(this Anchor anchor)
         {
             if (anchor == Anchor.Custom)
-                throw new ArgumentException($"{nameof(Anchor.Custom)} is not supported.", nameof(anchor));
+                throw new ArgumentException(
+                    $"{nameof(Anchor.Custom)} is not supported.",
+                    nameof(anchor)
+                );
 
             if (anchor.HasFlagFast(Anchor.x0) || anchor.HasFlagFast(Anchor.x2))
                 anchor ^= Anchor.x0 | Anchor.x2;
@@ -36,7 +39,10 @@ namespace osu.Framework.Extensions
         public static Vector2 PositionOnQuad(this Anchor anchor, Quad quad)
         {
             if (anchor == Anchor.Custom)
-                throw new ArgumentException($"{nameof(Anchor.Custom)} is not supported.", nameof(anchor));
+                throw new ArgumentException(
+                    $"{nameof(Anchor.Custom)} is not supported.",
+                    nameof(anchor)
+                );
 
             Vector2 position = new Vector2();
 

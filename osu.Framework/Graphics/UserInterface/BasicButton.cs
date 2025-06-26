@@ -3,11 +3,11 @@
 
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
-using osu.Framework.Graphics.Sprites;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.UserInterface
 {
@@ -84,38 +84,41 @@ namespace osu.Framework.Graphics.UserInterface
 
         public BasicButton()
         {
-            AddRange(new Drawable[]
-            {
-                Background = new Box
+            AddRange(
+                new Drawable[]
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = FrameworkColour.BlueGreen
-                },
-                Hover = new Box
-                {
-                    Alpha = 0,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.White.Opacity(.1f),
-                    Blending = BlendingParameters.Additive
-                },
-                SpriteText = CreateText()
-            });
+                    Background = new Box
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = FrameworkColour.BlueGreen,
+                    },
+                    Hover = new Box
+                    {
+                        Alpha = 0,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.White.Opacity(.1f),
+                        Blending = BlendingParameters.Additive,
+                    },
+                    SpriteText = CreateText(),
+                }
+            );
 
             Enabled.BindValueChanged(enabledChanged, true);
         }
 
-        protected virtual SpriteText CreateText() => new SpriteText
-        {
-            Depth = -1,
-            Origin = Anchor.Centre,
-            Anchor = Anchor.Centre,
-            Font = FrameworkFont.Regular,
-            Colour = FrameworkColour.Yellow
-        };
+        protected virtual SpriteText CreateText() =>
+            new SpriteText
+            {
+                Depth = -1,
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Font = FrameworkFont.Regular,
+                Colour = FrameworkColour.Yellow,
+            };
 
         protected override bool OnClick(ClickEvent e)
         {
@@ -142,7 +145,11 @@ namespace osu.Framework.Graphics.UserInterface
 
         private void enabledChanged(ValueChangedEvent<bool> e)
         {
-            this.FadeColour(e.NewValue ? Color4.White : DisabledColour, DisabledFadeDuration, Easing.OutQuint);
+            this.FadeColour(
+                e.NewValue ? Color4.White : DisabledColour,
+                DisabledFadeDuration,
+                Easing.OutQuint
+            );
         }
     }
 }

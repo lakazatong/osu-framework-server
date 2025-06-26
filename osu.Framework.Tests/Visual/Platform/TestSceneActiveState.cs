@@ -49,8 +49,14 @@ namespace osu.Framework.Tests.Visual.Platform
                 },
             };
 
-            isActive.BindValueChanged(active => isActiveBox.Colour = active.NewValue ? Color4.Green : Color4.Red, true);
-            cursorInWindow?.BindValueChanged(active => cursorInWindowBox.Colour = active.NewValue ? Color4.Green : Color4.Red, true);
+            isActive.BindValueChanged(
+                active => isActiveBox.Colour = active.NewValue ? Color4.Green : Color4.Red,
+                true
+            );
+            cursorInWindow?.BindValueChanged(
+                active => cursorInWindowBox.Colour = active.NewValue ? Color4.Green : Color4.Red,
+                true
+            );
         }
 
         public partial class DisplayBox : CompositeDrawable
@@ -59,18 +65,14 @@ namespace osu.Framework.Tests.Visual.Platform
             {
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                     new SpriteText
                     {
                         Text = label,
                         Colour = Color4.Black,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
+                    },
                 };
             }
         }

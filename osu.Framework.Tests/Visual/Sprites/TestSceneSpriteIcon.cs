@@ -30,11 +30,15 @@ namespace osu.Framework.Tests.Visual.Sprites
         {
             SpriteIcon? icon = null;
 
-            AddStep("create icon", () => icon = new SpriteIcon
-            {
-                Size = new Vector2(20),
-                Icon = FontAwesome.Solid.Anchor
-            });
+            AddStep(
+                "create icon",
+                () =>
+                    icon = new SpriteIcon
+                    {
+                        Size = new Vector2(20),
+                        Icon = FontAwesome.Solid.Anchor,
+                    }
+            );
             AddStep("preload icon", () => LoadComponent(icon));
             AddStep("change icon", () => icon!.Icon = FontAwesome.Solid.Ad);
             AddStep("add icon", () => Add(icon));
@@ -48,44 +52,55 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             int i = 0;
 
-            AddStep("prepare test", () =>
-            {
-                i = 0;
-                icons = getAllIcons().ToArray();
-                scheduledDelegate?.Cancel();
-
-                Child = new TooltipContainer
+            AddStep(
+                "prepare test",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    i = 0;
+                    icons = getAllIcons().ToArray();
+                    scheduledDelegate?.Cancel();
+
+                    Child = new TooltipContainer
                     {
-                        new BasicScrollContainer
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = flow = new FillFlowContainer
+                            new BasicScrollContainer
                             {
-                                Anchor = Anchor.TopRight,
-                                Origin = Anchor.TopRight,
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Spacing = new Vector2(5),
-                                Direction = FillDirection.Full,
+                                RelativeSizeAxes = Axes.Both,
+                                Child = flow =
+                                    new FillFlowContainer
+                                    {
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.TopRight,
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Spacing = new Vector2(5),
+                                        Direction = FillDirection.Full,
+                                    },
                             },
-                        }
-                    }
-                };
-            });
+                        },
+                    };
+                }
+            );
 
-            AddStep("start adding icons", () =>
-            {
-                scheduledDelegate = Scheduler.AddDelayed(() =>
+            AddStep(
+                "start adding icons",
+                () =>
                 {
-                    flow.Add(icons[i++]);
+                    scheduledDelegate = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            flow.Add(icons[i++]);
 
-                    if (++i > icons.Length - 1)
-                        scheduledDelegate?.Cancel();
-                }, 5, true);
-            });
+                            if (++i > icons.Length - 1)
+                                scheduledDelegate?.Cancel();
+                        },
+                        5,
+                        true
+                    );
+                }
+            );
         }
 
         [Test]
@@ -94,63 +109,105 @@ namespace osu.Framework.Tests.Visual.Sprites
             Box background = null!;
             FillFlowContainer flow = null!;
 
-            AddStep("prepare", () =>
-            {
-                scheduledDelegate?.Cancel();
-
-                Child = new TooltipContainer
+            AddStep(
+                "prepare",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    scheduledDelegate?.Cancel();
+
+                    Child = new TooltipContainer
                     {
-                        background = new Box
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Colour = Color4.Teal,
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                        new BasicScrollContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Child = flow = new FillFlowContainer
+                            background = new Box
                             {
-                                Anchor = Anchor.TopRight,
-                                Origin = Anchor.TopRight,
+                                Colour = Color4.Teal,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            new BasicScrollContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = flow =
+                                    new FillFlowContainer
+                                    {
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.TopRight,
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Spacing = new Vector2(5),
+                                        Direction = FillDirection.Full,
+                                    },
+                            },
+                        },
+                    };
+
+                    var weights = typeof(FontAwesome).GetNestedTypes();
+
+                    foreach (var w in weights)
+                    {
+                        flow.Add(
+                            new SpriteText
+                            {
+                                Text = w.Name,
+                                Scale = new Vector2(4),
                                 RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Spacing = new Vector2(5),
-                                Direction = FillDirection.Full,
+                                Padding = new MarginPadding(10),
+                            }
+                        );
+
+                        foreach (var icon in getAllIconsForWeight(w))
+                            flow.Add(icon);
+                    }
+                }
+            );
+
+            AddStep(
+                "toggle shadows",
+                () =>
+                    flow
+                        .Children.OfType<Icon>()
+                        .ForEach(i => i.SpriteIcon.Shadow = !i.SpriteIcon.Shadow)
+            );
+            AddStep(
+                "change icons",
+                () =>
+                    flow
+                        .Children.OfType<Icon>()
+                        .ForEach(i =>
+                            i.SpriteIcon.Icon = new IconUsage((char)(i.SpriteIcon.Icon.Icon + 1))
+                        )
+            );
+            AddStep("white background", () => background.FadeColour(Color4.White, 200));
+            AddStep(
+                "move shadow offset",
+                () =>
+                    flow
+                        .Children.OfType<Icon>()
+                        .ForEach(i => i.SpriteIcon.ShadowOffset += Vector2.One)
+            );
+            AddStep(
+                "change shadow colour",
+                () =>
+                    flow
+                        .Children.OfType<Icon>()
+                        .ForEach(i => i.SpriteIcon.ShadowColour = Color4.Pink)
+            );
+            AddStep(
+                "add new icon with colour and offset",
+                () =>
+                    flow.Add(
+                        new Icon("FontAwesome.Regular.Handshake", FontAwesome.Regular.Handshake)
+                        {
+                            SpriteIcon =
+                            {
+                                Shadow = true,
+                                ShadowColour = Color4.Orange,
+                                ShadowOffset = new Vector2(5, 1),
                             },
                         }
-                    }
-                };
-
-                var weights = typeof(FontAwesome).GetNestedTypes();
-
-                foreach (var w in weights)
-                {
-                    flow.Add(new SpriteText
-                    {
-                        Text = w.Name,
-                        Scale = new Vector2(4),
-                        RelativeSizeAxes = Axes.X,
-                        Padding = new MarginPadding(10),
-                    });
-
-                    foreach (var icon in getAllIconsForWeight(w))
-                        flow.Add(icon);
-                }
-            });
-
-            AddStep("toggle shadows", () => flow.Children.OfType<Icon>().ForEach(i => i.SpriteIcon.Shadow = !i.SpriteIcon.Shadow));
-            AddStep("change icons", () => flow.Children.OfType<Icon>().ForEach(i => i.SpriteIcon.Icon = new IconUsage((char)(i.SpriteIcon.Icon.Icon + 1))));
-            AddStep("white background", () => background.FadeColour(Color4.White, 200));
-            AddStep("move shadow offset", () => flow.Children.OfType<Icon>().ForEach(i => i.SpriteIcon.ShadowOffset += Vector2.One));
-            AddStep("change shadow colour", () => flow.Children.OfType<Icon>().ForEach(i => i.SpriteIcon.ShadowColour = Color4.Pink));
-            AddStep("add new icon with colour and offset", () =>
-                flow.Add(new Icon("FontAwesome.Regular.Handshake", FontAwesome.Regular.Handshake)
-                {
-                    SpriteIcon = { Shadow = true, ShadowColour = Color4.Orange, ShadowOffset = new Vector2(5, 1) }
-                }));
+                    )
+            );
         }
 
         private IEnumerable<Icon> getAllIcons()
@@ -171,7 +228,10 @@ namespace osu.Framework.Tests.Visual.Sprites
                 object? propValue = p.GetValue(null);
                 Debug.Assert(propValue != null);
 
-                yield return new Icon($"{nameof(FontAwesome)}.{weight.Name}.{p.Name}", (IconUsage)propValue);
+                yield return new Icon(
+                    $"{nameof(FontAwesome)}.{weight.Name}.{p.Name}",
+                    (IconUsage)propValue
+                );
             }
         }
 
@@ -186,11 +246,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                 TooltipText = name;
 
                 AutoSizeAxes = Axes.Both;
-                Child = SpriteIcon = new SpriteIcon
-                {
-                    Icon = icon,
-                    Size = new Vector2(60),
-                };
+                Child = SpriteIcon = new SpriteIcon { Icon = icon, Size = new Vector2(60) };
             }
         }
     }

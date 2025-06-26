@@ -23,7 +23,11 @@ namespace osu.Framework.Tests.Localisation
             var str2 = new TranslatableString(makeStringA, makeStringB);
 
             testEquals(true, str1, str1);
-            testEquals(true, str1, new TranslatableString(makeStringA, makeStringB, makeStringA, makeStringB)); // Structural equality.
+            testEquals(
+                true,
+                str1,
+                new TranslatableString(makeStringA, makeStringB, makeStringA, makeStringB)
+            ); // Structural equality.
             testEquals(false, str1, str2);
         }
 
@@ -61,9 +65,18 @@ namespace osu.Framework.Tests.Localisation
         [Test]
         public void TestLocalisableStringEqualsTranslatableString()
         {
-            LocalisableString localisable = new TranslatableString(makeStringA, makeStringB, makeStringA, makeStringB);
+            LocalisableString localisable = new TranslatableString(
+                makeStringA,
+                makeStringB,
+                makeStringA,
+                makeStringB
+            );
 
-            testEquals(true, localisable, new TranslatableString(makeStringA, makeStringB, makeStringA, makeStringB));
+            testEquals(
+                true,
+                localisable,
+                new TranslatableString(makeStringA, makeStringB, makeStringA, makeStringB)
+            );
             testEquals(false, localisable, new TranslatableString(makeStringB, makeStringA));
             testEquals(false, localisable, makeStringA);
             testEquals(false, localisable, new RomanisableString(makeStringA, makeStringB));
@@ -98,36 +111,75 @@ namespace osu.Framework.Tests.Localisation
         [Test]
         public void TestLocalisableStringDoesNotEqualNull()
         {
-            testEquals(false, new LocalisableString(), new RomanisableString(makeStringA, makeStringB));
-            testEquals(false, new RomanisableString(makeStringA, makeStringB), new LocalisableString());
+            testEquals(
+                false,
+                new LocalisableString(),
+                new RomanisableString(makeStringA, makeStringB)
+            );
+            testEquals(
+                false,
+                new RomanisableString(makeStringA, makeStringB),
+                new LocalisableString()
+            );
         }
 
         [Test]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public void TestIsNullOrEmpty()
         {
-            Assert.That(LocalisableString.IsNullOrEmpty(null), Is.EqualTo(string.IsNullOrEmpty(null)));
-            Assert.That(LocalisableString.IsNullOrEmpty(string.Empty), Is.EqualTo(string.IsNullOrEmpty(string.Empty)));
+            Assert.That(
+                LocalisableString.IsNullOrEmpty(null),
+                Is.EqualTo(string.IsNullOrEmpty(null))
+            );
+            Assert.That(
+                LocalisableString.IsNullOrEmpty(string.Empty),
+                Is.EqualTo(string.IsNullOrEmpty(string.Empty))
+            );
             Assert.That(LocalisableString.IsNullOrEmpty(""), Is.EqualTo(string.IsNullOrEmpty("")));
-            Assert.That(LocalisableString.IsNullOrEmpty(" "), Is.EqualTo(string.IsNullOrEmpty(" ")));
-            Assert.That(LocalisableString.IsNullOrEmpty("a"), Is.EqualTo(string.IsNullOrEmpty("a")));
+            Assert.That(
+                LocalisableString.IsNullOrEmpty(" "),
+                Is.EqualTo(string.IsNullOrEmpty(" "))
+            );
+            Assert.That(
+                LocalisableString.IsNullOrEmpty("a"),
+                Is.EqualTo(string.IsNullOrEmpty("a"))
+            );
 
             Assert.IsTrue(LocalisableString.IsNullOrEmpty(new LocalisableString())); // default(LocalisableString)
-            Assert.IsFalse(LocalisableString.IsNullOrEmpty(new TranslatableString("key", "fallback")));
+            Assert.IsFalse(
+                LocalisableString.IsNullOrEmpty(new TranslatableString("key", "fallback"))
+            );
         }
 
         [Test]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public void TestIsNullOrWhiteSpace()
         {
-            Assert.That(LocalisableString.IsNullOrWhiteSpace(null), Is.EqualTo(string.IsNullOrWhiteSpace(null)));
-            Assert.That(LocalisableString.IsNullOrWhiteSpace(string.Empty), Is.EqualTo(string.IsNullOrWhiteSpace(string.Empty)));
-            Assert.That(LocalisableString.IsNullOrWhiteSpace(""), Is.EqualTo(string.IsNullOrWhiteSpace("")));
-            Assert.That(LocalisableString.IsNullOrWhiteSpace(" "), Is.EqualTo(string.IsNullOrWhiteSpace(" ")));
-            Assert.That(LocalisableString.IsNullOrWhiteSpace("a"), Is.EqualTo(string.IsNullOrWhiteSpace("a")));
+            Assert.That(
+                LocalisableString.IsNullOrWhiteSpace(null),
+                Is.EqualTo(string.IsNullOrWhiteSpace(null))
+            );
+            Assert.That(
+                LocalisableString.IsNullOrWhiteSpace(string.Empty),
+                Is.EqualTo(string.IsNullOrWhiteSpace(string.Empty))
+            );
+            Assert.That(
+                LocalisableString.IsNullOrWhiteSpace(""),
+                Is.EqualTo(string.IsNullOrWhiteSpace(""))
+            );
+            Assert.That(
+                LocalisableString.IsNullOrWhiteSpace(" "),
+                Is.EqualTo(string.IsNullOrWhiteSpace(" "))
+            );
+            Assert.That(
+                LocalisableString.IsNullOrWhiteSpace("a"),
+                Is.EqualTo(string.IsNullOrWhiteSpace("a"))
+            );
 
             Assert.IsTrue(LocalisableString.IsNullOrWhiteSpace(new LocalisableString())); // default(LocalisableString)
-            Assert.IsFalse(LocalisableString.IsNullOrWhiteSpace(new TranslatableString("key", "fallback")));
+            Assert.IsFalse(
+                LocalisableString.IsNullOrWhiteSpace(new TranslatableString("key", "fallback"))
+            );
         }
 
         private static void testEquals<T>(bool expected, T a, T b)

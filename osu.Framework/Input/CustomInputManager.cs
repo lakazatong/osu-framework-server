@@ -18,7 +18,8 @@ namespace osu.Framework.Input
 
         protected void AddHandler(InputHandler handler)
         {
-            if (!handler.Initialize(Host)) return;
+            if (!handler.Initialize(Host))
+                return;
 
             inputHandlers = inputHandlers.Append(handler).ToImmutableArray();
         }

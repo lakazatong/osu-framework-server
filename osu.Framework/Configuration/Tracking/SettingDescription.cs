@@ -37,7 +37,12 @@ namespace osu.Framework.Configuration.Tracking
         /// <param name="name">The readable setting name.</param>
         /// <param name="value">The readable setting value.</param>
         /// <param name="shortcut">The shortcut keys that cause this setting to change.</param>
-        public SettingDescription(object rawValue, LocalisableString name, LocalisableString value, LocalisableString? shortcut = null)
+        public SettingDescription(
+            object rawValue,
+            LocalisableString name,
+            LocalisableString value,
+            LocalisableString? shortcut = null
+        )
         {
             RawValue = rawValue;
             Name = name;

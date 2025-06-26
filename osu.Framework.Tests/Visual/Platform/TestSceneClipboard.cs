@@ -36,7 +36,11 @@ namespace osu.Framework.Tests.Visual.Platform
         public void TestText(string text)
         {
             AddStep("set clipboard text", () => clipboard.SetText(text));
-            AddAssert("clipboard text is expected", () => clipboard.GetText(), () => Is.EqualTo(text));
+            AddAssert(
+                "clipboard text is expected",
+                () => clipboard.GetText(),
+                () => Is.EqualTo(text)
+            );
             AddAssert("clipboard image is null", () => clipboard.GetImage<Rgba32>(), () => Is.Null);
         }
 
@@ -44,65 +48,83 @@ namespace osu.Framework.Tests.Visual.Platform
         public void TestImage()
         {
             if (DebugUtils.IsNUnitRunning)
-                Assert.Ignore("This test cannot run in headless mode (a window instance is required).");
+                Assert.Ignore(
+                    "This test cannot run in headless mode (a window instance is required)."
+                );
 
             AddStep("clear previous screenshots", Clear);
 
-            AddStep("screenshot screen", () =>
-            {
-                host.TakeScreenshotAsync().ContinueWith(t =>
+            AddStep(
+                "screenshot screen",
+                () =>
                 {
-                    var image = t.GetResultSafely();
-                    originalImage = image.Clone();
-                    image.Dispose();
-                });
-            });
+                    host.TakeScreenshotAsync()
+                        .ContinueWith(t =>
+                        {
+                            var image = t.GetResultSafely();
+                            originalImage = image.Clone();
+                            image.Dispose();
+                        });
+                }
+            );
 
             AddUntilStep("screenshot taken", () => originalImage != null);
 
-            AddStep("copy image to clipboard", () =>
-            {
-                clipboard.SetImage(originalImage!);
-            });
+            AddStep(
+                "copy image to clipboard",
+                () =>
+                {
+                    clipboard.SetImage(originalImage!);
+                }
+            );
 
             AddAssert("clipboard text is null", () => clipboard.GetText(), () => Is.Null);
 
-            AddStep("retrieve image from clipboard", () =>
-            {
-                var image = clipboard.GetImage<Rgba32>();
-                clipboardImage = image!.Clone();
-
-                var texture = renderer.CreateTexture(image.Width, image.Height);
-                texture.SetData(new TextureUpload(image));
-
-                Child = new Sprite
+            AddStep(
+                "retrieve image from clipboard",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    FillMode = FillMode.Fit,
-                    Texture = texture
-                };
-            });
+                    var image = clipboard.GetImage<Rgba32>();
+                    clipboardImage = image!.Clone();
+
+                    var texture = renderer.CreateTexture(image.Width, image.Height);
+                    texture.SetData(new TextureUpload(image));
+
+                    Child = new Sprite
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        FillMode = FillMode.Fit,
+                        Texture = texture,
+                    };
+                }
+            );
 
             AddAssert("image retrieved", () => clipboardImage != null);
 
-            AddAssert("compare images", () =>
-            {
-                if (originalImage!.Width != clipboardImage!.Width || originalImage.Height != clipboardImage.Height)
-                    return false;
-
-                for (int x = 0; x < originalImage.Width; x++)
+            AddAssert(
+                "compare images",
+                () =>
                 {
-                    for (int y = 0; y < originalImage.Height; y++)
-                    {
-                        if (originalImage[x, y] != clipboardImage[x, y])
-                            return false;
-                    }
-                }
+                    if (
+                        originalImage!.Width != clipboardImage!.Width
+                        || originalImage.Height != clipboardImage.Height
+                    )
+                        return false;
 
-                return true;
-            });
+                    for (int x = 0; x < originalImage.Width; x++)
+                    {
+                        for (int y = 0; y < originalImage.Height; y++)
+                        {
+                            if (originalImage[x, y] != clipboardImage[x, y])
+                                return false;
+                        }
+                    }
+
+                    return true;
+                }
+            );
         }
     }
 }

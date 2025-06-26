@@ -10,7 +10,8 @@ using osu.Framework.SourceGeneration.Generators;
 
 namespace osu.Framework.SourceGeneration.Tests.Verifiers
 {
-    public partial class CSharpMultiPhaseSourceGeneratorVerifier<TSourceGenerator> where TSourceGenerator : AbstractIncrementalGenerator, new()
+    public partial class CSharpMultiPhaseSourceGeneratorVerifier<TSourceGenerator>
+        where TSourceGenerator : AbstractIncrementalGenerator, new()
     {
         public class Test
         {
@@ -30,10 +31,13 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                 (string filename, string content)[] commonSources,
                 (string filename, string content)[] commonGenerated,
                 List<List<(string filename, string content)>> multiPhaseSources,
-                List<List<(string filename, string content)>> multiPhaseGenerated)
+                List<List<(string filename, string content)>> multiPhaseGenerated
+            )
             {
                 driver = CSharpGeneratorDriver.Create(generator = new TSourceGenerator());
-                driver = driver.WithUpdatedParseOptions(CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion));
+                driver = driver.WithUpdatedParseOptions(
+                    CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion)
+                );
 
                 this.commonSources = commonSources;
                 this.commonGenerated = commonGenerated;
@@ -41,7 +45,13 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                 this.multiPhaseGenerated = multiPhaseGenerated;
             }
 
-            public void AddStatisticsVerification((int syntaxTargetCreated, int semanticTargetCreated, int emitHits)[] expectedStatistics)
+            public void AddStatisticsVerification(
+                (
+                    int syntaxTargetCreated,
+                    int semanticTargetCreated,
+                    int emitHits
+                )[] expectedStatistics
+            )
             {
                 int phase = 0;
                 int syntaxTargetCreated = 0;
@@ -66,7 +76,9 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                     var actual = (syntaxTargetCreated, semanticTargetCreated, emitHits);
 
                     if (actual != expected)
-                        throw new Xunit.Sdk.XunitException($"Phase {phase}: Expected statistics {expected} but got {actual}.");
+                        throw new Xunit.Sdk.XunitException(
+                            $"Phase {phase}: Expected statistics {expected} but got {actual}."
+                        );
                 };
             }
 
@@ -87,7 +99,10 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                     // Remove sources from previous phase that are not existing in the current phase
                     if (phase > 0)
                     {
-                        foreach (var (filename, _) in multiPhaseSources[phase - 1].Where(old => sources.All(@new => @new.filename != old.filename)))
+                        foreach (
+                            var (filename, _) in multiPhaseSources[phase - 1]
+                                .Where(old => sources.All(@new => @new.filename != old.filename))
+                        )
                             compilation.RemoveSource(filename);
                     }
 

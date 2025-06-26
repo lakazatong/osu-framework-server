@@ -8,8 +8,10 @@ namespace osu.Framework.Testing.Input
 {
     public class ManualTextInputSource : TextInputSource
     {
-        public readonly Queue<TextInputProperties> ActivationQueue = new Queue<TextInputProperties>();
-        public readonly Queue<TextInputProperties> EnsureActivatedQueue = new Queue<TextInputProperties>();
+        public readonly Queue<TextInputProperties> ActivationQueue =
+            new Queue<TextInputProperties>();
+        public readonly Queue<TextInputProperties> EnsureActivatedQueue =
+            new Queue<TextInputProperties>();
         public readonly Queue<bool> DeactivationQueue = new Queue<bool>();
 
         public void Text(string text) => TriggerTextInput(text);

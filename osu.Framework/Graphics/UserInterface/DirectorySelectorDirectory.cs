@@ -7,8 +7,8 @@ using System;
 using System.IO;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Input.Events;
 using osu.Framework.Extensions.EnumExtensions;
+using osu.Framework.Input.Events;
 
 namespace osu.Framework.Graphics.UserInterface
 {

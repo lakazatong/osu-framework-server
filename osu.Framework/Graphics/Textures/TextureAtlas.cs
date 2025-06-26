@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -19,7 +19,8 @@ namespace osu.Framework.Graphics.Textures
         // We are adding an extra padding on top of the padding required by
         // mipmap blending in order to support smooth edges without antialiasing which requires
         // inflating texture rectangles.
-        internal const int PADDING = (1 << IRenderer.MAX_MIPMAP_LEVELS) * Sprite.MAX_EDGE_SMOOTHNESS;
+        internal const int PADDING =
+            (1 << IRenderer.MAX_MIPMAP_LEVELS) * Sprite.MAX_EDGE_SMOOTHNESS;
         internal const int WHITE_PIXEL_SIZE = 1;
 
         private readonly List<RectangleI> subTextureBounds = new List<RectangleI>();
@@ -41,7 +42,10 @@ namespace osu.Framework.Graphics.Textures
                 if (atlasTexture == null)
                     Reset();
 
-                Debug.Assert(atlasTexture != null, "Atlas texture should not be null after Reset().");
+                Debug.Assert(
+                    atlasTexture != null,
+                    "Atlas texture should not be null after Reset()."
+                );
 
                 return new TextureWhitePixel(atlasTexture);
             }
@@ -51,7 +55,13 @@ namespace osu.Framework.Graphics.Textures
         private readonly TextureFilteringMode filteringMode;
         private readonly object textureRetrievalLock = new object();
 
-        public TextureAtlas(IRenderer renderer, int width, int height, bool manualMipmaps = false, TextureFilteringMode filteringMode = TextureFilteringMode.Linear)
+        public TextureAtlas(
+            IRenderer renderer,
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear
+        )
         {
             this.renderer = renderer;
             atlasWidth = width;
@@ -77,14 +87,37 @@ namespace osu.Framework.Graphics.Textures
 
                 // We pass PADDING/2 as opposed to PADDING such that the padded region of each individual texture
                 // occupies half of the padded space.
-                atlasTexture = new BackingAtlasTexture(renderer, atlasWidth, atlasHeight, manualMipmaps, filteringMode, PADDING / 2);
+                atlasTexture = new BackingAtlasTexture(
+                    renderer,
+                    atlasWidth,
+                    atlasHeight,
+                    manualMipmaps,
+                    filteringMode,
+                    PADDING / 2
+                );
 
                 RectangleI bounds = new RectangleI(0, 0, WHITE_PIXEL_SIZE, WHITE_PIXEL_SIZE);
                 subTextureBounds.Add(bounds);
 
-                using (var whiteTex = new TextureRegion(atlasTexture, bounds, WrapMode.Repeat, WrapMode.Repeat))
+                using (
+                    var whiteTex = new TextureRegion(
+                        atlasTexture,
+                        bounds,
+                        WrapMode.Repeat,
+                        WrapMode.Repeat
+                    )
+                )
                     // Generate white padding as if the white texture was wrapped, even though it isn't
-                    whiteTex.SetData(new TextureUpload(new Image<Rgba32>(SixLabors.ImageSharp.Configuration.Default, whiteTex.Width, whiteTex.Height, new Rgba32(Vector4.One))));
+                    whiteTex.SetData(
+                        new TextureUpload(
+                            new Image<Rgba32>(
+                                SixLabors.ImageSharp.Configuration.Default,
+                                whiteTex.Width,
+                                whiteTex.Height,
+                                new Rgba32(Vector4.One)
+                            )
+                        )
+                    );
 
                 currentPosition = new Vector2I(PADDING + WHITE_PIXEL_SIZE, PADDING);
             }
@@ -98,7 +131,12 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="wrapModeS">The horizontal wrap mode of the texture.</param>
         /// <param name="wrapModeT">The vertical wrap mode of the texture.</param>
         /// <returns>A texture, or null if the requested size exceeds the atlas' bounds.</returns>
-        public Texture? Add(int width, int height, WrapMode wrapModeS = WrapMode.None, WrapMode wrapModeT = WrapMode.None)
+        public Texture? Add(
+            int width,
+            int height,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None
+        )
         {
             if (!canFitEmptyTextureAtlas(width, height))
                 return null;
@@ -106,7 +144,10 @@ namespace osu.Framework.Graphics.Textures
             lock (textureRetrievalLock)
             {
                 Vector2I position = findPosition(width, height);
-                Debug.Assert(atlasTexture != null, "Atlas texture should not be null after findPosition().");
+                Debug.Assert(
+                    atlasTexture != null,
+                    "Atlas texture should not be null after findPosition()."
+                );
 
                 RectangleI bounds = new RectangleI(position.X, position.Y, width, height);
                 subTextureBounds.Add(bounds);
@@ -128,7 +169,10 @@ namespace osu.Framework.Graphics.Textures
                 return false;
 
             // exceeds bounds in both directions (in this one, we have to account for the white pixel)
-            if (width + WHITE_PIXEL_SIZE > maxFittableWidth && height + WHITE_PIXEL_SIZE > maxFittableHeight)
+            if (
+                width + WHITE_PIXEL_SIZE > maxFittableWidth
+                && height + WHITE_PIXEL_SIZE > maxFittableHeight
+            )
                 return false;
 
             return true;
@@ -145,13 +189,19 @@ namespace osu.Framework.Graphics.Textures
         {
             if (atlasTexture == null)
             {
-                Logger.Log($"TextureAtlas initialised ({atlasWidth}x{atlasHeight})", LoggingTarget.Performance);
+                Logger.Log(
+                    $"TextureAtlas initialised ({atlasWidth}x{atlasHeight})",
+                    LoggingTarget.Performance
+                );
                 Reset();
             }
 
             if (currentPosition.Y + height + PADDING > atlasHeight)
             {
-                Logger.Log($"TextureAtlas size exceeded {++exceedCount} time(s); generating new texture ({atlasWidth}x{atlasHeight})", LoggingTarget.Performance);
+                Logger.Log(
+                    $"TextureAtlas size exceeded {++exceedCount} time(s); generating new texture ({atlasWidth}x{atlasHeight})",
+                    LoggingTarget.Performance
+                );
                 Reset();
             }
 

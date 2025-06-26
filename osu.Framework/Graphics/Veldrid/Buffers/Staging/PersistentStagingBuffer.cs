@@ -24,7 +24,9 @@ namespace osu.Framework.Graphics.Veldrid.Buffers.Staging
             Count = count;
             SizeInBytes = (uint)(Unsafe.SizeOf<T>() * count);
 
-            stagingBuffer = renderer.Factory.CreateBuffer(new BufferDescription(SizeInBytes, BufferUsage.Staging));
+            stagingBuffer = renderer.Factory.CreateBuffer(
+                new BufferDescription(SizeInBytes, BufferUsage.Staging)
+            );
 
             Data.Clear();
         }
@@ -58,7 +60,8 @@ namespace osu.Framework.Graphics.Veldrid.Buffers.Staging
                 (uint)(srcOffset * Unsafe.SizeOf<T>()),
                 buffer,
                 (uint)(dstOffset * Unsafe.SizeOf<T>()),
-                (uint)(size * Unsafe.SizeOf<T>()));
+                (uint)(size * Unsafe.SizeOf<T>())
+            );
         }
 
         private void unmap()

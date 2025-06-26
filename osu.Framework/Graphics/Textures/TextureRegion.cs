@@ -21,7 +21,12 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="bounds">The texture-space area in <paramref name="parent"/> which bounds this texture.</param>
         /// <param name="wrapModeS">The horizontal wrap mode for this region.</param>
         /// <param name="wrapModeT">The vertical warp mode for this region.</param>
-        public TextureRegion(Texture parent, RectangleI bounds, WrapMode wrapModeS, WrapMode wrapModeT)
+        public TextureRegion(
+            Texture parent,
+            RectangleI bounds,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT
+        )
             : base(parent, wrapModeS, wrapModeT)
         {
             this.parent = parent;
@@ -32,13 +37,19 @@ namespace osu.Framework.Graphics.Textures
 
         public override int Height => bounds.Height;
 
-        internal override void SetData(ITextureUpload upload, WrapMode wrapModeS, WrapMode wrapModeT, Opacity? opacity)
+        internal override void SetData(
+            ITextureUpload upload,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT,
+            Opacity? opacity
+        )
         {
             if (upload.Bounds.Width > bounds.Width || upload.Bounds.Height > bounds.Height)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(upload),
-                    $"Texture is too small to fit the requested upload. Texture size is {bounds.Width} x {bounds.Height}, upload size is {upload.Bounds.Width} x {upload.Bounds.Height}.");
+                    $"Texture is too small to fit the requested upload. Texture size is {bounds.Width} x {bounds.Height}, upload size is {upload.Bounds.Width} x {upload.Bounds.Height}."
+                );
             }
 
             if (upload.Bounds.IsEmpty)
@@ -77,6 +88,7 @@ namespace osu.Framework.Graphics.Textures
             return actualBounds / parent.ScaleAdjust;
         }
 
-        public override RectangleF GetTextureRect(RectangleF? area = null) => parent.GetTextureRect(boundsInParent(area));
+        public override RectangleF GetTextureRect(RectangleF? area = null) =>
+            parent.GetTextureRect(boundsInParent(area));
     }
 }

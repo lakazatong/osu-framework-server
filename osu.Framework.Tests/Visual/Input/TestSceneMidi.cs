@@ -40,13 +40,18 @@ namespace osu.Framework.Tests.Visual.Input
         {
             base.LoadComplete();
 
-            AddToggleStep("toggle midi handler", enabled =>
-            {
-                var midiHandler = host.AvailableInputHandlers.OfType<MidiHandler>().FirstOrDefault();
+            AddToggleStep(
+                "toggle midi handler",
+                enabled =>
+                {
+                    var midiHandler = host
+                        .AvailableInputHandlers.OfType<MidiHandler>()
+                        .FirstOrDefault();
 
-                if (midiHandler != null)
-                    midiHandler.Enabled.Value = enabled;
-            });
+                    if (midiHandler != null)
+                        midiHandler.Enabled.Value = enabled;
+                }
+            );
         }
 
         protected override bool OnMidiDown(MidiDownEvent e)
@@ -89,14 +94,14 @@ namespace osu.Framework.Tests.Visual.Input
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.DarkGreen,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = key.ToString().Replace("Sharp", "#")
-                    }
+                        Text = key.ToString().Replace("Sharp", "#"),
+                    },
                 };
             }
 
@@ -107,7 +112,11 @@ namespace osu.Framework.Tests.Visual.Input
 
                 const float base_opacity = 0.25f; // to make a velocity of 1 not completely invisible
 
-                background.FadeTo(base_opacity + e.Velocity / 128f * (1 - base_opacity), 100, Easing.OutQuint);
+                background.FadeTo(
+                    base_opacity + e.Velocity / 128f * (1 - base_opacity),
+                    100,
+                    Easing.OutQuint
+                );
                 return true;
             }
 

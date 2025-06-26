@@ -22,7 +22,10 @@ namespace osu.Framework.Graphics.Visualisation
 {
     [Cached]
     // Implementing IRequireHighFrequencyMousePosition is necessary to gain the ability to block high frequency mouse position updates.
-    internal partial class DrawVisualiser : OverlayContainer, IContainVisualisedDrawables, IRequireHighFrequencyMousePosition
+    internal partial class DrawVisualiser
+        : OverlayContainer,
+            IContainVisualisedDrawables,
+            IRequireHighFrequencyMousePosition
     {
         public Vector2 ToolPosition
         {
@@ -61,7 +64,7 @@ namespace osu.Framework.Graphics.Visualisation
                     ToggleInspector = toggleInspector,
                     TakeScreenshot = takeScreenshot,
                 },
-                new CursorContainer()
+                new CursorContainer(),
             };
 
             drawableInspector = treeContainer.DrawableInspector;
@@ -97,7 +100,9 @@ namespace osu.Framework.Graphics.Visualisation
             // Rehighlight the last highlight
             if (lastHighlight != null)
             {
-                VisualisedDrawable visualised = targetVisualiser.FindVisualisedDrawable(lastHighlight);
+                VisualisedDrawable visualised = targetVisualiser.FindVisualisedDrawable(
+                    lastHighlight
+                );
 
                 if (visualised != null)
                 {
@@ -124,25 +129,30 @@ namespace osu.Framework.Graphics.Visualisation
             if (currentTarget == null)
                 return;
 
-            Add(new DrawableScreenshotter(currentTarget, image =>
-            {
-                if (image == null)
-                    return;
+            Add(
+                new DrawableScreenshotter(
+                    currentTarget,
+                    image =>
+                    {
+                        if (image == null)
+                            return;
 
-                clipboard.SetImage(image);
+                        clipboard.SetImage(image);
 
-                if (currentTarget.IsDisposed)
-                    return;
+                        if (currentTarget.IsDisposed)
+                            return;
 
-                var flash = new FlashyBox(static d => d.ScreenSpaceDrawQuad)
-                {
-                    Target = currentTarget,
-                    Depth = 1
-                };
-                Add(flash);
+                        var flash = new FlashyBox(static d => d.ScreenSpaceDrawQuad)
+                        {
+                            Target = currentTarget,
+                            Depth = 1,
+                        };
+                        Add(flash);
 
-                flash.FadeOut(1000, Easing.Out).Expire();
-            }));
+                        flash.FadeOut(1000, Easing.Out).Expire();
+                    }
+                )
+            );
         }
 
         protected override void LoadComplete()
@@ -236,10 +246,16 @@ namespace osu.Framework.Graphics.Visualisation
             base.Update();
 
             updateCursorTarget();
-            overlay.Target = Searching ? cursorTarget : inputManager.HoveredDrawables.OfType<VisualisedDrawable>().FirstOrDefault()?.Target;
+            overlay.Target = Searching
+                ? cursorTarget
+                : inputManager
+                    .HoveredDrawables.OfType<VisualisedDrawable>()
+                    .FirstOrDefault()
+                    ?.Target;
         }
 
-        private static readonly Dictionary<Type, bool> is_type_valid_target_cache = new Dictionary<Type, bool>();
+        private static readonly Dictionary<Type, bool> is_type_valid_target_cache =
+            new Dictionary<Type, bool>();
 
         private void updateCursorTarget()
         {
@@ -299,8 +315,14 @@ namespace osu.Framework.Graphics.Visualisation
                     if (!composite.Masking)
                         return;
 
-                    if ((composite.BorderThickness > 0 && composite.BorderColour.MaxAlpha > 0)
-                        || (composite.EdgeEffect.Type != EdgeEffectType.None && composite.EdgeEffect.Radius > 0 && composite.EdgeEffect.Colour.Alpha > 0))
+                    if (
+                        (composite.BorderThickness > 0 && composite.BorderColour.MaxAlpha > 0)
+                        || (
+                            composite.EdgeEffect.Type != EdgeEffectType.None
+                            && composite.EdgeEffect.Radius > 0
+                            && composite.EdgeEffect.Colour.Alpha > 0
+                        )
+                    )
                     {
                         drawableTarget = composite;
                     }
@@ -317,8 +339,10 @@ namespace osu.Framework.Graphics.Visualisation
             // Valid if the drawable contains the mouse position and the position wouldn't be masked by the parent
             bool validForTarget(Drawable drawable)
             {
-                if (!drawable.ScreenSpaceDrawQuad.Contains(inputManager.CurrentState.Mouse.Position)
-                    || maskingQuad?.Contains(inputManager.CurrentState.Mouse.Position) == false)
+                if (
+                    !drawable.ScreenSpaceDrawQuad.Contains(inputManager.CurrentState.Mouse.Position)
+                    || maskingQuad?.Contains(inputManager.CurrentState.Mouse.Position) == false
+                )
                 {
                     return false;
                 }
@@ -329,7 +353,11 @@ namespace osu.Framework.Graphics.Visualisation
                     return valid;
 
                 // Exclude "overlay" objects (Component/etc) that don't draw anything and don't override CreateDrawNode().
-                valid = type.GetMethod(nameof(CreateDrawNode), BindingFlags.Instance | BindingFlags.NonPublic)?.DeclaringType != typeof(Drawable);
+                valid =
+                    type.GetMethod(
+                        nameof(CreateDrawNode),
+                        BindingFlags.Instance | BindingFlags.NonPublic
+                    )?.DeclaringType != typeof(Drawable);
 
                 // Exclude objects that specify they should be hidden anyway.
                 valid &= !type.GetCustomAttributes<DrawVisualiserHiddenAttribute>(true).Any();
@@ -384,7 +412,8 @@ namespace osu.Framework.Graphics.Visualisation
             return base.OnClick(e);
         }
 
-        private readonly Dictionary<Drawable, VisualisedDrawable> visCache = new Dictionary<Drawable, VisualisedDrawable>();
+        private readonly Dictionary<Drawable, VisualisedDrawable> visCache =
+            new Dictionary<Drawable, VisualisedDrawable>();
 
         public VisualisedDrawable GetVisualiserFor(Drawable drawable)
         {

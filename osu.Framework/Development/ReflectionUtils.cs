@@ -36,7 +36,11 @@ namespace osu.Framework.Development
         // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         // ***********************************************************************
 
-        private const BindingFlags all_members = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        private const BindingFlags all_members =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.Static;
 
         /// <summary>
         /// Returns all methods declared by the specified fixture type that have the specified attribute, optionally
@@ -46,26 +50,30 @@ namespace osu.Framework.Development
         /// <param name="fixtureType">The type to examine.</param>
         /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        internal static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
+        internal static MethodInfo[] GetMethodsWithAttribute(
+            Type fixtureType,
+            Type attributeType,
+            bool inherit
+        )
         {
             if (!inherit)
             {
                 return fixtureType
-                       .GetMethods(all_members | BindingFlags.DeclaredOnly)
-                       .Where(method => method.IsDefined(attributeType, inherit: false))
-                       .ToArray();
+                    .GetMethods(all_members | BindingFlags.DeclaredOnly)
+                    .Where(method => method.IsDefined(attributeType, inherit: false))
+                    .ToArray();
             }
 
             var methodsByDeclaringType = fixtureType
-                                         .GetMethods(all_members | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
-                                         .Where(method => method.IsDefined(attributeType, inherit: true))
-                                         .ToLookup(method => method.DeclaringType);
+                .GetMethods(all_members | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
+                .Where(method => method.IsDefined(attributeType, inherit: true))
+                .ToLookup(method => method.DeclaringType);
 
             return fixtureType
-                   .EnumerateBaseTypes()
-                   .Reverse()
-                   .SelectMany(declaringType => methodsByDeclaringType[declaringType])
-                   .ToArray();
+                .EnumerateBaseTypes()
+                .Reverse()
+                .SelectMany(declaringType => methodsByDeclaringType[declaringType])
+                .ToArray();
         }
     }
 }

@@ -30,8 +30,14 @@ namespace osu.Framework.Benchmarks
 
         private partial class TestGame : Game
         {
-            public readonly AudioContainer Container1 = new AudioContainer { RelativeSizeAxes = Axes.Both };
-            public readonly AudioContainer Container2 = new AudioContainer { RelativeSizeAxes = Axes.Both };
+            public readonly AudioContainer Container1 = new AudioContainer
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
+            public readonly AudioContainer Container2 = new AudioContainer
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
 
             public readonly AudioContainer Sample = new AudioContainer(); // usually a sample, but we're just testing the base class here
 
@@ -43,11 +49,7 @@ namespace osu.Framework.Benchmarks
             {
                 base.LoadComplete();
 
-                InternalChildren = new Drawable[]
-                {
-                    Container1,
-                    Container2,
-                };
+                InternalChildren = new Drawable[] { Container1, Container2 };
 
                 transferTo(Container1);
             }

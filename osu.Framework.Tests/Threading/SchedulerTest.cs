@@ -28,7 +28,9 @@ namespace osu.Framework.Tests.Threading
         {
             int matchingLogCount = 0;
 
-            using (var storage = new TemporaryNativeStorage(nameof(TestLogOutputFromManyQueuedTasks)))
+            using (
+                var storage = new TemporaryNativeStorage(nameof(TestLogOutputFromManyQueuedTasks))
+            )
             {
                 Logger.Storage = storage;
                 Logger.Enabled = true;
@@ -40,7 +42,8 @@ namespace osu.Framework.Tests.Threading
                 for (int i = 0; i < Scheduler.LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL / 2; i++)
                 {
                     scheduler.Add(() => { });
-                    if (withFlushing) scheduler.Update();
+                    if (withFlushing)
+                        scheduler.Update();
                 }
 
                 Assert.AreEqual(0, matchingLogCount);
@@ -48,7 +51,8 @@ namespace osu.Framework.Tests.Threading
                 for (int i = 0; i < Scheduler.LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL / 2; i++)
                 {
                     scheduler.Add(() => { });
-                    if (withFlushing) scheduler.Update();
+                    if (withFlushing)
+                        scheduler.Update();
                 }
 
                 Assert.AreEqual(withFlushing ? 0 : 1, matchingLogCount);
@@ -56,7 +60,8 @@ namespace osu.Framework.Tests.Threading
                 for (int i = 0; i < Scheduler.LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL; i++)
                 {
                     scheduler.Add(() => { });
-                    if (withFlushing) scheduler.Update();
+                    if (withFlushing)
+                        scheduler.Update();
                 }
 
                 Assert.AreEqual(withFlushing ? 0 : 2, matchingLogCount);
@@ -67,18 +72,27 @@ namespace osu.Framework.Tests.Threading
 
                 void logTest(LogEntry entry)
                 {
-                    if (entry.Target == LoggingTarget.Performance && entry.Message.Contains("tasks pending"))
+                    if (
+                        entry.Target == LoggingTarget.Performance
+                        && entry.Message.Contains("tasks pending")
+                    )
                         matchingLogCount++;
                 }
             }
         }
 
         [Test]
-        public void TestLogOutputFromManyQueuedScheduledTasks([Values(false, true)] bool withFlushing)
+        public void TestLogOutputFromManyQueuedScheduledTasks(
+            [Values(false, true)] bool withFlushing
+        )
         {
             int matchingLogCount = 0;
 
-            using (var storage = new TemporaryNativeStorage(nameof(TestLogOutputFromManyQueuedScheduledTasks)))
+            using (
+                var storage = new TemporaryNativeStorage(
+                    nameof(TestLogOutputFromManyQueuedScheduledTasks)
+                )
+            )
             {
                 Logger.Storage = storage;
                 Logger.Enabled = true;
@@ -90,7 +104,8 @@ namespace osu.Framework.Tests.Threading
                 for (int i = 0; i < Scheduler.LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL / 2; i++)
                 {
                     scheduler.AddDelayed(() => { }, 0);
-                    if (withFlushing) scheduler.Update();
+                    if (withFlushing)
+                        scheduler.Update();
                 }
 
                 Assert.AreEqual(0, matchingLogCount);
@@ -98,7 +113,8 @@ namespace osu.Framework.Tests.Threading
                 for (int i = 0; i < Scheduler.LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL / 2; i++)
                 {
                     scheduler.AddDelayed(() => { }, 0);
-                    if (withFlushing) scheduler.Update();
+                    if (withFlushing)
+                        scheduler.Update();
                 }
 
                 Assert.AreEqual(withFlushing ? 0 : 1, matchingLogCount);
@@ -106,7 +122,8 @@ namespace osu.Framework.Tests.Threading
                 for (int i = 0; i < Scheduler.LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL; i++)
                 {
                     scheduler.AddDelayed(() => { }, 0);
-                    if (withFlushing) scheduler.Update();
+                    if (withFlushing)
+                        scheduler.Update();
                 }
 
                 Assert.AreEqual(withFlushing ? 0 : 2, matchingLogCount);
@@ -117,14 +134,20 @@ namespace osu.Framework.Tests.Threading
 
                 void logTest(LogEntry entry)
                 {
-                    if (entry.Target == LoggingTarget.Performance && entry.Message.Contains("tasks pending"))
+                    if (
+                        entry.Target == LoggingTarget.Performance
+                        && entry.Message.Contains("tasks pending")
+                    )
                         matchingLogCount++;
                 }
             }
         }
 
         [Test]
-        public void TestScheduleOnce([Values(false, true)] bool fromMainThread, [Values(false, true)] bool forceScheduled)
+        public void TestScheduleOnce(
+            [Values(false, true)] bool fromMainThread,
+            [Values(false, true)] bool forceScheduled
+        )
         {
             this.fromMainThread = fromMainThread;
 
@@ -265,13 +288,18 @@ namespace osu.Framework.Tests.Threading
 
             ScheduledDelegate? del = null;
 
-            scheduler.Add(del = new ScheduledDelegate(() =>
-            {
-                invocations++;
+            scheduler.Add(
+                del = new ScheduledDelegate(
+                    () =>
+                    {
+                        invocations++;
 
-                // ReSharper disable once AccessToModifiedClosure
-                del?.Cancel();
-            }, 1000));
+                        // ReSharper disable once AccessToModifiedClosure
+                        del?.Cancel();
+                    },
+                    1000
+                )
+            );
 
             Assert.AreEqual(ScheduledDelegate.RunState.Waiting, del.State);
 
@@ -351,10 +379,12 @@ namespace osu.Framework.Tests.Threading
 
             int invocations = 0;
 
-            scheduler.Add(new ScheduledDelegate(() => invocations++, 500, 500)
-            {
-                PerformRepeatCatchUpExecutions = performCatchUp
-            });
+            scheduler.Add(
+                new ScheduledDelegate(() => invocations++, 500, 500)
+                {
+                    PerformRepeatCatchUpExecutions = performCatchUp,
+                }
+            );
 
             for (double d = 0; d <= 10000; d += 2000)
             {
@@ -554,14 +584,18 @@ namespace osu.Framework.Tests.Threading
             else
                 Assert.AreEqual(max_reschedules, reschedules);
 
-            void scheduleTask() => scheduler.Add(() =>
-            {
-                if (reschedules == max_reschedules)
-                    return;
+            void scheduleTask() =>
+                scheduler.Add(
+                    () =>
+                    {
+                        if (reschedules == max_reschedules)
+                            return;
 
-                reschedules++;
-                scheduleTask();
-            }, forceScheduled);
+                        reschedules++;
+                        scheduleTask();
+                    },
+                    forceScheduled
+                );
         }
 
         [Test]

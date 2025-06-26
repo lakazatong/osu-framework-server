@@ -6,9 +6,7 @@ namespace osu.Framework.Bindables
     public class BindableInt : BindableNumber<int>
     {
         public BindableInt(int defaultValue = 0)
-            : base(defaultValue)
-        {
-        }
+            : base(defaultValue) { }
 
         protected override Bindable<int> CreateInstance() => new BindableInt();
     }

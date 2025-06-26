@@ -28,7 +28,12 @@ namespace osu.Framework.Input.Events
         /// </summary>
         public Vector2 Delta => MousePosition - LastMousePosition;
 
-        public DragEvent(InputState state, MouseButton button, Vector2? screenSpaceMousePosition = null, Vector2? screenSpaceLastMousePosition = null)
+        public DragEvent(
+            InputState state,
+            MouseButton button,
+            Vector2? screenSpaceMousePosition = null,
+            Vector2? screenSpaceLastMousePosition = null
+        )
             : base(state, button, screenSpaceMousePosition)
         {
             ScreenSpaceLastMousePosition = screenSpaceLastMousePosition ?? state.Mouse.Position;

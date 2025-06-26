@@ -21,7 +21,7 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// The target <see cref="Drawable.DrawSize"/> to be enforced according to <see cref="Strategy"/>.
         /// </summary>
-        public Vector2 TargetDrawSize = new Vector2(1920, 1080);
+        public Vector2 TargetDrawSize = new Vector2(1024, 768);
 
         /// <summary>
         /// The strategy to be used for enforcing <see cref="TargetDrawSize"/>. The default strategy
@@ -32,10 +32,7 @@ namespace osu.Framework.Graphics.Containers
 
         public DrawSizePreservingFillContainer()
         {
-            AddInternal(content = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(content = new Container { RelativeSizeAxes = Axes.Both });
 
             RelativeSizeAxes = Axes.Both;
         }
@@ -67,7 +64,8 @@ namespace osu.Framework.Graphics.Containers
 
             content.Size = new Vector2(
                 content.Scale.X == 0 ? 0 : 1 / content.Scale.X,
-                content.Scale.Y == 0 ? 0 : 1 / content.Scale.Y);
+                content.Scale.Y == 0 ? 0 : 1 / content.Scale.Y
+            );
         }
     }
 

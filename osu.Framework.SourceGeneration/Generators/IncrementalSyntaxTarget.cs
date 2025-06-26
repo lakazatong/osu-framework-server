@@ -29,7 +29,9 @@ namespace osu.Framework.SourceGeneration.Generators
             return this;
         }
 
-        public IncrementalSyntaxTarget WithSemanticTarget(Func<ClassDeclarationSyntax, SemanticModel, IncrementalSemanticTarget> createTarget)
+        public IncrementalSyntaxTarget WithSemanticTarget(
+            Func<ClassDeclarationSyntax, SemanticModel, IncrementalSemanticTarget> createTarget
+        )
         {
             SemanticTarget ??= createTarget(Syntax, semanticModel!);
             semanticModel = null;
@@ -38,17 +40,22 @@ namespace osu.Framework.SourceGeneration.Generators
 
         public bool Equals(IncrementalSyntaxTarget? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return Syntax == other.Syntax;
         }
 
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
 
             return Equals((IncrementalSyntaxTarget)obj);
         }
@@ -64,10 +71,14 @@ namespace osu.Framework.SourceGeneration.Generators
 
             public bool Equals(IncrementalSyntaxTarget? x, IncrementalSyntaxTarget? y)
             {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
-                if (x.GetType() != y.GetType()) return false;
+                if (ReferenceEquals(x, y))
+                    return true;
+                if (ReferenceEquals(x, null))
+                    return false;
+                if (ReferenceEquals(y, null))
+                    return false;
+                if (x.GetType() != y.GetType())
+                    return false;
 
                 return x.SyntaxName == y.SyntaxName;
             }

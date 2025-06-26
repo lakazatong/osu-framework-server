@@ -14,9 +14,7 @@ namespace osu.Framework.iOS.Graphics.Textures
     internal class IOSTextureLoaderStore : AppleTextureLoaderStore
     {
         public IOSTextureLoaderStore(IResourceStore<byte[]> store)
-            : base(store)
-        {
-        }
+            : base(store) { }
 
         protected override unsafe Image<TPixel> ImageFromStream<TPixel>(Stream stream)
         {
@@ -30,7 +28,9 @@ namespace osu.Framework.iOS.Graphics.Textures
 
                 using var uiImage = UIImage.LoadFromData(nativeData);
                 if (uiImage == null)
-                    throw new ArgumentException($"{nameof(Image)} could not be created from {nameof(stream)}.");
+                    throw new ArgumentException(
+                        $"{nameof(Image)} could not be created from {nameof(stream)}."
+                    );
 
                 var cgImage = new Platform.Apple.Native.CGImage(uiImage.CGImage!.Handle);
                 return ImageFromCGImage<TPixel>(cgImage);

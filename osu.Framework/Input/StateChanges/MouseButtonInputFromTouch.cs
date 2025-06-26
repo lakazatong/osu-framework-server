@@ -8,7 +8,11 @@ namespace osu.Framework.Input.StateChanges
 {
     public class MouseButtonInputFromTouch : MouseButtonInput, ISourcedFromTouch
     {
-        public MouseButtonInputFromTouch(MouseButton button, bool isPressed, TouchStateChangeEvent touchEvent)
+        public MouseButtonInputFromTouch(
+            MouseButton button,
+            bool isPressed,
+            TouchStateChangeEvent touchEvent
+        )
             : base(button, isPressed)
         {
             TouchEvent = touchEvent;

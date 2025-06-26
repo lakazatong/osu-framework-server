@@ -25,17 +25,24 @@ namespace osu.Framework.Graphics.Veldrid
         {
             Pipeline = pipeline;
 
-            usageStat = GlobalStatistics.Get<ResourcePoolUsageStatistic>(nameof(VeldridRenderer), $"{name} usage");
+            usageStat = GlobalStatistics.Get<ResourcePoolUsageStatistic>(
+                nameof(VeldridRenderer),
+                $"{name} usage"
+            );
             usageStat.Value = new ResourcePoolUsageStatistic();
 
             pipeline.ExecutionStarted += executionStarted;
             pipeline.ExecutionFinished += executionFinished;
         }
 
-        protected bool TryGet([NotNullWhen(true)] out T? resource)
-            => TryGet<object>(static (_, _) => true, null, out resource);
+        protected bool TryGet([NotNullWhen(true)] out T? resource) =>
+            TryGet<object>(static (_, _) => true, null, out resource);
 
-        protected bool TryGet<TState>(Func<T, TState?, bool> match, TState? state, [NotNullWhen(true)] out T? resource)
+        protected bool TryGet<TState>(
+            Func<T, TState?, bool> match,
+            TState? state,
+            [NotNullWhen(true)] out T? resource
+        )
         {
             // Reverse iteration is important to prefer reusing recently returned textures.
             // This avoids the case of a large pool being constantly cycled and therefore never

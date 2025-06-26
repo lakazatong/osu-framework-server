@@ -13,10 +13,21 @@ namespace osu.Framework.Platform.Windows.Native
     internal static class Explorer
     {
         [DllImport("shell32.dll", SetLastError = true)]
-        private static extern int SHOpenFolderAndSelectItems(IntPtr pidlFolder, uint cidl, [In, MarshalAs(UnmanagedType.LPArray)] IntPtr[] apidl, uint dwFlags);
+        private static extern int SHOpenFolderAndSelectItems(
+            IntPtr pidlFolder,
+            uint cidl,
+            [In, MarshalAs(UnmanagedType.LPArray)] IntPtr[] apidl,
+            uint dwFlags
+        );
 
         [DllImport("shell32.dll", SetLastError = true)]
-        private static extern void SHParseDisplayName([MarshalAs(UnmanagedType.LPWStr)] string name, IntPtr bindingContext, [Out] out IntPtr pidl, uint sfgaoIn, [Out] out uint psfgaoOut);
+        private static extern void SHParseDisplayName(
+            [MarshalAs(UnmanagedType.LPWStr)] string name,
+            IntPtr bindingContext,
+            [Out] out IntPtr pidl,
+            uint sfgaoIn,
+            [Out] out uint psfgaoOut
+        );
 
         internal static void OpenFolderAndSelectItem(string filename)
         {
@@ -27,13 +38,19 @@ namespace osu.Framework.Platform.Windows.Native
 
                 try
                 {
-                    filename = filename.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+                    filename = filename.Replace(
+                        Path.AltDirectorySeparatorChar,
+                        Path.DirectorySeparatorChar
+                    );
 
                     string? folderPath = Path.GetDirectoryName(filename);
 
                     if (folderPath == null)
                     {
-                        Logger.Log($"Failed to get directory for {filename}", level: LogLevel.Debug);
+                        Logger.Log(
+                            $"Failed to get directory for {filename}",
+                            level: LogLevel.Debug
+                        );
                         return;
                     }
 
@@ -41,7 +58,10 @@ namespace osu.Framework.Platform.Windows.Native
 
                     if (nativeFolder == IntPtr.Zero)
                     {
-                        Logger.Log($"Cannot find native folder for '{folderPath}'", level: LogLevel.Error);
+                        Logger.Log(
+                            $"Cannot find native folder for '{folderPath}'",
+                            level: LogLevel.Error
+                        );
                         return;
                     }
 
@@ -55,7 +75,10 @@ namespace osu.Framework.Platform.Windows.Native
                     }
                     else
                     {
-                        Logger.Log($"Cannot find native file for '{filename}'", level: LogLevel.Debug);
+                        Logger.Log(
+                            $"Cannot find native file for '{filename}'",
+                            level: LogLevel.Debug
+                        );
 
                         // Open the folder without the file selected if we can't find the file
                         fileArray = new[] { nativeFolder };

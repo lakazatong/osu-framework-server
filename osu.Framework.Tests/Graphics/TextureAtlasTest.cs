@@ -47,19 +47,41 @@ namespace osu.Framework.Tests.Graphics
 
             if (texture != null)
             {
-                Assert.AreEqual(texture.Width, width, message: $"Width: {texture.Width} != {width} for texture {width}x{height}");
-                Assert.AreEqual(texture.Height, height, message: $"Height: {texture.Height} != {height} for texture {width}x{height}");
+                Assert.AreEqual(
+                    texture.Width,
+                    width,
+                    message: $"Width: {texture.Width} != {width} for texture {width}x{height}"
+                );
+                Assert.AreEqual(
+                    texture.Height,
+                    height,
+                    message: $"Height: {texture.Height} != {height} for texture {width}x{height}"
+                );
 
                 RectangleF rect = texture.GetTextureRect();
-                Assert.LessOrEqual(rect.X + rect.Width, 1, message: $"Returned texture is wider than TextureAtlas for texture {width}x{height}");
-                Assert.LessOrEqual(rect.Y + rect.Height, 1, message: $"Returned texture is taller than TextureAtlas for texture {width}x{height}");
+                Assert.LessOrEqual(
+                    rect.X + rect.Width,
+                    1,
+                    message: $"Returned texture is wider than TextureAtlas for texture {width}x{height}"
+                );
+                Assert.LessOrEqual(
+                    rect.Y + rect.Height,
+                    1,
+                    message: $"Returned texture is taller than TextureAtlas for texture {width}x{height}"
+                );
             }
             else
             {
-                Assert.True(width > 1024 - TextureAtlas.PADDING * 2 || height > 1024 - TextureAtlas.PADDING * 2 ||
-                            (width > 1024 - TextureAtlas.PADDING * 2 - TextureAtlas.WHITE_PIXEL_SIZE
-                             && height > 1024 - TextureAtlas.PADDING * 2 - TextureAtlas.WHITE_PIXEL_SIZE),
-                    message: $"Returned texture is null, but should have fit: {width}x{height}");
+                Assert.True(
+                    width > 1024 - TextureAtlas.PADDING * 2
+                        || height > 1024 - TextureAtlas.PADDING * 2
+                        || (
+                            width > 1024 - TextureAtlas.PADDING * 2 - TextureAtlas.WHITE_PIXEL_SIZE
+                            && height
+                                > 1024 - TextureAtlas.PADDING * 2 - TextureAtlas.WHITE_PIXEL_SIZE
+                        ),
+                    message: $"Returned texture is null, but should have fit: {width}x{height}"
+                );
             }
         }
 
@@ -73,8 +95,16 @@ namespace osu.Framework.Tests.Graphics
             Texture texture = atlas.Add(64, 64);
 
             RectangleF rect = texture.AsNonNull().GetTextureRect();
-            Assert.GreaterOrEqual(atlas_size * rect.X, TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING, message: "Texture is placed on top of the white pixel");
-            Assert.GreaterOrEqual(atlas_size * rect.Y, TextureAtlas.PADDING, message: "Texture has insufficient padding");
+            Assert.GreaterOrEqual(
+                atlas_size * rect.X,
+                TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING,
+                message: "Texture is placed on top of the white pixel"
+            );
+            Assert.GreaterOrEqual(
+                atlas_size * rect.Y,
+                TextureAtlas.PADDING,
+                message: "Texture has insufficient padding"
+            );
         }
 
         [Test]
@@ -87,8 +117,16 @@ namespace osu.Framework.Tests.Graphics
             Texture texture = atlas.Add(atlas_size - 2 * TextureAtlas.PADDING, 64);
 
             RectangleF rect = texture.AsNonNull().GetTextureRect();
-            Assert.GreaterOrEqual(atlas_size * rect.X, TextureAtlas.PADDING, message: "Texture has insufficient padding");
-            Assert.GreaterOrEqual(atlas_size * rect.Y, TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING, message: "Texture is placed on top of the white pixel");
+            Assert.GreaterOrEqual(
+                atlas_size * rect.X,
+                TextureAtlas.PADDING,
+                message: "Texture has insufficient padding"
+            );
+            Assert.GreaterOrEqual(
+                atlas_size * rect.Y,
+                TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING,
+                message: "Texture is placed on top of the white pixel"
+            );
         }
 
         [Test]

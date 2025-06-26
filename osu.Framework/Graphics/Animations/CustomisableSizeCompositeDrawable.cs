@@ -54,7 +54,8 @@ namespace osu.Framework.Graphics.Animations
         {
             FillAspectRatio = GetFillAspectRatio();
 
-            if (RelativeSizeAxes == Axes.Both) return;
+            if (RelativeSizeAxes == Axes.Both)
+                return;
 
             var frameSize = GetCurrentDisplaySize();
 

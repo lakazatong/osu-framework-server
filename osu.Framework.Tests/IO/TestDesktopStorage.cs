@@ -26,8 +26,15 @@ namespace osu.Framework.Tests.IO
                 Assert.Throws<ArgumentException>(() => storage.GetFullPath(".."));
                 Assert.Throws<ArgumentException>(() => storage.GetFullPath("./../"));
 
-                Assert.AreEqual(Path.GetFullPath(Path.Combine(basePath, "sub", "test")) + Path.DirectorySeparatorChar, storage.GetFullPath("sub/test/"));
-                Assert.AreEqual(Path.GetFullPath(Path.Combine(basePath, "sub", "test")), storage.GetFullPath("sub/test"));
+                Assert.AreEqual(
+                    Path.GetFullPath(Path.Combine(basePath, "sub", "test"))
+                        + Path.DirectorySeparatorChar,
+                    storage.GetFullPath("sub/test/")
+                );
+                Assert.AreEqual(
+                    Path.GetFullPath(Path.Combine(basePath, "sub", "test")),
+                    storage.GetFullPath("sub/test")
+                );
             }
         }
 
@@ -54,7 +61,10 @@ namespace osu.Framework.Tests.IO
 
             using (var storage = new TemporaryNativeStorage(guid))
             {
-                Assert.That(storage.GetStorageForDirectory("subdir").GetFullPath(string.Empty), Is.EqualTo(Path.Combine(storage.GetFullPath(string.Empty), "subdir")));
+                Assert.That(
+                    storage.GetStorageForDirectory("subdir").GetFullPath(string.Empty),
+                    Is.EqualTo(Path.Combine(storage.GetFullPath(string.Empty), "subdir"))
+                );
             }
         }
 
@@ -65,7 +75,10 @@ namespace osu.Framework.Tests.IO
 
             using (var storage = new TemporaryNativeStorage(guid))
             {
-                Assert.That(storage.GetStorageForDirectory(string.Empty).GetFullPath(string.Empty), Is.EqualTo(storage.GetFullPath(string.Empty)));
+                Assert.That(
+                    storage.GetStorageForDirectory(string.Empty).GetFullPath(string.Empty),
+                    Is.EqualTo(storage.GetFullPath(string.Empty))
+                );
             }
         }
 
@@ -104,7 +117,10 @@ namespace osu.Framework.Tests.IO
         private static bool isCaseSensitiveFilesystem()
         {
             // First test if this unit test is running on a filesystem which is case sensitive.
-            string testFile = Path.Combine(TestRunHeadlessGameHost.TemporaryTestDirectory, "case-sensitivity-test");
+            string testFile = Path.Combine(
+                TestRunHeadlessGameHost.TemporaryTestDirectory,
+                "case-sensitivity-test"
+            );
             File.WriteAllText(testFile, "test");
             bool isCaseSensitive = !File.Exists(testFile.ToUpperInvariant());
             File.Delete(testFile);

@@ -85,9 +85,7 @@ namespace osu.Framework.Input
         /// Sets where the native implementation displays IME controls and other text input elements.
         /// </summary>
         /// <param name="rectangle">Should be provided in screen space.</param>
-        public virtual void SetImeRectangle(RectangleF rectangle)
-        {
-        }
+        public virtual void SetImeRectangle(RectangleF rectangle) { }
 
         /// <summary>
         /// Resets IME.
@@ -123,26 +121,20 @@ namespace osu.Framework.Input
         /// An active native implementation should call <see cref="TriggerTextInput"/> on new text input
         /// and forward IME composition events through <see cref="TriggerImeComposition"/> and <see cref="TriggerImeResult"/>.
         /// </remarks>
-        protected virtual void ActivateTextInput(TextInputProperties properties)
-        {
-        }
+        protected virtual void ActivateTextInput(TextInputProperties properties) { }
 
         /// <inheritdoc cref="EnsureActivated"/>
         /// Should be overriden per-platform.
         /// <remarks>
         /// Only called if the native implementation has been activated with <see cref="Activate"/>.
         /// </remarks>
-        protected virtual void EnsureTextInputActivated(TextInputProperties properties)
-        {
-        }
+        protected virtual void EnsureTextInputActivated(TextInputProperties properties) { }
 
         /// <summary>
         /// Deactivates the native implementation that provides text input.
         /// Should be overriden per-platform.
         /// </summary>
-        protected virtual void DeactivateTextInput()
-        {
-        }
+        protected virtual void DeactivateTextInput() { }
 
         protected void TriggerTextInput(string text)
         {

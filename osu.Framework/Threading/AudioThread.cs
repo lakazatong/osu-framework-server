@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +12,7 @@ using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Platform.Linux.Native;
+using osu.Framework.Statistics;
 
 namespace osu.Framework.Threading
 {
@@ -34,21 +34,25 @@ namespace osu.Framework.Threading
             ThreadSafety.IsAudioThread = true;
         }
 
-        internal override IEnumerable<StatisticsCounterType> StatisticsCounters => new[]
-        {
-            StatisticsCounterType.TasksRun,
-            StatisticsCounterType.Tracks,
-            StatisticsCounterType.Samples,
-            StatisticsCounterType.SChannels,
-            StatisticsCounterType.Components,
-            StatisticsCounterType.MixChannels,
-        };
+        internal override IEnumerable<StatisticsCounterType> StatisticsCounters =>
+            new[]
+            {
+                StatisticsCounterType.TasksRun,
+                StatisticsCounterType.Tracks,
+                StatisticsCounterType.Samples,
+                StatisticsCounterType.SChannels,
+                StatisticsCounterType.Components,
+                StatisticsCounterType.MixChannels,
+            };
 
         private readonly List<AudioManager> managers = new List<AudioManager>();
 
         private static readonly HashSet<int> initialised_devices = new HashSet<int>();
 
-        private static readonly GlobalStatistic<double> cpu_usage = GlobalStatistics.Get<double>("Audio", "Bass CPU%");
+        private static readonly GlobalStatistic<double> cpu_usage = GlobalStatistics.Get<double>(
+            "Audio",
+            "Bass CPU%"
+        );
 
         private long frameCount;
 
@@ -165,7 +169,8 @@ namespace osu.Framework.Threading
 
             initialised_devices.Remove(deviceId);
 
-            static bool canSelectDevice(int deviceId) => Bass.GetDeviceInfo(deviceId, out var deviceInfo) && deviceInfo.IsInitialized;
+            static bool canSelectDevice(int deviceId) =>
+                Bass.GetDeviceInfo(deviceId, out var deviceInfo) && deviceInfo.IsInitialized;
         }
 
         /// <summary>
@@ -176,7 +181,10 @@ namespace osu.Framework.Threading
             if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
             {
                 // required for the time being to address libbass_fx.so load failures (see https://github.com/ppy/osu/issues/2852)
-                Library.Load("libbass.so", Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL);
+                Library.Load(
+                    "libbass.so",
+                    Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL
+                );
             }
         }
 
@@ -229,22 +237,32 @@ namespace osu.Framework.Threading
 
                 return Bass.ChannelGetData(globalMixerHandle.Value!.Value, buffer, length);
             };
-            wasapiNotifyProcedure = (notify, device, _) => Scheduler.Add(() =>
-            {
-                if (notify == WasapiNotificationType.DefaultOutput)
+            wasapiNotifyProcedure = (notify, device, _) =>
+                Scheduler.Add(() =>
                 {
-                    freeWasapi();
-                    initWasapi(device);
-                }
-            });
+                    if (notify == WasapiNotificationType.DefaultOutput)
+                    {
+                        freeWasapi();
+                        initWasapi(device);
+                    }
+                });
 
-            bool initialised = BassWasapi.Init(wasapiDevice, Procedure: wasapiProcedure, Buffer: 0.02f, Period: 0.01f);
+            bool initialised = BassWasapi.Init(
+                wasapiDevice,
+                Procedure: wasapiProcedure,
+                Buffer: 0.02f,
+                Period: 0.01f
+            );
 
             if (!initialised)
                 return;
 
             BassWasapi.GetInfo(out var wasapiInfo);
-            globalMixerHandle.Value = BassMix.CreateMixerStream(wasapiInfo.Frequency, wasapiInfo.Channels, BassFlags.MixerNonStop | BassFlags.Decode | BassFlags.Float);
+            globalMixerHandle.Value = BassMix.CreateMixerStream(
+                wasapiInfo.Frequency,
+                wasapiInfo.Channels,
+                BassFlags.MixerNonStop | BassFlags.Decode | BassFlags.Float
+            );
             BassWasapi.Start();
 
             BassWasapi.SetNotify(wasapiNotifyProcedure);
@@ -252,7 +270,8 @@ namespace osu.Framework.Threading
 
         private void freeWasapi()
         {
-            if (globalMixerHandle.Value == null) return;
+            if (globalMixerHandle.Value == null)
+                return;
 
             // The mixer probably doesn't need to be recycled. Just keeping things sane for now.
             Bass.StreamFree(globalMixerHandle.Value.Value);

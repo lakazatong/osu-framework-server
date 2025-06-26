@@ -18,9 +18,18 @@ using osuTK;
 
 namespace osu.Framework.Input.Handlers.Tablet
 {
-    public class OpenTabletDriverHandler : InputHandler, IAbsolutePointer, IRelativePointer, IPressureHandler, ITabletHandler
+    public class OpenTabletDriverHandler
+        : InputHandler,
+            IAbsolutePointer,
+            IRelativePointer,
+            IPressureHandler,
+            ITabletHandler
     {
-        private static readonly GlobalStatistic<ulong> statistic_total_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<OpenTabletDriverHandler>(), "Total events");
+        private static readonly GlobalStatistic<ulong> statistic_total_events =
+            GlobalStatistics.Get<ulong>(
+                StatisticGroupFor<OpenTabletDriverHandler>(),
+                "Total events"
+            );
 
         private TabletDriver? tabletDriver;
 
@@ -40,12 +49,13 @@ namespace osu.Framework.Input.Handlers.Tablet
 
         public Bindable<float> Rotation { get; } = new Bindable<float>();
 
-        public BindableFloat PressureThreshold { get; } = new BindableFloat(0.0f)
-        {
-            MinValue = 0f,
-            MaxValue = 1f,
-            Precision = 0.005f,
-        };
+        public BindableFloat PressureThreshold { get; } =
+            new BindableFloat(0.0f)
+            {
+                MinValue = 0f,
+                MaxValue = 1f,
+                Precision = 0.005f,
+            };
 
         public IBindable<TabletInfo?> Tablet => tablet;
 
@@ -68,32 +78,35 @@ namespace osu.Framework.Input.Handlers.Tablet
             AreaSize.BindValueChanged(_ => updateTabletAndInputArea(device));
             Rotation.BindValueChanged(_ => updateTabletAndInputArea(device), true);
 
-            Enabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+            Enabled.BindValueChanged(
+                enabled =>
                 {
-                    lastInitTask = Task.Run(() =>
+                    if (enabled.NewValue)
                     {
-                        tabletDriver = TabletDriver.Create();
-                        tabletDriver.PostLog = Log;
-                        tabletDriver.TabletsChanged += handleTabletsChanged;
-                        tabletDriver.DeviceReported += handleDeviceReported;
-                        tabletDriver.Detect();
-                    });
-                }
-                else
-                {
-                    lastInitTask?.WaitSafely();
-
-                    if (tabletDriver != null)
-                    {
-                        tabletDriver.DeviceReported -= handleDeviceReported;
-                        tabletDriver.TabletsChanged -= handleTabletsChanged;
-                        tabletDriver.Dispose();
-                        tabletDriver = null;
+                        lastInitTask = Task.Run(() =>
+                        {
+                            tabletDriver = TabletDriver.Create();
+                            tabletDriver.PostLog = Log;
+                            tabletDriver.TabletsChanged += handleTabletsChanged;
+                            tabletDriver.DeviceReported += handleDeviceReported;
+                            tabletDriver.Detect();
+                        });
                     }
-                }
-            }, true);
+                    else
+                    {
+                        lastInitTask?.WaitSafely();
+
+                        if (tabletDriver != null)
+                        {
+                            tabletDriver.DeviceReported -= handleDeviceReported;
+                            tabletDriver.TabletsChanged -= handleTabletsChanged;
+                            tabletDriver.Dispose();
+                            tabletDriver = null;
+                        }
+                    }
+                },
+                true
+            );
 
             return true;
         }
@@ -103,16 +116,34 @@ namespace osu.Framework.Input.Handlers.Tablet
         void IAbsolutePointer.SetPosition(System.Numerics.Vector2 pos)
         {
             lastTabletDeviceType = TabletPenDeviceType.Unknown;
-            enqueueInput(new MousePositionAbsoluteInputFromPen { Position = new Vector2(pos.X, pos.Y), DeviceType = lastTabletDeviceType });
+            enqueueInput(
+                new MousePositionAbsoluteInputFromPen
+                {
+                    Position = new Vector2(pos.X, pos.Y),
+                    DeviceType = lastTabletDeviceType,
+                }
+            );
         }
 
         void IRelativePointer.SetPosition(System.Numerics.Vector2 delta)
         {
             lastTabletDeviceType = TabletPenDeviceType.Indirect;
-            enqueueInput(new MousePositionRelativeInputFromPen { Delta = new Vector2(delta.X, delta.Y), DeviceType = lastTabletDeviceType });
+            enqueueInput(
+                new MousePositionRelativeInputFromPen
+                {
+                    Delta = new Vector2(delta.X, delta.Y),
+                    DeviceType = lastTabletDeviceType,
+                }
+            );
         }
 
-        void IPressureHandler.SetPressure(float percentage) => enqueueInput(new MouseButtonInputFromPen(percentage > PressureThreshold.Value) { DeviceType = lastTabletDeviceType });
+        void IPressureHandler.SetPressure(float percentage) =>
+            enqueueInput(
+                new MouseButtonInputFromPen(percentage > PressureThreshold.Value)
+                {
+                    DeviceType = lastTabletDeviceType,
+                }
+            );
 
         private void handleTabletsChanged(object? sender, IEnumerable<TabletReference> tablets)
         {
@@ -149,14 +180,15 @@ namespace osu.Framework.Input.Handlers.Tablet
             {
                 case AbsoluteOutputMode absoluteOutputMode:
                 {
-                    float outputWidth, outputHeight;
+                    float outputWidth,
+                        outputHeight;
 
                     // Set output area in pixels
                     absoluteOutputMode.Output = new Area
                     {
                         Width = outputWidth = window.ClientSize.Width,
                         Height = outputHeight = window.ClientSize.Height,
-                        Position = new System.Numerics.Vector2(outputWidth / 2, outputHeight / 2)
+                        Position = new System.Numerics.Vector2(outputWidth / 2, outputHeight / 2),
                     };
                     break;
                 }
@@ -196,8 +228,11 @@ namespace osu.Framework.Input.Handlers.Tablet
                     {
                         Width = AreaSize.Value.X,
                         Height = AreaSize.Value.Y,
-                        Position = new System.Numerics.Vector2(AreaOffset.Value.X, AreaOffset.Value.Y),
-                        Rotation = Rotation.Value
+                        Position = new System.Numerics.Vector2(
+                            AreaOffset.Value.X,
+                            AreaOffset.Value.Y
+                        ),
+                        Rotation = Rotation.Value,
                     };
                     break;
                 }
@@ -209,7 +244,10 @@ namespace osu.Framework.Input.Handlers.Tablet
             int buttonCount = tabletReport.PenButtons.Length;
             var buttons = new ButtonInputEntry<TabletPenButton>[buttonCount];
             for (int i = 0; i < buttonCount; i++)
-                buttons[i] = new ButtonInputEntry<TabletPenButton>((TabletPenButton)i, tabletReport.PenButtons[i]);
+                buttons[i] = new ButtonInputEntry<TabletPenButton>(
+                    (TabletPenButton)i,
+                    tabletReport.PenButtons[i]
+                );
 
             enqueueInput(new TabletPenButtonInput(buttons));
         }
@@ -219,7 +257,10 @@ namespace osu.Framework.Input.Handlers.Tablet
             int buttonCount = auxiliaryReport.AuxButtons.Length;
             var buttons = new ButtonInputEntry<TabletAuxiliaryButton>[buttonCount];
             for (int i = 0; i < buttonCount; i++)
-                buttons[i] = new ButtonInputEntry<TabletAuxiliaryButton>((TabletAuxiliaryButton)i, auxiliaryReport.AuxButtons[i]);
+                buttons[i] = new ButtonInputEntry<TabletAuxiliaryButton>(
+                    (TabletAuxiliaryButton)i,
+                    auxiliaryReport.AuxButtons[i]
+                );
 
             enqueueInput(new TabletAuxiliaryButtonInput(buttons));
         }

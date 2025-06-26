@@ -26,36 +26,42 @@ namespace osu.Framework.Tests.Visual.Input
             TestInputReceptor shownReceptor = null;
             TestInputReceptor hiddenReceptor = null;
 
-            AddStep("set children", () =>
-            {
-                Child = new TestKeyBindingContainer
+            AddStep(
+                "set children",
+                () =>
                 {
-                    Children = new[]
+                    Child = new TestKeyBindingContainer
                     {
-                        shownReceptor = new TestInputReceptor("first")
+                        Children = new[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(100),
-                            Colour = Color4.LightPink
+                            shownReceptor = new TestInputReceptor("first")
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(100),
+                                Colour = Color4.LightPink,
+                            },
+                            hiddenReceptor = new TestInputReceptor("second")
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(100),
+                                Alpha = 0,
+                                Colour = Color4.LightGreen,
+                            },
                         },
-                        hiddenReceptor = new TestInputReceptor("second")
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(100),
-                            Alpha = 0,
-                            Colour = Color4.LightGreen
-                        }
-                    }
-                };
-            });
+                    };
+                }
+            );
 
-            AddStep("click-hold shown receptor", () =>
-            {
-                InputManager.MoveMouseTo(shownReceptor);
-                InputManager.PressButton(MouseButton.Left);
-            });
+            AddStep(
+                "click-hold shown receptor",
+                () =>
+                {
+                    InputManager.MoveMouseTo(shownReceptor);
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
             AddStep("hide shown receptor", () => shownReceptor.Hide());
             AddStep("show hidden receptor", () => hiddenReceptor.Show());
             AddStep("release button", () => InputManager.ReleaseButton(MouseButton.Left));
@@ -81,8 +87,8 @@ namespace osu.Framework.Tests.Visual.Input
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Colour = Color4.Black,
-                        Text = name
-                    }
+                        Text = name,
+                    },
                 };
             }
 
@@ -100,15 +106,13 @@ namespace osu.Framework.Tests.Visual.Input
 
         private enum TestAction
         {
-            Action1
+            Action1,
         }
 
         private partial class TestKeyBindingContainer : KeyBindingContainer<TestAction>
         {
-            public override IEnumerable<IKeyBinding> DefaultKeyBindings => new[]
-            {
-                new KeyBinding(InputKey.MouseLeft, TestAction.Action1)
-            };
+            public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
+                new[] { new KeyBinding(InputKey.MouseLeft, TestAction.Action1) };
         }
     }
 }

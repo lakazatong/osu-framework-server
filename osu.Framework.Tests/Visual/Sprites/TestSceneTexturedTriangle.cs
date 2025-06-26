@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 
@@ -13,12 +13,14 @@ namespace osu.Framework.Tests.Visual.Sprites
     {
         public TestSceneTexturedTriangle()
         {
-            Add(new TexturedTriangle
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(300, 150)
-            });
+            Add(
+                new TexturedTriangle
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(300, 150),
+                }
+            );
         }
 
         private partial class TexturedTriangle : Triangle

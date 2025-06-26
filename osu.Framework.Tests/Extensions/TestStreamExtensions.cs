@@ -22,7 +22,10 @@ namespace osu.Framework.Tests.Extensions
             byte[] readBytes = ms.ReadAllBytesToArray();
 
             Assert.That(ms.Length, Is.EqualTo(readBytes.Length));
-            Assert.That(ms.ComputeMD5Hash(), Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash()));
+            Assert.That(
+                ms.ComputeMD5Hash(),
+                Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash())
+            );
         }
 
         [Test]
@@ -33,7 +36,10 @@ namespace osu.Framework.Tests.Extensions
             byte[] readBytes = await ms.ReadAllBytesToArrayAsync().ConfigureAwait(false);
 
             Assert.That(ms.Length, Is.EqualTo(readBytes.Length));
-            Assert.That(ms.ComputeMD5Hash(), Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash()));
+            Assert.That(
+                ms.ComputeMD5Hash(),
+                Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash())
+            );
         }
 
         [Test]
@@ -110,7 +116,10 @@ namespace osu.Framework.Tests.Extensions
             byte[] readBytes = ms.ReadAllBytesToArray();
 
             Assert.That(ms.Length, Is.EqualTo(readBytes.Length));
-            Assert.That(ms.ComputeMD5Hash(), Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash()));
+            Assert.That(
+                ms.ComputeMD5Hash(),
+                Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash())
+            );
         }
 
         [Test]
@@ -124,7 +133,10 @@ namespace osu.Framework.Tests.Extensions
             byte[] readBytes = await ms.ReadAllBytesToArrayAsync().ConfigureAwait(false);
 
             Assert.That(ms.Length, Is.EqualTo(readBytes.Length));
-            Assert.That(ms.ComputeMD5Hash(), Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash()));
+            Assert.That(
+                ms.ComputeMD5Hash(),
+                Is.EqualTo(new MemoryStream(readBytes).ComputeMD5Hash())
+            );
         }
 
         [Test]

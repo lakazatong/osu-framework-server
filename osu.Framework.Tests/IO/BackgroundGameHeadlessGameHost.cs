@@ -16,7 +16,11 @@ namespace osu.Framework.Tests.IO
     /// </summary>
     public partial class BackgroundGameHeadlessGameHost : TestRunHeadlessGameHost
     {
-        public BackgroundGameHeadlessGameHost(string gameName = null, HostOptions options = null, bool realtime = true)
+        public BackgroundGameHeadlessGameHost(
+            string gameName = null,
+            HostOptions options = null,
+            bool realtime = true
+        )
             : base(gameName, options, realtime: realtime)
         {
             var testGame = new TestGame();

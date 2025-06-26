@@ -26,41 +26,45 @@ namespace osu.Framework.Tests.Visual.Audio
 
         public TestSceneAudioMixer()
         {
-            AddRange(new Drawable[]
-            {
-                noEffectContainer = new ContainerWithEffect("no effect", Color4.Black, null)
+            AddRange(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1),
-                    Children = new Drawable[]
+                    noEffectContainer = new ContainerWithEffect("no effect", Color4.Black, null)
                     {
-                        effectContainers = new FillFlowContainer<ContainerWithEffect>
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1),
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Padding = new MarginPadding(20)
+                            effectContainers = new FillFlowContainer<ContainerWithEffect>
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Padding = new MarginPadding(20),
+                            },
+                            audioDrawable = new AudioPlayingDrawable { Origin = Anchor.Centre },
                         },
-                        audioDrawable = new AudioPlayingDrawable { Origin = Anchor.Centre }
-                    }
-                },
-                dragHandle = new DragHandle
-                {
-                    Origin = Anchor.Centre,
-                    Position = new Vector2(50)
+                    },
+                    dragHandle = new DragHandle
+                    {
+                        Origin = Anchor.Centre,
+                        Position = new Vector2(50),
+                    },
                 }
-            });
+            );
 
             for (int i = 0; i < 50; i++)
             {
                 float centre = 150 + 50 * i;
 
-                effectContainers.Add(new ContainerWithEffect($"<{centre}Hz", Color4.Blue, new BQFParameters
-                {
-                    lFilter = BQFType.LowPass,
-                    fCenter = centre
-                })
-                {
-                    Size = new Vector2(100),
-                });
+                effectContainers.Add(
+                    new ContainerWithEffect(
+                        $"<{centre}Hz",
+                        Color4.Blue,
+                        new BQFParameters { lFilter = BQFType.LowPass, fCenter = centre }
+                    )
+                    {
+                        Size = new Vector2(100),
+                    }
+                );
             }
         }
 
@@ -69,7 +73,9 @@ namespace osu.Framework.Tests.Visual.Audio
             base.Update();
 
             Vector2 pos = dragHandle.ScreenSpaceDrawQuad.Centre;
-            Container container = effectContainers.SingleOrDefault(c => c.ScreenSpaceDrawQuad.Contains(pos)) ?? noEffectContainer;
+            Container container =
+                effectContainers.SingleOrDefault(c => c.ScreenSpaceDrawQuad.Contains(pos))
+                ?? noEffectContainer;
 
             if (audioDrawable.Parent != container)
             {
@@ -85,11 +91,13 @@ namespace osu.Framework.Tests.Visual.Audio
             {
                 DrawableSample sample;
 
-                AddInternal(new AudioContainer
-                {
-                    Volume = { Value = 0.5f },
-                    Child = sample = new DrawableSample(samples.Get("long.mp3"))
-                });
+                AddInternal(
+                    new AudioContainer
+                    {
+                        Volume = { Value = 0.5f },
+                        Child = sample = new DrawableSample(samples.Get("long.mp3")),
+                    }
+                );
 
                 var channel = sample.GetChannel();
                 channel.Looping = true;
@@ -109,11 +117,7 @@ namespace osu.Framework.Tests.Visual.Audio
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.HotPink,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.HotPink },
                         new SpriteIcon
                         {
                             Anchor = Anchor.Centre,
@@ -121,8 +125,8 @@ namespace osu.Framework.Tests.Visual.Audio
                             RelativeSizeAxes = Axes.Both,
                             Size = new Vector2(0.5f),
                             Icon = FontAwesome.Solid.VolumeUp,
-                        }
-                    }
+                        },
+                    },
                 };
             }
 
@@ -153,20 +157,17 @@ namespace osu.Framework.Tests.Visual.Audio
                         {
                             RelativeSizeAxes = Axes.Both,
                             Colour = colour,
-                            Alpha = 0.2f
+                            Alpha = 0.2f,
                         },
                         new SpriteText
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Text = name,
-                            Font = FrameworkFont.Regular.With(size: 18)
+                            Font = FrameworkFont.Regular.With(size: 18),
                         },
-                        content = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
-                    }
+                        content = new Container { RelativeSizeAxes = Axes.Both },
+                    },
                 };
 
                 if (effect != null)

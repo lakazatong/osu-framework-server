@@ -34,7 +34,8 @@ namespace osu.Framework.Extensions
         public static int AddInPlace<T>(this List<T> list, T item)
         {
             int index = list.BinarySearch(item);
-            if (index < 0) index = ~index; // BinarySearch hacks multiple return values with 2's complement.
+            if (index < 0)
+                index = ~index; // BinarySearch hacks multiple return values with 2's complement.
             list.Insert(index, item);
             return index;
         }
@@ -49,7 +50,8 @@ namespace osu.Framework.Extensions
         public static int AddInPlace<T>(this List<T> list, T item, IComparer<T> comparer)
         {
             int index = list.BinarySearch(item, comparer);
-            if (index < 0) index = ~index; // BinarySearch hacks multiple return values with 2's complement.
+            if (index < 0)
+                index = ~index; // BinarySearch hacks multiple return values with 2's complement.
             list.Insert(index, item);
             return index;
         }
@@ -143,7 +145,8 @@ namespace osu.Framework.Extensions
         /// </summary>
         /// <param name="array">The array to invert.</param>
         /// <returns>The inverted array. This is always a square array.</returns>
-        public static T[][] Invert<T>(this T[][] array) => array.ToRectangular().Invert().ToJagged();
+        public static T[][] Invert<T>(this T[][] array) =>
+            array.ToRectangular().Invert().ToJagged();
 
         public static string ToResolutionString(this Size size) => $"{size.Width}x{size.Height}";
 
@@ -207,7 +210,9 @@ namespace osu.Framework.Extensions
             if (attribute == null)
                 return GetDescription(value);
 
-            var property = attribute.DeclaringType.GetMember(attribute.Name, BindingFlags.Static | BindingFlags.Public).FirstOrDefault();
+            var property = attribute
+                .DeclaringType.GetMember(attribute.Name, BindingFlags.Static | BindingFlags.Public)
+                .FirstOrDefault();
 
             switch (property)
             {
@@ -218,7 +223,9 @@ namespace osu.Framework.Extensions
                     return (LocalisableString)p.GetValue(null).AsNonNull();
 
                 default:
-                    throw new InvalidOperationException($"Member \"{attribute.Name}\" was not found in type {attribute.DeclaringType} (must be a static field or property)");
+                    throw new InvalidOperationException(
+                        $"Member \"{attribute.Name}\" was not found in type {attribute.DeclaringType} (must be a static field or property)"
+                    );
             }
         }
 
@@ -242,18 +249,24 @@ namespace osu.Framework.Extensions
                 return description;
 
             Type type = value as Type ?? value.GetType();
-            return type.GetField(value.ToString() ?? string.Empty)?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? value.ToString();
+            return type.GetField(value.ToString() ?? string.Empty)
+                    ?.GetCustomAttribute<DescriptionAttribute>()
+                    ?.Description ?? value.ToString();
         }
 
         private static string toLowercaseHex(this byte[] bytes)
         {
             // Convert.ToHexString is upper-case, so we are doing this ourselves
 
-            return string.Create(bytes.Length * 2, bytes, (span, b) =>
-            {
-                for (int i = 0; i < b.Length; i++)
-                    _ = b[i].TryFormat(span[(i * 2)..], out _, "x2");
-            });
+            return string.Create(
+                bytes.Length * 2,
+                bytes,
+                (span, b) =>
+                {
+                    for (int i = 0; i < b.Length; i++)
+                        _ = b[i].TryFormat(span[(i * 2)..], out _, "x2");
+                }
+            );
         }
 
         /// <summary>
@@ -275,7 +288,8 @@ namespace osu.Framework.Extensions
         /// </summary>
         /// <param name="str">The string to create a hash from.</param>
         /// <returns>A lower-case hex string representation of the hash (64 characters).</returns>
-        public static string ComputeSHA2Hash(this string str) => SHA256.HashData(Encoding.UTF8.GetBytes(str)).toLowercaseHex();
+        public static string ComputeSHA2Hash(this string str) =>
+            SHA256.HashData(Encoding.UTF8.GetBytes(str)).toLowercaseHex();
 
         public static string ComputeMD5Hash(this Stream stream)
         {
@@ -286,7 +300,8 @@ namespace osu.Framework.Extensions
             return hash;
         }
 
-        public static string ComputeMD5Hash(this string input) => MD5.HashData(Encoding.UTF8.GetBytes(input)).toLowercaseHex();
+        public static string ComputeMD5Hash(this string input) =>
+            MD5.HashData(Encoding.UTF8.GetBytes(input)).toLowercaseHex();
 
         /// <summary>
         /// Standardise the path string using '/' as directory separator.
@@ -294,8 +309,7 @@ namespace osu.Framework.Extensions
         /// </summary>
         /// <param name="path">The path string to standardise.</param>
         /// <returns>The standardised path string.</returns>
-        public static string ToStandardisedPath(this string path)
-            => path.Replace('\\', '/');
+        public static string ToStandardisedPath(this string path) => path.Replace('\\', '/');
 
         /// <summary>
         /// Trim DirectorySeparatorChar from the end of the path.
@@ -305,8 +319,8 @@ namespace osu.Framework.Extensions
         /// </remarks>
         /// <param name="path">The path string to trim.</param>
         /// <returns>The path with DirectorySeparatorChar trimmed.</returns>
-        public static string TrimDirectorySeparator(this string path)
-            => path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        public static string TrimDirectorySeparator(this string path) =>
+            path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
         /// <summary>
         /// Checks whether the provided URL is a safe protocol to execute a system <see cref="Process.Start()"/> call with.
@@ -320,8 +334,8 @@ namespace osu.Framework.Extensions
         public static bool CheckIsValidUrl(this string url)
         {
             return url.StartsWith("https://", StringComparison.Ordinal)
-                   || url.StartsWith("http://", StringComparison.Ordinal)
-                   || url.StartsWith("mailto:", StringComparison.Ordinal);
+                || url.StartsWith("http://", StringComparison.Ordinal)
+                || url.StartsWith("mailto:", StringComparison.Ordinal);
         }
     }
 }

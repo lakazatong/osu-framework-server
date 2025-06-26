@@ -32,15 +32,18 @@ namespace osu.Framework.Tests.Platform
 
             IBindable<GameThreadState> updateThreadState = null;
 
-            var task = Task.Factory.StartNew(() =>
-            {
-                using (host = new ExecutionModeGameHost(@"host", threadMode))
+            var task = Task.Factory.StartNew(
+                () =>
                 {
-                    game = new TestTestGame();
-                    gameCreated.Set();
-                    host.Run(game);
-                }
-            }, TaskCreationOptions.LongRunning);
+                    using (host = new ExecutionModeGameHost(@"host", threadMode))
+                    {
+                        game = new TestTestGame();
+                        gameCreated.Set();
+                        host.Run(game);
+                    }
+                },
+                TaskCreationOptions.LongRunning
+            );
 
             Assert.IsTrue(gameCreated.Wait(timeout));
             Assert.IsTrue(game.BecameAlive.Wait(timeout));
@@ -94,7 +97,9 @@ namespace osu.Framework.Tests.Platform
                 this.threadMode = threadMode;
             }
 
-            protected override void SetupConfig(IDictionary<FrameworkSetting, object> defaultOverrides)
+            protected override void SetupConfig(
+                IDictionary<FrameworkSetting, object> defaultOverrides
+            )
             {
                 base.SetupConfig(defaultOverrides);
                 Config.SetValue(FrameworkSetting.ExecutionMode, threadMode);

@@ -32,7 +32,8 @@ namespace osu.Framework.Input
 
         private void handleTextEditing(string? text, int selectionStart, int selectionLength)
         {
-            if (text == null) return;
+            if (text == null)
+                return;
 
             TriggerImeComposition(text, selectionStart, selectionLength);
         }

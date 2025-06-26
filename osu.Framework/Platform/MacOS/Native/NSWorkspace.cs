@@ -12,15 +12,19 @@ namespace osu.Framework.Platform.MacOS.Native
 
         private static readonly IntPtr class_pointer = Class.Get("NSWorkspace");
         private static readonly IntPtr sel_shared_workspace = Selector.Get("sharedWorkspace");
-        private static readonly IntPtr sel_select_file = Selector.Get("selectFile:inFileViewerRootedAtPath:");
+        private static readonly IntPtr sel_select_file = Selector.Get(
+            "selectFile:inFileViewerRootedAtPath:"
+        );
 
         internal NSWorkspace(IntPtr handle)
         {
             Handle = handle;
         }
 
-        internal static NSWorkspace SharedWorkspace() => new NSWorkspace(Interop.SendIntPtr(class_pointer, sel_shared_workspace));
+        internal static NSWorkspace SharedWorkspace() =>
+            new NSWorkspace(Interop.SendIntPtr(class_pointer, sel_shared_workspace));
 
-        internal bool SelectFile(string file) => Interop.SendBool(Handle, sel_select_file, NSString.FromString(file).Handle);
+        internal bool SelectFile(string file) =>
+            Interop.SendBool(Handle, sel_select_file, NSString.FromString(file).Handle);
     }
 }

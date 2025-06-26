@@ -32,7 +32,8 @@ namespace osu.Framework.Extensions.TypeExtensions
             {
                 var typeArgs = t.GetGenericArguments().Except(usedTypes);
                 if (typeArgs.Any())
-                    result += $"<{string.Join(',', typeArgs.Select(genType => readableName(genType, usedTypes)))}>";
+                    result +=
+                        $"<{string.Join(',', typeArgs.Select(genType => readableName(genType, usedTypes)))}>";
             }
 
             return result;
@@ -90,7 +91,8 @@ namespace osu.Framework.Extensions.TypeExtensions
             return ret;
         }
 
-        private static readonly ConcurrentDictionary<Type, Type> underlying_type_cache = new ConcurrentDictionary<Type, Type>();
+        private static readonly ConcurrentDictionary<Type, Type> underlying_type_cache =
+            new ConcurrentDictionary<Type, Type>();
 
         /// <summary>
         /// Determines whether the specified type is a <see cref="Nullable{T}"/> type.
@@ -184,7 +186,9 @@ namespace osu.Framework.Extensions.TypeExtensions
             return isNullableInfo(new NullabilityInfoContext().Create(propertyInfo));
         }
 
-        private static bool isNullableInfo(NullabilityInfo info) => info.WriteState == NullabilityState.Nullable || info.ReadState == NullabilityState.Nullable;
+        private static bool isNullableInfo(NullabilityInfo info) =>
+            info.WriteState == NullabilityState.Nullable
+            || info.ReadState == NullabilityState.Nullable;
     }
 
     [Flags]
@@ -194,6 +198,6 @@ namespace osu.Framework.Extensions.TypeExtensions
         Public = 1,
         Internal = 1 << 1,
         Protected = 1 << 2,
-        Private = 1 << 3
+        Private = 1 << 3,
     }
 }

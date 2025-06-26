@@ -6,19 +6,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
-using osuTK;
-using osuTK.Graphics;
-using osuTK.Input;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osuTK;
+using osuTK.Graphics;
+using osuTK.Input;
 
 namespace osu.Framework.Graphics.Visualisation
 {
@@ -43,10 +43,8 @@ namespace osu.Framework.Graphics.Visualisation
             }
         }
 
-        public IEnumerable<LocalisableString> FilterTerms => new LocalisableString[]
-        {
-            Target.ToString()
-        };
+        public IEnumerable<LocalisableString> FilterTerms =>
+            new LocalisableString[] { Target.ToString() };
 
         public bool FilteringActive { get; set; }
 
@@ -105,134 +103,139 @@ namespace osu.Framework.Graphics.Visualisation
 
             var spriteTarget = Target as Sprite;
 
-            AddRange(new Drawable[]
-            {
-                flow = new VisualisedDrawableFlow
+            AddRange(
+                new Drawable[]
                 {
-                    Direction = FillDirection.Vertical,
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Position = new Vector2(row_width, row_height)
-                },
-                new Container
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Children = new[]
+                    flow = new VisualisedDrawableFlow
                     {
-                        background = new Box
+                        Direction = FillDirection.Vertical,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Position = new Vector2(row_width, row_height),
+                    },
+                    new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Children = new[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(100, 1), // a bit of a hack, but works well enough.
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Colour = Color4.Transparent,
-                        },
-                        inputReceiving = new Container
-                        {
-                            Size = new Vector2(5, line_height),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Position = new Vector2(9, 0),
-                            Alpha = 0,
-                            Children = new Drawable[]
+                            background = new Box
                             {
-                                new Box
-                                {
-                                    Colour = Color4.Cyan,
-                                    RelativeSizeAxes = Axes.Both,
-                                },
-                                new SpriteIcon
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Colour = Color4.Cyan.Darken(5),
-                                    Icon = FontAwesome.Solid.MousePointer,
-                                    Size = new Vector2(6),
-                                }
-                            }
-                        },
-                        activityInvalidate = new Box
-                        {
-                            Colour = Color4.Yellow,
-                            Size = new Vector2(2, line_height),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Position = new Vector2(6, 0),
-                            Alpha = 0
-                        },
-                        activityLayout = new Box
-                        {
-                            Colour = Color4.Orange,
-                            Size = new Vector2(2, line_height),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Position = new Vector2(3, 0),
-                            Alpha = 0
-                        },
-                        activityAutosize = new Box
-                        {
-                            Colour = Color4.Red,
-                            Size = new Vector2(2, line_height),
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Position = new Vector2(0, 0),
-                            Alpha = 0
-                        },
-                        previewBox = spriteTarget?.Texture == null
-                            ? previewBox = new Box
-                            {
-                                Colour = Color4.White,
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                            }
-                            : new Sprite
-                            {
-                                // It's fine to only bypass the ref count, because this sprite will dispose along with the original sprite
-                                Texture = new Texture(spriteTarget.Texture),
-                                Scale = new Vector2(spriteTarget.Texture.DisplayWidth / spriteTarget.Texture.DisplayHeight, 1),
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
+                                RelativeSizeAxes = Axes.Both,
+                                Size = new Vector2(100, 1), // a bit of a hack, but works well enough.
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Colour = Color4.Transparent,
                             },
-                        new FillFlowContainer
-                        {
-                            AutoSizeAxes = Axes.Both,
-                            Direction = FillDirection.Horizontal,
-                            Spacing = new Vector2(5),
-                            Position = new Vector2(30, 0),
-                            Children = new Drawable[]
+                            inputReceiving = new Container
                             {
-                                text = new SpriteText { Font = FrameworkFont.Regular },
-                                text2 = new SpriteText { Font = FrameworkFont.Regular },
-                            }
+                                Size = new Vector2(5, line_height),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Position = new Vector2(9, 0),
+                                Alpha = 0,
+                                Children = new Drawable[]
+                                {
+                                    new Box { Colour = Color4.Cyan, RelativeSizeAxes = Axes.Both },
+                                    new SpriteIcon
+                                    {
+                                        Anchor = Anchor.Centre,
+                                        Origin = Anchor.Centre,
+                                        Colour = Color4.Cyan.Darken(5),
+                                        Icon = FontAwesome.Solid.MousePointer,
+                                        Size = new Vector2(6),
+                                    },
+                                },
+                            },
+                            activityInvalidate = new Box
+                            {
+                                Colour = Color4.Yellow,
+                                Size = new Vector2(2, line_height),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Position = new Vector2(6, 0),
+                                Alpha = 0,
+                            },
+                            activityLayout = new Box
+                            {
+                                Colour = Color4.Orange,
+                                Size = new Vector2(2, line_height),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Position = new Vector2(3, 0),
+                                Alpha = 0,
+                            },
+                            activityAutosize = new Box
+                            {
+                                Colour = Color4.Red,
+                                Size = new Vector2(2, line_height),
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Position = new Vector2(0, 0),
+                                Alpha = 0,
+                            },
+                            previewBox =
+                                spriteTarget?.Texture == null
+                                    ? previewBox = new Box
+                                    {
+                                        Colour = Color4.White,
+                                        Anchor = Anchor.CentreLeft,
+                                        Origin = Anchor.CentreLeft,
+                                    }
+                                    : new Sprite
+                                    {
+                                        // It's fine to only bypass the ref count, because this sprite will dispose along with the original sprite
+                                        Texture = new Texture(spriteTarget.Texture),
+                                        Scale = new Vector2(
+                                            spriteTarget.Texture.DisplayWidth
+                                                / spriteTarget.Texture.DisplayHeight,
+                                            1
+                                        ),
+                                        Anchor = Anchor.CentreLeft,
+                                        Origin = Anchor.CentreLeft,
+                                    },
+                            new FillFlowContainer
+                            {
+                                AutoSizeAxes = Axes.Both,
+                                Direction = FillDirection.Horizontal,
+                                Spacing = new Vector2(5),
+                                Position = new Vector2(30, 0),
+                                Children = new Drawable[]
+                                {
+                                    text = new SpriteText { Font = FrameworkFont.Regular },
+                                    text2 = new SpriteText { Font = FrameworkFont.Regular },
+                                },
+                            },
                         },
-                    }
-                },
-            });
+                    },
+                }
+            );
 
             const float connection_width = 1;
 
-            AddInternal(connectionContainer = new Container
-            {
-                Colour = FrameworkColour.Green,
-                RelativeSizeAxes = Axes.Y,
-                Width = connection_width,
-                Children = new Drawable[]
+            AddInternal(
+                connectionContainer = new Container
                 {
-                    new Box
+                    Colour = FrameworkColour.Green,
+                    RelativeSizeAxes = Axes.Y,
+                    Width = connection_width,
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        EdgeSmoothness = new Vector2(0.5f),
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            EdgeSmoothness = new Vector2(0.5f),
+                        },
+                        new Box
+                        {
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.CentreLeft,
+                            Y = row_height / 2,
+                            Width = row_width / 2,
+                            EdgeSmoothness = new Vector2(0.5f),
+                        },
                     },
-                    new Box
-                    {
-                        Anchor = Anchor.TopRight,
-                        Origin = Anchor.CentreLeft,
-                        Y = row_height / 2,
-                        Width = row_width / 2,
-                        EdgeSmoothness = new Vector2(0.5f),
-                    }
                 }
-            });
+            );
 
             previewBox.Position = new Vector2(15, 0);
             previewBox.Size = new Vector2(line_height, line_height);
@@ -269,7 +272,8 @@ namespace osu.Framework.Graphics.Visualisation
                 da.ChildDepthChanged += depthChanged;
             }
 
-            if (Target is FlowContainer<Drawable> df) df.OnLayout += onLayout;
+            if (Target is FlowContainer<Drawable> df)
+                df.OnLayout += onLayout;
         }
 
         private void detachEvents()
@@ -285,16 +289,19 @@ namespace osu.Framework.Graphics.Visualisation
                 da.ChildDepthChanged -= depthChanged;
             }
 
-            if (Target is FlowContainer<Drawable> df) df.OnLayout -= onLayout;
+            if (Target is FlowContainer<Drawable> df)
+                df.OnLayout -= onLayout;
         }
 
         private void addChild(Drawable drawable)
         {
             // Make sure to never add the DrawVisualiser (recursive scenario)
-            if (drawable == visualiser) return;
+            if (drawable == visualiser)
+                return;
 
             // Don't add individual characters of SpriteText
-            if (Target is SpriteText) return;
+            if (Target is SpriteText)
+                return;
 
             visualiser.GetVisualiserFor(drawable).SetContainer(this);
         }
@@ -324,7 +331,8 @@ namespace osu.Framework.Graphics.Visualisation
             flow.Add(visualiser);
         }
 
-        void IContainVisualisedDrawables.RemoveVisualiser(VisualisedDrawable visualiser) => flow.Remove(visualiser, false);
+        void IContainVisualisedDrawables.RemoveVisualiser(VisualisedDrawable visualiser) =>
+            flow.Remove(visualiser, false);
 
         public VisualisedDrawable FindVisualisedDrawable(Drawable drawable)
         {
@@ -435,7 +443,8 @@ namespace osu.Framework.Graphics.Visualisation
 
         private void onLayout() => activityLayout.FadeOutFromOne(1);
 
-        private void onInvalidated(Drawable d, Invalidation invalidation) => activityInvalidate.FadeOutFromOne(1);
+        private void onInvalidated(Drawable d, Invalidation invalidation) =>
+            activityInvalidate.FadeOutFromOne(1);
 
         private void onDispose()
         {
@@ -448,8 +457,8 @@ namespace osu.Framework.Graphics.Visualisation
             Vector2 posInTree = ToSpaceOfOtherDrawable(Vector2.Zero, tree);
 
             inputReceiving.Alpha =
-                Target.GetContainingInputManager() is InputManager inputManager &&
-                Target.ReceivePositionalInputAt(inputManager.CurrentState.Mouse.Position)
+                Target.GetContainingInputManager() is InputManager inputManager
+                && Target.ReceivePositionalInputAt(inputManager.CurrentState.Mouse.Position)
                     ? 1
                     : 0;
 
@@ -465,8 +474,9 @@ namespace osu.Framework.Graphics.Visualisation
             int childCount = (Target as CompositeDrawable)?.InternalChildren.Count ?? 0;
 
             text.Text = Target.ToString();
-            text2.Text = $"({Target.DrawPosition.X:#,0},{Target.DrawPosition.Y:#,0}) {Target.DrawSize.X:#,0}x{Target.DrawSize.Y:#,0}"
-                         + (!isExpanded && childCount > 0 ? $@" ({childCount} children)" : string.Empty);
+            text2.Text =
+                $"({Target.DrawPosition.X:#,0},{Target.DrawPosition.Y:#,0}) {Target.DrawSize.X:#,0}x{Target.DrawSize.Y:#,0}"
+                + (!isExpanded && childCount > 0 ? $@" ({childCount} children)" : string.Empty);
 
             Alpha = Target.IsPresent ? 1 : 0.3f;
         }
@@ -502,7 +512,11 @@ namespace osu.Framework.Graphics.Visualisation
 
         private partial class VisualisedDrawableFlow : FillFlowContainer<VisualisedDrawable>
         {
-            public override IEnumerable<Drawable> FlowingChildren => AliveInternalChildren.Where(d => d.IsPresent).OrderBy(d => -d.Depth).ThenBy(d => ((VisualisedDrawable)d).Target.ChildID);
+            public override IEnumerable<Drawable> FlowingChildren =>
+                AliveInternalChildren
+                    .Where(d => d.IsPresent)
+                    .OrderBy(d => -d.Depth)
+                    .ThenBy(d => ((VisualisedDrawable)d).Target.ChildID);
         }
     }
 }

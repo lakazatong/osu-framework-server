@@ -9,20 +9,18 @@ namespace osu.Framework.Input.StateChanges
     public class JoystickButtonInput : ButtonInput<JoystickButton>
     {
         public JoystickButtonInput(IEnumerable<ButtonInputEntry<JoystickButton>> entries)
-            : base(entries)
-        {
-        }
+            : base(entries) { }
 
         public JoystickButtonInput(JoystickButton button, bool isPressed)
-            : base(button, isPressed)
-        {
-        }
+            : base(button, isPressed) { }
 
-        public JoystickButtonInput(ButtonStates<JoystickButton> current, ButtonStates<JoystickButton> previous)
-            : base(current, previous)
-        {
-        }
+        public JoystickButtonInput(
+            ButtonStates<JoystickButton> current,
+            ButtonStates<JoystickButton> previous
+        )
+            : base(current, previous) { }
 
-        protected override ButtonStates<JoystickButton> GetButtonStates(InputState state) => state.Joystick.Buttons;
+        protected override ButtonStates<JoystickButton> GetButtonStates(InputState state) =>
+            state.Joystick.Buttons;
     }
 }

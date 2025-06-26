@@ -14,12 +14,18 @@ namespace osu.Framework.Graphics.OpenGL.Batches
     {
         private readonly PrimitiveTopology topology;
 
-        public GLLinearBatch(GLRenderer renderer, int size, int maxBuffers, PrimitiveTopology topology)
+        public GLLinearBatch(
+            GLRenderer renderer,
+            int size,
+            int maxBuffers,
+            PrimitiveTopology topology
+        )
             : base(renderer, size, maxBuffers)
         {
             this.topology = topology;
         }
 
-        protected override GLVertexBuffer<T> CreateVertexBuffer(GLRenderer renderer) => new GLLinearBuffer<T>(renderer, Size, topology, BufferUsageHint.DynamicDraw);
+        protected override GLVertexBuffer<T> CreateVertexBuffer(GLRenderer renderer) =>
+            new GLLinearBuffer<T>(renderer, Size, topology, BufferUsageHint.DynamicDraw);
     }
 }

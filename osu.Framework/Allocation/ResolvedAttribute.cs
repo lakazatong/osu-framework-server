@@ -27,9 +27,14 @@ namespace osu.Framework.Allocation
     [AttributeUsage(AttributeTargets.Property)]
     public class ResolvedAttribute : Attribute
     {
-        private static readonly GlobalStatistic<int> count_reflection_attributes = GlobalStatistics.Get<int>("Dependencies", "Reflected [Resolved]s");
+        private static readonly GlobalStatistic<int> count_reflection_attributes =
+            GlobalStatistics.Get<int>("Dependencies", "Reflected [Resolved]s");
 
-        private const BindingFlags activator_flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        private const BindingFlags activator_flags =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.DeclaredOnly;
 
         /// <summary>
         /// The containing type of the cached member in the <see cref="DependencyContainer"/>.
@@ -55,9 +60,7 @@ namespace osu.Framework.Allocation
         /// <summary>
         /// Identifies a member to be resolved from a <see cref="DependencyContainer"/>.
         /// </summary>
-        public ResolvedAttribute()
-        {
-        }
+        public ResolvedAttribute() { }
 
         /// <summary>
         /// Identifies a member to be resolved from a <see cref="DependencyContainer"/>.
@@ -80,7 +83,8 @@ namespace osu.Framework.Allocation
 
             var activators = new List<Action<object, IReadOnlyDependencyContainer>>();
 
-            var properties = type.GetProperties(activator_flags).Where(f => f.GetCustomAttribute<ResolvedAttribute>() != null);
+            var properties = type.GetProperties(activator_flags)
+                .Where(f => f.GetCustomAttribute<ResolvedAttribute>() != null);
 
             foreach (var property in properties)
             {
@@ -89,7 +93,10 @@ namespace osu.Framework.Allocation
 
                 var modifier = property.SetMethod.GetAccessModifier();
                 if (modifier != AccessModifier.Private)
-                    throw new AccessModifierNotAllowedForPropertySetterException(modifier, property);
+                    throw new AccessModifierNotAllowedForPropertySetterException(
+                        modifier,
+                        property
+                    );
 
                 var attribute = property.GetCustomAttribute<ResolvedAttribute>();
                 Debug.Assert(attribute != null);
@@ -102,7 +109,12 @@ namespace osu.Framework.Allocation
                     cacheInfo = new CacheInfo(cacheInfo.Name ?? property.Name, attribute.Parent);
                 }
 
-                var fieldGetter = getDependency(property.PropertyType, type, attribute.CanBeNull || property.IsNullable(), cacheInfo);
+                var fieldGetter = getDependency(
+                    property.PropertyType,
+                    type,
+                    attribute.CanBeNull || property.IsNullable(),
+                    cacheInfo
+                );
 
                 activators.Add((target, dc) => property.SetValue(target, fieldGetter(dc)));
             }
@@ -114,15 +126,29 @@ namespace osu.Framework.Allocation
             };
         }
 
-        private static Func<IReadOnlyDependencyContainer, object> getDependency(Type type, Type requestingType, bool permitNulls, CacheInfo info)
-            => dc => SourceGeneratorUtils.GetDependency(dc, type, requestingType, info.Name, info.Parent, permitNulls, true);
+        private static Func<IReadOnlyDependencyContainer, object> getDependency(
+            Type type,
+            Type requestingType,
+            bool permitNulls,
+            CacheInfo info
+        ) =>
+            dc =>
+                SourceGeneratorUtils.GetDependency(
+                    dc,
+                    type,
+                    requestingType,
+                    info.Name,
+                    info.Parent,
+                    permitNulls,
+                    true
+                );
     }
 
     public class PropertyNotWritableException : Exception
     {
         public PropertyNotWritableException(Type type, string propertyName)
-            : base($"Attempting to inject dependencies into non-write-able property {propertyName} of type {type.ReadableName()}.")
-        {
-        }
+            : base(
+                $"Attempting to inject dependencies into non-write-able property {propertyName} of type {type.ReadableName()}."
+            ) { }
     }
 }

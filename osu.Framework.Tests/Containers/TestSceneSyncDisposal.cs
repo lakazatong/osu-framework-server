@@ -21,11 +21,16 @@ namespace osu.Framework.Tests.Containers
 
             AddStep("create composite", () => Child = composite = new TestComposite());
 
-            AddAssert("immediate removal and disposal succeeds", () =>
-            {
-                composite.CompositeChild.RemoveAndDisposeImmediately();
-                return composite.CompositeChild.Parent == null && composite.CompositeChild.IsDisposed && composite.InternalChildren.Count == 0;
-            });
+            AddAssert(
+                "immediate removal and disposal succeeds",
+                () =>
+                {
+                    composite.CompositeChild.RemoveAndDisposeImmediately();
+                    return composite.CompositeChild.Parent == null
+                        && composite.CompositeChild.IsDisposed
+                        && composite.InternalChildren.Count == 0;
+                }
+            );
         }
 
         [Test]
@@ -35,11 +40,16 @@ namespace osu.Framework.Tests.Containers
 
             AddStep("create container", () => Child = container = new TestContainer());
 
-            AddAssert("immediate removal and disposal succeeds", () =>
-            {
-                container.ContainerChild.RemoveAndDisposeImmediately();
-                return container.ContainerChild.Parent == null && container.ContainerChild.IsDisposed && container.InternalChildren.Count == 0;
-            });
+            AddAssert(
+                "immediate removal and disposal succeeds",
+                () =>
+                {
+                    container.ContainerChild.RemoveAndDisposeImmediately();
+                    return container.ContainerChild.Parent == null
+                        && container.ContainerChild.IsDisposed
+                        && container.InternalChildren.Count == 0;
+                }
+            );
         }
 
         [Test]
@@ -47,16 +57,22 @@ namespace osu.Framework.Tests.Containers
         {
             TestContainerWithCustomContent container = null;
 
-            AddStep("create container", () => Child = container = new TestContainerWithCustomContent());
+            AddStep(
+                "create container",
+                () => Child = container = new TestContainerWithCustomContent()
+            );
 
-            AddAssert("immediate removal and disposal succeeds", () =>
-            {
-                container.ContentChild.RemoveAndDisposeImmediately();
-                return container.ContentChild.Parent == null
-                       && container.ContentChild.IsDisposed
-                       && container.InternalChildren.Count == 2
-                       && container.ContentContainer.InternalChildren.Count == 0;
-            });
+            AddAssert(
+                "immediate removal and disposal succeeds",
+                () =>
+                {
+                    container.ContentChild.RemoveAndDisposeImmediately();
+                    return container.ContentChild.Parent == null
+                        && container.ContentChild.IsDisposed
+                        && container.InternalChildren.Count == 2
+                        && container.ContentContainer.InternalChildren.Count == 0;
+                }
+            );
         }
 
         [Test]
@@ -64,16 +80,22 @@ namespace osu.Framework.Tests.Containers
         {
             TestContainerWithCustomContent container = null;
 
-            AddStep("create container", () => Child = container = new TestContainerWithCustomContent());
+            AddStep(
+                "create container",
+                () => Child = container = new TestContainerWithCustomContent()
+            );
 
-            AddAssert("immediate removal and disposal succeeds", () =>
-            {
-                container.NonContentChild.RemoveAndDisposeImmediately();
-                return container.NonContentChild.Parent == null
-                       && container.NonContentChild.IsDisposed
-                       && container.InternalChildren.Count == 1
-                       && container.ContentContainer.InternalChildren.Count == 1;
-            });
+            AddAssert(
+                "immediate removal and disposal succeeds",
+                () =>
+                {
+                    container.NonContentChild.RemoveAndDisposeImmediately();
+                    return container.NonContentChild.Parent == null
+                        && container.NonContentChild.IsDisposed
+                        && container.InternalChildren.Count == 1
+                        && container.ContentContainer.InternalChildren.Count == 1;
+                }
+            );
         }
 
         [Test]
@@ -83,11 +105,14 @@ namespace osu.Framework.Tests.Containers
 
             AddStep("create container", () => container = new Container());
 
-            AddAssert("immediate removal and disposal succeeds", () =>
-            {
-                container.RemoveAndDisposeImmediately();
-                return container.IsDisposed;
-            });
+            AddAssert(
+                "immediate removal and disposal succeeds",
+                () =>
+                {
+                    container.RemoveAndDisposeImmediately();
+                    return container.IsDisposed;
+                }
+            );
         }
 
         private partial class TestComposite : CompositeDrawable
@@ -120,14 +145,13 @@ namespace osu.Framework.Tests.Containers
 
             public TestContainerWithCustomContent()
             {
-                AddRangeInternal(new[]
-                {
-                    NonContentChild = new Container(),
-                    ContentContainer = new Container
+                AddRangeInternal(
+                    new[]
                     {
-                        Child = ContentChild = new Container()
+                        NonContentChild = new Container(),
+                        ContentContainer = new Container { Child = ContentChild = new Container() },
                     }
-                });
+                );
             }
         }
     }

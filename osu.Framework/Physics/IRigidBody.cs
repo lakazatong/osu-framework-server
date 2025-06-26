@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osuTK;
 using osu.Framework.Graphics;
+using osuTK;
 
 namespace osu.Framework.Physics
 {
@@ -104,7 +104,12 @@ namespace osu.Framework.Physics
         /// Computes the impulse of a collision of 2 rigid bodies, given the other body, the impact position,
         /// and the surface normal of this body at the impact position.
         /// </summary>
-        public static Vector2 ComputeImpulse(this IRigidBody body, IRigidBody other, Vector2 pos, Vector2 normal)
+        public static Vector2 ComputeImpulse(
+            this IRigidBody body,
+            IRigidBody other,
+            Vector2 pos,
+            Vector2 normal
+        )
         {
             Vector2 vrel = body.VelocityAt(pos) - other.VelocityAt(pos);
             float vrelOrtho = -Vector2.Dot(vrel, normal);
@@ -115,7 +120,8 @@ namespace osu.Framework.Physics
                 return Vector2.Zero;
 
             float impulseMagnitude = -(1.0f + body.Restitution) * vrelOrtho;
-            impulseMagnitude /= body.ImpulseDenominator(pos, normal) + other.ImpulseDenominator(pos, normal);
+            impulseMagnitude /=
+                body.ImpulseDenominator(pos, normal) + other.ImpulseDenominator(pos, normal);
 
             //impulseMagnitude = Math.Max(impulseMagnitude - 0.01f, 0.0f);
 
@@ -125,7 +131,16 @@ namespace osu.Framework.Physics
             Vector2 vrelPlanar = vrel + vrelOrtho * normal;
             float vrelPlanarLength = vrelPlanar.Length;
             if (vrelPlanarLength > 0)
-                impulse -= vrelPlanar * Math.Min(impulseMagnitude * 0.05f * body.FrictionCoefficient * other.FrictionCoefficient / vrelPlanarLength, body.Mass);
+                impulse -=
+                    vrelPlanar
+                    * Math.Min(
+                        impulseMagnitude
+                            * 0.05f
+                            * body.FrictionCoefficient
+                            * other.FrictionCoefficient
+                            / vrelPlanarLength,
+                        body.Mass
+                    );
 
             return impulse;
         }

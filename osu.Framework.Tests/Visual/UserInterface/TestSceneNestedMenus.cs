@@ -29,28 +29,39 @@ namespace osu.Framework.Tests.Visual.UserInterface
             rng = new Random(1337);
         }
 
-        private void createMenu(Direction mainDirection = Direction.Vertical, Direction subMenuDirection = Direction.Vertical)
-            => CreateMenu(() => new ClickOpenMenu(mainDirection, subMenuDirection, TimePerAction)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativePositionAxes = Axes.Both,
-                Items = new[]
+        private void createMenu(
+            Direction mainDirection = Direction.Vertical,
+            Direction subMenuDirection = Direction.Vertical
+        ) =>
+            CreateMenu(() =>
+                new ClickOpenMenu(mainDirection, subMenuDirection, TimePerAction)
                 {
-                    generateRandomMenuItem("First"),
-                    generateRandomMenuItem("Second"),
-                    generateRandomMenuItem("Third"),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.Both,
+                    Items = new[]
+                    {
+                        generateRandomMenuItem("First"),
+                        generateRandomMenuItem("Second"),
+                        generateRandomMenuItem("Third"),
+                    },
                 }
-            });
+            );
 
         private partial class ClickOpenMenu : BasicMenu
         {
             private readonly int depth;
             private readonly Direction subMenuDirection;
 
-            protected override Menu CreateSubMenu() => new ClickOpenMenu(subMenuDirection, subMenuDirection, HoverOpenDelay, depth + 1);
+            protected override Menu CreateSubMenu() =>
+                new ClickOpenMenu(subMenuDirection, subMenuDirection, HoverOpenDelay, depth + 1);
 
-            public ClickOpenMenu(Direction mainDirection, Direction subMenuDirection, double timePerAction, int depth = 0)
+            public ClickOpenMenu(
+                Direction mainDirection,
+                Direction subMenuDirection,
+                double timePerAction,
+                int depth = 0
+            )
                 : base(mainDirection, depth == 0)
             {
                 HoverOpenDelay = timePerAction;
@@ -59,12 +70,13 @@ namespace osu.Framework.Tests.Visual.UserInterface
             }
 
             protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) =>
-                base.CreateDrawableMenuItem(item).With(drawableItem =>
-                {
-                    float hue = (float)depth / max_depth;
-                    drawableItem.BackgroundColour = Colour4.FromHSV(hue, 1, 0.3f);
-                    drawableItem.BackgroundColourHover = Colour4.FromHSV(hue, 0.6f, 0.5f);
-                });
+                base.CreateDrawableMenuItem(item)
+                    .With(drawableItem =>
+                    {
+                        float hue = (float)depth / max_depth;
+                        drawableItem.BackgroundColour = Colour4.FromHSV(hue, 1, 0.3f);
+                        drawableItem.BackgroundColourHover = Colour4.FromHSV(hue, 0.6f, 0.5f);
+                    });
         }
 
         #region Test Cases
@@ -103,7 +115,10 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             createMenu();
 
-            AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(0).GetMenuItems()[0]));
+            AddStep(
+                "Hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(0).GetMenuItems()[0])
+            );
             AddAssert("Check closed", () => Menus.GetSubMenu(1)?.State != MenuState.Open);
             AddAssert("Check closed", () => Menus.GetSubMenu(1)?.State != MenuState.Open);
             AddStep("Click item", () => InputManager.Click(MouseButton.Left));
@@ -161,10 +176,16 @@ namespace osu.Framework.Tests.Visual.UserInterface
             createMenu();
 
             AddStep("Click item", () => ClickItem(0, 1));
-            AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[0]));
+            AddStep(
+                "Hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[0])
+            );
             AddAssert("Check closed", () => Menus.GetSubMenu(2)?.State != MenuState.Open);
             AddAssert("Check open", () => Menus.GetSubMenu(2).State == MenuState.Open);
-            AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(2).GetMenuItems()[0]));
+            AddStep(
+                "Hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(2).GetMenuItems()[0])
+            );
             AddAssert("Check closed", () => Menus.GetSubMenu(3)?.State != MenuState.Open);
             AddAssert("Check open", () => Menus.GetSubMenu(3).State == MenuState.Open);
         }
@@ -179,33 +200,54 @@ namespace osu.Framework.Tests.Visual.UserInterface
             createMenu();
 
             IReadOnlyList<MenuItem> currentItems = null;
-            AddStep("Click item", () => { ClickItem(0, 0); });
-
-            AddStep("Get items", () => { currentItems = Menus.GetSubMenu(1).Items; });
-
-            AddAssert("Check open", () => Menus.GetSubMenu(1).State == MenuState.Open);
-            AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(0).GetMenuItems()[1]));
-            AddAssert("Check open", () => Menus.GetSubMenu(1).State == MenuState.Open);
-
-            AddAssert("Check new items", () => !Menus.GetSubMenu(1).Items.SequenceEqual(currentItems));
-            AddAssert("Check closed", () =>
-            {
-                int currentSubMenu = 3;
-
-                while (true)
+            AddStep(
+                "Click item",
+                () =>
                 {
-                    var subMenu = Menus.GetSubMenu(currentSubMenu);
-                    if (subMenu == null)
-                        break;
-
-                    if (subMenu.State == MenuState.Open)
-                        return false;
-
-                    currentSubMenu++;
+                    ClickItem(0, 0);
                 }
+            );
 
-                return true;
-            });
+            AddStep(
+                "Get items",
+                () =>
+                {
+                    currentItems = Menus.GetSubMenu(1).Items;
+                }
+            );
+
+            AddAssert("Check open", () => Menus.GetSubMenu(1).State == MenuState.Open);
+            AddStep(
+                "Hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(0).GetMenuItems()[1])
+            );
+            AddAssert("Check open", () => Menus.GetSubMenu(1).State == MenuState.Open);
+
+            AddAssert(
+                "Check new items",
+                () => !Menus.GetSubMenu(1).Items.SequenceEqual(currentItems)
+            );
+            AddAssert(
+                "Check closed",
+                () =>
+                {
+                    int currentSubMenu = 3;
+
+                    while (true)
+                    {
+                        var subMenu = Menus.GetSubMenu(currentSubMenu);
+                        if (subMenu == null)
+                            break;
+
+                        if (subMenu.State == MenuState.Open)
+                            return false;
+
+                        currentSubMenu++;
+                    }
+
+                    return true;
+                }
+            );
         }
 
         /// <summary>
@@ -218,33 +260,45 @@ namespace osu.Framework.Tests.Visual.UserInterface
             createMenu();
 
             AddStep("Click item", () => ClickItem(0, 2));
-            AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[0]));
+            AddStep(
+                "Hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[0])
+            );
             AddAssert("Check closed", () => Menus.GetSubMenu(2)?.State != MenuState.Open);
             AddAssert("Check closed", () => Menus.GetSubMenu(2)?.State != MenuState.Open);
 
-            AddStep("Hover item", () => { InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[1]); });
+            AddStep(
+                "Hover item",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[1]);
+                }
+            );
 
             AddAssert("Check closed", () => Menus.GetSubMenu(2)?.State != MenuState.Open);
             AddAssert("Check open", () => Menus.GetSubMenu(2).State == MenuState.Open);
 
-            AddAssert("Check closed", () =>
-            {
-                int currentSubMenu = 3;
-
-                while (true)
+            AddAssert(
+                "Check closed",
+                () =>
                 {
-                    var subMenu = Menus.GetSubMenu(currentSubMenu);
-                    if (subMenu == null)
-                        break;
+                    int currentSubMenu = 3;
 
-                    if (subMenu.State == MenuState.Open)
-                        return false;
+                    while (true)
+                    {
+                        var subMenu = Menus.GetSubMenu(currentSubMenu);
+                        if (subMenu == null)
+                            break;
 
-                    currentSubMenu++;
+                        if (subMenu.State == MenuState.Open)
+                            return false;
+
+                        currentSubMenu++;
+                    }
+
+                    return true;
                 }
-
-                return true;
-            });
+            );
         }
 
         /// <summary>
@@ -264,20 +318,30 @@ namespace osu.Framework.Tests.Visual.UserInterface
             for (int i = 3; i >= 1; i--)
             {
                 int menuIndex = i;
-                AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(menuIndex).GetMenuItems()[0]));
-                AddAssert("Check submenu open", () => Menus.GetSubMenu(menuIndex + 1).State == MenuState.Open);
+                AddStep(
+                    "Hover item",
+                    () =>
+                        InputManager.MoveMouseTo(Menus.GetSubStructure(menuIndex).GetMenuItems()[0])
+                );
+                AddAssert(
+                    "Check submenu open",
+                    () => Menus.GetSubMenu(menuIndex + 1).State == MenuState.Open
+                );
                 AddStep("Click item", () => InputManager.Click(MouseButton.Left));
-                AddAssert("Check all open", () =>
-                {
-                    for (int j = 0; j <= menuIndex; j++)
+                AddAssert(
+                    "Check all open",
+                    () =>
                     {
-                        int menuIndex2 = j;
-                        if (Menus.GetSubMenu(menuIndex2)?.State != MenuState.Open)
-                            return false;
-                    }
+                        for (int j = 0; j <= menuIndex; j++)
+                        {
+                            int menuIndex2 = j;
+                            if (Menus.GetSubMenu(menuIndex2)?.State != MenuState.Open)
+                                return false;
+                        }
 
-                    return true;
-                });
+                        return true;
+                    }
+                );
             }
         }
 
@@ -295,17 +359,20 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("Click item", () => ClickItem(3, 0));
             AddStep("Click item", () => ClickItem(0, 1));
 
-            AddAssert("Check submenus closed", () =>
-            {
-                for (int j = 1; j <= 3; j++)
+            AddAssert(
+                "Check submenus closed",
+                () =>
                 {
-                    int menuIndex2 = j;
-                    if (Menus.GetSubMenu(menuIndex2).State == MenuState.Open)
-                        return false;
-                }
+                    for (int j = 1; j <= 3; j++)
+                    {
+                        int menuIndex2 = j;
+                        if (Menus.GetSubMenu(menuIndex2).State == MenuState.Open)
+                            return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
 
         /// <summary>
@@ -322,17 +389,20 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("Click item", () => ClickItem(3, 0));
             AddStep("Click item", () => ClickItem(4, 0));
 
-            AddAssert("Check submenus closed", () =>
-            {
-                for (int j = 1; j <= 3; j++)
+            AddAssert(
+                "Check submenus closed",
+                () =>
                 {
-                    int menuIndex2 = j;
-                    if (Menus.GetSubMenu(menuIndex2).State == MenuState.Open)
-                        return false;
-                }
+                    for (int j = 1; j <= 3; j++)
+                    {
+                        int menuIndex2 = j;
+                        if (Menus.GetSubMenu(menuIndex2).State == MenuState.Open)
+                            return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
         }
 
         /// <summary>
@@ -357,21 +427,30 @@ namespace osu.Framework.Tests.Visual.UserInterface
                 }
 
                 if (hoverPrevious && i > 0)
-                    AddStep("Hover previous", () => InputManager.MoveMouseTo(Menus.GetSubStructure(i2 - 1).GetMenuItems()[i2 > 1 ? 0 : 1]));
+                    AddStep(
+                        "Hover previous",
+                        () =>
+                            InputManager.MoveMouseTo(
+                                Menus.GetSubStructure(i2 - 1).GetMenuItems()[i2 > 1 ? 0 : 1]
+                            )
+                    );
 
                 AddStep("Remove hover", () => InputManager.MoveMouseTo(Vector2.Zero));
                 AddStep("Click outside", () => InputManager.Click(MouseButton.Left));
-                AddAssert("Check submenus closed", () =>
-                {
-                    for (int j = 1; j <= i2 + 1; j++)
+                AddAssert(
+                    "Check submenus closed",
+                    () =>
                     {
-                        int menuIndex2 = j;
-                        if (Menus.GetSubMenu(menuIndex2).State == MenuState.Open)
-                            return false;
-                    }
+                        for (int j = 1; j <= i2 + 1; j++)
+                        {
+                            int menuIndex2 = j;
+                            if (Menus.GetSubMenu(menuIndex2).State == MenuState.Open)
+                                return false;
+                        }
 
-                    return true;
-                });
+                        return true;
+                    }
+                );
             }
         }
 
@@ -386,19 +465,40 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("Click item", () => ClickItem(0, 2));
             AddAssert("Check open", () => Menus.GetSubMenu(1).State == MenuState.Open);
 
-            AddStep("Hover item", () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[1]));
+            AddStep(
+                "Hover item",
+                () => InputManager.MoveMouseTo(Menus.GetSubStructure(1).GetMenuItems()[1])
+            );
             AddAssert("Check closed 1", () => Menus.GetSubMenu(2)?.State != MenuState.Open);
             AddAssert("Check open", () => Menus.GetSubMenu(2).State == MenuState.Open);
-            AddAssert("Check selected index 1", () => Menus.GetSubStructure(1).GetSelectedIndex() == 1);
+            AddAssert(
+                "Check selected index 1",
+                () => Menus.GetSubStructure(1).GetSelectedIndex() == 1
+            );
 
-            AddStep("Change selection", () => Menus.GetSubStructure(1).SetSelectedState(0, MenuItemState.Selected));
-            AddAssert("Check selected index", () => Menus.GetSubStructure(1).GetSelectedIndex() == 0);
+            AddStep(
+                "Change selection",
+                () => Menus.GetSubStructure(1).SetSelectedState(0, MenuItemState.Selected)
+            );
+            AddAssert(
+                "Check selected index",
+                () => Menus.GetSubStructure(1).GetSelectedIndex() == 0
+            );
 
-            AddStep("Change selection", () => Menus.GetSubStructure(1).SetSelectedState(2, MenuItemState.Selected));
-            AddAssert("Check selected index 2", () => Menus.GetSubStructure(1).GetSelectedIndex() == 2);
+            AddStep(
+                "Change selection",
+                () => Menus.GetSubStructure(1).SetSelectedState(2, MenuItemState.Selected)
+            );
+            AddAssert(
+                "Check selected index 2",
+                () => Menus.GetSubStructure(1).GetSelectedIndex() == 2
+            );
 
             AddStep("Close menus", () => Menus.GetSubMenu(0).Close());
-            AddAssert("Check selected index 4", () => Menus.GetSubStructure(1).GetSelectedIndex() == -1);
+            AddAssert(
+                "Check selected index 4",
+                () => Menus.GetSubStructure(1).GetSelectedIndex() == -1
+            );
         }
 
         /// <summary>
@@ -411,11 +511,14 @@ namespace osu.Framework.Tests.Visual.UserInterface
         public void TestSubMenuOverflow(Anchor anchor, Direction direction)
         {
             createMenu(direction);
-            AddStep($"anchor menu {anchor}", () =>
-            {
-                var menu = Menus.GetSubMenu(0);
-                menu.Anchor = menu.Origin = anchor;
-            });
+            AddStep(
+                $"anchor menu {anchor}",
+                () =>
+                {
+                    var menu = Menus.GetSubMenu(0);
+                    menu.Anchor = menu.Origin = anchor;
+                }
+            );
 
             AddStep("Click item", () => ClickItem(0, 1));
             menuOpenAndVisible(1);
@@ -429,51 +532,96 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("Click item", () => ClickItem(3, 0));
             menuOpenAndVisible(4);
 
-            void menuOpenAndVisible(int index) => AddAssert("Menu is open and visible", () =>
-            {
-                var menu = Menus.GetSubMenu(index);
-                return menu.State == MenuState.Open && menu.ScreenSpaceDrawQuad.GetVertices().ToArray().All(v => Precision.AlmostBigger(ScreenSpaceDrawQuad.BottomRight.X, v.X, 1) && Precision.AlmostBigger(ScreenSpaceDrawQuad.BottomRight.Y, v.Y, 1));
-            });
+            void menuOpenAndVisible(int index) =>
+                AddAssert(
+                    "Menu is open and visible",
+                    () =>
+                    {
+                        var menu = Menus.GetSubMenu(index);
+                        return menu.State == MenuState.Open
+                            && menu.ScreenSpaceDrawQuad.GetVertices()
+                                .ToArray()
+                                .All(v =>
+                                    Precision.AlmostBigger(
+                                        ScreenSpaceDrawQuad.BottomRight.X,
+                                        v.X,
+                                        1
+                                    )
+                                    && Precision.AlmostBigger(
+                                        ScreenSpaceDrawQuad.BottomRight.Y,
+                                        v.Y,
+                                        1
+                                    )
+                                );
+                    }
+                );
         }
 
         [Test]
-        public void TestSubMenuOverflowPlayground([Values] Direction direction, [Values] Direction subMenuDirection)
+        public void TestSubMenuOverflowPlayground(
+            [Values] Direction direction,
+            [Values] Direction subMenuDirection
+        )
         {
             createMenu(direction, subMenuDirection);
-            AddStep("anchor menu to top left", () =>
-            {
-                var menu = Menus.GetSubMenu(0);
-                menu.Anchor = menu.Origin = Anchor.TopLeft;
-            });
+            AddStep(
+                "anchor menu to top left",
+                () =>
+                {
+                    var menu = Menus.GetSubMenu(0);
+                    menu.Anchor = menu.Origin = Anchor.TopLeft;
+                }
+            );
 
             AddStep("Click item", () => ClickItem(0, 1));
             AddStep("Click item", () => ClickItem(1, 0));
             AddStep("Click item", () => ClickItem(2, 0));
             AddStep("Click item", () => ClickItem(3, 0));
 
-            AddSliderStep("set top-level menu width", 50, 250, 50, width =>
-            {
-                var menu = Menus?.GetSubMenu(0);
-                if (menu == null || menu.IsDisposed) return;
+            AddSliderStep(
+                "set top-level menu width",
+                50,
+                250,
+                50,
+                width =>
+                {
+                    var menu = Menus?.GetSubMenu(0);
+                    if (menu == null || menu.IsDisposed)
+                        return;
 
-                menu.Width = width;
-            });
+                    menu.Width = width;
+                }
+            );
 
-            AddSliderStep("move top-level menu X", 0, 1, 0f, x =>
-            {
-                var menu = Menus?.GetSubMenu(0);
-                if (menu == null || menu.IsDisposed) return;
+            AddSliderStep(
+                "move top-level menu X",
+                0,
+                1,
+                0f,
+                x =>
+                {
+                    var menu = Menus?.GetSubMenu(0);
+                    if (menu == null || menu.IsDisposed)
+                        return;
 
-                menu.X = x;
-            });
+                    menu.X = x;
+                }
+            );
 
-            AddSliderStep("move top-level menu Y", 0, 1, 0f, y =>
-            {
-                var menu = Menus?.GetSubMenu(0);
-                if (menu == null || menu.IsDisposed) return;
+            AddSliderStep(
+                "move top-level menu Y",
+                0,
+                1,
+                0f,
+                y =>
+                {
+                    var menu = Menus?.GetSubMenu(0);
+                    if (menu == null || menu.IsDisposed)
+                        return;
 
-                menu.Y = y;
-            });
+                    menu.Y = y;
+                }
+            );
         }
 
         #endregion

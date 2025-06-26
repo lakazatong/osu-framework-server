@@ -33,19 +33,24 @@ namespace osu.Framework.IO.Stores
         /// </summary>
         internal Storage? CacheStorage { get; set; }
 
-        private readonly Dictionary<string, Stream> pageStreamHandles = new Dictionary<string, Stream>();
+        private readonly Dictionary<string, Stream> pageStreamHandles =
+            new Dictionary<string, Stream>();
 
         private readonly Dictionary<int, PageInfo> pageLookup = new Dictionary<int, PageInfo>();
 
-        public RawCachingGlyphStore(ResourceStore<byte[]> store, string? assetName = null, IResourceStore<TextureUpload>? textureLoader = null)
-            : base(store, assetName, textureLoader)
-        {
-        }
+        public RawCachingGlyphStore(
+            ResourceStore<byte[]> store,
+            string? assetName = null,
+            IResourceStore<TextureUpload>? textureLoader = null
+        )
+            : base(store, assetName, textureLoader) { }
 
         protected override TextureUpload LoadCharacter(Character character)
         {
             if (CacheStorage == null)
-                throw new InvalidOperationException($"{nameof(CacheStorage)} should be set before requesting characters.");
+                throw new InvalidOperationException(
+                    $"{nameof(CacheStorage)} should be set before requesting characters."
+                );
 
             // Use simple global locking for the time being.
             // If necessary, a per-lookup-key (page number) locking mechanism could be implemented similar to TextureStore.
@@ -76,16 +81,30 @@ namespace osu.Framework.IO.Stores
 
                 // Finding an existing file validates that the file both exists on disk, and was generated for the correct font.
                 // It doesn't guarantee that the generated cache file is in a good state.
-                string? existing = CacheStorage.GetFiles(string.Empty, $"{accessFilename}*").FirstOrDefault();
+                string? existing = CacheStorage
+                    .GetFiles(string.Empty, $"{accessFilename}*")
+                    .FirstOrDefault();
 
                 if (existing != null)
                 {
                     // Filename format is "filenameHashMD5#contentHashMD5#width#height"
                     string[] split = existing.Split('#');
 
-                    if (split.Length == 4
-                        && int.TryParse(split[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int width)
-                        && int.TryParse(split[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int height))
+                    if (
+                        split.Length == 4
+                        && int.TryParse(
+                            split[2],
+                            NumberStyles.Integer,
+                            CultureInfo.InvariantCulture,
+                            out int width
+                        )
+                        && int.TryParse(
+                            split[3],
+                            NumberStyles.Integer,
+                            CultureInfo.InvariantCulture,
+                            out int height
+                        )
+                    )
                     {
                         // Sanity check that the length of the file is expected, based on the width and height.
                         // If we ever see corrupt files in the wild, this should be changed to a full md5 check. Hopefully it will never happen.
@@ -96,7 +115,7 @@ namespace osu.Framework.IO.Stores
                                 return pageLookup[page] = new PageInfo
                                 {
                                     Size = new Size(width, height),
-                                    Filename = existing
+                                    Filename = existing,
                                 };
                             }
                         }
@@ -104,7 +123,12 @@ namespace osu.Framework.IO.Stores
                 }
 
                 using (var convert = GetPageImage(page))
-                using (var buffer = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<byte>(convert.Width * convert.Height))
+                using (
+                    var buffer =
+                        SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<byte>(
+                            convert.Width * convert.Height
+                        )
+                )
                 {
                     var output = buffer.Memory.Span;
                     var source = convert.Data;
@@ -116,7 +140,9 @@ namespace osu.Framework.IO.Stores
                     foreach (string f in CacheStorage.GetFiles(string.Empty, $"{filenameMd5}*"))
                         CacheStorage.Delete(f);
 
-                    accessFilename += FormattableString.Invariant($"#{convert.Width}#{convert.Height}");
+                    accessFilename += FormattableString.Invariant(
+                        $"#{convert.Width}#{convert.Height}"
+                    );
 
                     using (var outStream = CacheStorage.CreateFileSafely(accessFilename))
                         outStream.Write(buffer.Memory.Span);
@@ -124,7 +150,7 @@ namespace osu.Framework.IO.Stores
                     return pageLookup[page] = new PageInfo
                     {
                         Size = new Size(convert.Width, convert.Height),
-                        Filename = accessFilename
+                        Filename = accessFilename,
                     };
                 }
             }
@@ -141,10 +167,16 @@ namespace osu.Framework.IO.Stores
 
             try
             {
-                var image = new Image<Rgba32>(SixLabors.ImageSharp.Configuration.Default, character.Width, character.Height);
+                var image = new Image<Rgba32>(
+                    SixLabors.ImageSharp.Configuration.Default,
+                    character.Width,
+                    character.Height
+                );
 
                 if (!pageStreamHandles.TryGetValue(page.Filename, out var source))
-                    source = pageStreamHandles[page.Filename] = CacheStorage.GetStream(page.Filename);
+                    source = pageStreamHandles[page.Filename] = CacheStorage.GetStream(
+                        page.Filename
+                    );
 
                 // consider to use System.IO.RandomAccess in .NET 6
                 source.Seek(pageWidth * character.Y, SeekOrigin.Begin);
@@ -162,7 +194,14 @@ namespace osu.Framework.IO.Stores
 
                     for (int x = 0; x < character.Width; x++)
                     {
-                        span[x] = new Rgba32(255, 255, 255, x < readableWidth && y < readableHeight ? readBuffer[readOffset + x] : (byte)0);
+                        span[x] = new Rgba32(
+                            255,
+                            255,
+                            255,
+                            x < readableWidth && y < readableHeight
+                                ? readBuffer[readOffset + x]
+                                : (byte)0
+                        );
                     }
                 }
 

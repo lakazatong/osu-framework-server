@@ -14,9 +14,9 @@ using osu.Framework.Logging;
 using osu.Framework.Threading;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using static SDL2.SDL;
 using Image = SixLabors.ImageSharp.Image;
 using Point = System.Drawing.Point;
-using static SDL2.SDL;
 
 namespace osu.Framework.Platform.SDL2
 {
@@ -195,12 +195,17 @@ namespace osu.Framework.Platform.SDL2
             }
 
             SDL_GetVersion(out SDL_version version);
-            Logger.Log($@"SDL2 Initialized
+            Logger.Log(
+                $@"SDL2 Initialized
                           SDL2 Version: {version.major}.{version.minor}.{version.patch}
                           SDL2 Revision: {SDL_GetRevision()}
-                          SDL2 Video driver: {SDL_GetCurrentVideoDriver()}");
+                          SDL2 Video driver: {SDL_GetCurrentVideoDriver()}"
+            );
 
-            SDL_LogSetPriority((int)SDL_LogCategory.SDL_LOG_CATEGORY_ERROR, SDL_LogPriority.SDL_LOG_PRIORITY_DEBUG);
+            SDL_LogSetPriority(
+                (int)SDL_LogCategory.SDL_LOG_CATEGORY_ERROR,
+                SDL_LogPriority.SDL_LOG_PRIORITY_DEBUG
+            );
             SDL_LogSetOutputFunction(logOutputDelegate = logOutput, IntPtr.Zero);
 
             graphicsSurface = new SDL2GraphicsSurface(this, surfaceType);
@@ -215,12 +220,19 @@ namespace osu.Framework.Platform.SDL2
         }
 
         [MonoPInvokeCallback(typeof(SDL_LogOutputFunction))]
-        private static void logOutput(IntPtr _, int categoryInt, SDL_LogPriority priority, IntPtr messagePtr)
+        private static void logOutput(
+            IntPtr _,
+            int categoryInt,
+            SDL_LogPriority priority,
+            IntPtr messagePtr
+        )
         {
             var category = (SDL_LogCategory)categoryInt;
             string? message = Marshal.PtrToStringUTF8(messagePtr);
 
-            Logger.Log($@"SDL {category.ReadableName()} log [{priority.ReadableName()}]: {message}");
+            Logger.Log(
+                $@"SDL {category.ReadableName()} log [{priority.ReadableName()}]: {message}"
+            );
         }
 
         public void SetupWindow(FrameworkConfigManager config)
@@ -231,9 +243,10 @@ namespace osu.Framework.Platform.SDL2
 
         public virtual void Create()
         {
-            SDL_WindowFlags flags = SDL_WindowFlags.SDL_WINDOW_RESIZABLE |
-                                    SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI |
-                                    SDL_WindowFlags.SDL_WINDOW_HIDDEN; // shown after first swap to avoid white flash on startup (windows)
+            SDL_WindowFlags flags =
+                SDL_WindowFlags.SDL_WINDOW_RESIZABLE
+                | SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI
+                | SDL_WindowFlags.SDL_WINDOW_HIDDEN; // shown after first swap to avoid white flash on startup (windows)
 
             flags |= WindowState.ToFlags();
             flags |= graphicsSurface.Type.ToFlags();
@@ -249,10 +262,19 @@ namespace osu.Framework.Platform.SDL2
             // so we deactivate it on startup.
             SDL_StopTextInput();
 
-            SDLWindowHandle = SDL_CreateWindow(title, Position.X, Position.Y, Size.Width, Size.Height, flags);
+            SDLWindowHandle = SDL_CreateWindow(
+                title,
+                Position.X,
+                Position.Y,
+                Size.Width,
+                Size.Height,
+                flags
+            );
 
             if (SDLWindowHandle == IntPtr.Zero)
-                throw new InvalidOperationException($"Failed to create SDL window. SDL Error: {SDL_GetError()}");
+                throw new InvalidOperationException(
+                    $"Failed to create SDL window. SDL Error: {SDL_GetError()}"
+                );
 
             graphicsSurface.Initialise();
 
@@ -348,7 +370,10 @@ namespace osu.Framework.Platform.SDL2
             {
                 case SDL_EventType.SDL_WINDOWEVENT:
                     // polling via SDL_PollEvent blocks on resizes (https://stackoverflow.com/a/50858339)
-                    if (evt.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED && !updatingWindowStateAndSize)
+                    if (
+                        evt.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED
+                        && !updatingWindowStateAndSize
+                    )
                         fetchWindowSize();
 
                     break;
@@ -406,46 +431,54 @@ namespace osu.Framework.Platform.SDL2
             }
         }
 
-        public void Raise() => ScheduleCommand(() =>
-        {
-            var flags = (SDL_WindowFlags)SDL_GetWindowFlags(SDLWindowHandle);
+        public void Raise() =>
+            ScheduleCommand(() =>
+            {
+                var flags = (SDL_WindowFlags)SDL_GetWindowFlags(SDLWindowHandle);
 
-            if (flags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_MINIMIZED))
-                SDL_RestoreWindow(SDLWindowHandle);
+                if (flags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_MINIMIZED))
+                    SDL_RestoreWindow(SDLWindowHandle);
 
-            SDL_RaiseWindow(SDLWindowHandle);
-        });
+                SDL_RaiseWindow(SDLWindowHandle);
+            });
 
-        public void Hide() => ScheduleCommand(() =>
-        {
-            SDL_HideWindow(SDLWindowHandle);
-        });
+        public void Hide() =>
+            ScheduleCommand(() =>
+            {
+                SDL_HideWindow(SDLWindowHandle);
+            });
 
-        public void Show() => ScheduleCommand(() =>
-        {
-            SDL_ShowWindow(SDLWindowHandle);
-        });
+        public void Show() =>
+            ScheduleCommand(() =>
+            {
+                SDL_ShowWindow(SDLWindowHandle);
+            });
 
-        public void Flash(bool flashUntilFocused = false) => ScheduleCommand(() =>
-        {
-            if (isActive.Value)
-                return;
+        public void Flash(bool flashUntilFocused = false) =>
+            ScheduleCommand(() =>
+            {
+                if (isActive.Value)
+                    return;
 
-            if (!RuntimeInfo.IsDesktop)
-                return;
+                if (!RuntimeInfo.IsDesktop)
+                    return;
 
-            SDL_FlashWindow(SDLWindowHandle, flashUntilFocused
-                ? SDL_FlashOperation.SDL_FLASH_UNTIL_FOCUSED
-                : SDL_FlashOperation.SDL_FLASH_BRIEFLY);
-        });
+                SDL_FlashWindow(
+                    SDLWindowHandle,
+                    flashUntilFocused
+                        ? SDL_FlashOperation.SDL_FLASH_UNTIL_FOCUSED
+                        : SDL_FlashOperation.SDL_FLASH_BRIEFLY
+                );
+            });
 
-        public void CancelFlash() => ScheduleCommand(() =>
-        {
-            if (!RuntimeInfo.IsDesktop)
-                return;
+        public void CancelFlash() =>
+            ScheduleCommand(() =>
+            {
+                if (!RuntimeInfo.IsDesktop)
+                    return;
 
-            SDL_FlashWindow(SDLWindowHandle, SDL_FlashOperation.SDL_FLASH_CANCEL);
-        });
+                SDL_FlashWindow(SDLWindowHandle, SDL_FlashOperation.SDL_FLASH_CANCEL);
+            });
 
         public void EnableScreenSuspension() => ScheduleCommand(SDL_EnableScreenSaver);
 
@@ -466,7 +499,17 @@ namespace osu.Framework.Platform.SDL2
 
                 IntPtr surface;
                 fixed (Rgba32* ptr = pixelSpan)
-                    surface = SDL_CreateRGBSurfaceFrom(new IntPtr(ptr), imageSize.Width, imageSize.Height, 32, imageSize.Width * 4, 0xff, 0xff00, 0xff0000, 0xff000000);
+                    surface = SDL_CreateRGBSurfaceFrom(
+                        new IntPtr(ptr),
+                        imageSize.Width,
+                        imageSize.Height,
+                        32,
+                        imageSize.Width * 4,
+                        0xff,
+                        0xff00,
+                        0xff0000,
+                        0xff000000
+                    );
 
                 SDL_SetWindowIcon(SDLWindowHandle, surface);
                 SDL_FreeSurface(surface);
@@ -497,7 +540,13 @@ namespace osu.Framework.Platform.SDL2
 
             do
             {
-                eventsRead = SDL_PeepEvents(events, events_per_peep, SDL_eventaction.SDL_GETEVENT, SDL_EventType.SDL_FIRSTEVENT, SDL_EventType.SDL_LASTEVENT);
+                eventsRead = SDL_PeepEvents(
+                    events,
+                    events_per_peep,
+                    SDL_eventaction.SDL_GETEVENT,
+                    SDL_EventType.SDL_FIRSTEVENT,
+                    SDL_EventType.SDL_LASTEVENT
+                );
                 for (int i = 0; i < eventsRead; i++)
                     HandleEvent(events[i]);
             } while (eventsRead == events_per_peep);

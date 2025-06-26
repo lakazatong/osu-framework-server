@@ -26,14 +26,14 @@ namespace osu.Framework.Tests.Visual.Input
                     return new NonBlockingScroll
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = box = new ClickBox()
+                        Child = box = new ClickBox(),
                     };
 
                 case TestType.Scroll:
                     return new BasicScrollContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = box = new ClickBox()
+                        Child = box = new ClickBox(),
                     };
 
                 default:
@@ -61,9 +61,18 @@ namespace osu.Framework.Tests.Visual.Input
         {
             AddStep("create button", () => Child = createClickBox(type));
 
-            AddStep("move to TopLeft", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft));
+            AddStep(
+                "move to TopLeft",
+                () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft)
+            );
             AddStep("mouse down", () => InputManager.PressButton(MouseButton.Left));
-            AddStep("move to BottomLeft", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).BottomLeft));
+            AddStep(
+                "move to BottomLeft",
+                () =>
+                    InputManager.MoveMouseTo(
+                        box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).BottomLeft
+                    )
+            );
             AddStep("mouse up", () => InputManager.ReleaseButton(MouseButton.Left));
 
             checkClicked(type != TestType.Scroll);
@@ -76,9 +85,18 @@ namespace osu.Framework.Tests.Visual.Input
         {
             AddStep("create button", () => Child = createClickBox(type));
 
-            AddStep("move to TopLeft", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft));
+            AddStep(
+                "move to TopLeft",
+                () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft)
+            );
             AddStep("mouse down", () => InputManager.PressButton(MouseButton.Left));
-            AddStep("move to TopRight", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopRight + new Vector2(0, 5)));
+            AddStep(
+                "move to TopRight",
+                () =>
+                    InputManager.MoveMouseTo(
+                        box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopRight + new Vector2(0, 5)
+                    )
+            );
             AddStep("mouse up", () => InputManager.ReleaseButton(MouseButton.Left));
 
             checkClicked(true);
@@ -91,9 +109,18 @@ namespace osu.Framework.Tests.Visual.Input
         {
             AddStep("create button", () => Child = createClickBox(type));
 
-            AddStep("move to TopLeft", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft));
+            AddStep(
+                "move to TopLeft",
+                () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft)
+            );
             AddStep("mouse down", () => InputManager.PressButton(MouseButton.Left));
-            AddStep("move out", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.TopLeft - new Vector2(10, 0)));
+            AddStep(
+                "move out",
+                () =>
+                    InputManager.MoveMouseTo(
+                        box.ScreenSpaceDrawQuad.AABBFloat.TopLeft - new Vector2(10, 0)
+                    )
+            );
             AddStep("mouse up", () => InputManager.ReleaseButton(MouseButton.Left));
 
             checkClicked(false);
@@ -106,16 +133,32 @@ namespace osu.Framework.Tests.Visual.Input
         {
             AddStep("create button", () => Child = createClickBox(type));
 
-            AddStep("move to TopLeft", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft));
+            AddStep(
+                "move to TopLeft",
+                () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft)
+            );
             AddStep("mouse down", () => InputManager.PressButton(MouseButton.Left));
-            AddStep("move out", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.TopLeft - new Vector2(10, 0)));
-            AddStep("move back in", () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft));
+            AddStep(
+                "move out",
+                () =>
+                    InputManager.MoveMouseTo(
+                        box.ScreenSpaceDrawQuad.AABBFloat.TopLeft - new Vector2(10, 0)
+                    )
+            );
+            AddStep(
+                "move back in",
+                () => InputManager.MoveMouseTo(box.ScreenSpaceDrawQuad.AABBFloat.Shrink(10).TopLeft)
+            );
             AddStep("mouse up", () => InputManager.ReleaseButton(MouseButton.Left));
 
             checkClicked(true);
         }
 
-        private void checkClicked(bool clicked) => AddAssert($"button {(clicked ? "clicked" : "not clicked")}", () => box.Clicked == clicked);
+        private void checkClicked(bool clicked) =>
+            AddAssert(
+                $"button {(clicked ? "clicked" : "not clicked")}",
+                () => box.Clicked == clicked
+            );
 
         public partial class ClickBox : BasicButton
         {
@@ -150,7 +193,7 @@ namespace osu.Framework.Tests.Visual.Input
         {
             Direct,
             Scroll,
-            NonBlockingScroll
+            NonBlockingScroll,
         }
     }
 }

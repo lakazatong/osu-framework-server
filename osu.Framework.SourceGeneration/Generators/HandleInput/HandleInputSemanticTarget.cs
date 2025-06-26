@@ -15,10 +15,11 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
         public bool RequestsPositionalInput { get; private set; }
         public bool RequestsNonPositionalInput { get; private set; }
 
-        public HandleInputSemanticTarget(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
-            : base(classSyntax, semanticModel)
-        {
-        }
+        public HandleInputSemanticTarget(
+            ClassDeclarationSyntax classSyntax,
+            SemanticModel semanticModel
+        )
+            : base(classSyntax, semanticModel) { }
 
         protected override bool CheckValid(INamedTypeSymbol symbol)
         {
@@ -56,26 +57,47 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
 
         private static bool checkMethods(IEnumerable<string> methods, INamedTypeSymbol symbol)
         {
-            return runForTypeHierarchy(symbol, methods, static (symbol, methods) =>
-            {
-                return methods.SelectMany(name => symbol.GetMembers(name).OfType<IMethodSymbol>()).Any(isDrawableMethod);
-            });
+            return runForTypeHierarchy(
+                symbol,
+                methods,
+                static (symbol, methods) =>
+                {
+                    return methods
+                        .SelectMany(name => symbol.GetMembers(name).OfType<IMethodSymbol>())
+                        .Any(isDrawableMethod);
+                }
+            );
         }
 
         private static bool checkProperties(IEnumerable<string> properties, INamedTypeSymbol symbol)
         {
-            return runForTypeHierarchy(symbol, properties, static (symbol, properties) =>
-            {
-                return properties.SelectMany(name => symbol.GetMembers(name).OfType<IPropertySymbol>()).Any(isDrawableProperty);
-            });
+            return runForTypeHierarchy(
+                symbol,
+                properties,
+                static (symbol, properties) =>
+                {
+                    return properties
+                        .SelectMany(name => symbol.GetMembers(name).OfType<IPropertySymbol>())
+                        .Any(isDrawableProperty);
+                }
+            );
         }
 
-        private static bool checkInterfaces(ImmutableHashSet<string> interfaces, INamedTypeSymbol symbol)
+        private static bool checkInterfaces(
+            ImmutableHashSet<string> interfaces,
+            INamedTypeSymbol symbol
+        )
         {
-            return symbol.AllInterfaces.Select(SyntaxHelpers.GetFullyQualifiedTypeName).Any(interfaces.Contains);
+            return symbol
+                .AllInterfaces.Select(SyntaxHelpers.GetFullyQualifiedTypeName)
+                .Any(interfaces.Contains);
         }
 
-        private static bool runForTypeHierarchy<T>(INamedTypeSymbol symbol, T items, Func<INamedTypeSymbol, T, bool> func)
+        private static bool runForTypeHierarchy<T>(
+            INamedTypeSymbol symbol,
+            T items,
+            Func<INamedTypeSymbol, T, bool> func
+        )
         {
             INamedTypeSymbol? type = symbol;
 
@@ -106,8 +128,8 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
             return isDrawableType(property.ContainingType);
         }
 
-        private static bool isDrawableType(INamedTypeSymbol type)
-            => SyntaxHelpers.GetFullyQualifiedTypeName(type) == "osu.Framework.Graphics.Drawable";
+        private static bool isDrawableType(INamedTypeSymbol type) =>
+            SyntaxHelpers.GetFullyQualifiedTypeName(type) == "osu.Framework.Graphics.Drawable";
 
         // HandleInputCache.positional_input_methods
         private static readonly string[] positional_input_methods =
@@ -130,7 +152,7 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
             "OnTouchMove",
             "OnTouchUp",
             "OnTabletPenButtonPress",
-            "OnTabletPenButtonRelease"
+            "OnTabletPenButtonRelease",
         };
 
         // HandleInputCache.non_positional_input_methods
@@ -147,33 +169,30 @@ namespace osu.Framework.SourceGeneration.Generators.HandleInput
             "OnTabletAuxiliaryButtonPress",
             "OnTabletAuxiliaryButtonRelease",
             "OnMidiDown",
-            "OnMidiUp"
+            "OnMidiUp",
         };
 
         // HandleInputCache.positional_input_interfaces
-        private static readonly ImmutableHashSet<string> positional_input_interfaces = ImmutableHashSet.Create<string>(
-            "osu.Framework.Graphics.Cursor.IHasTooltip",
-            "osu.Framework.Graphics.Cursor.IHasCustomTooltip",
-            "osu.Framework.Graphics.Cursor.IHasContextMenu",
-            "osu.Framework.Graphics.Cursor.IHasPopover"
-        );
+        private static readonly ImmutableHashSet<string> positional_input_interfaces =
+            ImmutableHashSet.Create<string>(
+                "osu.Framework.Graphics.Cursor.IHasTooltip",
+                "osu.Framework.Graphics.Cursor.IHasCustomTooltip",
+                "osu.Framework.Graphics.Cursor.IHasContextMenu",
+                "osu.Framework.Graphics.Cursor.IHasPopover"
+            );
 
         // HandleInputCache.non_positional_input_interfaces
-        private static readonly ImmutableHashSet<string> non_positional_input_interfaces = ImmutableHashSet.Create<string>(
-            "osu.Framework.Input.Bindings.IKeyBindingHandler"
-        );
+        private static readonly ImmutableHashSet<string> non_positional_input_interfaces =
+            ImmutableHashSet.Create<string>("osu.Framework.Input.Bindings.IKeyBindingHandler");
 
         // HandleInputCache.positional_input_properties
-        private static readonly string[] positional_input_properties =
-        {
-            "HandlePositionalInput"
-        };
+        private static readonly string[] positional_input_properties = { "HandlePositionalInput" };
 
         // HandleInputCache.non_positional_input_properties
         private static readonly string[] non_positional_input_properties =
         {
             "HandleNonPositionalInput",
-            "AcceptsFocus"
+            "AcceptsFocus",
         };
     }
 }

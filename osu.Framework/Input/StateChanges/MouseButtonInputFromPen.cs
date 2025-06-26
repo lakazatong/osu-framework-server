@@ -8,9 +8,7 @@ namespace osu.Framework.Input.StateChanges
     public class MouseButtonInputFromPen : MouseButtonInput, ISourcedFromPen
     {
         public MouseButtonInputFromPen(bool isPressed)
-            : base(MouseButton.Left, isPressed)
-        {
-        }
+            : base(MouseButton.Left, isPressed) { }
 
         public required TabletPenDeviceType DeviceType { get; init; }
     }

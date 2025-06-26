@@ -27,14 +27,27 @@ namespace osu.Framework.Tests.Shaders
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("setup manager", () =>
-            {
-                manager = new ShaderManager(new TestGLRenderer(), new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(Game).Assembly), @"Resources/Shaders"));
-                shader = (GLShader)manager.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
-                shaderRef = new WeakReference<IShader>(shader);
+            AddStep(
+                "setup manager",
+                () =>
+                {
+                    manager = new ShaderManager(
+                        new TestGLRenderer(),
+                        new NamespacedResourceStore<byte[]>(
+                            new DllResourceStore(typeof(Game).Assembly),
+                            @"Resources/Shaders"
+                        )
+                    );
+                    shader = (GLShader)
+                        manager.Load(
+                            VertexShaderDescriptor.TEXTURE_2,
+                            FragmentShaderDescriptor.TEXTURE
+                        );
+                    shaderRef = new WeakReference<IShader>(shader);
 
-                shader.EnsureShaderCompiled();
-            });
+                    shader.EnsureShaderCompiled();
+                }
+            );
 
             AddUntilStep("wait for load", () => shader.IsLoaded);
         }
@@ -44,45 +57,59 @@ namespace osu.Framework.Tests.Shaders
         {
             AddStep("remove local reference", () => shader = null);
 
-            AddStep("dispose manager", () =>
-            {
-                manager.Dispose();
-                manager = null;
-            });
+            AddStep(
+                "dispose manager",
+                () =>
+                {
+                    manager.Dispose();
+                    manager = null;
+                }
+            );
 
-            AddUntilStep("reference lost", () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                return !shaderRef.TryGetTarget(out _);
-            });
+            AddUntilStep(
+                "reference lost",
+                () =>
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    return !shaderRef.TryGetTarget(out _);
+                }
+            );
         }
 
         private class TestGLRenderer : GLRenderer
         {
-            protected override IShader CreateShader(string name, IShaderPart[] parts, ShaderCompilationStore compilationStore)
-                => new TestGLShader(this, name, parts.Cast<GLShaderPart>().ToArray(), compilationStore);
+            protected override IShader CreateShader(
+                string name,
+                IShaderPart[] parts,
+                ShaderCompilationStore compilationStore
+            ) =>
+                new TestGLShader(
+                    this,
+                    name,
+                    parts.Cast<GLShaderPart>().ToArray(),
+                    compilationStore
+                );
 
             private class TestGLShader : GLShader
             {
-                internal TestGLShader(GLRenderer renderer, string name, GLShaderPart[] parts, ShaderCompilationStore compilationStore)
-                    : base(renderer, name, parts, compilationStore)
-                {
-                }
+                internal TestGLShader(
+                    GLRenderer renderer,
+                    string name,
+                    GLShaderPart[] parts,
+                    ShaderCompilationStore compilationStore
+                )
+                    : base(renderer, name, parts, compilationStore) { }
 
                 private protected override int CreateProgram() => 1337;
 
                 private protected override bool CompileInternal() => true;
 
-                public override void BindUniformBlock(string blockName, IUniformBuffer buffer)
-                {
-                }
+                public override void BindUniformBlock(string blockName, IUniformBuffer buffer) { }
 
                 private protected override string GetProgramLog() => string.Empty;
 
-                private protected override void DeleteProgram(int id)
-                {
-                }
+                private protected override void DeleteProgram(int id) { }
             }
         }
     }

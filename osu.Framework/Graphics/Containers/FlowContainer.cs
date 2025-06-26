@@ -57,7 +57,8 @@ namespace osu.Framework.Graphics.Containers
             get => maximumSize;
             set
             {
-                if (maximumSize == value) return;
+                if (maximumSize == value)
+                    return;
 
                 maximumSize = value;
                 Invalidate(Invalidation.DrawSize);
@@ -65,16 +66,21 @@ namespace osu.Framework.Graphics.Containers
         }
 
         private readonly LayoutValue layout = new LayoutValue(Invalidation.DrawSize);
-        private readonly LayoutValue childLayout = new LayoutValue(Invalidation.RequiredParentSizeToFit | Invalidation.Presence, InvalidationSource.Child);
+        private readonly LayoutValue childLayout = new LayoutValue(
+            Invalidation.RequiredParentSizeToFit | Invalidation.Presence,
+            InvalidationSource.Child
+        );
 
-        protected override bool RequiresChildrenUpdate => base.RequiresChildrenUpdate || !layout.IsValid;
+        protected override bool RequiresChildrenUpdate =>
+            base.RequiresChildrenUpdate || !layout.IsValid;
 
         /// <summary>
         /// Invoked when layout should be invalidated.
         /// </summary>
         protected internal void InvalidateLayout() => layout.Invalidate();
 
-        private readonly Dictionary<Drawable, float> layoutChildren = new Dictionary<Drawable, float>();
+        private readonly Dictionary<Drawable, float> layoutChildren =
+            new Dictionary<Drawable, float>();
 
         protected override void AddInternal(Drawable drawable)
         {
@@ -113,7 +119,9 @@ namespace osu.Framework.Graphics.Containers
         public void SetLayoutPosition(Drawable drawable, float newPosition)
         {
             if (!layoutChildren.ContainsKey(drawable))
-                throw new InvalidOperationException($"Cannot change layout position of drawable which is not contained within this {nameof(FlowContainer<T>)}.");
+                throw new InvalidOperationException(
+                    $"Cannot change layout position of drawable which is not contained within this {nameof(FlowContainer<T>)}."
+                );
 
             layoutChildren[drawable] = newPosition;
             InvalidateLayout();
@@ -139,7 +147,9 @@ namespace osu.Framework.Graphics.Containers
         public float GetLayoutPosition(Drawable drawable)
         {
             if (!layoutChildren.TryGetValue(drawable, out float value))
-                throw new InvalidOperationException($"Cannot get layout position of drawable which is not contained within this {nameof(FlowContainer<T>)}.");
+                throw new InvalidOperationException(
+                    $"Cannot get layout position of drawable which is not contained within this {nameof(FlowContainer<T>)}."
+                );
 
             return value;
         }
@@ -157,7 +167,11 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// Gets the children that appear in the flow of this <see cref="FlowContainer{T}"/> in the order in which they are processed within the flowing layout.
         /// </summary>
-        public virtual IEnumerable<Drawable> FlowingChildren => AliveInternalChildren.Where(d => d.IsPresent).OrderBy(d => layoutChildren[d]).ThenBy(d => d.ChildID);
+        public virtual IEnumerable<Drawable> FlowingChildren =>
+            AliveInternalChildren
+                .Where(d => d.IsPresent)
+                .OrderBy(d => layoutChildren[d])
+                .ThenBy(d => d.ChildID);
 
         protected abstract IEnumerable<Vector2> ComputeLayoutPositions();
 
@@ -170,7 +184,9 @@ namespace osu.Framework.Graphics.Containers
 
             int processedCount = 0;
 
-            using (IEnumerator<Vector2> positionEnumerator = ComputeLayoutPositions().GetEnumerator())
+            using (
+                IEnumerator<Vector2> positionEnumerator = ComputeLayoutPositions().GetEnumerator()
+            )
             using (IEnumerator<Drawable> drawableEnumerator = FlowingChildren.GetEnumerator())
             {
                 while (true)
@@ -181,7 +197,8 @@ namespace osu.Framework.Graphics.Containers
                     if (nextPos != nextDrawable)
                     {
                         throw new InvalidOperationException(
-                            $"{GetType().FullName}.{nameof(ComputeLayoutPositions)} returned a total of {processedCount} positions for {FlowingChildren.Count()} children. {nameof(ComputeLayoutPositions)} must return 1 position per child.");
+                            $"{GetType().FullName}.{nameof(ComputeLayoutPositions)} returned a total of {processedCount} positions for {FlowingChildren.Count()} children. {nameof(ComputeLayoutPositions)} must return 1 position per child."
+                        );
                     }
 
                     // at this point we only need to check one of the two iterators (due to the conditional directly above).
@@ -196,18 +213,32 @@ namespace osu.Framework.Graphics.Containers
                     Debug.Assert(drawable != null);
 
                     if (drawable.RelativePositionAxes != Axes.None)
-                        throw new InvalidOperationException($"A flow container cannot contain a child with relative positioning (it is {drawable.RelativePositionAxes}).");
+                        throw new InvalidOperationException(
+                            $"A flow container cannot contain a child with relative positioning (it is {drawable.RelativePositionAxes})."
+                        );
 
-                    var existingTransform = drawable.TransformsForTargetMember(FlowTransform.TARGET_MEMBER).FirstOrDefault(x => x is FlowTransform) as FlowTransform;
+                    var existingTransform =
+                        drawable
+                            .TransformsForTargetMember(FlowTransform.TARGET_MEMBER)
+                            .FirstOrDefault(x => x is FlowTransform) as FlowTransform;
                     Vector2 currentTargetPos = existingTransform?.EndValue ?? drawable.Position;
 
-                    if (Precision.AlmostEquals(currentTargetPos, pos)) continue;
+                    if (Precision.AlmostEquals(currentTargetPos, pos))
+                        continue;
 
                     if (LayoutDuration > 0)
-                        drawable.TransformTo(drawable.PopulateTransform(new FlowTransform { Rewindable = false }, pos, LayoutDuration, LayoutEasing));
+                        drawable.TransformTo(
+                            drawable.PopulateTransform(
+                                new FlowTransform { Rewindable = false },
+                                pos,
+                                LayoutDuration,
+                                LayoutEasing
+                            )
+                        );
                     else
                     {
-                        if (existingTransform != null) drawable.ClearTransforms(false, FlowTransform.TARGET_MEMBER);
+                        if (existingTransform != null)
+                            drawable.ClearTransforms(false, FlowTransform.TARGET_MEMBER);
                         drawable.Position = pos;
                     }
                 }
@@ -236,9 +267,7 @@ namespace osu.Framework.Graphics.Containers
             public const string TARGET_MEMBER = nameof(Position);
 
             public FlowTransform()
-                : base(TARGET_MEMBER)
-            {
-            }
+                : base(TARGET_MEMBER) { }
         }
     }
 }

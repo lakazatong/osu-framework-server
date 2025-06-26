@@ -53,14 +53,15 @@ namespace osu.Framework.Graphics.Containers
             InternalChildren = new Drawable[]
             {
                 pool,
-                Scroll = CreateScrollContainer().With(s =>
-                {
-                    s.RelativeSizeAxes = Axes.Both;
-                    s.Child = Items = new ItemFlow(pool, rowHeight)
+                Scroll = CreateScrollContainer()
+                    .With(s =>
                     {
-                        RelativeSizeAxes = Axes.X
-                    };
-                })
+                        s.RelativeSizeAxes = Axes.Both;
+                        s.Child = Items = new ItemFlow(pool, rowHeight)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                        };
+                    }),
             };
         }
 
@@ -119,7 +120,11 @@ namespace osu.Framework.Graphics.Containers
                 {
                     var allMoves = new List<(ItemRow, int)>();
 
-                    for (int i = Math.Min(e.OldStartingIndex, e.NewStartingIndex); i <= Math.Max(e.OldStartingIndex, e.NewStartingIndex); ++i)
+                    for (
+                        int i = Math.Min(e.OldStartingIndex, e.NewStartingIndex);
+                        i <= Math.Max(e.OldStartingIndex, e.NewStartingIndex);
+                        ++i
+                    )
                     {
                         if (i == e.OldStartingIndex)
                             allMoves.Add((items[i], e.NewStartingIndex));
@@ -152,11 +157,17 @@ namespace osu.Framework.Graphics.Containers
             {
                 TData expectedItem = RowData[i];
                 TData actualItem = Items[i].Row;
-                Debug.Assert(ReferenceEquals(expectedItem, actualItem), $"Data item mismatch at index {i} when handling changes in VirtualisedListContainer");
+                Debug.Assert(
+                    ReferenceEquals(expectedItem, actualItem),
+                    $"Data item mismatch at index {i} when handling changes in VirtualisedListContainer"
+                );
 
                 float expectedY = i * rowHeight;
                 float actualY = Items[i].Y;
-                Debug.Assert(expectedY == actualY, $"Y mismatch at index {i} when handling changes in VirtualisedListContainer: expected {expectedY} actual {actualY}");
+                Debug.Assert(
+                    expectedY == actualY,
+                    $"Y mismatch at index {i} when handling changes in VirtualisedListContainer: expected {expectedY} actual {actualY}"
+                );
             }
         }
 
@@ -164,7 +175,10 @@ namespace osu.Framework.Graphics.Containers
         {
             base.Update();
 
-            var currentVisibleRange = ((int)(Scroll.Current / rowHeight), (int)((Scroll.Current + Scroll.DrawHeight) / rowHeight) + 1);
+            var currentVisibleRange = (
+                (int)(Scroll.Current / rowHeight),
+                (int)((Scroll.Current + Scroll.DrawHeight) / rowHeight) + 1
+            );
 
             if (currentVisibleRange != visibleRange)
             {
@@ -182,7 +196,10 @@ namespace osu.Framework.Graphics.Containers
                     float rowTop = row.Y;
                     float rowBottom = rowTop + rowHeight;
 
-                    if (rowTop < visibleRange.min * rowHeight || rowBottom > visibleRange.max * rowHeight)
+                    if (
+                        rowTop < visibleRange.min * rowHeight
+                        || rowBottom > visibleRange.max * rowHeight
+                    )
                     {
                         if (row.Visible)
                             row.Unload();
@@ -214,15 +231,17 @@ namespace osu.Framework.Graphics.Containers
 
             public void Insert(TData row, int index)
             {
-                Add(new ItemRow(row, pool)
-                {
-                    Height = rowHeight,
-                    LifetimeEnd = double.NegativeInfinity,
-                    // the depth management is mostly done so that enumeration order of `Children` matches expectations.
-                    // in edge cases it could also ensure correct Z-ordering of children, but it's a secondary consideration.
-                    Depth = -index,
-                    Y = index * rowHeight
-                });
+                Add(
+                    new ItemRow(row, pool)
+                    {
+                        Height = rowHeight,
+                        LifetimeEnd = double.NegativeInfinity,
+                        // the depth management is mostly done so that enumeration order of `Children` matches expectations.
+                        // in edge cases it could also ensure correct Z-ordering of children, but it's a secondary consideration.
+                        Depth = -index,
+                        Y = index * rowHeight,
+                    }
+                );
             }
 
             public void Remove(ItemRow itemRow)

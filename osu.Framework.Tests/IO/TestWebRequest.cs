@@ -36,7 +36,8 @@ namespace osu.Framework.Tests.IO
 
         static TestWebRequest()
         {
-            bool localHttpBin = Environment.GetEnvironmentVariable("OSU_TESTS_LOCAL_HTTPBIN") == "1";
+            bool localHttpBin =
+                Environment.GetEnvironmentVariable("OSU_TESTS_LOCAL_HTTPBIN") == "1";
 
             if (localHttpBin)
             {
@@ -67,13 +68,13 @@ namespace osu.Framework.Tests.IO
         }
 
         [Test, Retry(5)]
-        public void TestValidGet([ValueSource(nameof(protocols))] string protocol, [Values(true, false)] bool async)
+        public void TestValidGet(
+            [ValueSource(nameof(protocols))] string protocol,
+            [Values(true, false)] bool async
+        )
         {
             string url = $"{protocol}://{host}/get";
-            var request = new JsonWebRequest<HttpBinGetResponse>(url)
-            {
-                Method = HttpMethod.Get
-            };
+            var request = new JsonWebRequest<HttpBinGetResponse>(url) { Method = HttpMethod.Get };
 
             testValidGetInternal(async, request, "osu-framework");
         }
@@ -86,27 +87,28 @@ namespace osu.Framework.Tests.IO
         public void TestValidGetFromTask([ValueSource(nameof(protocols))] string protocol)
         {
             string url = $"{protocol}://{host}/get";
-            var request = new JsonWebRequest<HttpBinGetResponse>(url)
-            {
-                Method = HttpMethod.Get
-            };
+            var request = new JsonWebRequest<HttpBinGetResponse>(url) { Method = HttpMethod.Get };
 
             Task.Run(() => testValidGetInternal(false, request, "osu-framework")).WaitSafely();
         }
 
         [Test, Retry(5)]
-        public void TestCustomUserAgent([ValueSource(nameof(protocols))] string protocol, [Values(true, false)] bool async)
+        public void TestCustomUserAgent(
+            [ValueSource(nameof(protocols))] string protocol,
+            [Values(true, false)] bool async
+        )
         {
             string url = $"{protocol}://{host}/get";
-            var request = new CustomUserAgentWebRequest(url)
-            {
-                Method = HttpMethod.Get
-            };
+            var request = new CustomUserAgentWebRequest(url) { Method = HttpMethod.Get };
 
             testValidGetInternal(async, request, "custom-ua");
         }
 
-        private static void testValidGetInternal(bool async, JsonWebRequest<HttpBinGetResponse> request, string expectedUserAgent)
+        private static void testValidGetInternal(
+            bool async,
+            JsonWebRequest<HttpBinGetResponse> request,
+            string expectedUserAgent
+        )
         {
             bool hasThrown = false;
             request.Failed += exception => hasThrown = exception != null;
@@ -155,7 +157,7 @@ namespace osu.Framework.Tests.IO
                 var request = new DelayedWebRequest
                 {
                     Method = HttpMethod.Get,
-                    Delay = induced_delay
+                    Delay = induced_delay,
                 };
 
                 request.Started += () =>
@@ -193,11 +195,14 @@ namespace osu.Framework.Tests.IO
         }
 
         [Test, Retry(5)]
-        public void TestInvalidGetExceptions([ValueSource(nameof(protocols))] string protocol, [Values(true, false)] bool async)
+        public void TestInvalidGetExceptions(
+            [ValueSource(nameof(protocols))] string protocol,
+            [Values(true, false)] bool async
+        )
         {
             var request = new WebRequest($"{protocol}://{invalid_get_url}")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             Exception finishedException = null;
@@ -218,7 +223,9 @@ namespace osu.Framework.Tests.IO
         [Test, Retry(5)]
         public void TestBadStatusCode([Values(true, false)] bool async)
         {
-            var request = new WebRequest($"{default_protocol}://{host}/hidden-basic-auth/user/passwd");
+            var request = new WebRequest(
+                $"{default_protocol}://{host}/hidden-basic-auth/user/passwd"
+            );
 
             bool hasThrown = false;
             request.Failed += exception => hasThrown = exception != null;
@@ -235,7 +242,9 @@ namespace osu.Framework.Tests.IO
         }
 
         [Test, Retry(5)]
-        public void TestJsonWebRequestThrowsCorrectlyOnMultipleErrors([Values(true, false)] bool async)
+        public void TestJsonWebRequestThrowsCorrectlyOnMultipleErrors(
+            [Values(true, false)] bool async
+        )
         {
             var request = new JsonWebRequest<Drawable>("badrequest://www.google.com");
 
@@ -265,7 +274,7 @@ namespace osu.Framework.Tests.IO
         {
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -293,7 +302,7 @@ namespace osu.Framework.Tests.IO
         {
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -319,7 +328,7 @@ namespace osu.Framework.Tests.IO
         {
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -347,9 +356,11 @@ namespace osu.Framework.Tests.IO
         [Test, Retry(5)]
         public void TestRestartAfterAbort([Values(true, false)] bool async)
         {
-            var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/delay/10")
+            var request = new JsonWebRequest<HttpBinGetResponse>(
+                $"{default_protocol}://{host}/delay/10"
+            )
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -383,7 +394,7 @@ namespace osu.Framework.Tests.IO
             var cancellationSource = new CancellationTokenSource();
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -408,7 +419,7 @@ namespace osu.Framework.Tests.IO
             var cancellationSource = new CancellationTokenSource();
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -434,7 +445,7 @@ namespace osu.Framework.Tests.IO
             var cancellationSource = new CancellationTokenSource();
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             bool hasThrown = false;
@@ -443,7 +454,9 @@ namespace osu.Framework.Tests.IO
             cancellationSource.Cancel();
             request.PerformAsync(cancellationSource.Token).WaitSafely();
 
-            Assert.ThrowsAsync<OperationCanceledException>(() => request.PerformAsync(cancellationSource.Token));
+            Assert.ThrowsAsync<OperationCanceledException>(() =>
+                request.PerformAsync(cancellationSource.Token)
+            );
 
             Assert.IsTrue(request.Completed);
             Assert.IsTrue(request.Aborted);
@@ -464,7 +477,7 @@ namespace osu.Framework.Tests.IO
             {
                 Method = HttpMethod.Get,
                 Timeout = 1000,
-                Delay = 2
+                Delay = 2,
             };
 
             Exception thrownException = null;
@@ -489,7 +502,7 @@ namespace osu.Framework.Tests.IO
             var request = new WebRequest($"{default_protocol}://{host}/delay/4")
             {
                 Method = HttpMethod.Get,
-                Timeout = 1000
+                Timeout = 1000,
             };
 
             Exception thrownException = null;
@@ -513,7 +526,7 @@ namespace osu.Framework.Tests.IO
         {
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             request.Started += () => { };
@@ -527,8 +540,12 @@ namespace osu.Framework.Tests.IO
 
             foreach (var e in events)
             {
-                var field = request.GetType().GetField(e.Name, BindingFlags.Instance | BindingFlags.Public);
-                Assert.IsFalse(((Delegate)field?.GetValue(request))?.GetInvocationList().Length > 0);
+                var field = request
+                    .GetType()
+                    .GetField(e.Name, BindingFlags.Instance | BindingFlags.Public);
+                Assert.IsFalse(
+                    ((Delegate)field?.GetValue(request))?.GetInvocationList().Length > 0
+                );
             }
         }
 
@@ -540,7 +557,7 @@ namespace osu.Framework.Tests.IO
         {
             var request = new JsonWebRequest<HttpBinGetResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             using (request)
@@ -557,8 +574,12 @@ namespace osu.Framework.Tests.IO
 
             foreach (var e in events)
             {
-                var field = request.GetType().GetField(e.Name, BindingFlags.Instance | BindingFlags.Public);
-                Assert.IsFalse(((Delegate)field?.GetValue(request))?.GetInvocationList().Length > 0);
+                var field = request
+                    .GetType()
+                    .GetField(e.Name, BindingFlags.Instance | BindingFlags.Public);
+                Assert.IsFalse(
+                    ((Delegate)field?.GetValue(request))?.GetInvocationList().Length > 0
+                );
             }
         }
 
@@ -571,9 +592,11 @@ namespace osu.Framework.Tests.IO
             const string test_key_2 = "testkey2";
             const string test_val_2 = "testval2 that ends with a space ";
 
-            var request = new JsonWebRequest<HttpBinGetResponse>($@"{default_protocol}://{host}/get")
+            var request = new JsonWebRequest<HttpBinGetResponse>(
+                $@"{default_protocol}://{host}/get"
+            )
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
             request.AddParameter(test_key_1, test_val_1);
@@ -598,9 +621,11 @@ namespace osu.Framework.Tests.IO
         [Test, Retry(5)]
         public void TestPostWithJsonResponse([Values(true, false)] bool async)
         {
-            var request = new JsonWebRequest<HttpBinPostResponse>($"{default_protocol}://{host}/post")
+            var request = new JsonWebRequest<HttpBinPostResponse>(
+                $"{default_protocol}://{host}/post"
+            )
             {
-                Method = HttpMethod.Post
+                Method = HttpMethod.Post,
             };
 
             request.AddParameter("testkey1", "testval1");
@@ -627,16 +652,23 @@ namespace osu.Framework.Tests.IO
             Assert.IsTrue(responseObject.Form.ContainsKey("testkey2"));
             Assert.IsTrue(responseObject.Form["testkey2"] == "testval2");
 
-            Assert.IsTrue(responseObject.Headers.ContentType.StartsWith("multipart/form-data; boundary=", StringComparison.Ordinal));
+            Assert.IsTrue(
+                responseObject.Headers.ContentType.StartsWith(
+                    "multipart/form-data; boundary=",
+                    StringComparison.Ordinal
+                )
+            );
         }
 
         [Test, Retry(5)]
         public void TestPostWithJsonRequest([Values(true, false)] bool async)
         {
-            var request = new JsonWebRequest<HttpBinPostResponse>($"{default_protocol}://{host}/post")
+            var request = new JsonWebRequest<HttpBinPostResponse>(
+                $"{default_protocol}://{host}/post"
+            )
             {
                 Method = HttpMethod.Post,
-                ContentType = "application/json"
+                ContentType = "application/json",
             };
 
             var testObject = new TestObject();
@@ -662,7 +694,7 @@ namespace osu.Framework.Tests.IO
         {
             var request = new WebRequest($"{default_protocol}://{host}/post")
             {
-                Method = HttpMethod.Post
+                Method = HttpMethod.Post,
             };
 
             if (async)
@@ -670,7 +702,9 @@ namespace osu.Framework.Tests.IO
             else
                 Assert.DoesNotThrow(request.Perform);
 
-            var responseJson = JsonConvert.DeserializeObject<HttpBinPostResponse>(request.GetResponseString().AsNonNull());
+            var responseJson = JsonConvert.DeserializeObject<HttpBinPostResponse>(
+                request.GetResponseString().AsNonNull()
+            );
 
             Assert.IsTrue(request.Completed);
             Assert.IsFalse(request.Aborted);
@@ -691,7 +725,7 @@ namespace osu.Framework.Tests.IO
 
             var request = new JsonWebRequest<HttpBinPutResponse>($"{default_protocol}://{host}/put")
             {
-                Method = HttpMethod.Put
+                Method = HttpMethod.Put,
             };
 
             request.AddParameter(test_key_1, test_val_1, RequestParameterType.Query);
@@ -723,10 +757,12 @@ namespace osu.Framework.Tests.IO
         {
             var request = new JsonWebRequest<HttpBinPutResponse>($"{default_protocol}://{host}/get")
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
 
-            Assert.Throws<ArgumentException>(() => request.AddParameter("cannot", "work", RequestParameterType.Form));
+            Assert.Throws<ArgumentException>(() =>
+                request.AddParameter("cannot", "work", RequestParameterType.Form)
+            );
         }
 
         /// <summary>
@@ -765,7 +801,7 @@ namespace osu.Framework.Tests.IO
                 {
                     Method = HttpMethod.Get,
                     Timeout = 1000,
-                    Delay = 2
+                    Delay = 2,
                 };
 
                 request.CompleteInvoked = () => request.Delay = 0;
@@ -781,16 +817,21 @@ namespace osu.Framework.Tests.IO
         }
 
         [Test, Retry(5)]
-        public void TestGetBinaryData([Values(true, false)] bool async, [Values(true, false)] bool chunked)
+        public void TestGetBinaryData(
+            [Values(true, false)] bool async,
+            [Values(true, false)] bool chunked
+        )
         {
             const int bytes_count = 65536;
             const int chunk_size = 1024;
 
             string endpoint = chunked ? "stream-bytes" : "bytes";
 
-            WebRequest request = new WebRequest($"{default_protocol}://{host}/{endpoint}/{bytes_count}")
+            WebRequest request = new WebRequest(
+                $"{default_protocol}://{host}/{endpoint}/{bytes_count}"
+            )
             {
-                Method = HttpMethod.Get
+                Method = HttpMethod.Get,
             };
             if (chunked)
                 request.AddParameter("chunk_size", chunk_size.ToString());
@@ -807,7 +848,10 @@ namespace osu.Framework.Tests.IO
         }
 
         [Test, Retry(5)]
-        public void TestAllowInsecureRequestsOverride([ValueSource(nameof(protocols))] string protocol, [Values(true, false)] bool async)
+        public void TestAllowInsecureRequestsOverride(
+            [ValueSource(nameof(protocols))] string protocol,
+            [Values(true, false)] bool async
+        )
         {
             FrameworkEnvironment.AllowInsecureRequests = false;
 
@@ -815,7 +859,7 @@ namespace osu.Framework.Tests.IO
             var request = new JsonWebRequest<HttpBinGetResponse>(url)
             {
                 Method = HttpMethod.Get,
-                AllowInsecureRequests = true
+                AllowInsecureRequests = true,
             };
 
             testValidGetInternal(async, request, "osu-framework");
@@ -842,7 +886,8 @@ namespace osu.Framework.Tests.IO
             return result;
         }
 
-        private static T convertObject<T>(object obj) where T : IConvertible
+        private static T convertObject<T>(object obj)
+            where T : IConvertible
         {
             switch (obj)
             {
@@ -853,7 +898,11 @@ namespace osu.Framework.Tests.IO
                     return (T)Convert.ChangeType(strVal, typeof(T));
 
                 case JArray strArray:
-                    return (T)Convert.ChangeType(strArray.Count == 0 ? string.Empty : strArray[0], typeof(T));
+                    return (T)
+                        Convert.ChangeType(
+                            strArray.Count == 0 ? string.Empty : strArray[0],
+                            typeof(T)
+                        );
 
                 default:
                     return default;
@@ -943,9 +992,7 @@ namespace osu.Framework.Tests.IO
         private class CustomUserAgentWebRequest : JsonWebRequest<HttpBinGetResponse>
         {
             public CustomUserAgentWebRequest(string url)
-                : base(url)
-            {
-            }
+                : base(url) { }
 
             protected override string UserAgent => "custom-ua";
         }
@@ -967,9 +1014,7 @@ namespace osu.Framework.Tests.IO
             }
 
             public DelayedWebRequest()
-                : base($"{default_protocol}://{host}/delay/0")
-            {
-            }
+                : base($"{default_protocol}://{host}/delay/0") { }
 
             protected override Task Complete(Exception e = null)
             {

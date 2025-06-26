@@ -8,20 +8,26 @@ using osu.Framework.SourceGeneration.Generators;
 
 namespace osu.Framework.SourceGeneration.Tests.Verifiers
 {
-    public partial class CSharpMultiPhaseSourceGeneratorVerifier<TSourceGenerator> where TSourceGenerator : AbstractIncrementalGenerator, new()
+    public partial class CSharpMultiPhaseSourceGeneratorVerifier<TSourceGenerator>
+        where TSourceGenerator : AbstractIncrementalGenerator, new()
     {
         // ReSharper disable once StaticMemberInGenericType
-        private static readonly Regex multi_phase = new Regex(@"^(?<filename>.*)\.(?<num>\d+)\.cs$", RegexOptions.Compiled);
+        private static readonly Regex multi_phase = new Regex(
+            @"^(?<filename>.*)\.(?<num>\d+)\.cs$",
+            RegexOptions.Compiled
+        );
 
         public static void Verify(
             (string filename, string content)[] commonSources,
             (string filename, string content)[] sources,
             (string filename, string content)[] commonGenerated,
             (string filename, string content)[] generated,
-            Action<Test>? configure = null)
+            Action<Test>? configure = null
+        )
         {
-            List<List<(string filename, string content)>>
-                multiPhaseSources = new List<List<(string filename, string content)>>(),
+            List<List<(string filename, string content)>> multiPhaseSources = new List<
+                    List<(string filename, string content)>
+                >(),
                 multiPhaseGenerated = new List<List<(string filename, string content)>>();
 
             extractPhases(sources, multiPhaseSources);
@@ -29,7 +35,12 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
 
             verifySamePhaseCount(multiPhaseSources, multiPhaseGenerated);
 
-            var test = new Test(commonSources, commonGenerated, multiPhaseSources, multiPhaseGenerated);
+            var test = new Test(
+                commonSources,
+                commonGenerated,
+                multiPhaseSources,
+                multiPhaseGenerated
+            );
             configure?.Invoke(test);
 
             test.Verify();
@@ -43,7 +54,8 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
             static void extractPhases(
                 (string filename, string content)[] sources,
                 List<List<(string filename, string content)>> multiPhaseList,
-                bool isGenerated = false)
+                bool isGenerated = false
+            )
             {
                 foreach (var s in sources)
                 {
@@ -66,14 +78,19 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                         if (multiPhaseList.Count == 0)
                             multiPhaseList.Add(new List<(string filename, string content)>());
                         if (multiPhaseList.Count > 1)
-                            throw new InvalidOperationException($"Found {(isGenerated ? "generated" : "source")} file {s.filename} outside of a multi-phase directory.");
+                            throw new InvalidOperationException(
+                                $"Found {(isGenerated ? "generated" : "source")} file {s.filename} outside of a multi-phase directory."
+                            );
 
                         multiPhaseList[0].Add(s);
                     }
                 }
             }
 
-            static void verifySamePhaseCount(List<List<(string filename, string content)>> sources, List<List<(string filename, string content)>> generated)
+            static void verifySamePhaseCount(
+                List<List<(string filename, string content)>> sources,
+                List<List<(string filename, string content)>> generated
+            )
             {
                 // support cases where no generated files are expected.
                 if (generated.Count == 0)
@@ -83,7 +100,9 @@ namespace osu.Framework.SourceGeneration.Tests.Verifiers
                 }
 
                 if (sources.Count != generated.Count)
-                    throw new InvalidOperationException($"The number of phases for source and generated do not match. Sources: {sources.Count}, Generated: {generated.Count}");
+                    throw new InvalidOperationException(
+                        $"The number of phases for source and generated do not match. Sources: {sources.Count}, Generated: {generated.Count}"
+                    );
             }
         }
     }

@@ -2,16 +2,16 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Graphics.Textures;
-using osuTK;
-using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering.Vertices;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
+using osuTK;
 using osuTK.Graphics;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Framework.Graphics.Rendering
 {
@@ -223,7 +223,12 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="wrapModeS">The texture's horizontal wrap mode.</param>
         /// <param name="wrapModeT">The texture's vertex wrap mode.</param>
         /// <returns>Whether the texture was successfully bound.</returns>
-        bool BindTexture(Texture texture, int unit = 0, WrapMode? wrapModeS = null, WrapMode? wrapModeT = null);
+        bool BindTexture(
+            Texture texture,
+            int unit = 0,
+            WrapMode? wrapModeS = null,
+            WrapMode? wrapModeT = null
+        );
 
         /// <summary>
         /// Clears the currently bound frame buffer.
@@ -363,7 +368,12 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="rawData">The content of the shader part.</param>
         /// <param name="partType">The type of the shader part.</param>
         /// <returns>The <see cref="IShaderPart"/>.</returns>
-        protected internal IShaderPart CreateShaderPart(IShaderStore store, string name, byte[]? rawData, ShaderPartType partType);
+        protected internal IShaderPart CreateShaderPart(
+            IShaderStore store,
+            string name,
+            byte[]? rawData,
+            ShaderPartType partType
+        );
 
         /// <summary>
         /// Creates a new <see cref="IShader"/>.
@@ -379,7 +389,10 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="renderBufferFormats">Any render buffer formats.</param>
         /// <param name="filteringMode">The texture filtering mode.</param>
         /// <returns>The <see cref="IFrameBuffer"/>.</returns>
-        IFrameBuffer CreateFrameBuffer(RenderBufferFormat[]? renderBufferFormats = null, TextureFilteringMode filteringMode = TextureFilteringMode.Linear);
+        IFrameBuffer CreateFrameBuffer(
+            RenderBufferFormat[]? renderBufferFormats = null,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear
+        );
 
         /// <summary>
         /// Creates a new <see cref="Texture"/>.
@@ -392,8 +405,15 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="wrapModeS">The texture's horizontal wrap mode.</param>
         /// <param name="wrapModeT">The texture's vertex wrap mode.</param>
         /// <returns>The <see cref="Texture"/>.</returns>
-        Texture CreateTexture(int width, int height, bool manualMipmaps = false, TextureFilteringMode filteringMode = TextureFilteringMode.Linear, WrapMode wrapModeS = WrapMode.None,
-                              WrapMode wrapModeT = WrapMode.None, Color4? initialisationColour = null);
+        Texture CreateTexture(
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None,
+            Color4? initialisationColour = null
+        );
 
         /// <summary>
         /// Creates a new video texture.
@@ -406,20 +426,27 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="size">Number of quads.</param>
         /// <param name="maxBuffers">Maximum number of vertex buffers.</param>
         /// <param name="topology">The type of primitive the vertices are drawn as.</param>
-        IVertexBatch<TVertex> CreateLinearBatch<TVertex>(int size, int maxBuffers, PrimitiveTopology topology) where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
+        IVertexBatch<TVertex> CreateLinearBatch<TVertex>(
+            int size,
+            int maxBuffers,
+            PrimitiveTopology topology
+        )
+            where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
 
         /// <summary>
         /// Creates a new quad vertex batch, accepting vertices and drawing as quads.
         /// </summary>
         /// <param name="size">Number of quads.</param>
         /// <param name="maxBuffers">Maximum number of vertex buffers.</param>
-        IVertexBatch<TVertex> CreateQuadBatch<TVertex>(int size, int maxBuffers) where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
+        IVertexBatch<TVertex> CreateQuadBatch<TVertex>(int size, int maxBuffers)
+            where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
 
         /// <summary>
         /// Creates a buffer that stores data for a uniform block of a <see cref="IShader"/>.
         /// </summary>
         /// <typeparam name="TData">The type of data in the buffer.</typeparam>
-        IUniformBuffer<TData> CreateUniformBuffer<TData>() where TData : unmanaged, IEquatable<TData>;
+        IUniformBuffer<TData> CreateUniformBuffer<TData>()
+            where TData : unmanaged, IEquatable<TData>;
 
         /// <summary>
         /// Creates a buffer that can be used to store an array of data for use in a <see cref="IShader"/>.
@@ -438,13 +465,18 @@ namespace osu.Framework.Graphics.Rendering
         /// </remarks>
         /// <typeparam name="TData">The type of data to be stored in the buffer.</typeparam>
         /// <returns>An <see cref="IShaderStorageBufferObject{TData}"/>.</returns>
-        IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(int uboSize, int ssboSize) where TData : unmanaged, IEquatable<TData>;
+        IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(
+            int uboSize,
+            int ssboSize
+        )
+            where TData : unmanaged, IEquatable<TData>;
 
         /// <summary>
         /// Sets the value of a uniform.
         /// </summary>
         /// <param name="uniform">The uniform to set.</param>
-        internal void SetUniform<T>(IUniformWithValue<T> uniform) where T : unmanaged, IEquatable<T>;
+        internal void SetUniform<T>(IUniformWithValue<T> uniform)
+            where T : unmanaged, IEquatable<T>;
 
         internal IVertexBatch<TexturedVertex2D> DefaultQuadBatch { get; }
 
@@ -452,13 +484,9 @@ namespace osu.Framework.Graphics.Rendering
 
         internal void PopQuadBatch();
 
-        internal void EnterDrawNode(DrawNode node)
-        {
-        }
+        internal void EnterDrawNode(DrawNode node) { }
 
-        internal void ExitDrawNode()
-        {
-        }
+        internal void ExitDrawNode() { }
 
         #region TextureVisualiser Support
 

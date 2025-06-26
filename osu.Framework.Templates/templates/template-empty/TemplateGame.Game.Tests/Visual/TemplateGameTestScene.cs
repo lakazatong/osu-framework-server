@@ -4,9 +4,12 @@ namespace TemplateGame.Game.Tests.Visual
 {
     public abstract partial class TemplateGameTestScene : TestScene
     {
-        protected override ITestSceneTestRunner CreateRunner() => new TemplateGameTestSceneTestRunner();
+        protected override ITestSceneTestRunner CreateRunner() =>
+            new TemplateGameTestSceneTestRunner();
 
-        private partial class TemplateGameTestSceneTestRunner : TemplateGameGameBase, ITestSceneTestRunner
+        private partial class TemplateGameTestSceneTestRunner
+            : TemplateGameGameBase,
+                ITestSceneTestRunner
         {
             private TestSceneTestRunner.TestRunner runner;
 

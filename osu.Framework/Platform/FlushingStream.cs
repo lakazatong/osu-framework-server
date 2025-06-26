@@ -15,9 +15,7 @@ namespace osu.Framework.Platform
     public class FlushingStream : FileStream
     {
         public FlushingStream(string path, FileMode mode, FileAccess access)
-            : base(path, mode, access)
-        {
-        }
+            : base(path, mode, access) { }
 
         private bool finalFlushRun;
 

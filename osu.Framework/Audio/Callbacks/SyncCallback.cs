@@ -14,7 +14,8 @@ namespace osu.Framework.Audio.Callbacks
     /// </summary>
     public class SyncCallback : BassCallback
     {
-        public SyncProcedure Callback => RuntimeFeature.IsDynamicCodeSupported ? Sync : syncCallback;
+        public SyncProcedure Callback =>
+            RuntimeFeature.IsDynamicCodeSupported ? Sync : syncCallback;
 
         public readonly SyncProcedure Sync;
 

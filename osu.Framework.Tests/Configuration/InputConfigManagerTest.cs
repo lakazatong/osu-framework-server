@@ -28,13 +28,17 @@ namespace osu.Framework.Tests.Configuration
         {
             using (var host = new TestHeadlessGameHost(bypassCleanup: true))
             {
-                host.Run(new TestGame((h, config) =>
-                {
-                    storage = h.Storage;
+                host.Run(
+                    new TestGame(
+                        (h, config) =>
+                        {
+                            storage = h.Storage;
 #pragma warning disable 618
-                    config.SetValue(FrameworkSetting.CursorSensitivity, 5.0);
+                            config.SetValue(FrameworkSetting.CursorSensitivity, 5.0);
 #pragma warning restore 618
-                }));
+                        }
+                    )
+                );
             }
 
             // test with only FrameworkConfigManager configuration file present
@@ -44,7 +48,15 @@ namespace osu.Framework.Tests.Configuration
 
             using (var host = new TestHeadlessGameHost())
             {
-                host.Run(new TestGame((h, _) => sensitivity = h.AvailableInputHandlers.OfType<MouseHandler>().First().Sensitivity.Value));
+                host.Run(
+                    new TestGame(
+                        (h, _) =>
+                            sensitivity = h
+                                .AvailableInputHandlers.OfType<MouseHandler>()
+                                .First()
+                                .Sensitivity.Value
+                    )
+                );
             }
 
             Assert.AreEqual(5, sensitivity);
@@ -55,11 +67,18 @@ namespace osu.Framework.Tests.Configuration
         {
             using (var host = new TestHeadlessGameHost(bypassCleanup: true))
             {
-                host.Run(new TestGame((h, _) =>
-                {
-                    storage = h.Storage;
-                    h.AvailableInputHandlers.OfType<MouseHandler>().First().Sensitivity.Value = 5;
-                }));
+                host.Run(
+                    new TestGame(
+                        (h, _) =>
+                        {
+                            storage = h.Storage;
+                            h
+                                .AvailableInputHandlers.OfType<MouseHandler>()
+                                .First()
+                                .Sensitivity.Value = 5;
+                        }
+                    )
+                );
             }
 
             // test with only InputConfigManager configuration file present
@@ -69,7 +88,15 @@ namespace osu.Framework.Tests.Configuration
 
             using (var host = new TestHeadlessGameHost())
             {
-                host.Run(new TestGame((h, _) => sensitivity = h.AvailableInputHandlers.OfType<MouseHandler>().First().Sensitivity.Value));
+                host.Run(
+                    new TestGame(
+                        (h, _) =>
+                            sensitivity = h
+                                .AvailableInputHandlers.OfType<MouseHandler>()
+                                .First()
+                                .Sensitivity.Value
+                    )
+                );
             }
 
             Assert.AreEqual(5, sensitivity);
@@ -108,15 +135,14 @@ namespace osu.Framework.Tests.Configuration
 
         public class TestHeadlessGameHost : TestRunHeadlessGameHost
         {
-            public TestHeadlessGameHost([CallerMemberName] string caller = "", bool bypassCleanup = false)
-                : base(caller, new HostOptions(), bypassCleanup: bypassCleanup)
-            {
-            }
+            public TestHeadlessGameHost(
+                [CallerMemberName] string caller = "",
+                bool bypassCleanup = false
+            )
+                : base(caller, new HostOptions(), bypassCleanup: bypassCleanup) { }
 
-            protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() => new[]
-            {
-                new MouseHandler()
-            };
+            protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() =>
+                new[] { new MouseHandler() };
         }
 
         private partial class TestGame : Game
@@ -151,13 +177,9 @@ namespace osu.Framework.Tests.Configuration
             public readonly AutoResetEvent SaveEvent = new AutoResetEvent(false);
 
             public TestInputConfigManager(IReadOnlyList<InputHandler> inputHandlers)
-                : base(null!, inputHandlers)
-            {
-            }
+                : base(null!, inputHandlers) { }
 
-            protected override void PerformLoad()
-            {
-            }
+            protected override void PerformLoad() { }
 
             protected override bool PerformSave()
             {

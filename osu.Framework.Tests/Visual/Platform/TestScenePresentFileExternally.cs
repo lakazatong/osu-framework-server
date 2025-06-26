@@ -35,61 +35,55 @@ namespace osu.Framework.Tests.Visual.Platform
                 Padding = new MarginPadding(10),
                 Children = new Drawable[]
                 {
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => host.PresentFileExternally(@"C:/Windows/system32/winver.exe"),
                         @"C:/Windows/system32/winver.exe",
                         @"Opens: 'C:/Windows/system32'   Selected: 'winver.exe'"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => host.PresentFileExternally(@"C:\Windows\system32"),
                         @"C:\Windows\system32",
                         @"Opens: 'C:\Windows'   Selected: 'System32'"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => host.PresentFileExternally(@"C:\Windows\system32\"),
                         @"C:\Windows\system32\",
                         @"Opens: 'C:\Windows'   Selected: 'System32'"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => host.OpenFileExternally(@"C:\Windows\system32"),
                         @"Open C:\Windows\system32",
                         @"Opens: 'C:\Windows\System32'   Selected: nothing"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => host.OpenFileExternally(@"C:\Windows\system32\"),
                         @"Open C:\Windows\system32\",
                         @"Opens: 'C:\Windows\System32'   Selected: nothing"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => logStorage.PresentExternally(),
                         @"open logs folder",
                         @"Opens: 'logs'   Selected: nothing"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => logStorage.PresentFileExternally(string.Empty),
                         @"show logs folder",
                         @"Opens: 'visual-tests'   Selected: 'logs'"
                     ),
-                    new ButtonWithDescription
-                    (
-                        () => logStorage.PresentFileExternally(logStorage.GetFiles(string.Empty, "*runtime*").First()),
+                    new ButtonWithDescription(
+                        () =>
+                            logStorage.PresentFileExternally(
+                                logStorage.GetFiles(string.Empty, "*runtime*").First()
+                            ),
                         @"show runtime.log",
                         @"Opens: 'logs'   Selected: 'runtime.log'"
                     ),
-                    new ButtonWithDescription
-                    (
+                    new ButtonWithDescription(
                         () => logStorage.PresentFileExternally(@"file that doesn't exist"),
                         @"show non-existent file (in logs folder)",
                         @"Opens: 'logs'   Selected: nothing"
-                    )
-                }
+                    ),
+                },
             };
         }
 
@@ -116,9 +110,9 @@ namespace osu.Framework.Tests.Visual.Platform
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Text = description
-                        }
-                    }
+                            Text = description,
+                        },
+                    },
                 };
             }
         }

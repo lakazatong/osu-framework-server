@@ -15,7 +15,10 @@ using osu.Framework.Testing.Dependencies;
 namespace osu.Framework.Tests.Dependencies.Reflection
 {
     [TestFixture]
-    [SuppressMessage("Performance", "OFSG001:Class contributes to dependency injection and should be partial")]
+    [SuppressMessage(
+        "Performance",
+        "OFSG001:Class contributes to dependency injection and should be partial"
+    )]
     public class ResolvedAttributeTest
     {
         [Test]
@@ -44,7 +47,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver2();
 
-            Assert.Throws<DependencyNotRegisteredException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -72,7 +77,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver5();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -80,7 +87,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver6();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -88,7 +97,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver7();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -104,7 +115,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver9();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -112,7 +125,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var receiver = new Receiver10();
 
-            Assert.Throws<PropertyNotWritableException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<PropertyNotWritableException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -135,7 +150,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             var testObject = new CachedStructProvider();
 
-            var dependencies = DependencyActivator.MergeDependencies(testObject, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                testObject,
+                new DependencyContainer()
+            );
 
             Assert.DoesNotThrow(() => dependencies.Inject(receiver));
             Assert.AreEqual(testObject.CachedObject.Value, receiver.Obj.Value);
@@ -150,7 +168,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var testObject = new CachedNullableProvider();
             testObject.SetValue(testValue);
 
-            var dependencies = DependencyActivator.MergeDependencies(testObject, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                testObject,
+                new DependencyContainer()
+            );
 
             dependencies.Inject(receiver);
 
@@ -160,7 +181,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         [Test]
         public void TestResolveStructWithoutNullPermits()
         {
-            Assert.Throws<DependencyNotRegisteredException>(() => new DependencyContainer().Inject(new Receiver14()));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                new DependencyContainer().Inject(new Receiver14())
+            );
         }
 
         [Test]
@@ -206,7 +229,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             var receiver = new Receiver18();
 
             // Throws with non-nullable dependency not cached.
-            Assert.Throws<DependencyNotRegisteredException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                createDependencies().Inject(receiver)
+            );
 
             // Does not throw with the non-nullable dependency cached.
             Assert.DoesNotThrow(() => createDependencies(new Bindable<int>(10)).Inject(receiver));
@@ -221,9 +246,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             return dependencies;
         }
 
-        private class BaseObject
-        {
-        }
+        private class BaseObject { }
 
         private class Receiver1 : IDependencyInjectionCandidate
         {
@@ -293,9 +316,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             public BaseObject Obj { get; }
         }
 
-        private class Receiver11 : Receiver8
-        {
-        }
+        private class Receiver11 : Receiver8 { }
 
         private class Receiver12 : IDependencyInjectionCandidate
         {

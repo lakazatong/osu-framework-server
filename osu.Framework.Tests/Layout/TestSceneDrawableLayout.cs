@@ -28,63 +28,69 @@ namespace osu.Framework.Tests.Layout
             Box[] boxes = new Box[4];
             TestContainer1 testContainer = null;
 
-            AddStep("create test", () =>
-            {
-                Child = testContainer = new TestContainer1
+            AddStep(
+                "create test",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new FillFlowContainer
+                    Child = testContainer = new TestContainer1
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Height = 0.25f,
-                        Children = new[]
+                        Child = new FillFlowContainer
                         {
-                            boxes[0] = new Box
+                            RelativeSizeAxes = Axes.Both,
+                            Height = 0.25f,
+                            Children = new[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Beige,
-                                Width = 0.2f,
+                                boxes[0] = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = Color4.Beige,
+                                    Width = 0.2f,
+                                },
+                                boxes[1] = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = Color4.Bisque,
+                                    Width = 0.2f,
+                                },
+                                boxes[2] = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = Color4.Aquamarine,
+                                    Width = 0.2f,
+                                },
+                                boxes[3] = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = Color4.Cornsilk,
+                                    Width = 0.2f,
+                                },
                             },
-                            boxes[1] = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Bisque,
-                                Width = 0.2f,
-                            },
-                            boxes[2] = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Aquamarine,
-                                Width = 0.2f,
-                            },
-                            boxes[3] = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Cornsilk,
-                                Width = 0.2f,
-                            },
-                        }
-                    }
-                };
-            });
+                        },
+                    };
+                }
+            );
 
             AddWaitStep("wait for flow", 2);
             AddStep("change scale", () => testContainer.AdjustScale(0.5f));
 
-            AddAssert("boxes flowed correctly", () =>
-            {
-                float expectedX = 0;
-
-                foreach (var child in boxes)
+            AddAssert(
+                "boxes flowed correctly",
+                () =>
                 {
-                    if (!Precision.AlmostEquals(expectedX, child.DrawPosition.X))
-                        return false;
+                    float expectedX = 0;
 
-                    expectedX += child.DrawWidth;
+                    foreach (var child in boxes)
+                    {
+                        if (!Precision.AlmostEquals(expectedX, child.DrawPosition.X))
+                            return false;
+
+                        expectedX += child.DrawWidth;
+                    }
+
+                    return true;
                 }
-
-                return true;
-            });
+            );
         }
 
         [Test]
@@ -92,22 +98,24 @@ namespace osu.Framework.Tests.Layout
         {
             TestBox1 box = null;
 
-            AddStep("create test", () =>
-            {
-                Child = box = new TestBox1
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                };
-            });
+                    Child = box = new TestBox1 { Anchor = Anchor.Centre, Origin = Anchor.Centre };
+                }
+            );
 
             AddUntilStep("wait for validation", () => box.MiscGeometryLayoutValue.IsValid);
 
-            AddAssert("change position and ensure MiscGeometry invalidated on self", () =>
-            {
-                box.Position = new Vector2(50);
-                return !box.MiscGeometryLayoutValue.IsValid;
-            });
+            AddAssert(
+                "change position and ensure MiscGeometry invalidated on self",
+                () =>
+                {
+                    box.Position = new Vector2(50);
+                    return !box.MiscGeometryLayoutValue.IsValid;
+                }
+            );
         }
 
         [Test]
@@ -115,23 +123,29 @@ namespace osu.Framework.Tests.Layout
         {
             TestBox1 box = null;
 
-            AddStep("create test", () =>
-            {
-                Child = box = new TestBox1
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(50)
-                };
-            });
+                    Child = box = new TestBox1
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(50),
+                    };
+                }
+            );
 
             AddUntilStep("wait for validation", () => box.DrawSizeLayoutValue.IsValid);
 
-            AddAssert("change size and ensure DrawSize invalidated on self", () =>
-            {
-                box.Size = new Vector2(100);
-                return !box.DrawSizeLayoutValue.IsValid;
-            });
+            AddAssert(
+                "change size and ensure DrawSize invalidated on self",
+                () =>
+                {
+                    box.Size = new Vector2(100);
+                    return !box.DrawSizeLayoutValue.IsValid;
+                }
+            );
         }
 
         [Test]
@@ -139,27 +153,34 @@ namespace osu.Framework.Tests.Layout
         {
             TestBox1 box = null;
 
-            AddStep("create test", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    Child = box = new TestBox1
+                    Child = new Container
                     {
-                        Size = new Vector2(100, 100),
-                        Position = new Vector2(10000, 10000)
-                    }
-                };
-            });
+                        RelativeSizeAxes = Axes.Both,
+                        Masking = true,
+                        Child = box =
+                            new TestBox1
+                            {
+                                Size = new Vector2(100, 100),
+                                Position = new Vector2(10000, 10000),
+                            },
+                    };
+                }
+            );
 
             AddUntilStep("masked away", () => box.IsMaskedAway);
 
-            AddStep("move onto screen and validate immediately", () =>
-            {
-                box.Position = Vector2.Zero;
-                _ = box.ScreenSpaceDrawQuad; // Validate everything.
-            });
+            AddStep(
+                "move onto screen and validate immediately",
+                () =>
+                {
+                    box.Position = Vector2.Zero;
+                    _ = box.ScreenSpaceDrawQuad; // Validate everything.
+                }
+            );
 
             AddUntilStep("not masked away", () => !box.IsMaskedAway);
         }
@@ -175,8 +196,14 @@ namespace osu.Framework.Tests.Layout
 
         private partial class TestBox1 : Box
         {
-            public readonly LayoutValue MiscGeometryLayoutValue = new LayoutValue(Invalidation.MiscGeometry, InvalidationSource.Self);
-            public readonly LayoutValue DrawSizeLayoutValue = new LayoutValue(Invalidation.DrawSize, InvalidationSource.Self);
+            public readonly LayoutValue MiscGeometryLayoutValue = new LayoutValue(
+                Invalidation.MiscGeometry,
+                InvalidationSource.Self
+            );
+            public readonly LayoutValue DrawSizeLayoutValue = new LayoutValue(
+                Invalidation.DrawSize,
+                InvalidationSource.Self
+            );
 
             public TestBox1()
             {

@@ -27,7 +27,11 @@ namespace osu.Framework.Tests.Visual.Platform
         public void TestRaise(WindowMode windowMode)
         {
             AddStep($"set mode to {windowMode}", () => window.WindowMode.Value = windowMode);
-            AddUntilStep("wait for window to lose focus", () => window.IsActive.Value, () => Is.False);
+            AddUntilStep(
+                "wait for window to lose focus",
+                () => window.IsActive.Value,
+                () => Is.False
+            );
             AddWaitStep("do nothing to give the WM breathing room", 5);
             AddStep("raise window", () => window.Raise());
             AddAssert("window has focus", () => window.IsActive.Value, () => Is.True);

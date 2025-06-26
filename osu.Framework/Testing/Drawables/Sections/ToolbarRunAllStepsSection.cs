@@ -35,9 +35,9 @@ namespace osu.Framework.Testing.Drawables.Sections
                         AutoSizeAxes = Axes.Both,
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                        Current = browser.RunAllSteps
+                        Current = browser.RunAllSteps,
                     },
-                }
+                },
             };
         }
     }

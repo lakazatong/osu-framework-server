@@ -4,7 +4,6 @@
 #nullable disable
 
 using System;
-using osu.Framework.IO.Stores;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -14,6 +13,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 
 namespace osu.Framework.Graphics.Textures
@@ -23,9 +23,11 @@ namespace osu.Framework.Graphics.Textures
     /// </summary>
     public class TextureStore : ITextureStore
     {
-        private readonly Dictionary<string, Texture> textureCache = new Dictionary<string, Texture>();
+        private readonly Dictionary<string, Texture> textureCache =
+            new Dictionary<string, Texture>();
 
-        private readonly ResourceStore<TextureUpload> uploadStore = new ResourceStore<TextureUpload>();
+        private readonly ResourceStore<TextureUpload> uploadStore =
+            new ResourceStore<TextureUpload>();
         private readonly List<ITextureStore> nestedStores = new List<ITextureStore>();
 
         private readonly IRenderer renderer;
@@ -48,7 +50,14 @@ namespace osu.Framework.Graphics.Textures
         /// </summary>
         public readonly float ScaleAdjust;
 
-        public TextureStore(IRenderer renderer, IResourceStore<TextureUpload> store = null, bool useAtlas = true, TextureFilteringMode filteringMode = TextureFilteringMode.Linear, bool manualMipmaps = false, float scaleAdjust = 2)
+        public TextureStore(
+            IRenderer renderer,
+            IResourceStore<TextureUpload> store = null,
+            bool useAtlas = true,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+            bool manualMipmaps = false,
+            float scaleAdjust = 2
+        )
         {
             if (store != null)
                 AddTextureSource(store);
@@ -62,7 +71,13 @@ namespace osu.Framework.Graphics.Textures
             if (useAtlas)
             {
                 int size = Math.Min(max_atlas_size, renderer.MaxTextureSize);
-                Atlas = new TextureAtlas(renderer, size, size, filteringMode: filteringMode, manualMipmaps: manualMipmaps);
+                Atlas = new TextureAtlas(
+                    renderer,
+                    size,
+                    size,
+                    filteringMode: filteringMode,
+                    manualMipmaps: manualMipmaps
+                );
             }
         }
 
@@ -73,13 +88,15 @@ namespace osu.Framework.Graphics.Textures
         /// Lookup sources can be implemented easily using a <see cref="TextureLoaderStore"/> to provide the final <see cref="TextureUpload"/>.
         /// </remarks>
         /// <param name="store">The store to add.</param>
-        public virtual void AddTextureSource(IResourceStore<TextureUpload> store) => uploadStore.AddStore(store);
+        public virtual void AddTextureSource(IResourceStore<TextureUpload> store) =>
+            uploadStore.AddStore(store);
 
         /// <summary>
         /// Removes a texture data lookup source.
         /// </summary>
         /// <param name="store">The store to remove.</param>
-        public virtual void RemoveTextureStore(IResourceStore<TextureUpload> store) => uploadStore.RemoveStore(store);
+        public virtual void RemoveTextureStore(IResourceStore<TextureUpload> store) =>
+            uploadStore.RemoveStore(store);
 
         /// <summary>
         /// Adds a nested texture store to use during <see cref="Texture"/> lookup if not found in this store.
@@ -104,9 +121,14 @@ namespace osu.Framework.Graphics.Textures
                 nestedStores.Remove(store);
         }
 
-        private Texture loadRaw(TextureUpload upload, WrapMode wrapModeS = WrapMode.None, WrapMode wrapModeT = WrapMode.None)
+        private Texture loadRaw(
+            TextureUpload upload,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None
+        )
         {
-            if (upload == null) return null;
+            if (upload == null)
+                return null;
 
             Texture tex = null;
 
@@ -116,11 +138,19 @@ namespace osu.Framework.Graphics.Textures
                 {
                     Logger.Log(
                         $"Texture requested ({upload.Width}x{upload.Height}) which exceeds {nameof(TextureStore)}'s atlas size ({max_atlas_size}x{max_atlas_size}) - bypassing atlasing. Consider using {nameof(LargeTextureStore)}.",
-                        LoggingTarget.Performance);
+                        LoggingTarget.Performance
+                    );
                 }
             }
 
-            tex ??= renderer.CreateTexture(upload.Width, upload.Height, manualMipmaps, filteringMode, wrapModeS, wrapModeT);
+            tex ??= renderer.CreateTexture(
+                upload.Width,
+                upload.Height,
+                manualMipmaps,
+                filteringMode,
+                wrapModeS,
+                wrapModeT
+            );
             tex.ScaleAdjust = ScaleAdjust;
             tex.SetData(upload);
 
@@ -133,7 +163,8 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="name">The name of the texture.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The texture.</returns>
-        public Task<Texture> GetAsync(string name, CancellationToken cancellationToken) => GetAsync(name, default, default, cancellationToken);
+        public Task<Texture> GetAsync(string name, CancellationToken cancellationToken) =>
+            GetAsync(name, default, default, cancellationToken);
 
         /// <summary>
         /// Retrieves a texture from the store and adds it to the atlas.
@@ -143,8 +174,12 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="wrapModeT">The texture wrap mode in vertical direction.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The texture.</returns>
-        public Task<Texture> GetAsync(string name, WrapMode wrapModeT, WrapMode wrapModeS, CancellationToken cancellationToken = default) =>
-            Task.Run(() => Get(name, wrapModeS, wrapModeT), cancellationToken); // TODO: best effort. need to re-think textureCache data structure to fix this.
+        public Task<Texture> GetAsync(
+            string name,
+            WrapMode wrapModeT,
+            WrapMode wrapModeS,
+            CancellationToken cancellationToken = default
+        ) => Task.Run(() => Get(name, wrapModeS, wrapModeT), cancellationToken); // TODO: best effort. need to re-think textureCache data structure to fix this.
 
         /// <summary>
         /// Retrieves a texture from the store and adds it to the atlas.
@@ -153,7 +188,8 @@ namespace osu.Framework.Graphics.Textures
         /// <returns>The texture.</returns>
         public Texture Get(string name) => Get(name, default, default);
 
-        private readonly Dictionary<string, Task> retrievalCompletionSources = new Dictionary<string, Task>();
+        private readonly Dictionary<string, Task> retrievalCompletionSources =
+            new Dictionary<string, Task>();
 
         /// <summary>
         /// Retrieves a texture from the store and adds it to the atlas.
@@ -203,12 +239,20 @@ namespace osu.Framework.Graphics.Textures
         public IEnumerable<string> GetAvailableResources()
         {
             lock (nestedStores)
-                return uploadStore.GetAvailableResources().Concat(nestedStores.SelectMany(s => s.GetAvailableResources()).ExcludeSystemFileNames()).ToArray();
+                return uploadStore
+                    .GetAvailableResources()
+                    .Concat(
+                        nestedStores
+                            .SelectMany(s => s.GetAvailableResources())
+                            .ExcludeSystemFileNames()
+                    )
+                    .ToArray();
         }
 
         private Texture get(string name, WrapMode wrapModeS, WrapMode wrapModeT)
         {
-            if (string.IsNullOrEmpty(name)) return null;
+            if (string.IsNullOrEmpty(name))
+                return null;
 
             string key = $"{name}:wrap-{(int)wrapModeS}-{(int)wrapModeT}";
 
@@ -224,7 +268,9 @@ namespace osu.Framework.Graphics.Textures
                 // check if an existing lookup was already started for this key.
                 if (!retrievalCompletionSources.TryGetValue(key, out task))
                     // if not, take responsibility for the lookup.
-                    retrievalCompletionSources[key] = (tcs = new TaskCompletionSource<Texture>()).Task;
+                    retrievalCompletionSources[key] = (
+                        tcs = new TaskCompletionSource<Texture>()
+                    ).Task;
             }
 
             // handle the case where a lookup is already in progress.
@@ -253,7 +299,10 @@ namespace osu.Framework.Graphics.Textures
             }
             catch (TextureTooLargeForGLException)
             {
-                Logger.Log($"Texture \"{name}\" exceeds the maximum size supported by this device ({renderer.MaxTextureSize}px).", level: LogLevel.Error);
+                Logger.Log(
+                    $"Texture \"{name}\" exceeds the maximum size supported by this device ({renderer.MaxTextureSize}px).",
+                    level: LogLevel.Error
+                );
             }
             finally
             {
@@ -276,7 +325,10 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="lookupKey">The lookup key that uniquely identifies textures in the cache.</param>
         /// <param name="texture">The returned texture. Null if the texture did not exist in the cache.</param>
         /// <returns>Whether a cached texture was retrieved.</returns>
-        protected virtual bool TryGetCached([NotNull] string lookupKey, [CanBeNull] out Texture texture)
+        protected virtual bool TryGetCached(
+            [NotNull] string lookupKey,
+            [CanBeNull] out Texture texture
+        )
         {
             lock (textureCache)
                 return textureCache.TryGetValue(lookupKey, out texture);
@@ -289,7 +341,10 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="texture">The texture to be cached and returned.</param>
         /// <returns>The texture to be returned.</returns>
         [CanBeNull]
-        protected virtual Texture CacheAndReturnTexture([NotNull] string lookupKey, [CanBeNull] Texture texture)
+        protected virtual Texture CacheAndReturnTexture(
+            [NotNull] string lookupKey,
+            [CanBeNull] Texture texture
+        )
         {
             lock (textureCache)
                 return textureCache[lookupKey] = texture;
@@ -332,7 +387,8 @@ namespace osu.Framework.Graphics.Textures
                 isDisposed = true;
 
                 uploadStore.Dispose();
-                lock (nestedStores) nestedStores.ForEach(s => s.Dispose());
+                lock (nestedStores)
+                    nestedStores.ForEach(s => s.Dispose());
             }
         }
 

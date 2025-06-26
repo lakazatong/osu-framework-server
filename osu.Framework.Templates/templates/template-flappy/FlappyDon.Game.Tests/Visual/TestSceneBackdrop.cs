@@ -1,6 +1,6 @@
 using FlappyDon.Game.Elements;
-using osu.Framework.Allocation;
 using NUnit.Framework;
+using osu.Framework.Allocation;
 
 namespace FlappyDon.Game.Tests.Visual
 {

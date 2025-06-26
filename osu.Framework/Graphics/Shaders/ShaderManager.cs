@@ -13,8 +13,10 @@ namespace osu.Framework.Graphics.Shaders
     {
         private const string shader_prefix = @"sh_";
 
-        private readonly ConcurrentDictionary<string, IShaderPart> partCache = new ConcurrentDictionary<string, IShaderPart>();
-        private readonly ConcurrentDictionary<(string, string), IShader> shaderCache = new ConcurrentDictionary<(string, string), IShader>();
+        private readonly ConcurrentDictionary<string, IShaderPart> partCache =
+            new ConcurrentDictionary<string, IShaderPart>();
+        private readonly ConcurrentDictionary<(string, string), IShader> shaderCache =
+            new ConcurrentDictionary<(string, string), IShader>();
 
         private readonly IRenderer renderer;
         private readonly IResourceStore<byte[]> store;
@@ -44,8 +46,9 @@ namespace osu.Framework.Graphics.Shaders
                 new[]
                 {
                     resolveShaderPart(vertex, ShaderPartType.Vertex),
-                    resolveShaderPart(fragment, ShaderPartType.Fragment)
-                });
+                    resolveShaderPart(fragment, ShaderPartType.Fragment),
+                }
+            );
         }
 
         /// <summary>
@@ -54,16 +57,16 @@ namespace osu.Framework.Graphics.Shaders
         /// <param name="vertex">The vertex shader name.</param>
         /// <param name="fragment">The fragment shader name.</param>
         /// <returns>A cached <see cref="IShader"/> instance, if existing.</returns>
-        public virtual IShader? GetCachedShader(string vertex, string fragment)
-            => shaderCache.TryGetValue((vertex, fragment), out IShader? shader) ? shader : null;
+        public virtual IShader? GetCachedShader(string vertex, string fragment) =>
+            shaderCache.TryGetValue((vertex, fragment), out IShader? shader) ? shader : null;
 
         /// <summary>
         /// Attempts to retrieve an already-cached shader part.
         /// </summary>
         /// <param name="name">The name of the shader part.</param>
         /// <returns>A cached <see cref="IShaderPart"/> instance, if existing.</returns>
-        public virtual IShaderPart? GetCachedShaderPart(string name)
-            => partCache.TryGetValue(name, out IShaderPart? part) ? part : null;
+        public virtual IShaderPart? GetCachedShaderPart(string name) =>
+            partCache.TryGetValue(name, out IShaderPart? part) ? part : null;
 
         /// <summary>
         /// Attempts to retrieve the raw data for a shader file.
@@ -134,14 +137,17 @@ namespace osu.Framework.Graphics.Shaders
 
                 store.Dispose();
 
-                renderer.ScheduleDisposal(s =>
-                {
-                    foreach (var shader in s.shaderCache.Values)
-                        shader.Dispose();
+                renderer.ScheduleDisposal(
+                    s =>
+                    {
+                        foreach (var shader in s.shaderCache.Values)
+                            shader.Dispose();
 
-                    foreach (var part in s.partCache.Values)
-                        part.Dispose();
-                }, this);
+                        foreach (var part in s.partCache.Values)
+                            part.Dispose();
+                    },
+                    this
+                );
             }
         }
 

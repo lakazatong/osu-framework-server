@@ -28,9 +28,12 @@ namespace osu.Framework.Graphics.Veldrid.Batches
         /// <summary>
         /// Multiple VBOs in a swap chain to try our best to avoid GPU contention.
         /// </summary>
-        private readonly List<IVeldridVertexBuffer<T>>[] vertexBuffers = new List<IVeldridVertexBuffer<T>>[FrameworkEnvironment.VertexBufferCount ?? vertex_buffer_count];
+        private readonly List<IVeldridVertexBuffer<T>>[] vertexBuffers = new List<
+            IVeldridVertexBuffer<T>
+        >[FrameworkEnvironment.VertexBufferCount ?? vertex_buffer_count];
 
-        private List<IVeldridVertexBuffer<T>> currentVertexBuffers => vertexBuffers[renderer.FrameIndex % (ulong)vertexBuffers.Length];
+        private List<IVeldridVertexBuffer<T>> currentVertexBuffers =>
+            vertexBuffers[renderer.FrameIndex % (ulong)vertexBuffers.Length];
 
         /// <summary>
         /// The number of vertices in each VertexBuffer.
@@ -50,7 +53,12 @@ namespace osu.Framework.Graphics.Veldrid.Batches
         private readonly PrimitiveTopology primitiveType;
         private readonly VeldridIndexLayout indexLayout;
 
-        protected VeldridVertexBatch(VeldridRenderer renderer, int size, PrimitiveTopology primitiveType, VeldridIndexLayout indexLayout)
+        protected VeldridVertexBatch(
+            VeldridRenderer renderer,
+            int size,
+            PrimitiveTopology primitiveType,
+            VeldridIndexLayout indexLayout
+        )
         {
             Size = size;
             this.renderer = renderer;

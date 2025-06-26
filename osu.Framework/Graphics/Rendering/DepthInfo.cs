@@ -30,13 +30,20 @@ namespace osu.Framework.Graphics.Rendering
         /// </summary>
         public readonly BufferTestFunction Function;
 
-        public DepthInfo(bool depthTest = true, bool writeDepth = true, BufferTestFunction function = BufferTestFunction.LessThan)
+        public DepthInfo(
+            bool depthTest = true,
+            bool writeDepth = true,
+            BufferTestFunction function = BufferTestFunction.LessThan
+        )
         {
             DepthTest = depthTest;
             WriteDepth = writeDepth;
             Function = function;
         }
 
-        public bool Equals(DepthInfo other) => DepthTest == other.DepthTest && WriteDepth == other.WriteDepth && Function == other.Function;
+        public bool Equals(DepthInfo other) =>
+            DepthTest == other.DepthTest
+            && WriteDepth == other.WriteDepth
+            && Function == other.Function;
     }
 }

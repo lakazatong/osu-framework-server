@@ -35,37 +35,34 @@ namespace osu.Framework.Tests.Visual.Drawables
         }
 
         [SetUp]
-        public new void SetUp() => Schedule(() =>
-        {
-            Children = new Drawable[]
+        public new void SetUp() =>
+            Schedule(() =>
             {
-                focusTopLeft = new FocusBox
+                Children = new Drawable[]
                 {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                },
-                requestingFocus = new RequestingFocusBox
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                },
-                focusBottomLeft = new FocusBox
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                },
-                focusBottomRight = new FocusBox
-                {
-                    Anchor = Anchor.BottomRight,
-                    Origin = Anchor.BottomRight,
-                },
-                overlay = new FocusOverlay
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                }
-            };
-        });
+                    focusTopLeft = new FocusBox
+                    {
+                        Anchor = Anchor.TopLeft,
+                        Origin = Anchor.TopLeft,
+                    },
+                    requestingFocus = new RequestingFocusBox
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                    },
+                    focusBottomLeft = new FocusBox
+                    {
+                        Anchor = Anchor.BottomLeft,
+                        Origin = Anchor.BottomLeft,
+                    },
+                    focusBottomRight = new FocusBox
+                    {
+                        Anchor = Anchor.BottomRight,
+                        Origin = Anchor.BottomRight,
+                    },
+                    overlay = new FocusOverlay { Anchor = Anchor.Centre, Origin = Anchor.Centre },
+                };
+            });
 
         [Test]
         public void FocusedOverlayTakesFocusOnShow()
@@ -89,11 +86,14 @@ namespace osu.Framework.Tests.Visual.Drawables
             AddStep("show overlay", () => overlay.Show());
             checkFocused(() => overlay);
 
-            AddStep("click away", () =>
-            {
-                InputManager.MoveMouseTo(Vector2.One);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click away",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Vector2.One);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkNotFocused(() => overlay);
             checkFocused(() => requestingFocus);
@@ -104,11 +104,14 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             checkFocused(() => requestingFocus);
 
-            AddStep("click away", () =>
-            {
-                InputManager.MoveMouseTo(Vector2.One);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click away",
+                () =>
+                {
+                    InputManager.MoveMouseTo(Vector2.One);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkFocused(() => requestingFocus);
         }
@@ -118,19 +121,25 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             checkFocused(() => requestingFocus);
 
-            AddStep("click top left", () =>
-            {
-                InputManager.MoveMouseTo(focusTopLeft);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click top left",
+                () =>
+                {
+                    InputManager.MoveMouseTo(focusTopLeft);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkFocused(() => focusTopLeft);
 
-            AddStep("click bottom right", () =>
-            {
-                InputManager.MoveMouseTo(focusBottomRight);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click bottom right",
+                () =>
+                {
+                    InputManager.MoveMouseTo(focusBottomRight);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkFocused(() => focusBottomRight);
         }
@@ -144,7 +153,10 @@ namespace osu.Framework.Tests.Visual.Drawables
             checkFocused(() => requestingFocus);
 
             AddStep("disable focus from top left", () => focusTopLeft.AllowAcceptingFocus = false);
-            AddAssert("cannot switch focus to top left", () => !((IFocusManager)InputManager).ChangeFocus(focusTopLeft));
+            AddAssert(
+                "cannot switch focus to top left",
+                () => !((IFocusManager)InputManager).ChangeFocus(focusTopLeft)
+            );
 
             checkFocused(() => requestingFocus);
         }
@@ -158,7 +170,10 @@ namespace osu.Framework.Tests.Visual.Drawables
             checkFocused(() => requestingFocus);
 
             AddStep("hide top left", () => focusTopLeft.Alpha = 0);
-            AddAssert("cannot switch focus to top left", () => !((IFocusManager)InputManager).ChangeFocus(focusTopLeft));
+            AddAssert(
+                "cannot switch focus to top left",
+                () => !((IFocusManager)InputManager).ChangeFocus(focusTopLeft)
+            );
 
             checkFocused(() => requestingFocus);
         }
@@ -171,20 +186,22 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             checkFocused(() => requestingFocus);
 
-            AddStep("wrap top left in hidden container", () =>
-            {
-                Container container;
-
-                Add(container = new Container
+            AddStep(
+                "wrap top left in hidden container",
+                () =>
                 {
-                    Alpha = 0,
-                    RelativeSizeAxes = Axes.Both,
-                });
+                    Container container;
 
-                Remove(focusTopLeft, false);
-                container.Add(focusTopLeft);
-            });
-            AddAssert("cannot switch focus to top left", () => !((IFocusManager)InputManager).ChangeFocus(focusTopLeft));
+                    Add(container = new Container { Alpha = 0, RelativeSizeAxes = Axes.Both });
+
+                    Remove(focusTopLeft, false);
+                    container.Add(focusTopLeft);
+                }
+            );
+            AddAssert(
+                "cannot switch focus to top left",
+                () => !((IFocusManager)InputManager).ChangeFocus(focusTopLeft)
+            );
 
             checkFocused(() => requestingFocus);
         }
@@ -192,11 +209,14 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void ShowOverlayInteractions()
         {
-            AddStep("click bottom left", () =>
-            {
-                InputManager.MoveMouseTo(focusBottomLeft);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click bottom left",
+                () =>
+                {
+                    InputManager.MoveMouseTo(focusBottomLeft);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkFocused(() => focusBottomLeft);
 
@@ -221,27 +241,46 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void InputPropagation()
         {
-            AddStep("Focus bottom left", () =>
-            {
-                InputManager.MoveMouseTo(focusBottomLeft);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddStep("Press a key (blocking)", () =>
-            {
-                InputManager.PressKey(Key.A);
-                InputManager.ReleaseKey(Key.A);
-            });
-            AddAssert("Received the key", () =>
-                focusBottomLeft.KeyDownCount == 1 && focusBottomLeft.KeyUpCount == 1 &&
-                focusBottomRight.KeyDownCount == 0 && focusBottomRight.KeyUpCount == 0);
-            AddStep("Press a joystick (non blocking)", () =>
-            {
-                InputManager.PressJoystickButton(JoystickButton.Button1);
-                InputManager.ReleaseJoystickButton(JoystickButton.Button1);
-            });
-            AddAssert("Received the joystick button", () =>
-                focusBottomLeft.JoystickPressCount == 1 && focusBottomLeft.JoystickReleaseCount == 1 &&
-                focusBottomRight.JoystickPressCount == 1 && focusBottomRight.JoystickReleaseCount == 1);
+            AddStep(
+                "Focus bottom left",
+                () =>
+                {
+                    InputManager.MoveMouseTo(focusBottomLeft);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddStep(
+                "Press a key (blocking)",
+                () =>
+                {
+                    InputManager.PressKey(Key.A);
+                    InputManager.ReleaseKey(Key.A);
+                }
+            );
+            AddAssert(
+                "Received the key",
+                () =>
+                    focusBottomLeft.KeyDownCount == 1
+                    && focusBottomLeft.KeyUpCount == 1
+                    && focusBottomRight.KeyDownCount == 0
+                    && focusBottomRight.KeyUpCount == 0
+            );
+            AddStep(
+                "Press a joystick (non blocking)",
+                () =>
+                {
+                    InputManager.PressJoystickButton(JoystickButton.Button1);
+                    InputManager.ReleaseJoystickButton(JoystickButton.Button1);
+                }
+            );
+            AddAssert(
+                "Received the joystick button",
+                () =>
+                    focusBottomLeft.JoystickPressCount == 1
+                    && focusBottomLeft.JoystickReleaseCount == 1
+                    && focusBottomRight.JoystickPressCount == 1
+                    && focusBottomRight.JoystickReleaseCount == 1
+            );
         }
 
         [Test]
@@ -250,41 +289,54 @@ namespace osu.Framework.Tests.Visual.Drawables
             FocusBox focusableBox = null!;
             FocusBox noFocusChangeBox = null!;
 
-            AddStep("setup", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "setup",
+                () =>
                 {
-                    focusableBox = new FocusBox
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                    },
-                    noFocusChangeBox = new NoFocusChangeBox
-                    {
-                        Anchor = Anchor.CentreRight,
-                        Origin = Anchor.CentreRight,
-                        AllowAcceptingFocus = false
-                    }
-                };
-            });
+                        focusableBox = new FocusBox
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                        },
+                        noFocusChangeBox = new NoFocusChangeBox
+                        {
+                            Anchor = Anchor.CentreRight,
+                            Origin = Anchor.CentreRight,
+                            AllowAcceptingFocus = false,
+                        },
+                    };
+                }
+            );
 
-            AddStep("click focusable box", () =>
-            {
-                InputManager.MoveMouseTo(focusableBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click focusable box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(focusableBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkFocused(() => focusableBox);
 
-            AddStep("click no focus change box", () =>
-            {
-                InputManager.MoveMouseTo(noFocusChangeBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click no focus change box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(noFocusChangeBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             checkFocused(() => focusableBox);
             checkNotFocused(() => noFocusChangeBox);
-            AddAssert("no focus change box received click", () => noFocusChangeBox.ClickCount, () => Is.GreaterThan(0));
+            AddAssert(
+                "no focus change box received click",
+                () => noFocusChangeBox.ClickCount,
+                () => Is.GreaterThan(0)
+            );
         }
 
         [Test]
@@ -293,44 +345,52 @@ namespace osu.Framework.Tests.Visual.Drawables
             BasicButton button = null!;
             FocusBox box = null!;
 
-            AddStep("setup", () =>
-            {
-                FocusBox b = new FocusBox
+            AddStep(
+                "setup",
+                () =>
                 {
-                    Position = new Vector2(0, 75)
-                };
+                    FocusBox b = new FocusBox { Position = new Vector2(0, 75) };
 
-                Children =
-                [
-                    button = new BasicButton
-                    {
-                        Size = new Vector2(150, 50),
-                        Text = "Focus the box",
-                        Action = () => b.GetContainingFocusManager()!.ChangeFocus(b)
-                    },
-                    box = b
-                ];
-            });
+                    Children =
+                    [
+                        button = new BasicButton
+                        {
+                            Size = new Vector2(150, 50),
+                            Text = "Focus the box",
+                            Action = () => b.GetContainingFocusManager()!.ChangeFocus(b),
+                        },
+                        box = b,
+                    ];
+                }
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(button);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("box is focused", () => box.HasFocus, () => Is.True);
 
-            AddStep("click button again", () =>
-            {
-                InputManager.MoveMouseTo(button);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button again",
+                () =>
+                {
+                    InputManager.MoveMouseTo(button);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("box is still focused", () => box.HasFocus, () => Is.True);
         }
 
         private void checkFocused(Func<Drawable> d) => AddAssert("check focus", () => d().HasFocus);
-        private void checkNotFocused(Func<Drawable> d) => AddAssert("check not focus", () => !d().HasFocus);
+
+        private void checkNotFocused(Func<Drawable> d) =>
+            AddAssert("check not focus", () => !d().HasFocus);
 
         private partial class FocusOverlay : FocusedOverlayContainer
         {
@@ -343,11 +403,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Gray.Opacity(0.5f),
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray.Opacity(0.5f) },
                     box = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -367,7 +423,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                         Text = "FocusedOverlay",
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
-                    }
+                    },
                 };
 
                 this.FadeTo(0.2f);
@@ -417,28 +473,36 @@ namespace osu.Framework.Tests.Visual.Drawables
             {
                 Box.Colour = Color4.Green;
 
-                AddInternal(new SpriteText
-                {
-                    Text = "RequestsFocus",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                AddInternal(
+                    new SpriteText
+                    {
+                        Text = "RequestsFocus",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
             }
         }
 
         public partial class FocusBox : CompositeDrawable
         {
             protected Box Box;
-            public int KeyDownCount, KeyUpCount, JoystickPressCount, JoystickReleaseCount, ClickCount;
+            public int KeyDownCount,
+                KeyUpCount,
+                JoystickPressCount,
+                JoystickReleaseCount,
+                ClickCount;
 
             public FocusBox()
             {
-                AddInternal(Box = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0.5f,
-                    Colour = Color4.Red
-                });
+                AddInternal(
+                    Box = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Alpha = 0.5f,
+                        Colour = Color4.Red,
+                    }
+                );
 
                 RelativeSizeAxes = Axes.Both;
                 Size = new Vector2(0.4f);
@@ -498,12 +562,14 @@ namespace osu.Framework.Tests.Visual.Drawables
             {
                 Box.Colour = Color4.Green;
 
-                AddInternal(new SpriteText
-                {
-                    Text = "ChangeFocusOnClick = false",
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
+                AddInternal(
+                    new SpriteText
+                    {
+                        Text = "ChangeFocusOnClick = false",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    }
+                );
             }
 
             public override bool ChangeFocusOnClick => false;

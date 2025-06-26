@@ -29,7 +29,8 @@ namespace osu.Framework.Testing.Drawables.Sections
         private void load(TestBrowser browser)
         {
             this.browser = browser;
-            SpriteText maxFrameCount, currentFrame;
+            SpriteText maxFrameCount,
+                currentFrame;
 
             InternalChild = new FillFlowContainer
             {
@@ -61,7 +62,7 @@ namespace osu.Framework.Testing.Drawables.Sections
                                 Origin = Anchor.CentreLeft,
                                 Colour = FrameworkColour.Yellow,
                                 Text = "0",
-                                Font = FrameworkFont.Regular.With(fixedWidth: true)
+                                Font = FrameworkFont.Regular.With(fixedWidth: true),
                             },
                             new BasicSliderBar<int>
                             {
@@ -78,9 +79,9 @@ namespace osu.Framework.Testing.Drawables.Sections
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
                                 Text = "0",
-                                Font = FrameworkFont.Regular.With(fixedWidth: true)
+                                Font = FrameworkFont.Regular.With(fixedWidth: true),
                             },
-                        }
+                        },
                     },
                     recordButton = new BasicButton
                     {
@@ -88,12 +89,14 @@ namespace osu.Framework.Testing.Drawables.Sections
                         Width = 100,
                         Action = changeState,
                     },
-                }
+                },
             };
 
             browser.RecordState.BindValueChanged(updateState, true);
-            browser.CurrentFrame.ValueChanged += frame => currentFrame.Text = frame.NewValue.ToString("00000");
-            browser.CurrentFrame.MaxValueChanged += maxVal => maxFrameCount.Text = maxVal.ToString("00000");
+            browser.CurrentFrame.ValueChanged += frame =>
+                currentFrame.Text = frame.NewValue.ToString("00000");
+            browser.CurrentFrame.MaxValueChanged += maxVal =>
+                maxFrameCount.Text = maxVal.ToString("00000");
         }
 
         private void changeState()

@@ -10,7 +10,9 @@ using Veldrid;
 
 namespace osu.Framework.Graphics.Veldrid.Buffers
 {
-    internal class VeldridShaderStorageBufferObject<TData> : IShaderStorageBufferObject<TData>, IVeldridUniformBuffer
+    internal class VeldridShaderStorageBufferObject<TData>
+        : IShaderStorageBufferObject<TData>,
+            IVeldridUniformBuffer
         where TData : unmanaged, IEquatable<TData>
     {
         public int Size { get; }
@@ -31,12 +33,24 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
             if (renderer.UseStructuredBuffers)
             {
                 Size = ssboSize;
-                buffer = renderer.Factory.CreateBuffer(new BufferDescription((uint)(elementSize * Size), BufferUsage.StructuredBufferReadOnly | BufferUsage.Dynamic, elementSize, true));
+                buffer = renderer.Factory.CreateBuffer(
+                    new BufferDescription(
+                        (uint)(elementSize * Size),
+                        BufferUsage.StructuredBufferReadOnly | BufferUsage.Dynamic,
+                        elementSize,
+                        true
+                    )
+                );
             }
             else
             {
                 Size = uboSize;
-                buffer = renderer.Factory.CreateBuffer(new BufferDescription((uint)(elementSize * Size), BufferUsage.UniformBuffer | BufferUsage.Dynamic));
+                buffer = renderer.Factory.CreateBuffer(
+                    new BufferDescription(
+                        (uint)(elementSize * Size),
+                        BufferUsage.UniformBuffer | BufferUsage.Dynamic
+                    )
+                );
             }
 
             data = new TData[Size];
@@ -80,7 +94,11 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
             if (changeBeginIndex == -1)
                 return;
 
-            renderer.BufferUpdateCommands.UpdateBuffer(buffer, (uint)(changeBeginIndex * elementSize), data.AsSpan().Slice(changeBeginIndex, changeCount));
+            renderer.BufferUpdateCommands.UpdateBuffer(
+                buffer,
+                (uint)(changeBeginIndex * elementSize),
+                data.AsSpan().Slice(changeBeginIndex, changeCount)
+            );
 
             changeBeginIndex = -1;
             changeCount = 0;
@@ -92,9 +110,7 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
             return renderer.Factory.CreateResourceSet(new ResourceSetDescription(layout, buffer));
         }
 
-        public void ResetCounters()
-        {
-        }
+        public void ResetCounters() { }
 
         public void Dispose()
         {

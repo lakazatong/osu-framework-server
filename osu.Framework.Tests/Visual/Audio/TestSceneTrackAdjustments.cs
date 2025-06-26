@@ -27,9 +27,9 @@ namespace osu.Framework.Tests.Visual.Audio
                 {
                     Child = new DraggableAudioContainer
                     {
-                        Child = new TrackPlayer(tracks.Get("sample-track.mp3"))
-                    }
-                }
+                        Child = new TrackPlayer(tracks.Get("sample-track.mp3")),
+                    },
+                },
             };
         }
 
@@ -49,20 +49,16 @@ namespace osu.Framework.Tests.Visual.Audio
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Yellow,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Yellow, RelativeSizeAxes = Axes.Both },
                     new SpriteIcon
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Icon = FontAwesome.Solid.VolumeUp,
                         Colour = Color4.Black,
-                        Size = new Vector2(40)
+                        Size = new Vector2(40),
                     },
-                    drawableTrack = new DrawableTrack(track)
+                    drawableTrack = new DrawableTrack(track),
                 };
 
                 drawableTrack.Looping = true;
@@ -130,7 +126,7 @@ namespace osu.Framework.Tests.Visual.Audio
                                         Anchor = Anchor.BottomRight,
                                         Origin = Anchor.BottomRight,
                                     },
-                                }
+                                },
                             },
                             spinner = new SpriteIcon
                             {
@@ -141,19 +137,16 @@ namespace osu.Framework.Tests.Visual.Audio
                                 Colour = Color4.White,
                                 Alpha = 0.2f,
                                 Scale = new Vector2(20),
-                                Position = new Vector2(20, -20)
-                            }
-                        }
+                                Position = new Vector2(20, -20),
+                            },
+                        },
                     },
 
                     audio = new AudioContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = content = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
-                    }
+                        Child = content = new Container { RelativeSizeAxes = Axes.Both },
+                    },
                 };
             }
 
@@ -173,14 +166,16 @@ namespace osu.Framework.Tests.Visual.Audio
 
             private void updateAggregate(ValueChangedEvent<double> obj)
             {
-                textAggregate.Text = $"aggr: vol {audio.AggregateVolume.Value:F1} freq {audio.AggregateFrequency.Value:F1} tempo {audio.AggregateTempo.Value:F1} bal {audio.AggregateBalance.Value:F1}";
+                textAggregate.Text =
+                    $"aggr: vol {audio.AggregateVolume.Value:F1} freq {audio.AggregateFrequency.Value:F1} tempo {audio.AggregateTempo.Value:F1} bal {audio.AggregateBalance.Value:F1}";
                 volFill.Height = (float)audio.AggregateVolume.Value;
 
                 warpContent.Rotation = (float)audio.AggregateBalance.Value * 4;
             }
 
             private void updateLocal(ValueChangedEvent<double> obj) =>
-                textLocal.Text = $"local: vol {audio.Volume.Value:F1} freq {audio.Frequency.Value:F1} tempo {audio.Tempo.Value:F1} bal {audio.Balance.Value:F1}";
+                textLocal.Text =
+                    $"local: vol {audio.Volume.Value:F1} freq {audio.Frequency.Value:F1} tempo {audio.Tempo.Value:F1} bal {audio.Balance.Value:F1}";
 
             protected override void OnDrag(DragEvent e)
             {
@@ -202,7 +197,9 @@ namespace osu.Framework.Tests.Visual.Audio
             protected override void Update()
             {
                 base.Update();
-                spinner.Rotation += (float)(audio.AggregateFrequency.Value * Clock.ElapsedFrameTime);
+                spinner.Rotation += (float)(
+                    audio.AggregateFrequency.Value * Clock.ElapsedFrameTime
+                );
             }
 
             protected override bool OnDragStart(DragStartEvent e) => true;

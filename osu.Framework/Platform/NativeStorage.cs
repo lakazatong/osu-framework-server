@@ -48,22 +48,33 @@ namespace osu.Framework.Platform
         {
             // Retry move operations as it can fail on windows intermittently with IOExceptions:
             // The process cannot access the file because it is being used by another process.
-            General.AttemptWithRetryOnException<IOException>(() => File.Move(GetFullPath(from), GetFullPath(to), true));
+            General.AttemptWithRetryOnException<IOException>(() =>
+                File.Move(GetFullPath(from), GetFullPath(to), true)
+            );
         }
 
-        public override IEnumerable<string> GetDirectories(string path) => getRelativePaths(Directory.GetDirectories(GetFullPath(path)));
+        public override IEnumerable<string> GetDirectories(string path) =>
+            getRelativePaths(Directory.GetDirectories(GetFullPath(path)));
 
-        public override IEnumerable<string> GetFiles(string path, string pattern = "*") => getRelativePaths(Directory.GetFiles(GetFullPath(path), pattern));
+        public override IEnumerable<string> GetFiles(string path, string pattern = "*") =>
+            getRelativePaths(Directory.GetFiles(GetFullPath(path), pattern));
 
         private IEnumerable<string> getRelativePaths(IEnumerable<string> paths)
         {
             string basePath = Path.GetFullPath(GetFullPath(string.Empty));
-            return paths.Select(Path.GetFullPath).Select(path =>
-            {
-                if (!path.StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) throw new ArgumentException($"\"{path}\" does not start with \"{basePath}\" and is probably malformed");
+            return paths
+                .Select(Path.GetFullPath)
+                .Select(path =>
+                {
+                    if (!path.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
+                        throw new ArgumentException(
+                            $"\"{path}\" does not start with \"{basePath}\" and is probably malformed"
+                        );
 
-                return path.AsSpan(basePath.Length).TrimStart(Path.DirectorySeparatorChar).ToString();
-            });
+                    return path.AsSpan(basePath.Length)
+                        .TrimStart(Path.DirectorySeparatorChar)
+                        .ToString();
+                });
         }
 
         public override string GetFullPath(string path, bool createIfNotExisting = false)
@@ -73,9 +84,13 @@ namespace osu.Framework.Platform
             string basePath = Path.GetFullPath(BasePath).TrimEnd(Path.DirectorySeparatorChar);
             string resolvedPath = Path.GetFullPath(Path.Combine(basePath, path));
 
-            if (!resolvedPath.StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) throw new ArgumentException($"\"{resolvedPath}\" traverses outside of \"{basePath}\" and is probably malformed");
+            if (!resolvedPath.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException(
+                    $"\"{resolvedPath}\" traverses outside of \"{basePath}\" and is probably malformed"
+                );
 
-            if (createIfNotExisting) Directory.CreateDirectory(Path.GetDirectoryName(resolvedPath).AsNonNull());
+            if (createIfNotExisting)
+                Directory.CreateDirectory(Path.GetDirectoryName(resolvedPath).AsNonNull());
             return resolvedPath;
         }
 
@@ -85,7 +100,11 @@ namespace osu.Framework.Platform
         public override bool PresentFileExternally(string filename) =>
             host?.PresentFileExternally(GetFullPath(filename)) == true;
 
-        public override Stream GetStream(string path, FileAccess access = FileAccess.Read, FileMode mode = FileMode.OpenOrCreate)
+        public override Stream GetStream(
+            string path,
+            FileAccess access = FileAccess.Read,
+            FileMode mode = FileMode.OpenOrCreate
+        )
         {
             path = GetFullPath(path, access != FileAccess.Read);
 
@@ -94,7 +113,8 @@ namespace osu.Framework.Platform
             switch (access)
             {
                 case FileAccess.Read:
-                    if (!File.Exists(path)) return null;
+                    if (!File.Exists(path))
+                        return null;
 
                     return File.Open(path, FileMode.Open, access, FileShare.Read);
 

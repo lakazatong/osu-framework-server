@@ -16,49 +16,55 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestBufferedContainerBehindBox()
         {
-            AddStep("set children", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "set children",
+                () =>
                 {
-                    new TestBufferedContainer(true)
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.BottomCentre,
-                        Size = new Vector2(200)
-                    },
-                    new Box
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = Color4.SlateGray,
-                        Size = new Vector2(300),
-                    },
-                };
-            });
+                        new TestBufferedContainer(true)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.BottomCentre,
+                            Size = new Vector2(200),
+                        },
+                        new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = Color4.SlateGray,
+                            Size = new Vector2(300),
+                        },
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestBufferedContainerAboveBox()
         {
-            AddStep("set children", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "set children",
+                () =>
                 {
-                    new Box
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = Color4.SlateGray,
-                        Size = new Vector2(300),
-                    },
-                    new TestBufferedContainer(false)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.BottomCentre,
-                        Size = new Vector2(200)
-                    },
-                };
-            });
+                        new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = Color4.SlateGray,
+                            Size = new Vector2(300),
+                        },
+                        new TestBufferedContainer(false)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.BottomCentre,
+                            Size = new Vector2(200),
+                        },
+                    };
+                }
+            );
         }
 
         public partial class TestBufferedContainer : BufferedContainer
@@ -67,18 +73,14 @@ namespace osu.Framework.Tests.Visual.Containers
             {
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Orange
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Orange },
                     new SpriteText
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
                         Y = 5,
-                        Text = $"Behind = {behind}"
-                    }
+                        Text = $"Behind = {behind}",
+                    },
                 };
             }
         }

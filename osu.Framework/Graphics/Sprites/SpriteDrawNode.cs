@@ -3,10 +3,10 @@
 
 #nullable disable
 
-using osuTK;
 using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Textures;
+using osuTK;
 
 namespace osu.Framework.Graphics.Sprites
 {
@@ -30,9 +30,7 @@ namespace osu.Framework.Graphics.Sprites
         private bool hasOpaqueInterior;
 
         public SpriteDrawNode(Sprite source)
-            : base(source)
-        {
-        }
+            : base(source) { }
 
         public override void ApplyState()
         {
@@ -47,9 +45,10 @@ namespace osu.Framework.Graphics.Sprites
             if (Texture != null)
                 TextureCoords *= new Vector2(Texture.DisplayWidth, Texture.DisplayHeight);
 
-            hasOpaqueInterior = DrawColourInfo.Colour.MinAlpha == 1
-                                && DrawColourInfo.Blending == BlendingParameters.Mixture
-                                && DrawColourInfo.Colour.HasSingleColour;
+            hasOpaqueInterior =
+                DrawColourInfo.Colour.MinAlpha == 1
+                && DrawColourInfo.Blending == BlendingParameters.Mixture
+                && DrawColourInfo.Colour.HasSingleColour;
 
             if (CanDrawOpaqueInterior)
                 ConservativeScreenSpaceDrawQuad = Source.ConservativeScreenSpaceDrawQuad;
@@ -60,9 +59,19 @@ namespace osu.Framework.Graphics.Sprites
             if (DrawRectangle.Width == 0 || DrawRectangle.Height == 0)
                 return;
 
-            renderer.DrawQuad(Texture, ScreenSpaceDrawQuad, DrawColourInfo.Colour, null, null,
-                new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height),
-                null, TextureCoords);
+            renderer.DrawQuad(
+                Texture,
+                ScreenSpaceDrawQuad,
+                DrawColourInfo.Colour,
+                null,
+                null,
+                new Vector2(
+                    InflationAmount.X / DrawRectangle.Width,
+                    InflationAmount.Y / DrawRectangle.Height
+                ),
+                null,
+                TextureCoords
+            );
         }
 
         protected virtual void BlitOpaqueInterior(IRenderer renderer)
@@ -71,9 +80,18 @@ namespace osu.Framework.Graphics.Sprites
                 return;
 
             if (renderer.IsMaskingActive)
-                renderer.DrawClipped(ref ConservativeScreenSpaceDrawQuad, Texture, DrawColourInfo.Colour);
+                renderer.DrawClipped(
+                    ref ConservativeScreenSpaceDrawQuad,
+                    Texture,
+                    DrawColourInfo.Colour
+                );
             else
-                renderer.DrawQuad(Texture, ConservativeScreenSpaceDrawQuad, DrawColourInfo.Colour, textureCoords: TextureCoords);
+                renderer.DrawQuad(
+                    Texture,
+                    ConservativeScreenSpaceDrawQuad,
+                    DrawColourInfo.Colour,
+                    textureCoords: TextureCoords
+                );
         }
 
         protected override void Draw(IRenderer renderer)
@@ -104,6 +122,7 @@ namespace osu.Framework.Graphics.Sprites
             UnbindTextureShader(renderer);
         }
 
-        protected internal override bool CanDrawOpaqueInterior => Texture?.Available == true && Texture.Opacity == Opacity.Opaque && hasOpaqueInterior;
+        protected internal override bool CanDrawOpaqueInterior =>
+            Texture?.Available == true && Texture.Opacity == Opacity.Opaque && hasOpaqueInterior;
     }
 }

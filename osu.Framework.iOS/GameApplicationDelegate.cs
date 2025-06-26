@@ -23,11 +23,15 @@ namespace osu.Framework.iOS
 
         private const string output_volume = "outputVolume";
 
-        private static readonly OutputVolumeObserver output_volume_observer = new OutputVolumeObserver();
+        private static readonly OutputVolumeObserver output_volume_observer =
+            new OutputVolumeObserver();
 
         public IOSGameHost Host { get; private set; } = null!;
 
-        public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+        public override bool FinishedLaunching(
+            UIApplication application,
+            NSDictionary launchOptions
+        )
         {
             mapLibraryNames();
 
@@ -39,7 +43,12 @@ namespace osu.Framework.iOS
             // Set the default audio session to one that obeys the mute switch and does not mix with other audio,
             // and insert an observer to disregard the mute switch when the user presses volume up/down.
             audioSession.SetCategory(AVAudioSessionCategory.SoloAmbient);
-            audioSession.AddObserver(output_volume_observer, output_volume, NSKeyValueObservingOptions.New, 0);
+            audioSession.AddObserver(
+                output_volume_observer,
+                output_volume,
+                NSKeyValueObservingOptions.New,
+                0
+            );
 
             Host = new IOSGameHost();
             Host.Run(CreateGame());
@@ -62,20 +71,43 @@ namespace osu.Framework.iOS
 
         private static void mapLibraryNames()
         {
-            NativeLibrary.SetDllImportResolver(typeof(Bass).Assembly, (_, assembly, path) => NativeLibrary.Load("@rpath/bass.framework/bass", assembly, path));
-            NativeLibrary.SetDllImportResolver(typeof(BassFx).Assembly, (_, assembly, path) => NativeLibrary.Load("@rpath/bass_fx.framework/bass_fx", assembly, path));
-            NativeLibrary.SetDllImportResolver(typeof(BassMix).Assembly, (_, assembly, path) => NativeLibrary.Load("@rpath/bassmix.framework/bassmix", assembly, path));
-            NativeLibrary.SetDllImportResolver(typeof(SDL3).Assembly, (_, assembly, path) => NativeLibrary.Load("@rpath/SDL3.framework/SDL3", assembly, path));
+            NativeLibrary.SetDllImportResolver(
+                typeof(Bass).Assembly,
+                (_, assembly, path) =>
+                    NativeLibrary.Load("@rpath/bass.framework/bass", assembly, path)
+            );
+            NativeLibrary.SetDllImportResolver(
+                typeof(BassFx).Assembly,
+                (_, assembly, path) =>
+                    NativeLibrary.Load("@rpath/bass_fx.framework/bass_fx", assembly, path)
+            );
+            NativeLibrary.SetDllImportResolver(
+                typeof(BassMix).Assembly,
+                (_, assembly, path) =>
+                    NativeLibrary.Load("@rpath/bassmix.framework/bassmix", assembly, path)
+            );
+            NativeLibrary.SetDllImportResolver(
+                typeof(SDL3).Assembly,
+                (_, assembly, path) =>
+                    NativeLibrary.Load("@rpath/SDL3.framework/SDL3", assembly, path)
+            );
         }
 
         private class OutputVolumeObserver : NSObject
         {
-            public override void ObserveValue(NSString keyPath, NSObject ofObject, NSDictionary change, nint context)
+            public override void ObserveValue(
+                NSString keyPath,
+                NSObject ofObject,
+                NSDictionary change,
+                nint context
+            )
             {
                 switch (keyPath)
                 {
                     case output_volume:
-                        AVAudioSession.SharedInstance().SetCategory(AVAudioSessionCategory.Playback);
+                        AVAudioSession
+                            .SharedInstance()
+                            .SetCategory(AVAudioSessionCategory.Playback);
                         break;
                 }
             }

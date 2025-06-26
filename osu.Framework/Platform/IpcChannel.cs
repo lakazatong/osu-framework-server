@@ -10,12 +10,11 @@ namespace osu.Framework.Platform
     /// Define an IPC channel which supports sending a specific well-defined type.
     /// </summary>
     /// <typeparam name="T">The type to send.</typeparam>
-    public class IpcChannel<T> : IpcChannel<T, object> where T : class
+    public class IpcChannel<T> : IpcChannel<T, object>
+        where T : class
     {
         public IpcChannel(IIpcHost host)
-            : base(host)
-        {
-        }
+            : base(host) { }
     }
 
     /// <summary>
@@ -37,19 +36,17 @@ namespace osu.Framework.Platform
             this.host.MessageReceived += handleMessage;
         }
 
-        public Task SendMessageAsync(T message) => host.SendMessageAsync(new IpcMessage
-        {
-            Type = typeof(T).AssemblyQualifiedName,
-            Value = message,
-        });
+        public Task SendMessageAsync(T message) =>
+            host.SendMessageAsync(
+                new IpcMessage { Type = typeof(T).AssemblyQualifiedName, Value = message }
+            );
 
         public async Task<TResponse?> SendMessageWithResponseAsync(T message)
         {
-            var response = await host.SendMessageWithResponseAsync(new IpcMessage
-            {
-                Type = typeof(T).AssemblyQualifiedName,
-                Value = message,
-            }).ConfigureAwait(false);
+            var response = await host.SendMessageWithResponseAsync(
+                    new IpcMessage { Type = typeof(T).AssemblyQualifiedName, Value = message }
+                )
+                .ConfigureAwait(false);
 
             if (response == null)
                 return null;
@@ -73,7 +70,7 @@ namespace osu.Framework.Platform
             return new IpcMessage
             {
                 Type = typeof(TResponse).AssemblyQualifiedName,
-                Value = response
+                Value = response,
             };
         }
 

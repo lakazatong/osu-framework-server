@@ -35,8 +35,6 @@ namespace osu.Framework.Graphics.UserInterface
         /// <summary>
         /// Triggered when the value is changed based on end-user input to this control.
         /// </summary>
-        protected virtual void OnUserChange(bool value)
-        {
-        }
+        protected virtual void OnUserChange(bool value) { }
     }
 }

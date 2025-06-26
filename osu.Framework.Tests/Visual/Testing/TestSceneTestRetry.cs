@@ -21,14 +21,15 @@ namespace osu.Framework.Tests.Visual.Testing
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            if (currentTest == TestExecutionContext.CurrentContext.CurrentTest.Name)
-                return;
+        public void Setup() =>
+            Schedule(() =>
+            {
+                if (currentTest == TestExecutionContext.CurrentContext.CurrentTest.Name)
+                    return;
 
-            runCount = 0;
-            currentTest = TestExecutionContext.CurrentContext.CurrentTest.Name;
-        });
+                runCount = 0;
+                currentTest = TestExecutionContext.CurrentContext.CurrentTest.Name;
+            });
 
         [Test]
         [FlakyTest(10)]

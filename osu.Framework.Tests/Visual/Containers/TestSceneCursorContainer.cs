@@ -9,8 +9,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -27,7 +27,10 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestPositionalUpdates()
         {
-            AddStep("Move cursor to centre", () => InputManager.MoveMouseTo(container.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move cursor to centre",
+                () => InputManager.MoveMouseTo(container.ScreenSpaceDrawQuad.Centre)
+            );
             AddAssert("Cursor is centered", cursorCenteredInContainer);
             AddAssert("Cursor at mouse position", cursorAtMouseScreenSpace);
         }
@@ -36,7 +39,10 @@ namespace osu.Framework.Tests.Visual.Containers
         public void TestPositionalUpdatesWhileHidden()
         {
             AddStep("Hide cursor container", () => cursorContainer.Alpha = 0f);
-            AddStep("Move cursor to centre", () => InputManager.MoveMouseTo(Content.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move cursor to centre",
+                () => InputManager.MoveMouseTo(Content.ScreenSpaceDrawQuad.Centre)
+            );
             AddAssert("Cursor is centered", cursorCenteredInContainer);
             AddAssert("Cursor at mouse position", cursorAtMouseScreenSpace);
             AddStep("Show cursor container", () => cursorContainer.Alpha = 1f);
@@ -47,7 +53,10 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestChangeContainerDimensions()
         {
-            AddStep("Move cursor to centre", () => InputManager.MoveMouseTo(container.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move cursor to centre",
+                () => InputManager.MoveMouseTo(container.ScreenSpaceDrawQuad.Centre)
+            );
             AddStep("Move container", () => container.Y += 50);
             AddAssert("Cursor no longer centered", () => !cursorCenteredInContainer());
             AddAssert("Cursor at mouse position", cursorAtMouseScreenSpace);
@@ -61,7 +70,10 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestRecreateContainer()
         {
-            AddStep("Move cursor to centre", () => InputManager.MoveMouseTo(Content.ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "Move cursor to centre",
+                () => InputManager.MoveMouseTo(Content.ScreenSpaceDrawQuad.Centre)
+            );
             AddStep("Recreate container with mouse already in place", createContent);
             AddAssert("Cursor is centered", cursorCenteredInContainer);
             AddAssert("Cursor at mouse position", cursorAtMouseScreenSpace);
@@ -70,12 +82,14 @@ namespace osu.Framework.Tests.Visual.Containers
         private bool cursorCenteredInContainer() =>
             Precision.AlmostEquals(
                 cursorContainer.ActiveCursor.ScreenSpaceDrawQuad.Centre,
-                container.ScreenSpaceDrawQuad.Centre);
+                container.ScreenSpaceDrawQuad.Centre
+            );
 
         private bool cursorAtMouseScreenSpace() =>
             Precision.AlmostEquals(
                 cursorContainer.ActiveCursor.ScreenSpaceDrawQuad.Centre,
-                InputManager.CurrentState.Mouse.Position);
+                InputManager.CurrentState.Mouse.Position
+            );
 
         private void createContent()
         {
@@ -88,28 +102,25 @@ namespace osu.Framework.Tests.Visual.Containers
                 Size = new Vector2(0.5f),
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Yellow,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Yellow, RelativeSizeAxes = Axes.Both },
                     cursorContainer = new TestCursorContainer
                     {
                         Name = "test",
-                        RelativeSizeAxes = Axes.Both
-                    }
-                }
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                },
             };
         }
 
         private partial class TestCursorContainer : CursorContainer
         {
-            protected override Drawable CreateCursor() => new Circle
-            {
-                Size = new Vector2(50),
-                Colour = Color4.Red,
-                Origin = Anchor.Centre,
-            };
+            protected override Drawable CreateCursor() =>
+                new Circle
+                {
+                    Size = new Vector2(50),
+                    Colour = Color4.Red,
+                    Origin = Anchor.Centre,
+                };
         }
     }
 }

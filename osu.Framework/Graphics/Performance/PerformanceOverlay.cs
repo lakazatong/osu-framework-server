@@ -42,14 +42,16 @@ namespace osu.Framework.Graphics.Performance
 
         private bool initialised;
 
-        private readonly List<FrameStatisticsDisplay> frameDisplays = new List<FrameStatisticsDisplay>();
+        private readonly List<FrameStatisticsDisplay> frameDisplays =
+            new List<FrameStatisticsDisplay>();
 
         public FrameStatisticsMode State
         {
             get => state;
             set
             {
-                if (state == value) return;
+                if (state == value)
+                    return;
 
                 state = value;
 
@@ -173,14 +175,18 @@ namespace osu.Framework.Graphics.Performance
 
                         var uploadPool = createUploadPool();
 
-                        Add(infoText = new TextFlowContainer(cp => cp.Font = FrameworkFont.Condensed)
-                        {
-                            Alpha = 0.75f,
-                            Anchor = Anchor.TopRight,
-                            Origin = Anchor.TopRight,
-                            TextAnchor = Anchor.TopRight,
-                            AutoSizeAxes = Axes.Both,
-                        });
+                        Add(
+                            infoText = new TextFlowContainer(cp =>
+                                cp.Font = FrameworkFont.Condensed
+                            )
+                            {
+                                Alpha = 0.75f,
+                                Anchor = Anchor.TopRight,
+                                Origin = Anchor.TopRight,
+                                TextAnchor = Anchor.TopRight,
+                                AutoSizeAxes = Axes.Both,
+                            }
+                        );
 
                         updateInfoText();
 
@@ -190,7 +196,7 @@ namespace osu.Framework.Graphics.Performance
                             {
                                 Anchor = Anchor.TopRight,
                                 Origin = Anchor.TopRight,
-                                State = state
+                                State = state,
                             };
 
                             Add(display);
@@ -244,16 +250,24 @@ namespace osu.Framework.Graphics.Performance
                     break;
             }
 
-            void addHeader(string text) => infoText.AddText($"{text} ", cp =>
-            {
-                cp.Padding = new MarginPadding { Left = 5 };
-                cp.Colour = Color4.Gray;
-            });
+            void addHeader(string text) =>
+                infoText.AddText(
+                    $"{text} ",
+                    cp =>
+                    {
+                        cp.Padding = new MarginPadding { Left = 5 };
+                        cp.Colour = Color4.Gray;
+                    }
+                );
 
-            void addValue(string text) => infoText.AddText(text, cp =>
-            {
-                cp.Font = cp.Font.With(weight: "Bold");
-            });
+            void addValue(string text) =>
+                infoText.AddText(
+                    text,
+                    cp =>
+                    {
+                        cp.Font = cp.Font.With(weight: "Bold");
+                    }
+                );
         }
 
         private ArrayPool<Rgba32> createUploadPool()
@@ -271,6 +285,6 @@ namespace osu.Framework.Graphics.Performance
     {
         None,
         Minimal,
-        Full
+        Full,
     }
 }

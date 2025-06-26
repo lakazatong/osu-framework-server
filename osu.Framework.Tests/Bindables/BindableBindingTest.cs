@@ -77,7 +77,9 @@ namespace osu.Framework.Tests.Bindables
             Bindable<string> bindable2 = bindable1.GetBoundCopy();
             Bindable<string> bindable3 = bindable2.GetBoundCopy();
 
-            int changed1 = 0, changed2 = 0, changed3 = 0;
+            int changed1 = 0,
+                changed2 = 0,
+                changed3 = 0;
 
             bindable1.DefaultChanged += _ => changed1++;
             bindable2.DefaultChanged += _ => changed2++;
@@ -109,7 +111,8 @@ namespace osu.Framework.Tests.Bindables
             Bindable<string> bindable1 = new Bindable<string>("won't change");
             Bindable<string> bindable2 = bindable1.GetBoundCopy();
 
-            int changed1 = 0, changed2 = 0;
+            int changed1 = 0,
+                changed2 = 0;
 
             bindable1.DefaultChanged += _ => changed1++;
             bindable2.DefaultChanged += _ =>
@@ -135,7 +138,9 @@ namespace osu.Framework.Tests.Bindables
             Bindable<string> bindable2 = bindable1.GetBoundCopy();
             Bindable<string> bindable3 = bindable2.GetBoundCopy();
 
-            int changed1 = 0, changed2 = 0, changed3 = 0;
+            int changed1 = 0,
+                changed2 = 0,
+                changed3 = 0;
 
             bindable1.ValueChanged += _ => changed1++;
             bindable2.ValueChanged += _ => changed2++;
@@ -167,7 +172,8 @@ namespace osu.Framework.Tests.Bindables
             Bindable<string> bindable1 = new Bindable<string>("won't change");
             Bindable<string> bindable2 = bindable1.GetBoundCopy();
 
-            int changed1 = 0, changed2 = 0;
+            int changed1 = 0,
+                changed2 = 0;
 
             bindable1.ValueChanged += _ => changed1++;
             bindable2.ValueChanged += _ =>
@@ -193,7 +199,9 @@ namespace osu.Framework.Tests.Bindables
             Bindable<string> bindable2 = bindable1.GetBoundCopy();
             Bindable<string> bindable3 = bindable2.GetBoundCopy();
 
-            bool disabled1 = false, disabled2 = false, disabled3 = false;
+            bool disabled1 = false,
+                disabled2 = false,
+                disabled3 = false;
 
             bindable1.DisabledChanged += v => disabled1 = v;
             bindable2.DisabledChanged += v => disabled2 = v;
@@ -218,7 +226,8 @@ namespace osu.Framework.Tests.Bindables
             Bindable<string> bindable1 = new Bindable<string>("won't change");
             Bindable<string> bindable2 = bindable1.GetBoundCopy();
 
-            int changed1 = 0, changed2 = 0;
+            int changed1 = 0,
+                changed2 = 0;
 
             bindable1.DisabledChanged += _ => changed1++;
             bindable2.DisabledChanged += _ =>
@@ -244,7 +253,8 @@ namespace osu.Framework.Tests.Bindables
             BindableInt bindable2 = new BindableInt();
             bindable2.BindTo(bindable1);
 
-            int minValue1 = 0, minValue2 = 0;
+            int minValue1 = 0,
+                minValue2 = 0;
 
             bindable1.MinValueChanged += v => minValue1 = v;
             bindable2.MinValueChanged += v => minValue2 = v;
@@ -267,7 +277,8 @@ namespace osu.Framework.Tests.Bindables
             BindableInt bindable2 = new BindableInt();
             bindable2.BindTo(bindable1);
 
-            int changed1 = 0, changed2 = 0;
+            int changed1 = 0,
+                changed2 = 0;
 
             bindable1.MinValueChanged += _ => changed1++;
             bindable2.MinValueChanged += _ =>
@@ -293,7 +304,8 @@ namespace osu.Framework.Tests.Bindables
             BindableInt bindable2 = new BindableInt();
             bindable2.BindTo(bindable1);
 
-            int minValue1 = 0, minValue2 = 0;
+            int minValue1 = 0,
+                minValue2 = 0;
 
             bindable1.MaxValueChanged += v => minValue1 = v;
             bindable2.MaxValueChanged += v => minValue2 = v;
@@ -316,7 +328,8 @@ namespace osu.Framework.Tests.Bindables
             BindableInt bindable2 = new BindableInt();
             bindable2.BindTo(bindable1);
 
-            int changed1 = 0, changed2 = 0;
+            int changed1 = 0,
+                changed2 = 0;
 
             bindable1.MaxValueChanged += _ => changed1++;
             bindable2.MaxValueChanged += _ =>
@@ -454,7 +467,7 @@ namespace osu.Framework.Tests.Bindables
                 MinValue = -5,
                 MaxValue = 5,
                 Precision = 1,
-                Disabled = false
+                Disabled = false,
             };
 
             bool valueChanged = false;
@@ -480,8 +493,14 @@ namespace osu.Framework.Tests.Bindables
             bindable.Precision = 5;
             bindable.Disabled = true;
 
-            Assert.That(!valueChanged && !defaultChanged && !disabledChanged &&
-                        !minValueChanged && !maxValueChanged && !precisionChanged);
+            Assert.That(
+                !valueChanged
+                    && !defaultChanged
+                    && !disabledChanged
+                    && !minValueChanged
+                    && !maxValueChanged
+                    && !precisionChanged
+            );
         }
 
         [Test]

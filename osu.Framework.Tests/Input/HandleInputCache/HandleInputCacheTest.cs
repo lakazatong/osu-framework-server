@@ -55,8 +55,7 @@ namespace osu.Framework.Tests.Input.HandleInputCache
         }
 #pragma warning restore OFSG001
 
-        private sealed partial class PartialLeafClassWithIntermediateNonPartial : IntermediateNonPartialClass
-        {
-        }
+        private sealed partial class PartialLeafClassWithIntermediateNonPartial
+            : IntermediateNonPartialClass { }
     }
 }

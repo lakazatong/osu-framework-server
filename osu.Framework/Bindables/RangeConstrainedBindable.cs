@@ -61,8 +61,9 @@ namespace osu.Framework.Bindables
         /// <summary>
         /// Whether this bindable has a user-defined range that is not the full range of the <typeparamref name="T"/> type.
         /// </summary>
-        public bool HasDefinedRange => !EqualityComparer<T>.Default.Equals(MinValue, DefaultMinValue) ||
-                                       !EqualityComparer<T>.Default.Equals(MaxValue, DefaultMaxValue);
+        public bool HasDefinedRange =>
+            !EqualityComparer<T>.Default.Equals(MinValue, DefaultMinValue)
+            || !EqualityComparer<T>.Default.Equals(MaxValue, DefaultMaxValue);
 
         protected RangeConstrainedBindable(T defaultValue = default)
             : base(defaultValue)
@@ -121,7 +122,11 @@ namespace osu.Framework.Bindables
         /// <param name="minValue">The new minimum value.</param>
         /// <param name="updateCurrentValue">Whether to update the current value after the minimum value is set.</param>
         /// <param name="source">The bindable that triggered this. A null value represents the current bindable instance.</param>
-        internal void SetMinValue(T minValue, bool updateCurrentValue, RangeConstrainedBindable<T> source)
+        internal void SetMinValue(
+            T minValue,
+            bool updateCurrentValue,
+            RangeConstrainedBindable<T> source
+        )
         {
             this.minValue = minValue;
             TriggerMinValueChange(source);
@@ -139,7 +144,11 @@ namespace osu.Framework.Bindables
         /// <param name="maxValue">The new maximum value.</param>
         /// <param name="updateCurrentValue">Whether to update the current value after the maximum value is set.</param>
         /// <param name="source">The bindable that triggered this. A null value represents the current bindable instance.</param>
-        internal void SetMaxValue(T maxValue, bool updateCurrentValue, RangeConstrainedBindable<T> source)
+        internal void SetMaxValue(
+            T maxValue,
+            bool updateCurrentValue,
+            RangeConstrainedBindable<T> source
+        )
         {
             this.maxValue = maxValue;
             TriggerMaxValueChange(source);
@@ -159,7 +168,10 @@ namespace osu.Framework.Bindables
             TriggerMaxValueChange(this, false);
         }
 
-        protected void TriggerMinValueChange(RangeConstrainedBindable<T> source = null, bool propagateToBindings = true)
+        protected void TriggerMinValueChange(
+            RangeConstrainedBindable<T> source = null,
+            bool propagateToBindings = true
+        )
         {
             // check a bound bindable hasn't changed the value again (it will fire its own event)
             T beforePropagation = minValue;
@@ -168,7 +180,8 @@ namespace osu.Framework.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
 
                     if (b is RangeConstrainedBindable<T> cb)
                         cb.SetMinValue(minValue, false, this);
@@ -179,7 +192,10 @@ namespace osu.Framework.Bindables
                 MinValueChanged?.Invoke(minValue);
         }
 
-        protected void TriggerMaxValueChange(RangeConstrainedBindable<T> source = null, bool propagateToBindings = true)
+        protected void TriggerMaxValueChange(
+            RangeConstrainedBindable<T> source = null,
+            bool propagateToBindings = true
+        )
         {
             // check a bound bindable hasn't changed the value again (it will fire its own event)
             T beforePropagation = maxValue;
@@ -188,7 +204,8 @@ namespace osu.Framework.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
 
                     if (b is RangeConstrainedBindable<T> cb)
                         cb.SetMaxValue(maxValue, false, this);
@@ -221,7 +238,9 @@ namespace osu.Framework.Bindables
                 if (!IsValidRange(other.MinValue, other.MaxValue))
                 {
                     throw new ArgumentOutOfRangeException(
-                        nameof(them), $"The target bindable has specified an invalid range of [{other.MinValue} - {other.MaxValue}].");
+                        nameof(them),
+                        $"The target bindable has specified an invalid range of [{other.MinValue} - {other.MaxValue}]."
+                    );
                 }
             }
 
@@ -236,9 +255,11 @@ namespace osu.Framework.Bindables
             MaxValueChanged = null;
         }
 
-        public new RangeConstrainedBindable<T> GetBoundCopy() => (RangeConstrainedBindable<T>)base.GetBoundCopy();
+        public new RangeConstrainedBindable<T> GetBoundCopy() =>
+            (RangeConstrainedBindable<T>)base.GetBoundCopy();
 
-        public new RangeConstrainedBindable<T> GetUnboundCopy() => (RangeConstrainedBindable<T>)base.GetUnboundCopy();
+        public new RangeConstrainedBindable<T> GetUnboundCopy() =>
+            (RangeConstrainedBindable<T>)base.GetUnboundCopy();
 
         /// <summary>
         /// Clamps <paramref name="value"/> to the range defined by <paramref name="minValue"/> and <paramref name="maxValue"/>.

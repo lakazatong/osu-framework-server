@@ -83,8 +83,6 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
         public int Id => uboId;
 
-        public void Flush()
-        {
-        }
+        public void Flush() { }
     }
 }

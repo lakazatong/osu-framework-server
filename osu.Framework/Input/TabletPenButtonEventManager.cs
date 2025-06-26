@@ -11,12 +11,12 @@ namespace osu.Framework.Input
     public class TabletPenButtonEventManager : ButtonEventManager<TabletPenButton>
     {
         public TabletPenButtonEventManager(TabletPenButton button)
-            : base(button)
-        {
-        }
+            : base(button) { }
 
-        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) => PropagateButtonEvent(targets, new TabletPenButtonPressEvent(state, Button));
+        protected override Drawable? HandleButtonDown(InputState state, List<Drawable> targets) =>
+            PropagateButtonEvent(targets, new TabletPenButtonPressEvent(state, Button));
 
-        protected override void HandleButtonUp(InputState state, List<Drawable> targets) => PropagateButtonEvent(targets, new TabletPenButtonReleaseEvent(state, Button));
+        protected override void HandleButtonUp(InputState state, List<Drawable> targets) =>
+            PropagateButtonEvent(targets, new TabletPenButtonReleaseEvent(state, Button));
     }
 }

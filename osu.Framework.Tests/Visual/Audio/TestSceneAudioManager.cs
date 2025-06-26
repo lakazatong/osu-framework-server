@@ -28,13 +28,27 @@ namespace osu.Framework.Tests.Visual.Audio
             List<string> filenames = null!;
 
             AddStep("create resource store", () => resourceStore = new TestResourceStore());
-            AddStep("store lookups for sample file", () => filenames = resourceStore.GetFilenames("test").ToList());
+            AddStep(
+                "store lookups for sample file",
+                () => filenames = resourceStore.GetFilenames("test").ToList()
+            );
 
-            AddStep("create sample store", () => sampleStore = audioManager.GetSampleStore(resourceStore));
-            AddAssert("resource store lookups unchanged", () => resourceStore.GetFilenames("test"), () => Is.EquivalentTo(filenames));
+            AddStep(
+                "create sample store",
+                () => sampleStore = audioManager.GetSampleStore(resourceStore)
+            );
+            AddAssert(
+                "resource store lookups unchanged",
+                () => resourceStore.GetFilenames("test"),
+                () => Is.EquivalentTo(filenames)
+            );
 
             AddStep("attempt to look up sample", () => sampleStore.Get("sample"));
-            AddAssert("extension lookups attempted", () => resourceStore.AttemptedLookups, () => Is.EquivalentTo(new[] { "sample", "sample.wav", "sample.mp3" }));
+            AddAssert(
+                "extension lookups attempted",
+                () => resourceStore.AttemptedLookups,
+                () => Is.EquivalentTo(new[] { "sample", "sample.wav", "sample.mp3" })
+            );
         }
 
         [Test]
@@ -44,12 +58,18 @@ namespace osu.Framework.Tests.Visual.Audio
             ISampleStore sampleStore = null!;
 
             AddStep("create resource store", () => resourceStore = new TestResourceStore());
-            AddStep("create sample store", () => sampleStore = audioManager.GetSampleStore(resourceStore));
+            AddStep(
+                "create sample store",
+                () => sampleStore = audioManager.GetSampleStore(resourceStore)
+            );
             AddStep("add another extension", () => sampleStore.AddExtension("ogg"));
 
             AddStep("attempt to look up sample", () => sampleStore.Get("sample"));
-            AddAssert("extension lookups attempted", () => resourceStore.AttemptedLookups,
-                () => Is.EquivalentTo(new[] { "sample", "sample.wav", "sample.mp3", "sample.ogg" }));
+            AddAssert(
+                "extension lookups attempted",
+                () => resourceStore.AttemptedLookups,
+                () => Is.EquivalentTo(new[] { "sample", "sample.wav", "sample.mp3", "sample.ogg" })
+            );
         }
 
         private class TestResourceStore : ResourceStore<byte[]>
@@ -65,7 +85,10 @@ namespace osu.Framework.Tests.Visual.Audio
                 return base.Get(name);
             }
 
-            public override Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default)
+            public override Task<byte[]> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            )
             {
                 attemptedLookups.Add(name);
                 return base.GetAsync(name, cancellationToken);

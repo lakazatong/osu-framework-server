@@ -24,6 +24,6 @@ namespace osu.Framework.Input.StateChanges
         /// <remarks>
         /// You may want to show a cursor so the user can see where the pen is pointing.
         /// </remarks>
-        Indirect
+        Indirect,
     }
 }

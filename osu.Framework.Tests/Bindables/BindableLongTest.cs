@@ -41,7 +41,12 @@ namespace osu.Framework.Tests.Bindables
         [TestCase("-0", -10, 10, 0)]
         [TestCase("-105", -10, 10, -10)]
         [TestCase("105", -10, 10, 10)]
-        public void TestParsingStringWithRange(string value, long minValue, long maxValue, long expected)
+        public void TestParsingStringWithRange(
+            string value,
+            long minValue,
+            long maxValue,
+            long expected
+        )
         {
             var bindable = new BindableLong { MinValue = minValue, MaxValue = maxValue };
             bindable.Parse(value, CultureInfo.InvariantCulture);

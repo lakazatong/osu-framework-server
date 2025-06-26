@@ -2,10 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osuTK;
-using osu.Framework.Graphics.Primitives;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using osu.Framework.Graphics.Primitives;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.Colour
@@ -91,9 +91,16 @@ namespace osu.Framework.Graphics.Colour
             return HasSingleColour;
         }
 
-        public readonly SRGBColour Interpolate(Vector2 interp) => SRGBColour.FromVector(
-            (1 - interp.Y) * ((1 - interp.X) * TopLeft.ToVector() + interp.X * TopRight.ToVector()) +
-            interp.Y * ((1 - interp.X) * BottomLeft.ToVector() + interp.X * BottomRight.ToVector()));
+        public readonly SRGBColour Interpolate(Vector2 interp) =>
+            SRGBColour.FromVector(
+                (1 - interp.Y)
+                    * ((1 - interp.X) * TopLeft.ToVector() + interp.X * TopRight.ToVector())
+                    + interp.Y
+                        * (
+                            (1 - interp.X) * BottomLeft.ToVector()
+                            + interp.X * BottomRight.ToVector()
+                        )
+            );
 
         /// <summary>
         /// Interpolates this <see cref="ColourInfo"/> across a quad.
@@ -114,7 +121,7 @@ namespace osu.Framework.Graphics.Colour
                 TopRight = Interpolate(quad.TopRight),
                 BottomLeft = Interpolate(quad.BottomLeft),
                 BottomRight = Interpolate(quad.BottomRight),
-                HasSingleColour = false
+                HasSingleColour = false,
             };
         }
 
@@ -155,13 +162,14 @@ namespace osu.Framework.Graphics.Colour
             BottomRight = newBottomRight;
         }
 
-        internal static ColourInfo Multiply(ColourInfo first, ColourInfo second) => new ColourInfo
-        {
-            TopLeft = first.TopLeft * second.TopLeft,
-            BottomLeft = first.BottomLeft * second.BottomLeft,
-            TopRight = first.TopRight * second.TopRight,
-            BottomRight = first.BottomRight * second.BottomRight
-        };
+        internal static ColourInfo Multiply(ColourInfo first, ColourInfo second) =>
+            new ColourInfo
+            {
+                TopLeft = first.TopLeft * second.TopLeft,
+                BottomLeft = first.BottomLeft * second.BottomLeft,
+                TopRight = first.TopRight * second.TopRight,
+                BottomRight = first.BottomRight * second.BottomRight,
+            };
 
         /// <summary>
         /// Created a new ColourInfo with the alpha value of the colours of all vertices
@@ -196,17 +204,17 @@ namespace osu.Framework.Graphics.Colour
                 if (other.HasSingleColour)
                     return false;
 
-                return
-                    TopLeft.Equals(other.TopLeft) &&
-                    TopRight.Equals(other.TopRight) &&
-                    BottomLeft.Equals(other.BottomLeft) &&
-                    BottomRight.Equals(other.BottomRight);
+                return TopLeft.Equals(other.TopLeft)
+                    && TopRight.Equals(other.TopRight)
+                    && BottomLeft.Equals(other.BottomLeft)
+                    && BottomRight.Equals(other.BottomRight);
             }
 
             return other.HasSingleColour && singleColour.Equals(other.singleColour);
         }
 
-        public readonly bool Equals(SRGBColour other) => HasSingleColour && singleColour.Equals(other);
+        public readonly bool Equals(SRGBColour other) =>
+            HasSingleColour && singleColour.Equals(other);
 
         /// <summary>
         /// The average colour of all corners.
@@ -219,7 +227,13 @@ namespace osu.Framework.Graphics.Colour
                     return singleColour;
 
                 return SRGBColour.FromVector(
-                    (TopLeft.ToVector() + TopRight.ToVector() + BottomLeft.ToVector() + BottomRight.ToVector()) / 4);
+                    (
+                        TopLeft.ToVector()
+                        + TopRight.ToVector()
+                        + BottomLeft.ToVector()
+                        + BottomRight.ToVector()
+                    ) / 4
+                );
             }
         }
 
@@ -231,9 +245,12 @@ namespace osu.Framework.Graphics.Colour
             get
             {
                 float max = TopLeft.Alpha;
-                if (TopRight.Alpha > max) max = TopRight.Alpha;
-                if (BottomLeft.Alpha > max) max = BottomLeft.Alpha;
-                if (BottomRight.Alpha > max) max = BottomRight.Alpha;
+                if (TopRight.Alpha > max)
+                    max = TopRight.Alpha;
+                if (BottomLeft.Alpha > max)
+                    max = BottomLeft.Alpha;
+                if (BottomRight.Alpha > max)
+                    max = BottomRight.Alpha;
 
                 return max;
             }
@@ -247,15 +264,21 @@ namespace osu.Framework.Graphics.Colour
             get
             {
                 float min = TopLeft.Alpha;
-                if (TopRight.Alpha < min) min = TopRight.Alpha;
-                if (BottomLeft.Alpha < min) min = BottomLeft.Alpha;
-                if (BottomRight.Alpha < min) min = BottomRight.Alpha;
+                if (TopRight.Alpha < min)
+                    min = TopRight.Alpha;
+                if (BottomLeft.Alpha < min)
+                    min = BottomLeft.Alpha;
+                if (BottomRight.Alpha < min)
+                    min = BottomRight.Alpha;
 
                 return min;
             }
         }
 
-        public override readonly string ToString() => HasSingleColour ? $@"{TopLeft} (Single)" : $@"{TopLeft}, {TopRight}, {BottomLeft}, {BottomRight}";
+        public override readonly string ToString() =>
+            HasSingleColour
+                ? $@"{TopLeft} (Single)"
+                : $@"{TopLeft}, {TopRight}, {BottomLeft}, {BottomRight}";
 
         public static implicit operator ColourInfo(SRGBColour colour) => SingleColour(colour);
 
@@ -267,13 +290,18 @@ namespace osu.Framework.Graphics.Colour
             return colour.singleColour;
 
             [DoesNotReturn]
-            static void throwConversionFromMultiColourToSingleColourException() => throw new InvalidOperationException("Attempted to read single colour from multi-colour ColourInfo.");
+            static void throwConversionFromMultiColourToSingleColourException() =>
+                throw new InvalidOperationException(
+                    "Attempted to read single colour from multi-colour ColourInfo."
+                );
         }
 
         public static implicit operator ColourInfo(Color4 colour) => (SRGBColour)colour;
+
         public static implicit operator Color4(ColourInfo colour) => (SRGBColour)colour;
 
         public static implicit operator ColourInfo(Colour4 colour) => (SRGBColour)colour;
+
         public static implicit operator Colour4(ColourInfo colour) => (SRGBColour)colour;
     }
 }

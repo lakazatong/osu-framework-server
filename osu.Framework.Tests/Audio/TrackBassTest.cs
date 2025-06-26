@@ -139,7 +139,10 @@ namespace osu.Framework.Tests.Audio
         {
             bool? success = null;
 
-            bass.RunOnAudioThread(() => { success = track.Seek(track.Length); });
+            bass.RunOnAudioThread(() =>
+            {
+                success = track.Seek(track.Length);
+            });
             bass.Update();
 
             Assert.AreEqual(0, track.CurrentTime);

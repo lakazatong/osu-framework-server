@@ -40,20 +40,21 @@ namespace osu.Framework.Testing.Drawables.Sections
                             Origin = Anchor.CentreLeft,
                             Padding = new MarginPadding(5) { Right = 0 },
                             Text = "Volume:",
-                            Font = FrameworkFont.Condensed
+                            Font = FrameworkFont.Condensed,
                         },
                         clickableReset = new ClickableContainer
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
                             AutoSizeAxes = Axes.Both,
-                            Child = volumeText = new SpriteText
-                            {
-                                Padding = new MarginPadding(5),
-                                Width = 45,
-                                Colour = FrameworkColour.Yellow,
-                                Font = FrameworkFont.Condensed
-                            },
+                            Child = volumeText =
+                                new SpriteText
+                                {
+                                    Padding = new MarginPadding(5),
+                                    Width = 45,
+                                    Colour = FrameworkColour.Yellow,
+                                    Font = FrameworkFont.Condensed,
+                                },
                         },
                         volumeSlider = new BasicSliderBar<double>
                         {
@@ -61,12 +62,15 @@ namespace osu.Framework.Testing.Drawables.Sections
                             Origin = Anchor.CentreLeft,
                             RelativeSizeAxes = Axes.Both,
                             Current = config.GetBindable<double>(FrameworkSetting.VolumeUniversal),
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             };
 
-            volumeSlider.Current.BindValueChanged(e => volumeText.Text = e.NewValue.ToString("0%"), true);
+            volumeSlider.Current.BindValueChanged(
+                e => volumeText.Text = e.NewValue.ToString("0%"),
+                true
+            );
             clickableReset.Action = () => volumeSlider.Current.Value = 0.25f;
         }
     }

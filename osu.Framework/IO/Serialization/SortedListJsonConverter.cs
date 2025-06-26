@@ -15,12 +15,22 @@ namespace osu.Framework.IO.Serialization
     /// </summary>
     internal class SortedListJsonConverter : JsonConverter<ISerializableSortedList>
     {
-        public override void WriteJson(JsonWriter writer, ISerializableSortedList value, JsonSerializer serializer)
-            => value.SerializeTo(writer, serializer);
+        public override void WriteJson(
+            JsonWriter writer,
+            ISerializableSortedList value,
+            JsonSerializer serializer
+        ) => value.SerializeTo(writer, serializer);
 
-        public override ISerializableSortedList ReadJson(JsonReader reader, Type objectType, ISerializableSortedList existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override ISerializableSortedList ReadJson(
+            JsonReader reader,
+            Type objectType,
+            ISerializableSortedList existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer
+        )
         {
-            var iList = existingValue ?? (ISerializableSortedList)Activator.CreateInstance(objectType);
+            var iList =
+                existingValue ?? (ISerializableSortedList)Activator.CreateInstance(objectType);
             Debug.Assert(iList != null);
 
             iList.DeserializeFrom(reader, serializer);

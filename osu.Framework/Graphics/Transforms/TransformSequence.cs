@@ -17,7 +17,8 @@ namespace osu.Framework.Graphics.Transforms
     /// <typeparam name="T">
     /// The type of the <see cref="ITransformable"/> the <see cref="Transform"/>s in this sequence operate upon.
     /// </typeparam>
-    public class TransformSequence<T> : ITransformSequence where T : class, ITransformable
+    public class TransformSequence<T> : ITransformSequence
+        where T : class, ITransformable
     {
         /// <summary>
         /// A delegate that generates a new <see cref="TransformSequence{T}"/> on a given <paramref name="origin"/>.
@@ -48,7 +49,10 @@ namespace osu.Framework.Graphics.Transforms
         public TransformSequence(T origin)
         {
             if (origin == null)
-                throw new ArgumentNullException(nameof(origin), $"May not create a {nameof(TransformSequence<T>)} with a null {nameof(origin)}.");
+                throw new ArgumentNullException(
+                    nameof(origin),
+                    $"May not create a {nameof(TransformSequence<T>)} with a null {nameof(origin)}."
+                );
 
             this.origin = origin;
             startTime = currentTime = lastEndTime = origin.TransformStartTime;
@@ -66,8 +70,12 @@ namespace osu.Framework.Graphics.Transforms
             hasCompleted = false;
         }
 
-        public TransformSequence<T> TransformTo<TValue>(string propertyOrFieldName, TValue newValue, double duration = 0, Easing easing = Easing.None) =>
-            Append(o => o.TransformTo(propertyOrFieldName, newValue, duration, easing));
+        public TransformSequence<T> TransformTo<TValue>(
+            string propertyOrFieldName,
+            TValue newValue,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) => Append(o => o.TransformTo(propertyOrFieldName, newValue, duration, easing));
 
         /// <summary>
         /// Adds an existing <see cref="Transform"/> operating on <see cref="origin"/> to this <see cref="TransformSequence{T}"/>.
@@ -78,7 +86,8 @@ namespace osu.Framework.Graphics.Transforms
             if (!ReferenceEquals(transform.TargetTransformable, origin))
             {
                 throw new InvalidOperationException(
-                    $"{nameof(transform)} must operate upon {nameof(origin)}={origin}, but operates upon {transform.TargetTransformable}.");
+                    $"{nameof(transform)} must operate upon {nameof(origin)}={origin}, but operates upon {transform.TargetTransformable}."
+                );
             }
 
             transforms.Add(transform);
@@ -130,7 +139,9 @@ namespace osu.Framework.Graphics.Transforms
                 child = childGenerator(origin);
 
             if (!ReferenceEquals(child.origin, origin))
-                throw new InvalidOperationException($"May not append {nameof(TransformSequence<T>)} with different origin.");
+                throw new InvalidOperationException(
+                    $"May not append {nameof(TransformSequence<T>)} with different origin."
+                );
 
             var oldLast = last;
             foreach (var t in child.transforms)
@@ -182,8 +193,9 @@ namespace osu.Framework.Graphics.Transforms
             if (onComplete != null)
             {
                 throw new InvalidOperationException(
-                    "May not subscribe completion multiple times." +
-                    $"This exception is also caused by calling {nameof(Then)} or {nameof(Finally)} on an infinitely looping {nameof(TransformSequence<T>)}.");
+                    "May not subscribe completion multiple times."
+                        + $"This exception is also caused by calling {nameof(Then)} or {nameof(Finally)} on an infinitely looping {nameof(TransformSequence<T>)}."
+                );
             }
 
             onComplete = func;
@@ -219,7 +231,11 @@ namespace osu.Framework.Graphics.Transforms
         /// <param name="numIters">The number of iterations.</param>
         /// <param name="childGenerators">The functions to generate the <see cref="TransformSequence{T}"/>s to be looped.</param>
         /// <returns>This <see cref="TransformSequence{T}"/>.</returns>
-        public TransformSequence<T> Loop(double pause, int numIters, params Generator[] childGenerators)
+        public TransformSequence<T> Loop(
+            double pause,
+            int numIters,
+            params Generator[] childGenerators
+        )
         {
             Append(o =>
             {
@@ -242,10 +258,14 @@ namespace osu.Framework.Graphics.Transforms
         public TransformSequence<T> Loop(double pause, int numIters)
         {
             if (numIters < 1)
-                throw new InvalidOperationException($"May not {nameof(Loop)} for fewer than 1 iteration ({numIters} attempted).");
+                throw new InvalidOperationException(
+                    $"May not {nameof(Loop)} for fewer than 1 iteration ({numIters} attempted)."
+                );
 
             if (!hasEnd)
-                throw new InvalidOperationException($"Can not perform {nameof(Loop)} on an endless {nameof(TransformSequence<T>)}.");
+                throw new InvalidOperationException(
+                    $"Can not perform {nameof(Loop)} on an endless {nameof(TransformSequence<T>)}."
+                );
 
             makeTransformsLooping(pause, numIters);
 
@@ -259,7 +279,8 @@ namespace osu.Framework.Graphics.Transforms
         /// </summary>
         /// <param name="childGenerators">The functions to generate the <see cref="TransformSequence{T}"/>s to be looped.</param>
         /// <returns>This <see cref="TransformSequence{T}"/>.</returns>
-        public TransformSequence<T> Loop(params Generator[] childGenerators) => Loop(0, childGenerators);
+        public TransformSequence<T> Loop(params Generator[] childGenerators) =>
+            Loop(0, childGenerators);
 
         /// <summary>
         /// Append a looping <see cref="TransformSequence{T}"/> to this <see cref="TransformSequence{T}"/>.
@@ -291,7 +312,9 @@ namespace osu.Framework.Graphics.Transforms
         public TransformSequence<T> Loop(double pause = 0)
         {
             if (!hasEnd)
-                throw new InvalidOperationException($"Can not perform {nameof(Loop)} on an endless {nameof(TransformSequence<T>)}.");
+                throw new InvalidOperationException(
+                    $"Can not perform {nameof(Loop)} on an endless {nameof(TransformSequence<T>)}."
+                );
 
             makeTransformsLooping(pause);
 
@@ -352,7 +375,8 @@ namespace osu.Framework.Graphics.Transforms
         /// </summary>
         /// <param name="childGenerators">The optional <see cref="Generator"/>s for <see cref="TransformSequence{T}"/>s to be appended.</param>
         /// <returns>This <see cref="TransformSequence{T}"/>.</returns>
-        public TransformSequence<T> Then(params Generator[] childGenerators) => Then(0, childGenerators);
+        public TransformSequence<T> Then(params Generator[] childGenerators) =>
+            Then(0, childGenerators);
 
         /// <summary>
         /// Advances the start time of future appended <see cref="TransformSequence{T}"/>s to the latest end time of all
@@ -365,7 +389,9 @@ namespace osu.Framework.Graphics.Transforms
         public TransformSequence<T> Then(double delay, params Generator[] childGenerators)
         {
             if (!hasEnd)
-                throw new InvalidOperationException($"Can not perform {nameof(Then)} on an endless {nameof(TransformSequence<T>)}.");
+                throw new InvalidOperationException(
+                    $"Can not perform {nameof(Then)} on an endless {nameof(TransformSequence<T>)}."
+                );
 
             // "Then" simply sets the currentTime to endTime to continue where the last transform left off,
             // followed by a subsequent delay call.
@@ -398,7 +424,9 @@ namespace osu.Framework.Graphics.Transforms
         public void OnComplete(Action<T> function)
         {
             if (!hasEnd)
-                throw new InvalidOperationException($"Can not perform {nameof(Then)} on an endless {nameof(TransformSequence<T>)}.");
+                throw new InvalidOperationException(
+                    $"Can not perform {nameof(Then)} on an endless {nameof(TransformSequence<T>)}."
+                );
 
             subscribeComplete(() => function(origin));
         }

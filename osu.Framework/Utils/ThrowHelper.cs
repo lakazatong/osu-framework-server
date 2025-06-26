@@ -12,6 +12,7 @@ namespace osu.Framework.Utils
     // todo: continue implementation and use where required, see https://github.com/ppy/osu-framework/issues/3470.
     public static class ThrowHelper
     {
-        public static void ThrowInvalidOperationException(string? message) => throw new InvalidOperationException(message);
+        public static void ThrowInvalidOperationException(string? message) =>
+            throw new InvalidOperationException(message);
     }
 }

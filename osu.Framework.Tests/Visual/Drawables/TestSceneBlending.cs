@@ -19,31 +19,33 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             Drawable blended = null;
 
-            AddStep("create test", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Children = new[]
+                    Child = new Container
                     {
-                        new Box
+                        Size = new Vector2(200),
+                        Children = new[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Orange
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Orange },
+                            blended = new Box
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(50),
+                                Alpha = 0.5f,
+                                Blending = BlendingParameters.Additive,
+                            },
                         },
-                        blended = new Box
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(50),
-                            Alpha = 0.5f,
-                            Blending = BlendingParameters.Additive
-                        }
-                    }
-                };
-            });
+                    };
+                }
+            );
 
-            AddAssert("blended additively", () => blended.DrawColourInfo.Blending == BlendingParameters.Additive);
+            AddAssert(
+                "blended additively",
+                () => blended.DrawColourInfo.Blending == BlendingParameters.Additive
+            );
         }
 
         [Test]
@@ -51,39 +53,38 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             Drawable blended = null;
 
-            AddStep("create test", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Children = new Drawable[]
+                    Child = new Container
                     {
-                        new Box
+                        Size = new Vector2(200),
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Orange
-                        },
-                        new Container
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(50),
-                            Blending = BlendingParameters.Additive,
-                            Child = new Container
+                            new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Orange },
+                            new Container
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Child = blended = new Box
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(50),
+                                Blending = BlendingParameters.Additive,
+                                Child = new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Alpha = 0.5f,
-                                }
-                            }
-                        }
-                    }
-                };
-            });
+                                    Child = blended =
+                                        new Box { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
+                                },
+                            },
+                        },
+                    };
+                }
+            );
 
-            AddAssert("blended additively", () => blended.DrawColourInfo.Blending == BlendingParameters.Additive);
+            AddAssert(
+                "blended additively",
+                () => blended.DrawColourInfo.Blending == BlendingParameters.Additive
+            );
         }
     }
 }

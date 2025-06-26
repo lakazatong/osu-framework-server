@@ -41,14 +41,7 @@ namespace osu.Framework.Tests.Polygons
             float.NaN,
         };
 
-        private static readonly int[] possible_sizes =
-        {
-            3,
-            4,
-            5,
-            8,
-            16
-        };
+        private static readonly int[] possible_sizes = { 3, 4, 5, 8, 16 };
 
         [Test]
         public void RunTest()
@@ -57,46 +50,61 @@ namespace osu.Framework.Tests.Polygons
 
             for (int i = 0; i < tasks.Length; i++)
             {
-                tasks[i] = Task.Factory.StartNew(() =>
-                {
-                    while (true)
+                tasks[i] = Task.Factory.StartNew(
+                    () =>
                     {
-                        int count1 = getRand(possible_sizes);
-                        int count2 = getRand(possible_sizes);
-
-                        HashSet<Vector2> vertices1 = new HashSet<Vector2>();
-                        HashSet<Vector2> vertices2 = new HashSet<Vector2>();
-
-                        while (vertices1.Count < count1)
-                            vertices1.Add(new Vector2(getRand(possible_values), getRand(possible_values)));
-
-                        while (vertices2.Count < count2)
-                            vertices2.Add(new Vector2(getRand(possible_values), getRand(possible_values)));
-
-                        SimpleConvexPolygon poly1 = new SimpleConvexPolygon(vertices1.ToArray());
-                        SimpleConvexPolygon poly2 = new SimpleConvexPolygon(vertices2.ToArray());
-
-                        try
+                        while (true)
                         {
-                            clip(poly1, poly2);
-                        }
-                        catch (Exception ex)
-                        {
-                            Assert.Fail($"Failed.\nPoly1: {poly1}\nPoly2: {poly2}\n\nException: {ex}");
-                            return;
-                        }
+                            int count1 = getRand(possible_sizes);
+                            int count2 = getRand(possible_sizes);
 
-                        try
-                        {
-                            clip(poly2, poly1);
+                            HashSet<Vector2> vertices1 = new HashSet<Vector2>();
+                            HashSet<Vector2> vertices2 = new HashSet<Vector2>();
+
+                            while (vertices1.Count < count1)
+                                vertices1.Add(
+                                    new Vector2(getRand(possible_values), getRand(possible_values))
+                                );
+
+                            while (vertices2.Count < count2)
+                                vertices2.Add(
+                                    new Vector2(getRand(possible_values), getRand(possible_values))
+                                );
+
+                            SimpleConvexPolygon poly1 = new SimpleConvexPolygon(
+                                vertices1.ToArray()
+                            );
+                            SimpleConvexPolygon poly2 = new SimpleConvexPolygon(
+                                vertices2.ToArray()
+                            );
+
+                            try
+                            {
+                                clip(poly1, poly2);
+                            }
+                            catch (Exception ex)
+                            {
+                                Assert.Fail(
+                                    $"Failed.\nPoly1: {poly1}\nPoly2: {poly2}\n\nException: {ex}"
+                                );
+                                return;
+                            }
+
+                            try
+                            {
+                                clip(poly2, poly1);
+                            }
+                            catch (Exception ex)
+                            {
+                                Assert.Fail(
+                                    $"Failed.\nPoly1: {poly2}\nPoly2: {poly1}\n\nException: {ex}"
+                                );
+                                return;
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            Assert.Fail($"Failed.\nPoly1: {poly2}\nPoly2: {poly1}\n\nException: {ex}");
-                            return;
-                        }
-                    }
-                }, TaskCreationOptions.LongRunning);
+                    },
+                    TaskCreationOptions.LongRunning
+                );
             }
 
             Task.WaitAny(tasks);
@@ -104,7 +112,10 @@ namespace osu.Framework.Tests.Polygons
 
         private static Vector2[] clip(SimpleConvexPolygon poly1, SimpleConvexPolygon poly2)
         {
-            var clipper = new ConvexPolygonClipper<SimpleConvexPolygon, SimpleConvexPolygon>(poly1, poly2);
+            var clipper = new ConvexPolygonClipper<SimpleConvexPolygon, SimpleConvexPolygon>(
+                poly1,
+                poly2
+            );
 
             Span<Vector2> buffer = stackalloc Vector2[clipper.GetClipBufferSize()];
 

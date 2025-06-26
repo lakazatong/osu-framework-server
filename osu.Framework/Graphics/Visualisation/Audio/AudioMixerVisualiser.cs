@@ -27,21 +27,23 @@ namespace osu.Framework.Graphics.Visualisation.Audio
             : base("AudioMixer", "(Ctrl+F9 to toggle)")
         {
             MainHorizontalContent.Clear();
-            MainHorizontalContent.Add(new BasicScrollContainer(Direction.Horizontal)
-            {
-                RelativeSizeAxes = Axes.Y,
-                Width = WIDTH,
-                Children = new[]
+            MainHorizontalContent.Add(
+                new BasicScrollContainer(Direction.Horizontal)
                 {
-                    mixerFlow = new FillFlowContainer<MixerDisplay>
+                    RelativeSizeAxes = Axes.Y,
+                    Width = WIDTH,
+                    Children = new[]
                     {
-                        RelativeSizeAxes = Axes.Y,
-                        AutoSizeAxes = Axes.X,
-                        Spacing = new Vector2(10),
-                        Padding = new MarginPadding(10)
-                    }
+                        mixerFlow = new FillFlowContainer<MixerDisplay>
+                        {
+                            RelativeSizeAxes = Axes.Y,
+                            AutoSizeAxes = Axes.X,
+                            Spacing = new Vector2(10),
+                            Padding = new MarginPadding(10),
+                        },
+                    },
                 }
-            });
+            );
         }
 
         protected override void LoadComplete()
@@ -52,21 +54,28 @@ namespace osu.Framework.Graphics.Visualisation.Audio
             activeMixers.BindCollectionChanged(onActiveMixerHandlesChanged, true);
         }
 
-        private void onActiveMixerHandlesChanged(object sender, NotifyCollectionChangedEventArgs e) => Schedule(() =>
-        {
-            switch (e.Action)
+        private void onActiveMixerHandlesChanged(
+            object sender,
+            NotifyCollectionChangedEventArgs e
+        ) =>
+            Schedule(() =>
             {
-                case NotifyCollectionChangedAction.Add:
-                    Debug.Assert(e.NewItems != null);
-                    foreach (var mixer in e.NewItems.OfType<AudioMixer>())
-                        mixerFlow.Add(new MixerDisplay(mixer));
-                    break;
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        Debug.Assert(e.NewItems != null);
+                        foreach (var mixer in e.NewItems.OfType<AudioMixer>())
+                            mixerFlow.Add(new MixerDisplay(mixer));
+                        break;
 
-                case NotifyCollectionChangedAction.Remove:
-                    Debug.Assert(e.OldItems != null);
-                    mixerFlow.RemoveAll(m => e.OldItems.OfType<AudioMixer>().Contains(m.Mixer), true);
-                    break;
-            }
-        });
+                    case NotifyCollectionChangedAction.Remove:
+                        Debug.Assert(e.OldItems != null);
+                        mixerFlow.RemoveAll(
+                            m => e.OldItems.OfType<AudioMixer>().Contains(m.Mixer),
+                            true
+                        );
+                        break;
+                }
+            });
     }
 }

@@ -8,7 +8,11 @@ namespace osu.Framework.Platform.Apple.Native
 {
     internal static partial class Selector
     {
-        [LibraryImport(Interop.LIB_OBJ_C, EntryPoint = "sel_registerName", StringMarshalling = StringMarshalling.Utf8)]
+        [LibraryImport(
+            Interop.LIB_OBJ_C,
+            EntryPoint = "sel_registerName",
+            StringMarshalling = StringMarshalling.Utf8
+        )]
         public static partial IntPtr Get(string name);
     }
 }

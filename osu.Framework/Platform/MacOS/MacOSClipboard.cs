@@ -28,7 +28,8 @@ namespace osu.Framework.Platform.MacOS
             return Image.Load<TPixel>(nsImage.TiffRepresentation.ToBytes());
         }
 
-        public override void SetText(string text) => setToPasteboard(NSString.FromString(text).Handle);
+        public override void SetText(string text) =>
+            setToPasteboard(NSString.FromString(text).Handle);
 
         public override bool SetImage(Image image)
         {

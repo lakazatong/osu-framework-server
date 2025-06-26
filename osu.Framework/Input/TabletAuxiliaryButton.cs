@@ -20,6 +20,6 @@ namespace osu.Framework.Input
         Button13,
         Button14,
         Button15,
-        Button16
+        Button16,
     }
 }

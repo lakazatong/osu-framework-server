@@ -21,12 +21,16 @@ namespace osu.Framework.Tests.Visual.Sprites
     [System.ComponentModel.Description("texture wrap modes")]
     public partial class TestSceneWrapModes : FrameworkGridTestScene
     {
-        private readonly WrapMode[] wrapModes = { WrapMode.None, WrapMode.ClampToEdge, WrapMode.ClampToBorder, WrapMode.Repeat };
+        private readonly WrapMode[] wrapModes =
+        {
+            WrapMode.None,
+            WrapMode.ClampToEdge,
+            WrapMode.ClampToBorder,
+            WrapMode.Repeat,
+        };
 
         public TestSceneWrapModes()
-            : base(4, 4)
-        {
-        }
+            : base(4, 4) { }
 
         private readonly Texture[] textures = new Texture[4 * 4];
         private byte[] videoData;
@@ -37,77 +41,88 @@ namespace osu.Framework.Tests.Visual.Sprites
             for (int i = 0; i < 4; ++i)
             {
                 for (int j = 0; j < 4; ++j)
-                    textures[i * 4 + j] = textureStore.Get(@"sample-texture", wrapModes[i], wrapModes[j]);
+                    textures[i * 4 + j] = textureStore.Get(
+                        @"sample-texture",
+                        wrapModes[i],
+                        wrapModes[j]
+                    );
             }
 
             videoData = game.Resources.Get("Videos/h264.mp4");
         }
 
         [Test]
-        public void TestSprites() => createTest(tex => new Sprite
-        {
-            Texture = tex,
-            TextureRectangle = new RectangleF(0.25f, 0.25f, 0.5f, 0.5f),
-        });
+        public void TestSprites() =>
+            createTest(tex => new Sprite
+            {
+                Texture = tex,
+                TextureRectangle = new RectangleF(0.25f, 0.25f, 0.5f, 0.5f),
+            });
 
         [Test]
-        public void TestTriangles() => createTest(tex => new EquilateralTriangle
-        {
-            Texture = tex,
-            TextureRectangle = new RectangleF(0.25f, 0.25f, 0.5f, 0.5f),
-        });
+        public void TestTriangles() =>
+            createTest(tex => new EquilateralTriangle
+            {
+                Texture = tex,
+                TextureRectangle = new RectangleF(0.25f, 0.25f, 0.5f, 0.5f),
+            });
 
         [Test, Ignore("not implemented yet")]
         public void TestVideos() => createTest(_ => new TestVideo(new MemoryStream(videoData)));
 
-        private void createTest(Func<Texture, Drawable> creatorFunc) => AddStep("create test", () =>
-        {
-            for (int i = 0; i < Rows; ++i)
-            {
-                for (int j = 0; j < Cols; ++j)
+        private void createTest(Func<Texture, Drawable> creatorFunc) =>
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Cell(i, j).Children = new Drawable[]
+                    for (int i = 0; i < Rows; ++i)
                     {
-                        new SpriteText
+                        for (int j = 0; j < Cols; ++j)
                         {
-                            Text = $"S={wrapModes[i]},T={wrapModes[j]}",
-                            Font = new FontUsage(size: 20),
-                        },
-                        new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(0.5f),
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Children = new[]
+                            Cell(i, j).Children = new Drawable[]
                             {
-                                creatorFunc(textures[i * 4 + j]).With(d =>
+                                new SpriteText
                                 {
-                                    d.RelativeSizeAxes = Axes.Both;
-                                    d.Size = Vector2.One;
-                                    d.Anchor = Anchor.Centre;
-                                    d.Origin = Anchor.Centre;
-                                }),
+                                    Text = $"S={wrapModes[i]},T={wrapModes[j]}",
+                                    Font = new FontUsage(size: 20),
+                                },
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Size = new Vector2(0.5f),
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Masking = true,
-                                    BorderColour = Color4.Red,
-                                    BorderThickness = 2,
-                                    Child = new Box
+                                    Children = new[]
                                     {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Colour = new Color4(0, 0, 0, 0),
-                                    }
-                                }
-                            }
+                                        creatorFunc(textures[i * 4 + j])
+                                            .With(d =>
+                                            {
+                                                d.RelativeSizeAxes = Axes.Both;
+                                                d.Size = Vector2.One;
+                                                d.Anchor = Anchor.Centre;
+                                                d.Origin = Anchor.Centre;
+                                            }),
+                                        new Container
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            Size = new Vector2(0.5f),
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Masking = true,
+                                            BorderColour = Color4.Red,
+                                            BorderThickness = 2,
+                                            Child = new Box
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Colour = new Color4(0, 0, 0, 0),
+                                            },
+                                        },
+                                    },
+                                },
+                            };
                         }
-                    };
+                    }
                 }
-            }
-        });
+            );
     }
 }

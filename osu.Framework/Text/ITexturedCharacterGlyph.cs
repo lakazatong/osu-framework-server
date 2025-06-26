@@ -32,7 +32,6 @@ namespace osu.Framework.Text
         /// Whether a <see cref="CharacterGlyph"/> represents a whitespace.
         /// </summary>
         public static bool IsWhiteSpace<T>(this T glyph)
-            where T : ITexturedCharacterGlyph
-            => char.IsWhiteSpace(glyph.Character);
+            where T : ITexturedCharacterGlyph => char.IsWhiteSpace(glyph.Character);
     }
 }

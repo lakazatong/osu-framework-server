@@ -22,7 +22,11 @@ namespace osu.Framework.Tests.Visual.Input
 {
     public partial class TestSceneKeyBindingsGrid : ManualInputManagerTestScene
     {
-        private readonly KeyBindingTester none, noneExact, noneModifiers, unique, all;
+        private readonly KeyBindingTester none,
+            noneExact,
+            noneModifiers,
+            unique,
+            all;
 
         public TestSceneKeyBindingsGrid()
         {
@@ -33,22 +37,38 @@ namespace osu.Framework.Tests.Visual.Input
                 {
                     new Drawable[]
                     {
-                        none = new KeyBindingTester(SimultaneousBindingMode.None, KeyCombinationMatchingMode.Any),
-                        noneExact = new KeyBindingTester(SimultaneousBindingMode.None, KeyCombinationMatchingMode.Exact),
-                        noneModifiers = new KeyBindingTester(SimultaneousBindingMode.None, KeyCombinationMatchingMode.Modifiers)
+                        none = new KeyBindingTester(
+                            SimultaneousBindingMode.None,
+                            KeyCombinationMatchingMode.Any
+                        ),
+                        noneExact = new KeyBindingTester(
+                            SimultaneousBindingMode.None,
+                            KeyCombinationMatchingMode.Exact
+                        ),
+                        noneModifiers = new KeyBindingTester(
+                            SimultaneousBindingMode.None,
+                            KeyCombinationMatchingMode.Modifiers
+                        ),
                     },
                     new Drawable[]
                     {
-                        unique = new KeyBindingTester(SimultaneousBindingMode.Unique, KeyCombinationMatchingMode.Any),
-                        all = new KeyBindingTester(SimultaneousBindingMode.All, KeyCombinationMatchingMode.Any)
+                        unique = new KeyBindingTester(
+                            SimultaneousBindingMode.Unique,
+                            KeyCombinationMatchingMode.Any
+                        ),
+                        all = new KeyBindingTester(
+                            SimultaneousBindingMode.All,
+                            KeyCombinationMatchingMode.Any
+                        ),
                     },
-                }
+                },
             };
         }
 
         private readonly List<Key> pressedKeys = new List<Key>();
         private readonly List<MouseButton> pressedMouseButtons = new List<MouseButton>();
-        private readonly Dictionary<TestButton, EventCounts> lastEventCounts = new Dictionary<TestButton, EventCounts>();
+        private readonly Dictionary<TestButton, EventCounts> lastEventCounts =
+            new Dictionary<TestButton, EventCounts>();
 
         private void toggleKey(Key key)
         {
@@ -80,76 +100,126 @@ namespace osu.Framework.Tests.Visual.Input
 
         private void scrollMouseWheel(int dx, int dy)
         {
-            if (dx != 0) AddStep($"scroll wheel horizontally {dx}", () => InputManager.ScrollHorizontalBy(dx));
-            if (dy != 0) AddStep($"scroll wheel {dy}", () => InputManager.ScrollVerticalBy(dy));
+            if (dx != 0)
+                AddStep(
+                    $"scroll wheel horizontally {dx}",
+                    () => InputManager.ScrollHorizontalBy(dx)
+                );
+            if (dy != 0)
+                AddStep($"scroll wheel {dy}", () => InputManager.ScrollVerticalBy(dy));
         }
 
         private void check(TestAction action, params CheckConditions[] entries)
         {
-            AddAssert($"check {action}", () =>
-            {
-                Assert.Multiple(() =>
+            AddAssert(
+                $"check {action}",
+                () =>
                 {
-                    foreach (var entry in entries)
+                    Assert.Multiple(() =>
                     {
-                        var scrollEntry = entry as ScrollCheckConditions;
-                        var testButton = entry.Tester[action];
-
-                        if (!lastEventCounts.TryGetValue(testButton, out var count))
-                            lastEventCounts[testButton] = count = new EventCounts();
-
-                        count.OnPressedCount += entry.OnPressedDelta;
-                        count.OnReleasedCount += entry.OnReleasedDelta;
-                        count.OnScrollCount += scrollEntry?.OnScrollCount ?? 0;
-
-                        Assert.AreEqual(count.OnPressedCount, testButton.OnPressedCount, $"{testButton.Concurrency} {testButton.Action} OnPressedCount");
-                        Assert.AreEqual(count.OnReleasedCount, testButton.OnReleasedCount, $"{testButton.Concurrency} {testButton.Action} OnReleasedCount");
-
-                        if (testButton is ScrollTestButton scrollTestButton && scrollEntry != null)
+                        foreach (var entry in entries)
                         {
-                            Assert.AreEqual(count.OnScrollCount, scrollTestButton.OnScrollCount, $"{testButton.Concurrency} {testButton.Action} OnScrollCount");
-                            Assert.AreEqual(scrollEntry.LastScrollAmount, scrollTestButton.LastScrollAmount, $"{testButton.Concurrency} {testButton.Action} LastScrollAmount");
+                            var scrollEntry = entry as ScrollCheckConditions;
+                            var testButton = entry.Tester[action];
+
+                            if (!lastEventCounts.TryGetValue(testButton, out var count))
+                                lastEventCounts[testButton] = count = new EventCounts();
+
+                            count.OnPressedCount += entry.OnPressedDelta;
+                            count.OnReleasedCount += entry.OnReleasedDelta;
+                            count.OnScrollCount += scrollEntry?.OnScrollCount ?? 0;
+
+                            Assert.AreEqual(
+                                count.OnPressedCount,
+                                testButton.OnPressedCount,
+                                $"{testButton.Concurrency} {testButton.Action} OnPressedCount"
+                            );
+                            Assert.AreEqual(
+                                count.OnReleasedCount,
+                                testButton.OnReleasedCount,
+                                $"{testButton.Concurrency} {testButton.Action} OnReleasedCount"
+                            );
+
+                            if (
+                                testButton is ScrollTestButton scrollTestButton
+                                && scrollEntry != null
+                            )
+                            {
+                                Assert.AreEqual(
+                                    count.OnScrollCount,
+                                    scrollTestButton.OnScrollCount,
+                                    $"{testButton.Concurrency} {testButton.Action} OnScrollCount"
+                                );
+                                Assert.AreEqual(
+                                    scrollEntry.LastScrollAmount,
+                                    scrollTestButton.LastScrollAmount,
+                                    $"{testButton.Concurrency} {testButton.Action} LastScrollAmount"
+                                );
+                            }
                         }
-                    }
-                });
-                return true;
-            });
+                    });
+                    return true;
+                }
+            );
         }
 
-        private void checkPressed(TestAction action, int noneDelta, int noneExactDelta, int noneModifiersDelta, int uniqueDelta, int allDelta)
+        private void checkPressed(
+            TestAction action,
+            int noneDelta,
+            int noneExactDelta,
+            int noneModifiersDelta,
+            int uniqueDelta,
+            int allDelta
+        )
         {
-            check(action,
+            check(
+                action,
                 new CheckConditions(none, noneDelta, 0),
                 new CheckConditions(noneExact, noneExactDelta, 0),
                 new CheckConditions(noneModifiers, noneModifiersDelta, 0),
                 new CheckConditions(unique, uniqueDelta, 0),
-                new CheckConditions(all, allDelta, 0));
+                new CheckConditions(all, allDelta, 0)
+            );
         }
 
-        private void checkReleased(TestAction action, int noneDelta, int noneExactDelta, int noneModifiersDelta, int uniqueDelta, int allDelta)
+        private void checkReleased(
+            TestAction action,
+            int noneDelta,
+            int noneExactDelta,
+            int noneModifiersDelta,
+            int uniqueDelta,
+            int allDelta
+        )
         {
-            check(action,
+            check(
+                action,
                 new CheckConditions(none, 0, noneDelta),
                 new CheckConditions(noneExact, 0, noneExactDelta),
                 new CheckConditions(noneModifiers, 0, noneModifiersDelta),
                 new CheckConditions(unique, 0, uniqueDelta),
-                new CheckConditions(all, 0, allDelta));
+                new CheckConditions(all, 0, allDelta)
+            );
         }
 
         private void wrapTest(Action inner)
         {
-            AddStep("init", () =>
-            {
-                foreach (var mode in new[] { none, noneExact, noneModifiers, unique, all })
+            AddStep(
+                "init",
+                () =>
                 {
-                    foreach (var action in Enum.GetValues(typeof(TestAction)).Cast<TestAction>())
+                    foreach (var mode in new[] { none, noneExact, noneModifiers, unique, all })
                     {
-                        mode[action].Reset();
+                        foreach (
+                            var action in Enum.GetValues(typeof(TestAction)).Cast<TestAction>()
+                        )
+                        {
+                            mode[action].Reset();
+                        }
                     }
-                }
 
-                lastEventCounts.Clear();
-            });
+                    lastEventCounts.Clear();
+                }
+            );
             pressedKeys.Clear();
             pressedMouseButtons.Clear();
             inner();
@@ -189,7 +259,14 @@ namespace osu.Framework.Tests.Visual.Input
                 toggleKey(Key.D);
                 checkPressed(TestAction.DOrF, 1, 1, 1, 1, 1);
                 toggleKey(Key.F);
-                check(TestAction.DOrF, new CheckConditions(none, 1, 1), new CheckConditions(noneExact, 0, 1), new CheckConditions(noneModifiers, 1, 1), new CheckConditions(unique, 0, 0), new CheckConditions(all, 1, 0));
+                check(
+                    TestAction.DOrF,
+                    new CheckConditions(none, 1, 1),
+                    new CheckConditions(noneExact, 0, 1),
+                    new CheckConditions(noneModifiers, 1, 1),
+                    new CheckConditions(unique, 0, 0),
+                    new CheckConditions(all, 1, 0)
+                );
                 toggleKey(Key.F);
                 checkReleased(TestAction.DOrF, 0, 0, 0, 0, 1);
                 toggleKey(Key.D);
@@ -273,7 +350,7 @@ namespace osu.Framework.Tests.Visual.Input
                     new CheckConditions(noneExact, 1, 1),
                     new CheckConditions(noneModifiers, 1, 1),
                     new CheckConditions(unique, 1, 1),
-                    new CheckConditions(all, 1, 1)
+                    new CheckConditions(all, 1, 1),
                 };
 
                 scrollMouseWheel(0, 1);
@@ -304,14 +381,15 @@ namespace osu.Framework.Tests.Visual.Input
         {
             wrapTest(() =>
             {
-                CheckConditions[] allPressAndReleased(float amount) => new CheckConditions[]
-                {
-                    new ScrollCheckConditions(none, 1, 1, 1, amount),
-                    new ScrollCheckConditions(noneExact, 1, 1, 1, amount),
-                    new ScrollCheckConditions(noneModifiers, 1, 1, 1, amount),
-                    new ScrollCheckConditions(unique, 1, 1, 1, amount),
-                    new ScrollCheckConditions(all, 1, 1, 1, amount)
-                };
+                CheckConditions[] allPressAndReleased(float amount) =>
+                    new CheckConditions[]
+                    {
+                        new ScrollCheckConditions(none, 1, 1, 1, amount),
+                        new ScrollCheckConditions(noneExact, 1, 1, 1, amount),
+                        new ScrollCheckConditions(noneModifiers, 1, 1, 1, amount),
+                        new ScrollCheckConditions(unique, 1, 1, 1, amount),
+                        new ScrollCheckConditions(all, 1, 1, 1, amount),
+                    };
 
                 scrollMouseWheel(0, 2);
                 check(TestAction.WheelUp, allPressAndReleased(2));
@@ -350,7 +428,13 @@ namespace osu.Framework.Tests.Visual.Input
             public readonly int OnScrollCount;
             public readonly float LastScrollAmount;
 
-            public ScrollCheckConditions(KeyBindingTester tester, int onPressedDelta, int onReleasedDelta, int onScrollCount, float lastScrollAmount)
+            public ScrollCheckConditions(
+                KeyBindingTester tester,
+                int onPressedDelta,
+                int onReleasedDelta,
+                int onScrollCount,
+                float lastScrollAmount
+            )
                 : base(tester, onPressedDelta, onReleasedDelta)
             {
                 OnScrollCount = onScrollCount;
@@ -393,69 +477,80 @@ namespace osu.Framework.Tests.Visual.Input
             WheelRight,
             CtrlAndWheelUp,
             AnyShiftA,
-            AnyShift
+            AnyShift,
         }
 
         private partial class TestInputManager : KeyBindingContainer<TestAction>
         {
-            public TestInputManager(SimultaneousBindingMode concurrencyMode = SimultaneousBindingMode.None, KeyCombinationMatchingMode matchingMode = KeyCombinationMatchingMode.Any)
-                : base(concurrencyMode, matchingMode)
-            {
-            }
+            public TestInputManager(
+                SimultaneousBindingMode concurrencyMode = SimultaneousBindingMode.None,
+                KeyCombinationMatchingMode matchingMode = KeyCombinationMatchingMode.Any
+            )
+                : base(concurrencyMode, matchingMode) { }
 
-            public override IEnumerable<IKeyBinding> DefaultKeyBindings => new[]
-            {
-                new KeyBinding(InputKey.A, TestAction.A),
-                new KeyBinding(InputKey.S, TestAction.S),
-                new KeyBinding(InputKey.D, TestAction.DOrF),
-                new KeyBinding(InputKey.F, TestAction.DOrF),
-
-                new KeyBinding(new[] { InputKey.Control, InputKey.A }, TestAction.CtrlA),
-                new KeyBinding(new[] { InputKey.Control, InputKey.S }, TestAction.CtrlS),
-                new KeyBinding(new[] { InputKey.Control, InputKey.D }, TestAction.CtrlDOrF),
-                new KeyBinding(new[] { InputKey.Control, InputKey.F }, TestAction.CtrlDOrF),
-
-                new KeyBinding(new[] { InputKey.LShift, InputKey.A }, TestAction.LShiftA),
-                new KeyBinding(new[] { InputKey.LShift, InputKey.S }, TestAction.LShiftS),
-                new KeyBinding(new[] { InputKey.LShift, InputKey.D }, TestAction.LShiftDOrF),
-                new KeyBinding(new[] { InputKey.LShift, InputKey.F }, TestAction.LShiftDOrF),
-
-                new KeyBinding(new[] { InputKey.RShift, InputKey.A }, TestAction.RShiftA),
-                new KeyBinding(new[] { InputKey.RShift, InputKey.S }, TestAction.RShiftS),
-                new KeyBinding(new[] { InputKey.RShift, InputKey.D }, TestAction.RShiftDOrF),
-                new KeyBinding(new[] { InputKey.RShift, InputKey.F }, TestAction.RShiftDOrF),
-
-                new KeyBinding(new[] { InputKey.Shift, InputKey.A }, TestAction.AnyShiftA),
-
-                new KeyBinding(new[] { InputKey.Alt, InputKey.A }, TestAction.AltA),
-                new KeyBinding(new[] { InputKey.Alt, InputKey.S }, TestAction.AltS),
-                new KeyBinding(new[] { InputKey.Alt, InputKey.D }, TestAction.AltDOrF),
-                new KeyBinding(new[] { InputKey.Alt, InputKey.F }, TestAction.AltDOrF),
-
-                new KeyBinding(new[] { InputKey.Control, InputKey.Shift, InputKey.A }, TestAction.CtrlShiftA),
-                new KeyBinding(new[] { InputKey.Control, InputKey.Shift, InputKey.S }, TestAction.CtrlShiftS),
-                new KeyBinding(new[] { InputKey.Control, InputKey.Shift, InputKey.D }, TestAction.CtrlShiftDOrF),
-                new KeyBinding(new[] { InputKey.Control, InputKey.Shift, InputKey.F }, TestAction.CtrlShiftDOrF),
-
-                new KeyBinding(new[] { InputKey.Control }, TestAction.Ctrl),
-                new KeyBinding(new[] { InputKey.Shift }, TestAction.AnyShift),
-                new KeyBinding(new[] { InputKey.LShift }, TestAction.LShift),
-                new KeyBinding(new[] { InputKey.RShift }, TestAction.RShift),
-                new KeyBinding(new[] { InputKey.Alt }, TestAction.Alt),
-                new KeyBinding(new[] { InputKey.Alt, InputKey.LShift }, TestAction.AltAndLShift),
-                new KeyBinding(new[] { InputKey.Control, InputKey.Alt }, TestAction.CtrlAndAlt),
-                new KeyBinding(new[] { InputKey.Control }, TestAction.CtrlOrShift),
-                new KeyBinding(new[] { InputKey.Shift }, TestAction.CtrlOrShift),
-
-                new KeyBinding(new[] { InputKey.MouseLeft }, TestAction.LeftMouse),
-                new KeyBinding(new[] { InputKey.MouseRight }, TestAction.RightMouse),
-
-                new KeyBinding(new[] { InputKey.MouseWheelUp }, TestAction.WheelUp),
-                new KeyBinding(new[] { InputKey.MouseWheelDown }, TestAction.WheelDown),
-                new KeyBinding(new[] { InputKey.MouseWheelLeft }, TestAction.WheelLeft),
-                new KeyBinding(new[] { InputKey.MouseWheelRight }, TestAction.WheelRight),
-                new KeyBinding(new[] { InputKey.Control, InputKey.MouseWheelUp }, TestAction.CtrlAndWheelUp),
-            };
+            public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
+                new[]
+                {
+                    new KeyBinding(InputKey.A, TestAction.A),
+                    new KeyBinding(InputKey.S, TestAction.S),
+                    new KeyBinding(InputKey.D, TestAction.DOrF),
+                    new KeyBinding(InputKey.F, TestAction.DOrF),
+                    new KeyBinding(new[] { InputKey.Control, InputKey.A }, TestAction.CtrlA),
+                    new KeyBinding(new[] { InputKey.Control, InputKey.S }, TestAction.CtrlS),
+                    new KeyBinding(new[] { InputKey.Control, InputKey.D }, TestAction.CtrlDOrF),
+                    new KeyBinding(new[] { InputKey.Control, InputKey.F }, TestAction.CtrlDOrF),
+                    new KeyBinding(new[] { InputKey.LShift, InputKey.A }, TestAction.LShiftA),
+                    new KeyBinding(new[] { InputKey.LShift, InputKey.S }, TestAction.LShiftS),
+                    new KeyBinding(new[] { InputKey.LShift, InputKey.D }, TestAction.LShiftDOrF),
+                    new KeyBinding(new[] { InputKey.LShift, InputKey.F }, TestAction.LShiftDOrF),
+                    new KeyBinding(new[] { InputKey.RShift, InputKey.A }, TestAction.RShiftA),
+                    new KeyBinding(new[] { InputKey.RShift, InputKey.S }, TestAction.RShiftS),
+                    new KeyBinding(new[] { InputKey.RShift, InputKey.D }, TestAction.RShiftDOrF),
+                    new KeyBinding(new[] { InputKey.RShift, InputKey.F }, TestAction.RShiftDOrF),
+                    new KeyBinding(new[] { InputKey.Shift, InputKey.A }, TestAction.AnyShiftA),
+                    new KeyBinding(new[] { InputKey.Alt, InputKey.A }, TestAction.AltA),
+                    new KeyBinding(new[] { InputKey.Alt, InputKey.S }, TestAction.AltS),
+                    new KeyBinding(new[] { InputKey.Alt, InputKey.D }, TestAction.AltDOrF),
+                    new KeyBinding(new[] { InputKey.Alt, InputKey.F }, TestAction.AltDOrF),
+                    new KeyBinding(
+                        new[] { InputKey.Control, InputKey.Shift, InputKey.A },
+                        TestAction.CtrlShiftA
+                    ),
+                    new KeyBinding(
+                        new[] { InputKey.Control, InputKey.Shift, InputKey.S },
+                        TestAction.CtrlShiftS
+                    ),
+                    new KeyBinding(
+                        new[] { InputKey.Control, InputKey.Shift, InputKey.D },
+                        TestAction.CtrlShiftDOrF
+                    ),
+                    new KeyBinding(
+                        new[] { InputKey.Control, InputKey.Shift, InputKey.F },
+                        TestAction.CtrlShiftDOrF
+                    ),
+                    new KeyBinding(new[] { InputKey.Control }, TestAction.Ctrl),
+                    new KeyBinding(new[] { InputKey.Shift }, TestAction.AnyShift),
+                    new KeyBinding(new[] { InputKey.LShift }, TestAction.LShift),
+                    new KeyBinding(new[] { InputKey.RShift }, TestAction.RShift),
+                    new KeyBinding(new[] { InputKey.Alt }, TestAction.Alt),
+                    new KeyBinding(
+                        new[] { InputKey.Alt, InputKey.LShift },
+                        TestAction.AltAndLShift
+                    ),
+                    new KeyBinding(new[] { InputKey.Control, InputKey.Alt }, TestAction.CtrlAndAlt),
+                    new KeyBinding(new[] { InputKey.Control }, TestAction.CtrlOrShift),
+                    new KeyBinding(new[] { InputKey.Shift }, TestAction.CtrlOrShift),
+                    new KeyBinding(new[] { InputKey.MouseLeft }, TestAction.LeftMouse),
+                    new KeyBinding(new[] { InputKey.MouseRight }, TestAction.RightMouse),
+                    new KeyBinding(new[] { InputKey.MouseWheelUp }, TestAction.WheelUp),
+                    new KeyBinding(new[] { InputKey.MouseWheelDown }, TestAction.WheelDown),
+                    new KeyBinding(new[] { InputKey.MouseWheelLeft }, TestAction.WheelLeft),
+                    new KeyBinding(new[] { InputKey.MouseWheelRight }, TestAction.WheelRight),
+                    new KeyBinding(
+                        new[] { InputKey.Control, InputKey.MouseWheelUp },
+                        TestAction.CtrlAndWheelUp
+                    ),
+                };
 
             protected override bool Handle(UIEvent e)
             {
@@ -528,11 +623,7 @@ namespace osu.Framework.Tests.Visual.Input
 
                 Background.Alpha = alphaTarget;
 
-                Add(highlight = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0,
-                });
+                Add(highlight = new Box { RelativeSizeAxes = Axes.Both, Alpha = 0 });
             }
 
             protected override void Update()
@@ -593,33 +684,36 @@ namespace osu.Framework.Tests.Visual.Input
         {
             private readonly TestButton[] testButtons;
 
-            public KeyBindingTester(SimultaneousBindingMode concurrency, KeyCombinationMatchingMode matchingMode)
+            public KeyBindingTester(
+                SimultaneousBindingMode concurrency,
+                KeyCombinationMatchingMode matchingMode
+            )
             {
                 RelativeSizeAxes = Axes.Both;
                 Direction = FillDirection.Vertical;
 
-                testButtons = Enum.GetValues(typeof(TestAction)).Cast<TestAction>().Select(t =>
-                {
-                    if (t.ToString().Contains("Wheel"))
-                        return new ScrollTestButton(t, concurrency);
+                testButtons = Enum.GetValues(typeof(TestAction))
+                    .Cast<TestAction>()
+                    .Select(t =>
+                    {
+                        if (t.ToString().Contains("Wheel"))
+                            return new ScrollTestButton(t, concurrency);
 
-                    return new TestButton(t, concurrency);
-                }).ToArray();
+                        return new TestButton(t, concurrency);
+                    })
+                    .ToArray();
 
                 Children = new Drawable[]
                 {
-                    new SpriteText
-                    {
-                        Text = $"{concurrency} / {matchingMode}"
-                    },
+                    new SpriteText { Text = $"{concurrency} / {matchingMode}" },
                     new TestInputManager(concurrency, matchingMode)
                     {
                         RelativeSizeAxes = Axes.Both,
                         Child = new FillFlowContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Children = testButtons
-                        }
+                            Children = testButtons,
+                        },
                     },
                 };
             }

@@ -4,8 +4,8 @@
 using System;
 using System.Threading.Tasks;
 using osu.Framework.Audio.Mixing;
-using osu.Framework.Statistics;
 using osu.Framework.Audio.Track;
+using osu.Framework.Statistics;
 
 namespace osu.Framework.Audio.Sample
 {
@@ -28,9 +28,7 @@ namespace osu.Framework.Audio.Sample
             OnPlay?.Invoke(this);
         }
 
-        public virtual void Stop()
-        {
-        }
+        public virtual void Stop() { }
 
         protected override void UpdateState()
         {

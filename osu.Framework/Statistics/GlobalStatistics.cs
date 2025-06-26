@@ -21,7 +21,8 @@ namespace osu.Framework.Statistics
         /// </summary>
         internal static event NotifyCollectionChangedEventHandler StatisticsChanged;
 
-        private static readonly BindableList<IGlobalStatistic> statistics = new BindableList<IGlobalStatistic>();
+        private static readonly BindableList<IGlobalStatistic> statistics =
+            new BindableList<IGlobalStatistic>();
 
         static GlobalStatistics()
         {
@@ -39,7 +40,9 @@ namespace osu.Framework.Statistics
         {
             lock (statistics)
             {
-                var existing = statistics.OfType<GlobalStatistic<T>>().FirstOrDefault(s => s.Name == name && s.Group == group);
+                var existing = statistics
+                    .OfType<GlobalStatistic<T>>()
+                    .FirstOrDefault(s => s.Name == name && s.Group == group);
                 if (existing != null)
                     return existing;
 
@@ -96,7 +99,7 @@ namespace osu.Framework.Statistics
                 Logger.Log($"# {group.Key}", LoggingTarget.Performance);
 
                 foreach (var i in group)
-                    Logger.Log($"{i.Name,-30}: {i.DisplayValue}", LoggingTarget.Performance);
+                    Logger.Log($"{i.Name, -30}: {i.DisplayValue}", LoggingTarget.Performance);
             }
 
             Logger.Log("--- Global Statistics End ---", LoggingTarget.Performance);

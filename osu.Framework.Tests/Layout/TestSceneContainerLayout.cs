@@ -29,23 +29,26 @@ namespace osu.Framework.Tests.Layout
             Box box = null;
             Container parent = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    RemoveCompletedTransforms = false,
-                    AutoSizeAxes = Axes.Both,
-                    Child = box = new Box
+                    Child = parent = new Container
                     {
-                        Size = new Vector2(200),
-                        LifetimeStart = double.MaxValue
-                    }
-                };
-            });
+                        RemoveCompletedTransforms = false,
+                        AutoSizeAxes = Axes.Both,
+                        Child = box =
+                            new Box { Size = new Vector2(200), LifetimeStart = double.MaxValue },
+                    };
+                }
+            );
 
             AddStep("make child alive", () => box.LifetimeStart = double.MinValue);
 
-            AddAssert("parent has size 200", () => Precision.AlmostEquals(new Vector2(200), parent.DrawSize));
+            AddAssert(
+                "parent has size 200",
+                () => Precision.AlmostEquals(new Vector2(200), parent.DrawSize)
+            );
         }
 
         /// <summary>
@@ -57,18 +60,24 @@ namespace osu.Framework.Tests.Layout
             Box box = null;
             Container parent = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Child = box = new Box { Size = new Vector2(200) }
-                };
-            });
+                    Child = parent = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Child = box = new Box { Size = new Vector2(200) },
+                    };
+                }
+            );
 
             AddStep("make child dead", () => box.Expire());
 
-            AddAssert("parent has size 0", () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize));
+            AddAssert(
+                "parent has size 0",
+                () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize)
+            );
         }
 
         /// <summary>
@@ -80,19 +89,25 @@ namespace osu.Framework.Tests.Layout
             Box box = null;
             Container parent = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    RemoveCompletedTransforms = false,
-                    AutoSizeAxes = Axes.Both,
-                    Child = box = new TestBox1 { Size = new Vector2(200) }
-                };
-            });
+                    Child = parent = new Container
+                    {
+                        RemoveCompletedTransforms = false,
+                        AutoSizeAxes = Axes.Both,
+                        Child = box = new TestBox1 { Size = new Vector2(200) },
+                    };
+                }
+            );
 
             AddStep("make child dead", () => box.Expire());
 
-            AddAssert("parent has size 0", () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize));
+            AddAssert(
+                "parent has size 0",
+                () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize)
+            );
         }
 
         /// <summary>
@@ -104,28 +119,37 @@ namespace osu.Framework.Tests.Layout
             Container content = null;
             Box child = null;
 
-            AddStep("create test", () =>
-            {
-                Child = content = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                };
-            });
+                    Child = content = new Container
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                    };
+                }
+            );
 
-            AddStep("add child", () => LoadComponentAsync(child = new Box
-            {
-                RelativeSizeAxes = Axes.X,
-                Height = 500,
-            }, d =>
-            {
-                content.Add(d);
-                d.FadeInFromZero(50000);
-            }));
+            AddStep(
+                "add child",
+                () =>
+                    LoadComponentAsync(
+                        child = new Box { RelativeSizeAxes = Axes.X, Height = 500 },
+                        d =>
+                        {
+                            content.Add(d);
+                            d.FadeInFromZero(50000);
+                        }
+                    )
+            );
 
             AddUntilStep("wait for child load", () => child.IsLoaded);
 
-            AddUntilStep("content height matches box height", () => Precision.AlmostEquals(content.DrawHeight, child.DrawHeight));
+            AddUntilStep(
+                "content height matches box height",
+                () => Precision.AlmostEquals(content.DrawHeight, child.DrawHeight)
+            );
         }
 
         /// <summary>
@@ -141,28 +165,34 @@ namespace osu.Framework.Tests.Layout
 
             bool autoSized = false;
 
-            AddStep("create test", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Child = child = new Box { BypassAutoSizeAxes = axes }
-                }.With(c => c.OnAutoSize += () => autoSized = true);
-            });
+                    Child = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Child = child = new Box { BypassAutoSizeAxes = axes },
+                    }.With(c => c.OnAutoSize += () => autoSized = true);
+                }
+            );
 
             AddUntilStep("wait for autosize", () => autoSized);
 
-            AddStep("adjust child size", () =>
-            {
-                autoSized = false;
+            AddStep(
+                "adjust child size",
+                () =>
+                {
+                    autoSized = false;
 
-                if (axes == Axes.Both)
-                    child.Size = new Vector2(50);
-                else if (axes == Axes.X)
-                    child.Width = 50;
-                else if (axes == Axes.Y)
-                    child.Height = 50;
-            });
+                    if (axes == Axes.Both)
+                        child.Size = new Vector2(50);
+                    else if (axes == Axes.X)
+                        child.Width = 50;
+                    else if (axes == Axes.Y)
+                        child.Height = 50;
+                }
+            );
 
             AddWaitStep("wait for autosize", 1);
 
@@ -182,28 +212,34 @@ namespace osu.Framework.Tests.Layout
 
             bool autoSized = false;
 
-            AddStep("create test", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    Child = child = new Box { BypassAutoSizeAxes = axes }
-                }.With(c => c.OnAutoSize += () => autoSized = true);
-            });
+                    Child = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Child = child = new Box { BypassAutoSizeAxes = axes },
+                    }.With(c => c.OnAutoSize += () => autoSized = true);
+                }
+            );
 
             AddUntilStep("wait for autosize", () => autoSized);
 
-            AddStep("adjust child size", () =>
-            {
-                autoSized = false;
+            AddStep(
+                "adjust child size",
+                () =>
+                {
+                    autoSized = false;
 
-                if (axes == Axes.Both)
-                    child.Position = new Vector2(50);
-                else if (axes == Axes.X)
-                    child.X = 50;
-                else if (axes == Axes.Y)
-                    child.Y = 50;
-            });
+                    if (axes == Axes.Both)
+                        child.Position = new Vector2(50);
+                    else if (axes == Axes.X)
+                        child.X = 50;
+                    else if (axes == Axes.Y)
+                        child.Y = 50;
+                }
+            );
 
             AddWaitStep("wait for autosize", 1);
 
@@ -219,27 +255,36 @@ namespace osu.Framework.Tests.Layout
 
             Invalidation invalidation = Invalidation.None;
 
-            AddStep("create test", () =>
-            {
-                Child = new TestContainer1
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Child = child = new Box { Size = new Vector2(200) }
-                }.With(c => c.Invalidated += i => invalidation = i);
-            });
+                    Child = new TestContainer1
+                    {
+                        Child = child = new Box { Size = new Vector2(200) },
+                    }.With(c => c.Invalidated += i => invalidation = i);
+                }
+            );
 
-            AddStep("move child", () =>
-            {
-                invalidation = Invalidation.None;
+            AddStep(
+                "move child",
+                () =>
+                {
+                    invalidation = Invalidation.None;
 
-                if (axes == Axes.Both)
-                    child.Position = new Vector2(10);
-                else if (axes == Axes.X)
-                    child.X = 10;
-                else if (axes == Axes.Y)
-                    child.Y = 10;
-            });
+                    if (axes == Axes.Both)
+                        child.Position = new Vector2(10);
+                    else if (axes == Axes.X)
+                        child.X = 10;
+                    else if (axes == Axes.Y)
+                        child.Y = 10;
+                }
+            );
 
-            AddAssert("parent only invalidated with geometry", () => invalidation == Invalidation.MiscGeometry);
+            AddAssert(
+                "parent only invalidated with geometry",
+                () => invalidation == Invalidation.MiscGeometry
+            );
         }
 
         [TestCase(Axes.X)]
@@ -251,27 +296,36 @@ namespace osu.Framework.Tests.Layout
 
             Invalidation invalidation = Invalidation.None;
 
-            AddStep("create test", () =>
-            {
-                Child = new TestContainer1
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Child = child = new Box { Size = new Vector2(200) }
-                }.With(c => c.Invalidated += i => invalidation = i);
-            });
+                    Child = new TestContainer1
+                    {
+                        Child = child = new Box { Size = new Vector2(200) },
+                    }.With(c => c.Invalidated += i => invalidation = i);
+                }
+            );
 
-            AddStep("move child", () =>
-            {
-                invalidation = Invalidation.None;
+            AddStep(
+                "move child",
+                () =>
+                {
+                    invalidation = Invalidation.None;
 
-                if (axes == Axes.Both)
-                    child.Size = new Vector2(10);
-                else if (axes == Axes.X)
-                    child.Width = 10;
-                else if (axes == Axes.Y)
-                    child.Height = 10;
-            });
+                    if (axes == Axes.Both)
+                        child.Size = new Vector2(10);
+                    else if (axes == Axes.X)
+                        child.Width = 10;
+                    else if (axes == Axes.Y)
+                        child.Height = 10;
+                }
+            );
 
-            AddAssert("parent only invalidated with size", () => invalidation == Invalidation.DrawSize);
+            AddAssert(
+                "parent only invalidated with size",
+                () => invalidation == Invalidation.DrawSize
+            );
         }
 
         /// <summary>
@@ -283,25 +337,29 @@ namespace osu.Framework.Tests.Layout
             Container parent = null;
             bool invalidated = false;
 
-            AddStep("create test", () =>
-            {
-                Drawable child;
-
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Child = child = new Box
+                    Drawable child;
+
+                    Child = parent = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        LifetimeStart = double.MaxValue
-                    }
-                };
+                        Size = new Vector2(200),
+                        Child = child =
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                LifetimeStart = double.MaxValue,
+                            },
+                    };
 
-                // Trigger a validation of draw size.
-                Assert.That(child.DrawSize, Is.EqualTo(new Vector2(200)));
+                    // Trigger a validation of draw size.
+                    Assert.That(child.DrawSize, Is.EqualTo(new Vector2(200)));
 
-                child.Invalidated += (_, _) => invalidated = true;
-            });
+                    child.Invalidated += (_, _) => invalidated = true;
+                }
+            );
 
             AddStep("resize parent", () => parent.Size = new Vector2(400));
             AddAssert("child not invalidated", () => !invalidated);
@@ -317,20 +375,26 @@ namespace osu.Framework.Tests.Layout
             Drawable child = null;
             bool invalidated = false;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Child = child = new Box { RelativeSizeAxes = Axes.Both }
-                };
-            });
+                    Child = parent = new Container
+                    {
+                        Size = new Vector2(200),
+                        Child = child = new Box { RelativeSizeAxes = Axes.Both },
+                    };
+                }
+            );
 
-            AddStep("make child dead", () =>
-            {
-                child.LifetimeStart = double.MaxValue;
-                child.Invalidated += (_, _) => invalidated = true;
-            });
+            AddStep(
+                "make child dead",
+                () =>
+                {
+                    child.LifetimeStart = double.MaxValue;
+                    child.Invalidated += (_, _) => invalidated = true;
+                }
+            );
 
             // See above: won't cause an invalidation
             AddStep("resize parent", () => parent.Size = new Vector2(400));
@@ -351,28 +415,35 @@ namespace osu.Framework.Tests.Layout
             Container parent = null;
             bool invalidated = false;
 
-            AddStep("create test", () =>
-            {
-                Drawable child;
-
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Child = child = new Box
+                    Drawable child;
+
+                    Child = parent = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        LifetimeStart = double.MaxValue
-                    }
-                };
+                        Size = new Vector2(200),
+                        Child = child =
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                LifetimeStart = double.MaxValue,
+                            },
+                    };
 
-                child.Invalidated += (_, _) => invalidated = true;
-            });
+                    child.Invalidated += (_, _) => invalidated = true;
+                }
+            );
 
-            AddStep("invalidate parent", () =>
-            {
-                invalidated = false;
-                parent.Invalidate(Invalidation.Parent);
-            });
+            AddStep(
+                "invalidate parent",
+                () =>
+                {
+                    invalidated = false;
+                    parent.Invalidate(Invalidation.Parent);
+                }
+            );
 
             AddAssert("child invalidated", () => invalidated);
         }
@@ -386,24 +457,30 @@ namespace osu.Framework.Tests.Layout
             Container parent = null;
             bool invalidated = false;
 
-            AddStep("create test", () =>
-            {
-                Drawable child;
-
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Size = new Vector2(200),
-                    Child = child = new Box { RelativeSizeAxes = Axes.Both }
-                };
+                    Drawable child;
 
-                child.Invalidated += (_, _) => invalidated = true;
-            });
+                    Child = parent = new Container
+                    {
+                        Size = new Vector2(200),
+                        Child = child = new Box { RelativeSizeAxes = Axes.Both },
+                    };
 
-            AddStep("invalidate parent", () =>
-            {
-                invalidated = false;
-                parent.Invalidate(Invalidation.DrawNode);
-            });
+                    child.Invalidated += (_, _) => invalidated = true;
+                }
+            );
+
+            AddStep(
+                "invalidate parent",
+                () =>
+                {
+                    invalidated = false;
+                    parent.Invalidate(Invalidation.DrawNode);
+                }
+            );
 
             AddAssert("child not invalidated", () => !invalidated);
         }
@@ -419,12 +496,15 @@ namespace osu.Framework.Tests.Layout
         {
             bool isValid = false;
 
-            AddStep("create test", () =>
-            {
-                Container child;
-                Child = child = new Container { AutoSizeAxes = autoSizeAxes };
-                isValid = child.ChildrenSizeDependenciesIsValid;
-            });
+            AddStep(
+                "create test",
+                () =>
+                {
+                    Container child;
+                    Child = child = new Container { AutoSizeAxes = autoSizeAxes };
+                    isValid = child.ChildrenSizeDependenciesIsValid;
+                }
+            );
 
             if (autoSizeAxes != Axes.None)
                 AddAssert("invalidated", () => !isValid);
@@ -442,28 +522,37 @@ namespace osu.Framework.Tests.Layout
             Container child = null;
             bool isValid = false;
 
-            AddStep("create test", () =>
-            {
-                Child = child = new Container();
-                isValid = child.ChildrenSizeDependenciesIsValid;
-            });
+            AddStep(
+                "create test",
+                () =>
+                {
+                    Child = child = new Container();
+                    isValid = child.ChildrenSizeDependenciesIsValid;
+                }
+            );
 
             AddAssert("initially valid", () => isValid);
 
-            AddStep("set autosize", () =>
-            {
-                child.AutoSizeAxes = Axes.Both;
-                isValid = child.ChildrenSizeDependenciesIsValid;
-            });
+            AddStep(
+                "set autosize",
+                () =>
+                {
+                    child.AutoSizeAxes = Axes.Both;
+                    isValid = child.ChildrenSizeDependenciesIsValid;
+                }
+            );
 
             AddAssert("invalidated", () => !isValid);
 
-            AddStep("remove autosize", () =>
-            {
-                child.Invalidate(); // It will have automatically validated after the previous step.
-                child.AutoSizeAxes = Axes.None;
-                isValid = child.ChildrenSizeDependenciesIsValid;
-            });
+            AddStep(
+                "remove autosize",
+                () =>
+                {
+                    child.Invalidate(); // It will have automatically validated after the previous step.
+                    child.AutoSizeAxes = Axes.None;
+                    isValid = child.ChildrenSizeDependenciesIsValid;
+                }
+            );
 
             AddAssert("valid", () => isValid);
         }
@@ -478,23 +567,26 @@ namespace osu.Framework.Tests.Layout
             Drawable child = null;
             bool isValid = false;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "create test",
+                () =>
                 {
-                    Child = child = new Box()
-                };
+                    Child = parent = new Container { Child = child = new Box() };
 
-                isValid = parent.ChildrenSizeDependenciesIsValid;
-            });
+                    isValid = parent.ChildrenSizeDependenciesIsValid;
+                }
+            );
 
             AddAssert("initially valid", () => isValid);
 
-            AddStep("invalidate child", () =>
-            {
-                child.Height = 100;
-                isValid = parent.ChildrenSizeDependenciesIsValid;
-            });
+            AddStep(
+                "invalidate child",
+                () =>
+                {
+                    child.Height = 100;
+                    isValid = parent.ChildrenSizeDependenciesIsValid;
+                }
+            );
 
             AddAssert("still valid", () => isValid);
         }
@@ -510,29 +602,44 @@ namespace osu.Framework.Tests.Layout
             RectangleF childMaskingBounds = new RectangleF();
             RectangleF actualChildMaskingBounds = new RectangleF();
 
-            AddStep("createTest", () =>
-            {
-                Child = parent = new Container
+            AddStep(
+                "createTest",
+                () =>
                 {
-                    Size = new Vector2(100),
-                    Child = child = new Container
+                    Child = parent = new Container
                     {
-                        RelativeSizeAxes = Axes.Both
-                    }
-                };
-            });
+                        Size = new Vector2(100),
+                        Child = child = new Container { RelativeSizeAxes = Axes.Both },
+                    };
+                }
+            );
 
             AddAssert("Parent's masking is off", () => parent.Masking == false);
-            AddStep("Save masking bounds", () =>
-            {
-                childMaskingBounds = parent.ChildMaskingBounds;
-                actualChildMaskingBounds = child.ChildMaskingBounds;
-            });
-            AddAssert("Parent and child have the same masking bounds", () => childMaskingBounds == actualChildMaskingBounds);
+            AddStep(
+                "Save masking bounds",
+                () =>
+                {
+                    childMaskingBounds = parent.ChildMaskingBounds;
+                    actualChildMaskingBounds = child.ChildMaskingBounds;
+                }
+            );
+            AddAssert(
+                "Parent and child have the same masking bounds",
+                () => childMaskingBounds == actualChildMaskingBounds
+            );
             AddStep("Enable parent masking", () => parent.Masking = true);
-            AddAssert("Parent's ChildMaskingBounds has changed", () => childMaskingBounds != parent.ChildMaskingBounds);
-            AddAssert("Child's masking bounds has changed", () => actualChildMaskingBounds != child.ChildMaskingBounds);
-            AddAssert("Parent and child have the same masking bounds", () => parent.ChildMaskingBounds == child.ChildMaskingBounds);
+            AddAssert(
+                "Parent's ChildMaskingBounds has changed",
+                () => childMaskingBounds != parent.ChildMaskingBounds
+            );
+            AddAssert(
+                "Child's masking bounds has changed",
+                () => actualChildMaskingBounds != child.ChildMaskingBounds
+            );
+            AddAssert(
+                "Parent and child have the same masking bounds",
+                () => parent.ChildMaskingBounds == child.ChildMaskingBounds
+            );
         }
 
         private partial class TestBox1 : Box
@@ -544,7 +651,10 @@ namespace osu.Framework.Tests.Layout
         {
             public new Action<Invalidation> Invalidated;
 
-            protected override bool OnInvalidate(Invalidation invalidation, InvalidationSource source)
+            protected override bool OnInvalidate(
+                Invalidation invalidation,
+                InvalidationSource source
+            )
             {
                 Invalidated?.Invoke(invalidation);
                 return base.OnInvalidate(invalidation, source);

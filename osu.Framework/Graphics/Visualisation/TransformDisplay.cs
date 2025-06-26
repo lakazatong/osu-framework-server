@@ -21,24 +21,21 @@ namespace osu.Framework.Graphics.Visualisation
             RelativeSizeAxes = Axes.Both;
             Children = new Drawable[]
             {
-                new Box
-                {
-                    Colour = FrameworkColour.GreenDarker,
-                    RelativeSizeAxes = Axes.Both
-                },
+                new Box { Colour = FrameworkColour.GreenDarker, RelativeSizeAxes = Axes.Both },
                 new BasicScrollContainer
                 {
                     Padding = new MarginPadding(10),
                     RelativeSizeAxes = Axes.Both,
                     ScrollbarOverlapsContent = false,
-                    Child = flow = new FillFlowContainer<DrawableTransform>
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 2)
-                    }
-                }
+                    Child = flow =
+                        new FillFlowContainer<DrawableTransform>
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 2),
+                        },
+                },
             };
         }
 

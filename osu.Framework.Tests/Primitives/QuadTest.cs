@@ -24,19 +24,14 @@ namespace osu.Framework.Tests.Primitives
                 new Vector2(1679.6332f, 861.614f)
             ),
             // Arbitrary convex quad
-            new Quad(
-                new Vector2(3, 0),
-                new Vector2(5, 1),
-                new Vector2(0, 5),
-                new Vector2(7, 7)
-            ),
+            new Quad(new Vector2(3, 0), new Vector2(5, 1), new Vector2(0, 5), new Vector2(7, 7)),
             // Very small quad
             new Quad(
                 new Vector2(-Precision.FLOAT_EPSILON, -Precision.FLOAT_EPSILON),
                 new Vector2(Precision.FLOAT_EPSILON, -Precision.FLOAT_EPSILON),
                 new Vector2(-Precision.FLOAT_EPSILON, Precision.FLOAT_EPSILON),
                 new Vector2(Precision.FLOAT_EPSILON, Precision.FLOAT_EPSILON)
-            )
+            ),
         };
 
         [TestCaseSource(typeof(AreaTestData), nameof(AreaTestData.TestCases))]
@@ -143,10 +138,7 @@ namespace osu.Framework.Tests.Primitives
         public void TestFlippedQuad()
         {
             var quad = new Quad(-5, -5, 10, 10);
-            quad *= new Matrix3(
-                -1, 0, 0,
-                0, 1, 0,
-                0, 0, 1);
+            quad *= new Matrix3(-1, 0, 0, 0, 1, 0, 0, 0, 1);
 
             Assert.That(quad.Contains(new Vector2(0, 0)), Is.True);
 
@@ -187,17 +179,41 @@ namespace osu.Framework.Tests.Primitives
                     yield return new TestCaseData(new Quad(5, 10, -5, -10)).Returns(50);
 
                     // Sheared quads
-                    yield return new TestCaseData(shear(new Quad(0, 0, 10, 10), new Vector2(2))).Returns(100);
-                    yield return new TestCaseData(shear(new Quad(0, 0, 10, 10), new Vector2(-2))).Returns(100);
+                    yield return new TestCaseData(
+                        shear(new Quad(0, 0, 10, 10), new Vector2(2))
+                    ).Returns(100);
+                    yield return new TestCaseData(
+                        shear(new Quad(0, 0, 10, 10), new Vector2(-2))
+                    ).Returns(100);
 
                     // Sheared rotated quads
-                    yield return new TestCaseData(shear(new Quad(10, 10, -10, -10), new Vector2(2))).Returns(100);
-                    yield return new TestCaseData(shear(new Quad(10, 5, -10, -5), new Vector2(2))).Returns(50);
-                    yield return new TestCaseData(shear(new Quad(5, 10, -5, -10), new Vector2(2))).Returns(50);
+                    yield return new TestCaseData(
+                        shear(new Quad(10, 10, -10, -10), new Vector2(2))
+                    ).Returns(100);
+                    yield return new TestCaseData(
+                        shear(new Quad(10, 5, -10, -5), new Vector2(2))
+                    ).Returns(50);
+                    yield return new TestCaseData(
+                        shear(new Quad(5, 10, -5, -10), new Vector2(2))
+                    ).Returns(50);
 
                     // Self-intersecting quads
-                    yield return new TestCaseData(new Quad(new Vector2(0, 5), new Vector2(0, -5), new Vector2(-5, 0), new Vector2(5, 0))).Returns(0);
-                    yield return new TestCaseData(new Quad(new Vector2(0, 5), new Vector2(0, -5), Vector2.Zero, new Vector2(5, 0))).Returns(12.5f);
+                    yield return new TestCaseData(
+                        new Quad(
+                            new Vector2(0, 5),
+                            new Vector2(0, -5),
+                            new Vector2(-5, 0),
+                            new Vector2(5, 0)
+                        )
+                    ).Returns(0);
+                    yield return new TestCaseData(
+                        new Quad(
+                            new Vector2(0, 5),
+                            new Vector2(0, -5),
+                            Vector2.Zero,
+                            new Vector2(5, 0)
+                        )
+                    ).Returns(12.5f);
                 }
             }
 

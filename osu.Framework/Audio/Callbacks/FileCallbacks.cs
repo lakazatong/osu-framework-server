@@ -19,20 +19,21 @@ namespace osu.Framework.Audio.Callbacks
     {
         public FileProcedures Callbacks { get; private set; }
 
-        private FileProcedures instanceProcedures => new FileProcedures
-        {
-            Read = Read,
-            Close = Close,
-            Length = Length,
-            Seek = Seek
-        };
+        private FileProcedures instanceProcedures =>
+            new FileProcedures
+            {
+                Read = Read,
+                Close = Close,
+                Length = Length,
+                Seek = Seek,
+            };
 
         private static readonly FileProcedures static_procedures = new FileProcedures
         {
             Read = readCallback,
             Close = closeCallback,
             Length = lengthCallback,
-            Seek = seekCallback
+            Seek = seekCallback,
         };
 
         private readonly IFileProcedures implementation;
@@ -41,23 +42,29 @@ namespace osu.Framework.Audio.Callbacks
 
         public FileCallbacks(IFileProcedures implementation)
         {
-            Callbacks = RuntimeFeature.IsDynamicCodeSupported ? instanceProcedures : static_procedures;
+            Callbacks = RuntimeFeature.IsDynamicCodeSupported
+                ? instanceProcedures
+                : static_procedures;
             this.implementation = implementation;
             procedures = null;
         }
 
         public FileCallbacks(FileProcedures procedures)
         {
-            Callbacks = RuntimeFeature.IsDynamicCodeSupported ? instanceProcedures : static_procedures;
+            Callbacks = RuntimeFeature.IsDynamicCodeSupported
+                ? instanceProcedures
+                : static_procedures;
             this.procedures = procedures;
             implementation = null;
         }
 
         public long Length(IntPtr user) => implementation?.Length(user) ?? procedures.Length(user);
 
-        public bool Seek(long offset, IntPtr user) => implementation?.Seek(offset, user) ?? procedures.Seek(offset, user);
+        public bool Seek(long offset, IntPtr user) =>
+            implementation?.Seek(offset, user) ?? procedures.Seek(offset, user);
 
-        public int Read(IntPtr buffer, int length, IntPtr user) => implementation?.Read(buffer, length, user) ?? procedures.Read(buffer, length, user);
+        public int Read(IntPtr buffer, int length, IntPtr user) =>
+            implementation?.Read(buffer, length, user) ?? procedures.Read(buffer, length, user);
 
         public void Close(IntPtr user)
         {

@@ -23,7 +23,10 @@ namespace osu.Framework.Benchmarks
         {
             SixLabors.ImageSharp.Configuration.Default.MemoryAllocator = MemoryAllocator.Default;
 
-            baseResources = new NamespacedResourceStore<byte[]>(new DllResourceStore(@"osu.Framework.dll"), @"Resources");
+            baseResources = new NamespacedResourceStore<byte[]>(
+                new DllResourceStore(@"osu.Framework.dll"),
+                @"Resources"
+            );
             sharedTemp = new TemporaryNativeStorage("fontstore-test-" + Guid.NewGuid());
         }
 
@@ -89,7 +92,9 @@ namespace osu.Framework.Benchmarks
         {
             store.LoadFontAsync().WaitSafely();
 
-            var props = typeof(FontAwesome.Solid).GetProperties(BindingFlags.Public | BindingFlags.Static);
+            var props = typeof(FontAwesome.Solid).GetProperties(
+                BindingFlags.Public | BindingFlags.Static
+            );
 
             int remainingCount = FetchCount;
 

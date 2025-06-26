@@ -3,9 +3,9 @@
 
 using System;
 using NUnit.Framework;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
@@ -22,69 +22,72 @@ namespace osu.Framework.Tests.Visual.Drawables
         private CircularContainer circleMask = null!;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = new GridContainer
+        public void Setup() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                RowDimensions = new[]
+                Child = new GridContainer
                 {
-                    new Dimension(GridSizeMode.Absolute, 100),
-                    new Dimension(),
-                },
-                ColumnDimensions = new[]
-                {
-                    new Dimension(GridSizeMode.Relative, 0.5f),
-                    new Dimension()
-                },
-                Content = new[]
-                {
-                    new Drawable[]
+                    RelativeSizeAxes = Axes.Both,
+                    RowDimensions = new[]
                     {
-                        new SpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = "FastCircle"
-                        },
-                        new SpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = "Circle"
-                        }
+                        new Dimension(GridSizeMode.Absolute, 100),
+                        new Dimension(),
                     },
-                    new Drawable[]
+                    ColumnDimensions = new[]
                     {
-                        fastCircleMask = new CircularContainer
+                        new Dimension(GridSizeMode.Relative, 0.5f),
+                        new Dimension(),
+                    },
+                    Content = new[]
+                    {
+                        new Drawable[]
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.TopRight,
-                            Size = new Vector2(200),
-                            Child = fastCircle = new TestCircle
+                            new SpriteText
                             {
-                                Anchor = Anchor.TopRight,
+                                Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
+                                Text = "FastCircle",
+                            },
+                            new SpriteText
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = "Circle",
+                            },
+                        },
+                        new Drawable[]
+                        {
+                            fastCircleMask = new CircularContainer
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.TopRight,
                                 Size = new Vector2(200),
-                                Clicked = onClick
-                            }
-                        },
-                        circleMask = new CircularContainer
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.TopRight,
-                            Size = new Vector2(200),
-                            Child = circle = new Circle
+                                Child = fastCircle =
+                                    new TestCircle
+                                    {
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.Centre,
+                                        Size = new Vector2(200),
+                                        Clicked = onClick,
+                                    },
+                            },
+                            circleMask = new CircularContainer
                             {
-                                Anchor = Anchor.TopRight,
-                                Origin = Anchor.Centre,
-                                Size = new Vector2(200)
-                            }
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.TopRight,
+                                Size = new Vector2(200),
+                                Child = circle =
+                                    new Circle
+                                    {
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.Centre,
+                                        Size = new Vector2(200),
+                                    },
+                            },
                         },
-                    }
-                }
-            };
-        });
+                    },
+                };
+            });
 
         [Test]
         public void TestInput()
@@ -97,52 +100,73 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void TestSmoothness()
         {
-            AddStep("Change smoothness to 0", () => fastCircle.EdgeSmoothness = circle.MaskingSmoothness = 0);
-            AddStep("Change smoothness to 1", () => fastCircle.EdgeSmoothness = circle.MaskingSmoothness = 1);
-            AddStep("Change smoothness to 5", () => fastCircle.EdgeSmoothness = circle.MaskingSmoothness = 5);
+            AddStep(
+                "Change smoothness to 0",
+                () => fastCircle.EdgeSmoothness = circle.MaskingSmoothness = 0
+            );
+            AddStep(
+                "Change smoothness to 1",
+                () => fastCircle.EdgeSmoothness = circle.MaskingSmoothness = 1
+            );
+            AddStep(
+                "Change smoothness to 5",
+                () => fastCircle.EdgeSmoothness = circle.MaskingSmoothness = 5
+            );
         }
 
         [Test]
         public void TestNestedMasking()
         {
-            AddToggleStep("Toggle parent masking", m => fastCircleMask.Masking = circleMask.Masking = m);
+            AddToggleStep(
+                "Toggle parent masking",
+                m => fastCircleMask.Masking = circleMask.Masking = m
+            );
         }
 
         [Test]
         public void TestRotation()
         {
             resize(new Vector2(200, 100));
-            AddToggleStep("Toggle rotation", rotate =>
-            {
-                fastCircle.ClearTransforms();
-                circle.ClearTransforms();
-
-                if (rotate)
+            AddToggleStep(
+                "Toggle rotation",
+                rotate =>
                 {
-                    fastCircle.Spin(2000, RotationDirection.Clockwise);
-                    circle.Spin(2000, RotationDirection.Clockwise);
+                    fastCircle.ClearTransforms();
+                    circle.ClearTransforms();
+
+                    if (rotate)
+                    {
+                        fastCircle.Spin(2000, RotationDirection.Clockwise);
+                        circle.Spin(2000, RotationDirection.Clockwise);
+                    }
                 }
-            });
+            );
         }
 
         [Test]
         public void TestShear()
         {
             resize(new Vector2(200, 100));
-            AddToggleStep("Toggle shear", shear =>
-            {
-                fastCircle.Shear = circle.Shear = shear ? new Vector2(0.5f, 0) : Vector2.Zero;
-            });
+            AddToggleStep(
+                "Toggle shear",
+                shear =>
+                {
+                    fastCircle.Shear = circle.Shear = shear ? new Vector2(0.5f, 0) : Vector2.Zero;
+                }
+            );
         }
 
         [Test]
         public void TestScale()
         {
             resize(new Vector2(200, 100));
-            AddToggleStep("Toggle scale", scale =>
-            {
-                fastCircle.Scale = circle.Scale = scale ? new Vector2(2f, 1f) : Vector2.One;
-            });
+            AddToggleStep(
+                "Toggle scale",
+                scale =>
+                {
+                    fastCircle.Scale = circle.Scale = scale ? new Vector2(2f, 1f) : Vector2.One;
+                }
+            );
         }
 
         private void testInput(Vector2 size)
@@ -156,16 +180,23 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private void resize(Vector2 size)
         {
-            AddStep($"Resize to {size}", () =>
-            {
-                fastCircle.Size = circle.Size = size;
-            });
+            AddStep(
+                $"Resize to {size}",
+                () =>
+                {
+                    fastCircle.Size = circle.Size = size;
+                }
+            );
         }
 
         private void clickNearCorner(Vector2 offset)
         {
             clicked = false;
-            InputManager.MoveMouseTo(fastCircle.ToScreenSpace(new Vector2(fastCircle.Radius * (1f - MathF.Sqrt(0.5f))) + offset));
+            InputManager.MoveMouseTo(
+                fastCircle.ToScreenSpace(
+                    new Vector2(fastCircle.Radius * (1f - MathF.Sqrt(0.5f))) + offset
+                )
+            );
             InputManager.Click(MouseButton.Left);
         }
 

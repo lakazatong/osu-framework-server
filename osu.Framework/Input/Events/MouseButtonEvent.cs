@@ -18,7 +18,11 @@ namespace osu.Framework.Input.Events
 
         public Vector2 MouseDownPosition => ToLocalSpace(ScreenSpaceMouseDownPosition);
 
-        protected MouseButtonEvent(InputState state, MouseButton button, Vector2? screenSpaceMouseDownPosition)
+        protected MouseButtonEvent(
+            InputState state,
+            MouseButton button,
+            Vector2? screenSpaceMouseDownPosition
+        )
             : base(state)
         {
             Button = button;

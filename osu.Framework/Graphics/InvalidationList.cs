@@ -42,7 +42,12 @@ namespace osu.Framework.Graphics
         public bool Invalidate(InvalidationSource source, Invalidation flags)
         {
             // Guaranteed by preconditions at the call site.
-            Debug.Assert(source is InvalidationSource.Self or InvalidationSource.Parent or InvalidationSource.Child);
+            Debug.Assert(
+                source
+                    is InvalidationSource.Self
+                        or InvalidationSource.Parent
+                        or InvalidationSource.Child
+            );
 
             switch (source)
             {
@@ -67,8 +72,8 @@ namespace osu.Framework.Graphics
         public bool Validate(Invalidation validation)
         {
             return validate(selfInvalidation, validation, out selfInvalidation)
-                   | validate(parentInvalidation, validation, out parentInvalidation)
-                   | validate(childInvalidation, validation, out childInvalidation);
+                | validate(parentInvalidation, validation, out parentInvalidation)
+                | validate(childInvalidation, validation, out childInvalidation);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -28,7 +28,10 @@ namespace osu.Framework.Graphics.Sprites
         private void load(FontStore store, ShaderManager shaders)
         {
             this.store = store;
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
             updateTexture();
         }
 
@@ -39,7 +42,8 @@ namespace osu.Framework.Graphics.Sprites
         {
             var loadableIcon = icon;
 
-            if (loadableIcon.Equals(loadedIcon)) return;
+            if (loadableIcon.Equals(loadedIcon))
+                return;
 
             var glyph = store.Get(loadableIcon.FontName, Icon.Icon);
 
@@ -113,7 +117,8 @@ namespace osu.Framework.Graphics.Sprites
             get => icon;
             set
             {
-                if (icon.Equals(value)) return;
+                if (icon.Equals(value))
+                    return;
 
                 icon = value;
                 if (LoadState > LoadState.NotLoaded)
@@ -128,9 +133,7 @@ namespace osu.Framework.Graphics.Sprites
             protected new SpriteIcon Source => (SpriteIcon)base.Source;
 
             public SpriteIconDrawNode(SpriteIcon source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             private bool shadow;
             private ColourInfo shadowDrawColour;
@@ -151,7 +154,10 @@ namespace osu.Framework.Graphics.Sprites
                 RectangleF drawRect = Source.DrawRectangle;
 
                 // scale texture to fit into drawable
-                float scale = Math.Min(drawRect.Width / texture.Width, drawRect.Height / texture.Height);
+                float scale = Math.Min(
+                    drawRect.Width / texture.Width,
+                    drawRect.Height / texture.Height
+                );
                 drawRect.Size = texture.Size * scale;
 
                 // move draw rectangle to make texture centered
@@ -170,7 +176,10 @@ namespace osu.Framework.Graphics.Sprites
                 //adjust shadow alpha based on highest component intensity to avoid muddy display of darker text.
                 //squared result for quadratic fall-off seems to give the best result.
                 var avgColour = (Color4)DrawColourInfo.Colour.AverageColour;
-                float alpha = MathF.Pow(Math.Max(Math.Max(avgColour.R, avgColour.G), avgColour.B), 2);
+                float alpha = MathF.Pow(
+                    Math.Max(Math.Max(avgColour.R, avgColour.G), avgColour.B),
+                    2
+                );
 
                 shadowCol = shadowCol.MultiplyAlpha(alpha);
 

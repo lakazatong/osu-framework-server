@@ -23,14 +23,14 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public Bindable<int> GetUnboundCopy() => new Bindable<int>().GetUnboundCopy();
 
-        private class BindableOld<T> : Bindable<T> where T : notnull
+        private class BindableOld<T> : Bindable<T>
+            where T : notnull
         {
             public BindableOld(T defaultValue = default!)
-                : base(defaultValue)
-            {
-            }
+                : base(defaultValue) { }
 
-            protected override Bindable<T> CreateInstance() => (BindableOld<T>)Activator.CreateInstance(GetType(), Value).AsNonNull();
+            protected override Bindable<T> CreateInstance() =>
+                (BindableOld<T>)Activator.CreateInstance(GetType(), Value).AsNonNull();
         }
     }
 }

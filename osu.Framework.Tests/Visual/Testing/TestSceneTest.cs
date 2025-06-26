@@ -24,7 +24,10 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             // Under nUnit, [SetUp] is run once for the base TestScene.TestConstructor() method. Our own test method has not run yet by this point, so this is ignored.
             // The test browser does _not_ invoke [SetUp] for the constructor, and the TestScene.TestConstructor() method is skipped.
-            if (DebugUtils.IsNUnitRunning && TestContext.CurrentContext.Test.MethodName == nameof(TestConstructor))
+            if (
+                DebugUtils.IsNUnitRunning
+                && TestContext.CurrentContext.Test.MethodName == nameof(TestConstructor)
+            )
                 return;
 
             setupRun++;
@@ -35,15 +38,20 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             // Under nUnit, [SetUpSteps] is run once for the base TestScene.TestConstructor() method. Our own test method has not run yet by this point, so this is ignored.
             // The test browser does _not_ invoke [SetUpSteps] for the constructor, and the TestScene.TestConstructor() method is skipped.
-            if (DebugUtils.IsNUnitRunning && TestContext.CurrentContext.Test.MethodName == nameof(TestConstructor))
+            if (
+                DebugUtils.IsNUnitRunning
+                && TestContext.CurrentContext.Test.MethodName == nameof(TestConstructor)
+            )
                 return;
 
-            AddStep(new SingleStepButton
-            {
-                Text = "set up dummy",
-                IsSetupStep = true,
-                Action = () => setupStepsDummyRun++
-            });
+            AddStep(
+                new SingleStepButton
+                {
+                    Text = "set up dummy",
+                    IsSetupStep = true,
+                    Action = () => setupStepsDummyRun++,
+                }
+            );
 
             AddStep("set up second step", () => { });
             setupStepsRun++;
@@ -54,7 +62,10 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             // Under nUnit, [TearDownSteps] is run once for the base TestScene.TestConstructor() method. Our own test method has not run yet by this point, so this is ignored.
             // The test browser does _not_ invoke [TearDownSteps] for the constructor, and the TestScene.TestConstructor() method is skipped.
-            if (DebugUtils.IsNUnitRunning && TestContext.CurrentContext.Test.MethodName == nameof(TestConstructor))
+            if (
+                DebugUtils.IsNUnitRunning
+                && TestContext.CurrentContext.Test.MethodName == nameof(TestConstructor)
+            )
                 return;
 
             AddStep("tear down dummy", () => teardownStepsDummyRun++);
@@ -81,7 +92,10 @@ namespace osu.Framework.Tests.Visual.Testing
             // Test browser:
             // [SetUp] -> [Test] -> [TearDown] -> [SetUp] -> [Test] -> [TearDown] -> ... -> {{ Run steps }}
             //
-            AddAssert("correct [SetUp] run count", () => setupRun == (DebugUtils.IsNUnitRunning ? testRunCount : testRunCountDummyRun));
+            AddAssert(
+                "correct [SetUp] run count",
+                () => setupRun == (DebugUtils.IsNUnitRunning ? testRunCount : testRunCountDummyRun)
+            );
 
             // Under both nUnit and the test browser, this should be invoked once for all test methods _before_ any test steps are run.
             AddAssert("correct [SetUpSteps] run count", () => setupStepsRun == testRunCount);
@@ -93,9 +107,19 @@ namespace osu.Framework.Tests.Visual.Testing
             AddAssert("correct [TearDownSteps] run count", () => teardownStepsRun == testRunCount);
 
             // Under both nUnit and the test browser, this should be invoked once _after_ each test method.
-            AddAssert("correct teardown step run", () => teardownStepsDummyRun == testRunCountDummyRun - 1);
+            AddAssert(
+                "correct teardown step run",
+                () => teardownStepsDummyRun == testRunCountDummyRun - 1
+            );
 
-            AddAssert("setup step marked as such", () => StepsContainer.OfType<StepButton>().First(s => s.Text.ToString() == "set up second step").IsSetupStep);
+            AddAssert(
+                "setup step marked as such",
+                () =>
+                    StepsContainer
+                        .OfType<StepButton>()
+                        .First(s => s.Text.ToString() == "set up second step")
+                        .IsSetupStep
+            );
 
             testRunCount++;
         }

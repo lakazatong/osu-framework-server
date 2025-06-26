@@ -24,15 +24,18 @@ namespace osu.Framework.Tests.Platform
         {
             var gameCreated = new ManualResetEventSlim();
 
-            var task = Task.Factory.StartNew(() =>
-            {
-                using (host = new ManualExitHeadlessGameHost())
+            var task = Task.Factory.StartNew(
+                () =>
                 {
-                    game = new TestTestGame();
-                    gameCreated.Set();
-                    host.Run(game);
-                }
-            }, TaskCreationOptions.LongRunning);
+                    using (host = new ManualExitHeadlessGameHost())
+                    {
+                        game = new TestTestGame();
+                        gameCreated.Set();
+                        host.Run(game);
+                    }
+                },
+                TaskCreationOptions.LongRunning
+            );
 
             gameCreated.Wait(timeout);
             Assert.IsTrue(game.BecameAlive.Wait(timeout));

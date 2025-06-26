@@ -42,16 +42,21 @@ namespace osu.Framework.Benchmarks
             char different = 'B';
 
             for (int i = 0; i < 100; i++)
-                textBuilder.AddCharacter(withDifferentBaselines && (i % 10 == 0) ? different++ : 'A');
+                textBuilder.AddCharacter(
+                    withDifferentBaselines && (i % 10 == 0) ? different++ : 'A'
+                );
         }
 
         private class TestStore : ITexturedGlyphLookupStore
         {
-            public ITexturedCharacterGlyph Get(string? fontName, char character) => new TexturedCharacterGlyph(
-                new CharacterGlyph(character, character, character, character, character, null),
-                new DummyRenderer().CreateTexture(1, 1));
+            public ITexturedCharacterGlyph Get(string? fontName, char character) =>
+                new TexturedCharacterGlyph(
+                    new CharacterGlyph(character, character, character, character, character, null),
+                    new DummyRenderer().CreateTexture(1, 1)
+                );
 
-            public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) => Task.Run<ITexturedCharacterGlyph?>(() => Get(fontName, character));
+            public Task<ITexturedCharacterGlyph?> GetAsync(string fontName, char character) =>
+                Task.Run<ITexturedCharacterGlyph?>(() => Get(fontName, character));
         }
     }
 }

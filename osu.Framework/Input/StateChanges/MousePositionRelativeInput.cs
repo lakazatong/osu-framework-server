@@ -28,7 +28,9 @@ namespace osu.Framework.Input.StateChanges
                 var lastPosition = mouse.Position;
                 mouse.Position += Delta;
                 mouse.LastSource = this;
-                handler.HandleInputStateChange(new MousePositionChangeEvent(state, this, lastPosition));
+                handler.HandleInputStateChange(
+                    new MousePositionChangeEvent(state, this, lastPosition)
+                );
             }
         }
     }

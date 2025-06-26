@@ -28,28 +28,40 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestStandard()
         {
-            AddStep("Create scroll container", () =>
-            {
-                Add(scrollContainer = new BasicScrollContainer
+            AddStep(
+                "Create scroll container",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    ScrollbarVisible = true,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.7f, 0.9f),
-                });
+                    Add(
+                        scrollContainer = new BasicScrollContainer
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            ScrollbarVisible = true,
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(0.7f, 0.9f),
+                        }
+                    );
 
-                for (int i = 0; i < item_count; i++)
-                {
-                    scrollContainer.Add(new BoxWithDouble
+                    for (int i = 0; i < item_count; i++)
                     {
-                        Colour = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                        RelativeSizeAxes = Axes.X,
-                        Height = item_height,
-                        Y = i * item_height,
-                    });
+                        scrollContainer.Add(
+                            new BoxWithDouble
+                            {
+                                Colour = new Color4(
+                                    RNG.NextSingle(1),
+                                    RNG.NextSingle(1),
+                                    RNG.NextSingle(1),
+                                    1
+                                ),
+                                RelativeSizeAxes = Axes.X,
+                                Height = item_height,
+                                Y = i * item_height,
+                            }
+                        );
+                    }
                 }
-            });
+            );
 
             scrollIntoView(item_count - 2);
             scrollIntoView(item_count - 1);
@@ -58,28 +70,40 @@ namespace osu.Framework.Tests.Visual.Containers
         [Test]
         public void TestDoublePrecision()
         {
-            AddStep("Create scroll container", () =>
-            {
-                Add(scrollContainer = new DoubleScrollContainer
+            AddStep(
+                "Create scroll container",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    ScrollbarVisible = true,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.7f, 0.9f),
-                });
+                    Add(
+                        scrollContainer = new DoubleScrollContainer
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            ScrollbarVisible = true,
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(0.7f, 0.9f),
+                        }
+                    );
 
-                for (int i = 0; i < item_count; i++)
-                {
-                    scrollContainer.Add(new BoxWithDouble
+                    for (int i = 0; i < item_count; i++)
                     {
-                        Colour = new Color4(RNG.NextSingle(1), RNG.NextSingle(1), RNG.NextSingle(1), 1),
-                        RelativeSizeAxes = Axes.X,
-                        Height = item_height,
-                        DoubleLocation = i * item_height,
-                    });
+                        scrollContainer.Add(
+                            new BoxWithDouble
+                            {
+                                Colour = new Color4(
+                                    RNG.NextSingle(1),
+                                    RNG.NextSingle(1),
+                                    RNG.NextSingle(1),
+                                    1
+                                ),
+                                RelativeSizeAxes = Axes.X,
+                                Height = item_height,
+                                DoubleLocation = i * item_height,
+                            }
+                        );
+                    }
                 }
-            });
+            );
 
             scrollIntoView(item_count - 2);
             scrollIntoView(item_count - 1);
@@ -87,8 +111,22 @@ namespace osu.Framework.Tests.Visual.Containers
 
         private void scrollIntoView(int index)
         {
-            AddStep($"scroll {index} into view", () => scrollContainer.ScrollIntoView(scrollContainer.ChildrenOfType<BoxWithDouble>().Skip(index).First()));
-            AddUntilStep($"{index} is visible", () => !scrollContainer.ChildrenOfType<BoxWithDouble>().Skip(index).First().IsMaskedAway);
+            AddStep(
+                $"scroll {index} into view",
+                () =>
+                    scrollContainer.ScrollIntoView(
+                        scrollContainer.ChildrenOfType<BoxWithDouble>().Skip(index).First()
+                    )
+            );
+            AddUntilStep(
+                $"{index} is visible",
+                () =>
+                    !scrollContainer
+                        .ChildrenOfType<BoxWithDouble>()
+                        .Skip(index)
+                        .First()
+                        .IsMaskedAway
+            );
         }
 
         public partial class DoubleScrollContainer : BasicScrollContainer
@@ -108,7 +146,11 @@ namespace osu.Framework.Tests.Visual.Containers
                 if (drawable is not BoxWithDouble boxWithDouble)
                     throw new InvalidOperationException();
 
-                layoutContent.Height = (float)Math.Max(layoutContent.Height, boxWithDouble.DoubleLocation + boxWithDouble.DrawHeight);
+                layoutContent.Height = (float)
+                    Math.Max(
+                        layoutContent.Height,
+                        boxWithDouble.DoubleLocation + boxWithDouble.DrawHeight
+                    );
                 layoutContent.Add(drawable);
             }
 
@@ -116,10 +158,9 @@ namespace osu.Framework.Tests.Visual.Containers
             {
                 // Managing our own custom layout within ScrollContent causes feedback with internal ScrollContainer calculations,
                 // so we must maintain one level of separation from ScrollContent.
-                base.Add(layoutContent = new Container<BoxWithDouble>
-                {
-                    RelativeSizeAxes = Axes.X,
-                });
+                base.Add(
+                    layoutContent = new Container<BoxWithDouble> { RelativeSizeAxes = Axes.X }
+                );
             }
 
             public override double GetChildPosInContent(Drawable d, Vector2 offset)
@@ -134,7 +175,8 @@ namespace osu.Framework.Tests.Visual.Containers
             {
                 Debug.Assert(ScrollDirection == Direction.Vertical);
 
-                double scrollableExtent = -Current + ScrollableExtent * ScrollContent.RelativeAnchorPosition.Y;
+                double scrollableExtent =
+                    -Current + ScrollableExtent * ScrollContent.RelativeAnchorPosition.Y;
 
                 foreach (var d in layoutContent)
                     d.Y = (float)(d.DoubleLocation + scrollableExtent);

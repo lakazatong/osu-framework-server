@@ -3,10 +3,10 @@
 
 #nullable disable
 
-using osuTK;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using osuTK;
 
 namespace osu.Framework.Graphics.Primitives
 {
@@ -17,9 +17,7 @@ namespace osu.Framework.Graphics.Primitives
         public int Y;
 
         public Vector2I(int val)
-            : this(val, val)
-        {
-        }
+            : this(val, val) { }
 
         public Vector2I(int x, int y)
         {
@@ -37,9 +35,11 @@ namespace osu.Framework.Graphics.Primitives
 
         public static bool operator !=(Vector2I left, Vector2I right) => !(left == right);
 
-        public static Vector2I operator +(Vector2I left, Vector2I right) => new Vector2I(left.X + right.X, left.Y + right.Y);
+        public static Vector2I operator +(Vector2I left, Vector2I right) =>
+            new Vector2I(left.X + right.X, left.Y + right.Y);
 
-        public static Vector2I operator -(Vector2I left, Vector2I right) => new Vector2I(left.X - right.X, left.Y - right.Y);
+        public static Vector2I operator -(Vector2I left, Vector2I right) =>
+            new Vector2I(left.X - right.X, left.Y - right.Y);
 
         public readonly bool Equals(Vector2I other) => other.X == X && other.Y == Y;
 
@@ -52,6 +52,7 @@ namespace osu.Framework.Graphics.Primitives
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        public override readonly int GetHashCode() => (int)(((uint)X ^ ((uint)Y << 13)) | ((uint)Y >> 0x13));
+        public override readonly int GetHashCode() =>
+            (int)(((uint)X ^ ((uint)Y << 13)) | ((uint)Y >> 0x13));
     }
 }

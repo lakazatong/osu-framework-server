@@ -38,11 +38,16 @@ namespace osu.Framework.Platform
             return true;
         }
 
-        public override void OpenUrlExternally(string url) => Logger.Log($"Application has requested URL \"{url}\" to be opened.");
+        public override void OpenUrlExternally(string url) =>
+            Logger.Log($"Application has requested URL \"{url}\" to be opened.");
 
         public override IEnumerable<string> UserStoragePaths => new[] { "./headless/" };
 
-        public HeadlessGameHost(string? gameName = null, HostOptions? options = null, bool realtime = true)
+        public HeadlessGameHost(
+            string? gameName = null,
+            HostOptions? options = null,
+            bool realtime = true
+        )
             : base(gameName ?? Guid.NewGuid().ToString(), options)
         {
             this.realtime = realtime;
@@ -54,7 +59,8 @@ namespace osu.Framework.Platform
 
         protected override Clipboard CreateClipboard() => new HeadlessClipboard();
 
-        protected override void ChooseAndSetupRenderer() => SetupRendererAndWindow(new DummyRenderer(), GraphicsSurfaceType.OpenGL);
+        protected override void ChooseAndSetupRenderer() =>
+            SetupRendererAndWindow(new DummyRenderer(), GraphicsSurfaceType.OpenGL);
 
         protected override void SetupConfig(IDictionary<FrameworkSetting, object> defaultOverrides)
         {
@@ -64,8 +70,13 @@ namespace osu.Framework.Platform
 
             if (FrameworkEnvironment.StartupExecutionMode != null)
             {
-                Config.SetValue(FrameworkSetting.ExecutionMode, FrameworkEnvironment.StartupExecutionMode.Value);
-                Logger.Log($"Startup execution mode set to {FrameworkEnvironment.StartupExecutionMode} from envvar");
+                Config.SetValue(
+                    FrameworkSetting.ExecutionMode,
+                    FrameworkEnvironment.StartupExecutionMode.Value
+                );
+                Logger.Log(
+                    $"Startup execution mode set to {FrameworkEnvironment.StartupExecutionMode} from envvar"
+                );
             }
         }
 
@@ -104,7 +115,8 @@ namespace osu.Framework.Platform
             base.UpdateFrame();
         }
 
-        protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() => Array.Empty<InputHandler>();
+        protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() =>
+            Array.Empty<InputHandler>();
 
         private class FastClock : IClock
         {

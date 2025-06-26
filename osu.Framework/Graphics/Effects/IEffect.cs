@@ -7,7 +7,8 @@ namespace osu.Framework.Graphics.Effects
     /// Represents an effect that can be applied to a drawable.
     /// </summary>
     /// <typeparam name="T">The type of the drawable that is created as a result of applying the effect to a drawable.</typeparam>
-    public interface IEffect<out T> where T : Drawable
+    public interface IEffect<out T>
+        where T : Drawable
     {
         /// <summary>
         /// Applies this effect to the given drawable.

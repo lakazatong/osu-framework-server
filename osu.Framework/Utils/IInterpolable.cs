@@ -24,6 +24,14 @@ namespace osu.Framework.Utils
         /// <param name="endTime">The end time.</param>
         /// <param name="easing">The easing function to use.</param>
         /// <returns>The interpolated value.</returns>
-        TValue ValueAt<TEasing>(double time, TValue startValue, TValue endValue, double startTime, double endTime, in TEasing easing) where TEasing : IEasingFunction;
+        TValue ValueAt<TEasing>(
+            double time,
+            TValue startValue,
+            TValue endValue,
+            double startTime,
+            double endTime,
+            in TEasing easing
+        )
+            where TEasing : IEasingFunction;
     }
 }

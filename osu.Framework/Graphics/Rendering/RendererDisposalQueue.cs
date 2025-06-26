@@ -69,8 +69,10 @@ namespace osu.Framework.Graphics.Rendering
 
             // note the signs - a 0 in the inner loop is a -1 here due to the postfix decrement.
             Debug.Assert(pendingDisposals[lastExecutedDisposal].RemainingFrameDelay < 0);
-            Debug.Assert(lastExecutedDisposal + 1 == pendingDisposals.Count
-                         || pendingDisposals[lastExecutedDisposal + 1].RemainingFrameDelay >= 0);
+            Debug.Assert(
+                lastExecutedDisposal + 1 == pendingDisposals.Count
+                    || pendingDisposals[lastExecutedDisposal + 1].RemainingFrameDelay >= 0
+            );
 
             pendingDisposals.RemoveRange(0, lastExecutedDisposal + 1);
         }

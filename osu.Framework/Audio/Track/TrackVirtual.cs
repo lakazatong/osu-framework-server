@@ -58,12 +58,14 @@ namespace osu.Framework.Audio.Track
             if (Length == 0 || CurrentTime >= Length)
                 return;
 
-            lock (clock) clock.Start();
+            lock (clock)
+                clock.Start();
         }
 
         public override void Reset()
         {
-            lock (clock) clock.Reset();
+            lock (clock)
+                clock.Reset();
             seekOffset = 0;
 
             base.Reset();
@@ -71,14 +73,16 @@ namespace osu.Framework.Audio.Track
 
         public override void Stop()
         {
-            lock (clock) clock.Stop();
+            lock (clock)
+                clock.Stop();
         }
 
         public override bool IsRunning
         {
             get
             {
-                lock (clock) return clock.IsRunning;
+                lock (clock)
+                    return clock.IsRunning;
             }
         }
 
@@ -86,7 +90,8 @@ namespace osu.Framework.Audio.Track
         {
             get
             {
-                lock (clock) return Math.Min(Length, seekOffset + clock.CurrentTime);
+                lock (clock)
+                    return Math.Min(Length, seekOffset + clock.CurrentTime);
             }
         }
 

@@ -28,10 +28,12 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             ColourPicker colourPicker = null;
 
-            AddStep("create picker", () => Child = colourPicker = new BasicColourPicker
-            {
-                Current = { Value = Colour4.Goldenrod }
-            });
+            AddStep(
+                "create picker",
+                () =>
+                    Child = colourPicker =
+                        new BasicColourPicker { Current = { Value = Colour4.Goldenrod } }
+            );
             AddAssert("colour is correct", () => colourPicker.Current.Value == Colour4.Goldenrod);
         }
 
@@ -44,21 +46,30 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             ColourPicker colourPicker = null;
 
-            AddStep("create picker", () => Child = colourPicker = new BasicColourPicker
-            {
-                Current = { Value = Colour4.Goldenrod }
-            });
+            AddStep(
+                "create picker",
+                () =>
+                    Child = colourPicker =
+                        new BasicColourPicker { Current = { Value = Colour4.Goldenrod } }
+            );
             AddStep("hide picker", () => colourPicker.Hide());
-            AddStep("set HSV manually", () =>
-            {
-                var saturationValueControl = this.ChildrenOfType<HSVColourPicker.SaturationValueSelector>().Single();
+            AddStep(
+                "set HSV manually",
+                () =>
+                {
+                    var saturationValueControl =
+                        this.ChildrenOfType<HSVColourPicker.SaturationValueSelector>().Single();
 
-                saturationValueControl.Hue.Value = hue;
-                saturationValueControl.Saturation.Value = saturation;
-                saturationValueControl.Value.Value = value;
-            });
+                    saturationValueControl.Hue.Value = hue;
+                    saturationValueControl.Saturation.Value = saturation;
+                    saturationValueControl.Value.Value = value;
+                }
+            );
 
-            AddUntilStep("colour is correct", () => colourPicker.Current.Value == Colour4.FromHSV(hue, saturation, value));
+            AddUntilStep(
+                "colour is correct",
+                () => colourPicker.Current.Value == Colour4.FromHSV(hue, saturation, value)
+            );
         }
     }
 }

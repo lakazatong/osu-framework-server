@@ -49,10 +49,10 @@ namespace osu.Framework.Tests.Visual.Input
                     auxButtonFlow = new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y
+                        AutoSizeAxes = Axes.Y,
                     },
                     thresholdTester = new PenThresholdTester(),
-                }
+                },
             };
 
             for (int i = 0; i < 8; i++)
@@ -69,7 +69,9 @@ namespace osu.Framework.Tests.Visual.Input
         {
             base.LoadComplete();
 
-            var tabletHandler = host.AvailableInputHandlers.OfType<OpenTabletDriverHandler>().FirstOrDefault();
+            var tabletHandler = host
+                .AvailableInputHandlers.OfType<OpenTabletDriverHandler>()
+                .FirstOrDefault();
 
             if (tabletHandler != null)
             {
@@ -84,42 +86,88 @@ namespace osu.Framework.Tests.Visual.Input
 
                 AddToggleStep("toggle tablet handling", t => tabletHandler.Enabled.Value = t);
 
-                AddSliderStep("change width", 0, 1, 1f,
-                    width => tabletHandler.AreaSize.Value = new Vector2(
-                        tabletHandler.AreaSize.Default.X * width,
-                        tabletHandler.AreaSize.Value.Y));
+                AddSliderStep(
+                    "change width",
+                    0,
+                    1,
+                    1f,
+                    width =>
+                        tabletHandler.AreaSize.Value = new Vector2(
+                            tabletHandler.AreaSize.Default.X * width,
+                            tabletHandler.AreaSize.Value.Y
+                        )
+                );
 
-                AddSliderStep("change height", 0, 1, 1f,
-                    height => tabletHandler.AreaSize.Value = new Vector2(
-                        tabletHandler.AreaSize.Value.X,
-                        tabletHandler.AreaSize.Default.Y * height));
+                AddSliderStep(
+                    "change height",
+                    0,
+                    1,
+                    1f,
+                    height =>
+                        tabletHandler.AreaSize.Value = new Vector2(
+                            tabletHandler.AreaSize.Value.X,
+                            tabletHandler.AreaSize.Default.Y * height
+                        )
+                );
 
-                AddSliderStep("change X offset", 0, 1, 0.5f,
-                    xOffset => tabletHandler.AreaOffset.Value = new Vector2(
-                        tabletHandler.AreaSize.Default.X * xOffset,
-                        tabletHandler.AreaOffset.Value.Y));
+                AddSliderStep(
+                    "change X offset",
+                    0,
+                    1,
+                    0.5f,
+                    xOffset =>
+                        tabletHandler.AreaOffset.Value = new Vector2(
+                            tabletHandler.AreaSize.Default.X * xOffset,
+                            tabletHandler.AreaOffset.Value.Y
+                        )
+                );
 
-                AddSliderStep("change Y offset", 0, 1, 0.5f,
-                    yOffset => tabletHandler.AreaOffset.Value = new Vector2(
-                        tabletHandler.AreaOffset.Value.X,
-                        tabletHandler.AreaSize.Default.Y * yOffset));
+                AddSliderStep(
+                    "change Y offset",
+                    0,
+                    1,
+                    0.5f,
+                    yOffset =>
+                        tabletHandler.AreaOffset.Value = new Vector2(
+                            tabletHandler.AreaOffset.Value.X,
+                            tabletHandler.AreaSize.Default.Y * yOffset
+                        )
+                );
 
-                AddSliderStep("change pen pressure threshold for click", 0, 1, 0f,
-                    threshold => tabletHandler.PressureThreshold.Value = threshold);
+                AddSliderStep(
+                    "change pen pressure threshold for click",
+                    0,
+                    1,
+                    0f,
+                    threshold => tabletHandler.PressureThreshold.Value = threshold
+                );
             }
 
-            AddToggleStep("toggle confine mode", enabled => frameworkConfigManager.SetValue(FrameworkSetting.ConfineMouseMode,
-                enabled ? ConfineMouseMode.Always : ConfineMouseMode.Never));
+            AddToggleStep(
+                "toggle confine mode",
+                enabled =>
+                    frameworkConfigManager.SetValue(
+                        FrameworkSetting.ConfineMouseMode,
+                        enabled ? ConfineMouseMode.Always : ConfineMouseMode.Never
+                    )
+            );
         }
 
         private void updateState()
         {
             if (tabletEnabled.Value)
-                tabletInfo.Text = tablet.Value != null ? $"Name: {tablet.Value.Name} Size: {tablet.Value.Size}" : "No tablet detected!";
+                tabletInfo.Text =
+                    tablet.Value != null
+                        ? $"Name: {tablet.Value.Name} Size: {tablet.Value.Size}"
+                        : "No tablet detected!";
             else
                 tabletInfo.Text = "Tablet input is disabled.";
 
-            areaVisualizer.Alpha = penButtonFlow.Alpha = auxButtonFlow.Alpha = thresholdTester.Alpha = tablet.Value != null && tabletEnabled.Value ? 1 : 0;
+            areaVisualizer.Alpha =
+                penButtonFlow.Alpha =
+                auxButtonFlow.Alpha =
+                thresholdTester.Alpha =
+                    tablet.Value != null && tabletEnabled.Value ? 1 : 0;
         }
 
         private partial class TabletAreaVisualiser : CompositeDrawable
@@ -146,7 +194,7 @@ namespace osu.Framework.Tests.Visual.Input
                         {
                             Width = AreaSize.Default.X,
                             Height = AreaSize.Default.Y,
-                            Colour = FrameworkColour.GreenDark
+                            Colour = FrameworkColour.GreenDark,
                         },
                         activeArea = new Container
                         {
@@ -156,16 +204,16 @@ namespace osu.Framework.Tests.Visual.Input
                                 new Box
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Colour = FrameworkColour.YellowGreen
+                                    Colour = FrameworkColour.YellowGreen,
                                 },
                                 areaText = new SpriteText
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                }
-                            }
+                                },
+                            },
                         },
-                    }
+                    },
                 };
             }
 
@@ -173,11 +221,14 @@ namespace osu.Framework.Tests.Visual.Input
             {
                 base.LoadComplete();
 
-                AreaSize.BindValueChanged(size =>
-                {
-                    activeArea.Size = size.NewValue;
-                    areaText.Text = $"Active area: {size.NewValue}";
-                }, true);
+                AreaSize.BindValueChanged(
+                    size =>
+                    {
+                        activeArea.Size = size.NewValue;
+                        areaText.Text = $"Active area: {size.NewValue}";
+                    },
+                    true
+                );
                 AreaSize.DefaultChanged += fullSize => fullArea.Size = fullSize.NewValue;
                 fullArea.Size = AreaSize.Default;
 
@@ -203,14 +254,14 @@ namespace osu.Framework.Tests.Visual.Input
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.DarkGreen,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = $"B{buttonIndex + 1}"
-                    }
+                        Text = $"B{buttonIndex + 1}",
+                    },
                 };
             }
 
@@ -253,14 +304,14 @@ namespace osu.Framework.Tests.Visual.Input
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.DarkGreen,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = $"B{buttonIndex + 1}"
-                    }
+                        Text = $"B{buttonIndex + 1}",
+                    },
                 };
             }
 
@@ -273,7 +324,9 @@ namespace osu.Framework.Tests.Visual.Input
                 return true;
             }
 
-            protected override void OnTabletAuxiliaryButtonRelease(TabletAuxiliaryButtonReleaseEvent e)
+            protected override void OnTabletAuxiliaryButtonRelease(
+                TabletAuxiliaryButtonReleaseEvent e
+            )
             {
                 if (e.Button != button)
                 {
@@ -296,15 +349,8 @@ namespace osu.Framework.Tests.Visual.Input
                 Size = new Vector2(100, 50);
                 InternalChildren = new Drawable[]
                 {
-                    background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    text = new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    }
+                    background = new Box { RelativeSizeAxes = Axes.Both },
+                    text = new SpriteText { Anchor = Anchor.Centre, Origin = Anchor.Centre },
                 };
                 setPressed(false);
             }

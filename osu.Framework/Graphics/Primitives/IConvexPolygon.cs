@@ -3,7 +3,5 @@
 
 namespace osu.Framework.Graphics.Primitives
 {
-    public interface IConvexPolygon : IPolygon
-    {
-    }
+    public interface IConvexPolygon : IPolygon { }
 }

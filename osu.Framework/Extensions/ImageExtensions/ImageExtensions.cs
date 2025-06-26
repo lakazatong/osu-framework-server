@@ -20,9 +20,10 @@ namespace osu.Framework.Extensions.ImageExtensions
         /// <param name="image">The <see cref="Image{TPixel}"/>.</param>
         /// <typeparam name="TPixel">The type of pixels in <paramref name="image"/>.</typeparam>
         /// <returns>The <see cref="ReadOnlyPixelSpan{TPixel}"/>.</returns>
-        public static ReadOnlyPixelSpan<TPixel> CreateReadOnlyPixelSpan<TPixel>(this Image<TPixel> image)
-            where TPixel : unmanaged, IPixel<TPixel>
-            => new ReadOnlyPixelSpan<TPixel>(image);
+        public static ReadOnlyPixelSpan<TPixel> CreateReadOnlyPixelSpan<TPixel>(
+            this Image<TPixel> image
+        )
+            where TPixel : unmanaged, IPixel<TPixel> => new ReadOnlyPixelSpan<TPixel>(image);
 
         /// <summary>
         /// Creates a contiguous and read-only memory from the pixels of an <see cref="Image{TPixel}"/>.
@@ -34,9 +35,10 @@ namespace osu.Framework.Extensions.ImageExtensions
         /// <param name="image">The <see cref="Image{TPixel}"/>.</param>
         /// <typeparam name="TPixel">The type of pixels in <paramref name="image"/>.</typeparam>
         /// <returns>The <see cref="ReadOnlyPixelMemory{TPixel}"/>.</returns>
-        public static ReadOnlyPixelMemory<TPixel> CreateReadOnlyPixelMemory<TPixel>(this Image<TPixel> image)
-            where TPixel : unmanaged, IPixel<TPixel>
-            => new ReadOnlyPixelMemory<TPixel>(image);
+        public static ReadOnlyPixelMemory<TPixel> CreateReadOnlyPixelMemory<TPixel>(
+            this Image<TPixel> image
+        )
+            where TPixel : unmanaged, IPixel<TPixel> => new ReadOnlyPixelMemory<TPixel>(image);
 
         /// <summary>
         /// Creates a new contiguous memory buffer from the pixels in an <see cref="Image{TPixel}"/>.
@@ -47,10 +49,15 @@ namespace osu.Framework.Extensions.ImageExtensions
         /// <param name="image">The <see cref="Image{TPixel}"/>.</param>
         /// <typeparam name="TPixel">The type of pixels in <paramref name="image"/>.</typeparam>
         /// <returns>The <see cref="IMemoryOwner{T}"/>, containing the contiguous pixel memory.</returns>
-        internal static IMemoryOwner<TPixel> CreateContiguousMemory<TPixel>(this Image<TPixel> image)
+        internal static IMemoryOwner<TPixel> CreateContiguousMemory<TPixel>(
+            this Image<TPixel> image
+        )
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            var allocatedOwner = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<TPixel>(image.Width * image.Height);
+            var allocatedOwner =
+                SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<TPixel>(
+                    image.Width * image.Height
+                );
             var allocatedMemory = allocatedOwner.Memory;
 
             for (int r = 0; r < image.Height; r++)

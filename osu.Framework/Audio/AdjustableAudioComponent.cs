@@ -66,7 +66,8 @@ namespace osu.Framework.Audio
         public void RemoveAdjustment(AdjustableProperty type, IBindable<double> adjustBindable) =>
             Adjustments.RemoveAdjustment(type, adjustBindable);
 
-        public void RemoveAllAdjustments(AdjustableProperty type) => Adjustments.RemoveAllAdjustments(type);
+        public void RemoveAllAdjustments(AdjustableProperty type) =>
+            Adjustments.RemoveAllAdjustments(type);
 
         private bool invalidationPending;
 
@@ -78,9 +79,7 @@ namespace osu.Framework.Audio
                 invalidationPending = true;
         }
 
-        internal virtual void OnStateChanged()
-        {
-        }
+        internal virtual void OnStateChanged() { }
 
         protected override void UpdateState()
         {
@@ -98,7 +97,8 @@ namespace osu.Framework.Audio
             Adjustments.BindAdjustments(component);
         }
 
-        public void UnbindAdjustments(IAggregateAudioAdjustment component) => adjustments?.UnbindAdjustments(component);
+        public void UnbindAdjustments(IAggregateAudioAdjustment component) =>
+            adjustments?.UnbindAdjustments(component);
 
         public IBindable<double> AggregateVolume => Adjustments.AggregateVolume;
 
@@ -124,6 +124,6 @@ namespace osu.Framework.Audio
         Volume,
         Balance,
         Frequency,
-        Tempo
+        Tempo,
     }
 }

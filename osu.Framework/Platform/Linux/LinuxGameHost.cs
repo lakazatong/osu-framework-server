@@ -26,12 +26,13 @@ namespace osu.Framework.Platform.Linux
             BypassCompositor = Options.BypassCompositor;
         }
 
-        protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface)
-            => FrameworkEnvironment.UseSDL3
+        protected override IWindow CreateWindow(GraphicsSurfaceType preferredSurface) =>
+            FrameworkEnvironment.UseSDL3
                 ? new SDL3LinuxWindow(preferredSurface, Options.FriendlyGameName, BypassCompositor)
                 : new SDL2LinuxWindow(preferredSurface, Options.FriendlyGameName, BypassCompositor);
 
-        protected override ReadableKeyCombinationProvider CreateReadableKeyCombinationProvider() => new LinuxReadableKeyCombinationProvider();
+        protected override ReadableKeyCombinationProvider CreateReadableKeyCombinationProvider() =>
+            new LinuxReadableKeyCombinationProvider();
 
         protected override IEnumerable<InputHandler> CreateAvailableInputHandlers()
         {

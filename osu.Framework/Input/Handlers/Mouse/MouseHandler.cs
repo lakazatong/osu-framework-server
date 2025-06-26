@@ -20,22 +20,25 @@ namespace osu.Framework.Input.Handlers.Mouse
     /// </summary>
     public class MouseHandler : InputHandler, IHasCursorSensitivity, INeedsMousePositionFeedback
     {
-        private static readonly GlobalStatistic<ulong> statistic_total_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<MouseHandler>(), "Total events");
+        private static readonly GlobalStatistic<ulong> statistic_total_events =
+            GlobalStatistics.Get<ulong>(StatisticGroupFor<MouseHandler>(), "Total events");
 
         /// <summary>
         /// Whether relative mode should be preferred when the window has focus, the cursor is contained and the OS cursor is not visible.
         /// </summary>
-        public BindableBool UseRelativeMode { get; } = new BindableBool(true)
-        {
-            Description = "Allows for sensitivity adjustment and tighter control of input",
-        };
+        public BindableBool UseRelativeMode { get; } =
+            new BindableBool(true)
+            {
+                Description = "Allows for sensitivity adjustment and tighter control of input",
+            };
 
-        public BindableDouble Sensitivity { get; } = new BindableDouble(1)
-        {
-            MinValue = 0.1,
-            MaxValue = 10,
-            Precision = 0.01
-        };
+        public BindableDouble Sensitivity { get; } =
+            new BindableDouble(1)
+            {
+                MinValue = 0.1,
+                MaxValue = 10,
+                Precision = 0.01,
+            };
 
         public override string Description => "Mouse";
 
@@ -58,7 +61,11 @@ namespace osu.Framework.Input.Handlers.Mouse
         /// <summary>
         /// Whether the application should be handling the cursor.
         /// </summary>
-        private bool cursorCaptured => isActive.Value && (window.CursorInWindow.Value || window.CursorState.HasFlagFast(CursorState.Confined));
+        private bool cursorCaptured =>
+            isActive.Value
+            && (
+                window.CursorInWindow.Value || window.CursorState.HasFlagFast(CursorState.Confined)
+            );
 
         /// <summary>
         /// Whether the last position (as reported by <see cref="FeedbackMousePositionChange"/>)
@@ -97,33 +104,39 @@ namespace osu.Framework.Input.Handlers.Mouse
             cursorState = desktopWindow.CursorStateBindable.GetBoundCopy();
             cursorState.BindValueChanged(_ => updateRelativeMode());
 
-            UseRelativeMode.BindValueChanged(e =>
-            {
-                window.MouseAutoCapture = !e.NewValue;
-                updateRelativeMode();
-            }, true);
-
-            Enabled.BindValueChanged(enabled =>
-            {
-                updateRelativeMode();
-
-                if (enabled.NewValue)
+            UseRelativeMode.BindValueChanged(
+                e =>
                 {
-                    window.MouseMove += HandleMouseMove;
-                    window.MouseMoveRelative += HandleMouseMoveRelative;
-                    window.MouseDown += handleMouseDown;
-                    window.MouseUp += handleMouseUp;
-                    window.MouseWheel += handleMouseWheel;
-                }
-                else
+                    window.MouseAutoCapture = !e.NewValue;
+                    updateRelativeMode();
+                },
+                true
+            );
+
+            Enabled.BindValueChanged(
+                enabled =>
                 {
-                    window.MouseMove -= HandleMouseMove;
-                    window.MouseMoveRelative -= HandleMouseMoveRelative;
-                    window.MouseDown -= handleMouseDown;
-                    window.MouseUp -= handleMouseUp;
-                    window.MouseWheel -= handleMouseWheel;
-                }
-            }, true);
+                    updateRelativeMode();
+
+                    if (enabled.NewValue)
+                    {
+                        window.MouseMove += HandleMouseMove;
+                        window.MouseMoveRelative += HandleMouseMoveRelative;
+                        window.MouseDown += handleMouseDown;
+                        window.MouseUp += handleMouseUp;
+                        window.MouseWheel += handleMouseWheel;
+                    }
+                    else
+                    {
+                        window.MouseMove -= HandleMouseMove;
+                        window.MouseMoveRelative -= HandleMouseMoveRelative;
+                        window.MouseDown -= handleMouseDown;
+                        window.MouseUp -= handleMouseUp;
+                        window.MouseWheel -= handleMouseWheel;
+                    }
+                },
+                true
+            );
 
             window.Exited += () =>
             {
@@ -153,7 +166,11 @@ namespace osu.Framework.Input.Handlers.Mouse
                 pendingUpdateRelativeMode = false;
             }
 
-            bool positionOutsideWindow = position.X < 0 || position.Y < 0 || position.X >= window.Size.Width || position.Y >= window.Size.Height;
+            bool positionOutsideWindow =
+                position.X < 0
+                || position.Y < 0
+                || position.X >= window.Size.Width
+                || position.Y >= window.Size.Height;
 
             if (window.RelativeMouseMode)
             {
@@ -164,7 +181,11 @@ namespace osu.Framework.Input.Handlers.Mouse
 
                 // handle the case where relative / raw input is active, but the cursor may have exited the window
                 // bounds and is not intended to be confined.
-                if (!window.CursorState.HasFlagFast(CursorState.Confined) && positionOutsideWindow && !previousPositionOutsideWindow)
+                if (
+                    !window.CursorState.HasFlagFast(CursorState.Confined)
+                    && positionOutsideWindow
+                    && !previousPositionOutsideWindow
+                )
                 {
                     // setting relative mode to false will allow the window manager to take control until the next
                     // updateRelativeMode() call succeeds (likely from the cursor returning inside the window).
@@ -208,14 +229,19 @@ namespace osu.Framework.Input.Handlers.Mouse
 
         protected virtual void HandleMouseMoveRelative(Vector2 delta)
         {
-            enqueueInput(new MousePositionRelativeInput { Delta = delta * (float)Sensitivity.Value });
+            enqueueInput(
+                new MousePositionRelativeInput { Delta = delta * (float)Sensitivity.Value }
+            );
         }
 
-        private void handleMouseDown(MouseButton button) => enqueueInput(new MouseButtonInput(button, true));
+        private void handleMouseDown(MouseButton button) =>
+            enqueueInput(new MouseButtonInput(button, true));
 
-        private void handleMouseUp(MouseButton button) => enqueueInput(new MouseButtonInput(button, false));
+        private void handleMouseUp(MouseButton button) =>
+            enqueueInput(new MouseButtonInput(button, false));
 
-        private void handleMouseWheel(Vector2 delta, bool precise) => enqueueInput(new MouseScrollRelativeInput { Delta = delta, IsPrecise = precise });
+        private void handleMouseWheel(Vector2 delta, bool precise) =>
+            enqueueInput(new MouseScrollRelativeInput { Delta = delta, IsPrecise = precise });
 
         private void enqueueInput(IInput input)
         {

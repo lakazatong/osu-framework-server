@@ -16,7 +16,11 @@ namespace osu.Framework.Tests.Localisation
         [TestCase("invalid name", false, system_culture)]
         [TestCase(system_culture, true, system_culture)]
         [TestCase("ko_KR", false, system_culture)]
-        public void TestTryGetCultureInfo(string name, bool expectedReturnValue, string expectedCultureName)
+        public void TestTryGetCultureInfo(
+            string name,
+            bool expectedReturnValue,
+            string expectedCultureName
+        )
         {
             CultureInfo expectedCulture;
 

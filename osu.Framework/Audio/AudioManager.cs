@@ -96,7 +96,7 @@ namespace osu.Framework.Audio
         public readonly BindableDouble VolumeSample = new BindableDouble(1)
         {
             MinValue = 0,
-            MaxValue = 1
+            MaxValue = 1,
         };
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace osu.Framework.Audio
         public readonly BindableDouble VolumeTrack = new BindableDouble(1)
         {
             MinValue = 0,
-            MaxValue = 1
+            MaxValue = 1,
         };
 
         /// <summary>
@@ -132,9 +132,11 @@ namespace osu.Framework.Audio
         /// </remarks>
         internal readonly IBindable<int?> GlobalMixerHandle = new Bindable<int?>();
 
-        public override bool IsLoaded => base.IsLoaded &&
-                                         // bass default device is a null device (-1), not the actual system default.
-                                         Bass.CurrentDevice != Bass.DefaultDevice;
+        public override bool IsLoaded =>
+            base.IsLoaded
+            &&
+            // bass default device is a null device (-1), not the actual system default.
+            Bass.CurrentDevice != Bass.DefaultDevice;
 
         // Mutated by multiple threads, must be thread safe.
         private ImmutableArray<DeviceInfo> audioDevices = ImmutableArray<DeviceInfo>.Empty;
@@ -163,7 +165,11 @@ namespace osu.Framework.Audio
         /// <param name="audioThread">The host's audio thread.</param>
         /// <param name="trackStore">The resource store containing all audio tracks to be used in the future.</param>
         /// <param name="sampleStore">The sample store containing all audio samples to be used in the future.</param>
-        public AudioManager(AudioThread audioThread, ResourceStore<byte[]> trackStore, ResourceStore<byte[]> sampleStore)
+        public AudioManager(
+            AudioThread audioThread,
+            ResourceStore<byte[]> trackStore,
+            ResourceStore<byte[]> sampleStore
+        )
         {
             thread = audioThread;
 
@@ -198,28 +204,29 @@ namespace osu.Framework.Audio
             CancellationToken token = cancelSource.Token;
 
             syncAudioDevices();
-            scheduler.AddDelayed(() =>
-            {
-                // sync audioDevices every 1000ms
-                new Thread(() =>
+            scheduler.AddDelayed(
+                () =>
                 {
-                    while (!token.IsCancellationRequested)
+                    // sync audioDevices every 1000ms
+                    new Thread(() =>
                     {
-                        try
+                        while (!token.IsCancellationRequested)
                         {
-                            if (CheckForDeviceChanges(audioDevices))
-                                syncAudioDevices();
-                            Thread.Sleep(1000);
+                            try
+                            {
+                                if (CheckForDeviceChanges(audioDevices))
+                                    syncAudioDevices();
+                                Thread.Sleep(1000);
+                            }
+                            catch { }
                         }
-                        catch
-                        {
-                        }
-                    }
-                })
-                {
-                    IsBackground = true
-                }.Start();
-            }, 1000);
+                    })
+                    {
+                        IsBackground = true,
+                    }.Start();
+                },
+                1000
+            );
         }
 
         protected override void Dispose(bool disposing)
@@ -261,7 +268,12 @@ namespace osu.Framework.Audio
         /// </remarks>
         /// <param name="identifier">An identifier displayed on the audio mixer visualiser.</param>
         public AudioMixer CreateAudioMixer(string identifier = default) =>
-            createAudioMixer(SampleMixer, !string.IsNullOrEmpty(identifier) ? identifier : $"user #{Interlocked.Increment(ref userMixerID)}");
+            createAudioMixer(
+                SampleMixer,
+                !string.IsNullOrEmpty(identifier)
+                    ? identifier
+                    : $"user #{Interlocked.Increment(ref userMixerID)}"
+            );
 
         private AudioMixer createAudioMixer(AudioMixer fallbackMixer, string identifier)
         {
@@ -290,9 +302,13 @@ namespace osu.Framework.Audio
         /// </summary>
         /// <param name="store">The <see cref="IResourceStore{T}"/> of which to retrieve the <see cref="TrackStore"/>.</param>
         /// <param name="mixer">The <see cref="AudioMixer"/> to use for tracks created by this store. Defaults to the global <see cref="TrackMixer"/>.</param>
-        public ITrackStore GetTrackStore(IResourceStore<byte[]> store = null, AudioMixer mixer = null)
+        public ITrackStore GetTrackStore(
+            IResourceStore<byte[]> store = null,
+            AudioMixer mixer = null
+        )
         {
-            if (store == null) return globalTrackStore.Value;
+            if (store == null)
+                return globalTrackStore.Value;
 
             TrackStore tm = new TrackStore(store, mixer ?? TrackMixer);
             globalTrackStore.Value.AddItem(tm);
@@ -310,9 +326,13 @@ namespace osu.Framework.Audio
         /// </remarks>
         /// <param name="store">The <see cref="IResourceStore{T}"/> of which to retrieve the <see cref="SampleStore"/>.</param>
         /// <param name="mixer">The <see cref="AudioMixer"/> to use for samples created by this store. Defaults to the global <see cref="SampleMixer"/>.</param>
-        public ISampleStore GetSampleStore(IResourceStore<byte[]> store = null, AudioMixer mixer = null)
+        public ISampleStore GetSampleStore(
+            IResourceStore<byte[]> store = null,
+            AudioMixer mixer = null
+        )
         {
-            if (store == null) return globalSampleStore.Value;
+            if (store == null)
+                return globalSampleStore.Value;
 
             SampleStore sm = new SampleStore(store, mixer ?? SampleMixer);
             globalSampleStore.Value.AddItem(sm);
@@ -364,11 +384,15 @@ namespace osu.Framework.Audio
 
             if (!initSuccess)
             {
-                Logger.Log("BASS failed to initialize but did not provide an error code", level: LogLevel.Error);
+                Logger.Log(
+                    "BASS failed to initialize but did not provide an error code",
+                    level: LogLevel.Error
+                );
                 return false;
             }
 
-            Logger.Log($@"🔈 BASS initialised
+            Logger.Log(
+                $@"🔈 BASS initialised
                           BASS version:           {Bass.Version}
                           BASS FX version:        {BassFx.Version}
                           BASS MIX version:       {BassMix.Version}
@@ -376,7 +400,8 @@ namespace osu.Framework.Audio
                           Driver:                 {device.Driver}
                           Update period:          {Bass.UpdatePeriod} ms
                           Device buffer length:   {Bass.DeviceBufferLength} ms
-                          Playback buffer length: {Bass.PlaybackBufferLength} ms");
+                          Playback buffer length: {Bass.PlaybackBufferLength} ms"
+            );
 
             //we have successfully initialised a new device.
             UpdateDevice(deviceIndex);
@@ -430,10 +455,17 @@ namespace osu.Framework.Audio
             audioDevices = GetAllDevices();
 
             // Bass should always be providing "No sound" and "Default" device.
-            Trace.Assert(audioDevices.Length >= BASS_INTERNAL_DEVICE_COUNT, "Bass did not provide any audio devices.");
+            Trace.Assert(
+                audioDevices.Length >= BASS_INTERNAL_DEVICE_COUNT,
+                "Bass did not provide any audio devices."
+            );
 
             var oldDeviceNames = audioDeviceNames;
-            var newDeviceNames = audioDeviceNames = audioDevices.Skip(BASS_INTERNAL_DEVICE_COUNT).Where(d => d.IsEnabled).Select(d => d.Name).ToImmutableList();
+            var newDeviceNames = audioDeviceNames = audioDevices
+                .Skip(BASS_INTERNAL_DEVICE_COUNT)
+                .Where(d => d.IsEnabled)
+                .Select(d => d.Name)
+                .ToImmutableList();
 
             onDevicesChanged();
 
@@ -442,13 +474,15 @@ namespace osu.Framework.Audio
 
             if (newDevices.Count > 0 || lostDevices.Count > 0)
             {
-                eventScheduler.Add(delegate
-                {
-                    foreach (string d in newDevices)
-                        OnNewDevice?.Invoke(d);
-                    foreach (string d in lostDevices)
-                        OnLostDevice?.Invoke(d);
-                });
+                eventScheduler.Add(
+                    delegate
+                    {
+                        foreach (string d in newDevices)
+                            OnNewDevice?.Invoke(d);
+                        foreach (string d in lostDevices)
+                            OnLostDevice?.Invoke(d);
+                    }
+                );
             }
         }
 
@@ -502,7 +536,9 @@ namespace osu.Framework.Audio
         protected virtual bool IsCurrentDeviceValid()
         {
             var device = audioDevices.ElementAtOrDefault(Bass.CurrentDevice);
-            bool isFallback = string.IsNullOrEmpty(AudioDevice.Value) ? !device.IsDefault : device.Name != AudioDevice.Value;
+            bool isFallback = string.IsNullOrEmpty(AudioDevice.Value)
+                ? !device.IsDefault
+                : device.Name != AudioDevice.Value;
             return device.IsEnabled && device.IsInitialized && !isFallback;
         }
 

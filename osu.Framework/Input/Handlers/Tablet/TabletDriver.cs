@@ -25,12 +25,17 @@ namespace osu.Framework.Input.Handlers.Tablet
 
         public Action<string, LogLevel, Exception?>? PostLog;
 
-        public TabletDriver(ICompositeDeviceHub deviceHub, IReportParserProvider reportParserProvider, IDeviceConfigurationProvider configurationProvider)
+        public TabletDriver(
+            ICompositeDeviceHub deviceHub,
+            IReportParserProvider reportParserProvider,
+            IDeviceConfigurationProvider configurationProvider
+        )
             : base(deviceHub, reportParserProvider, configurationProvider)
         {
-            var vendors = from config in configurationProvider.TabletConfigurations
-                          from id in config.DigitizerIdentifiers
-                          select id.VendorID;
+            var vendors =
+                from config in configurationProvider.TabletConfigurations
+                from id in config.DigitizerIdentifiers
+                select id.VendorID;
 
             knownVendors = vendors.Distinct().ToArray();
 
@@ -48,7 +53,8 @@ namespace osu.Framework.Input.Handlers.Tablet
 
         private void postLog(object? _, LogMessage logMessage)
         {
-            LogLevel level = (int)logMessage.Level > (int)LogLevel.Error ? LogLevel.Error : LogLevel.Verbose;
+            LogLevel level =
+                (int)logMessage.Level > (int)LogLevel.Error ? LogLevel.Error : LogLevel.Verbose;
             PostLog?.Invoke($"{logMessage.Group}: {logMessage.Message}", level, null);
         }
 
@@ -65,11 +71,19 @@ namespace osu.Framework.Input.Handlers.Tablet
             // wait a small delay as multiple devices may appear over a very short interval.
             await Task.Delay(50, cancellationToken).ConfigureAwait(false);
 
-            int foundVendor = CompositeDeviceHub.GetDevices().Select(d => d.VendorID).Intersect(knownVendors).FirstOrDefault();
+            int foundVendor = CompositeDeviceHub
+                .GetDevices()
+                .Select(d => d.VendorID)
+                .Intersect(knownVendors)
+                .FirstOrDefault();
 
             if (foundVendor > 0)
             {
-                PostLog?.Invoke($"Tablet detected (vid{foundVendor}), searching for usable configuration...", LogLevel.Verbose, null);
+                PostLog?.Invoke(
+                    $"Tablet detected (vid{foundVendor}), searching for usable configuration...",
+                    LogLevel.Verbose,
+                    null
+                );
 
                 Detect();
 
@@ -90,8 +104,8 @@ namespace osu.Framework.Input.Handlers.Tablet
 
         public static TabletDriver Create()
         {
-            IServiceCollection serviceCollection = new DriverServiceCollection()
-                .AddTransient<TabletDriver>();
+            IServiceCollection serviceCollection =
+                new DriverServiceCollection().AddTransient<TabletDriver>();
 
             var provider = serviceCollection.BuildServiceProvider();
 

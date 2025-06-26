@@ -10,9 +10,7 @@ namespace osu.Framework.Input.Events
     public abstract class JoystickEvent : UIEvent
     {
         protected JoystickEvent(InputState state)
-            : base(state)
-        {
-        }
+            : base(state) { }
 
         /// <summary>
         /// List of currently pressed joystick buttons.

@@ -19,21 +19,25 @@ namespace osu.Framework.Tests.Containers
     {
         [TestCase(TestThread.External, false)]
         [TestCase(TestThread.Update, false)]
-        public void TestNotLoadedAdd(TestThread thread, bool shouldThrow) => performTest(LoadState.NotLoaded, thread, shouldThrow);
+        public void TestNotLoadedAdd(TestThread thread, bool shouldThrow) =>
+            performTest(LoadState.NotLoaded, thread, shouldThrow);
 
         [TestCase(TestThread.External, true)]
         [TestCase(TestThread.Update, true)]
         [TestCase(TestThread.Load, false)]
-        public void TestLoadingAdd(TestThread thread, bool shouldThrow) => performTest(LoadState.Loading, thread, shouldThrow);
+        public void TestLoadingAdd(TestThread thread, bool shouldThrow) =>
+            performTest(LoadState.Loading, thread, shouldThrow);
 
         [TestCase(TestThread.External, true)]
         [TestCase(TestThread.Update, false)]
         [TestCase(TestThread.Load, false)]
-        public void TestReadyAdd(TestThread thread, bool shouldThrow) => performTest(LoadState.Ready, thread, shouldThrow);
+        public void TestReadyAdd(TestThread thread, bool shouldThrow) =>
+            performTest(LoadState.Ready, thread, shouldThrow);
 
         [TestCase(TestThread.External, true)]
         [TestCase(TestThread.Update, false)]
-        public void TestLoadedAdd(TestThread thread, bool shouldThrow) => performTest(LoadState.Loaded, thread, shouldThrow);
+        public void TestLoadedAdd(TestThread thread, bool shouldThrow) =>
+            performTest(LoadState.Loaded, thread, shouldThrow);
 
         private void performTest(LoadState expectedState, TestThread thread, bool shouldThrow)
         {
@@ -44,37 +48,43 @@ namespace osu.Framework.Tests.Containers
             {
                 LoadState stateToWaitFor = expectedState;
 
-                AddStep("begin loading", () =>
-                {
-                    LoadComponentAsync(container, Add);
-
-                    switch (expectedState)
+                AddStep(
+                    "begin loading",
+                    () =>
                     {
-                        // Special case for the load thread: the action is invoked after the event is set, so this is handled in the switch below
-                        case LoadState.Loading when thread != TestThread.Load:
-                            container.LoadingEvent.Set();
-                            break;
+                        LoadComponentAsync(container, Add);
 
-                        // Special case for the load thread: possibly active during the ready state, but the ready event is handled in the switch below
-                        case LoadState.Ready when thread == TestThread.Load:
-                            container.LoadingEvent.Set();
-                            stateToWaitFor = LoadState.Loading; // We'll never reach the ready state before the switch below
-                            break;
+                        switch (expectedState)
+                        {
+                            // Special case for the load thread: the action is invoked after the event is set, so this is handled in the switch below
+                            case LoadState.Loading when thread != TestThread.Load:
+                                container.LoadingEvent.Set();
+                                break;
 
-                        case LoadState.Ready:
-                            container.LoadingEvent.Set();
-                            container.ReadyEvent.Set();
-                            break;
+                            // Special case for the load thread: possibly active during the ready state, but the ready event is handled in the switch below
+                            case LoadState.Ready when thread == TestThread.Load:
+                                container.LoadingEvent.Set();
+                                stateToWaitFor = LoadState.Loading; // We'll never reach the ready state before the switch below
+                                break;
 
-                        case LoadState.Loaded:
-                            container.LoadingEvent.Set();
-                            container.ReadyEvent.Set();
-                            container.LoadedEvent.Set();
-                            break;
+                            case LoadState.Ready:
+                                container.LoadingEvent.Set();
+                                container.ReadyEvent.Set();
+                                break;
+
+                            case LoadState.Loaded:
+                                container.LoadingEvent.Set();
+                                container.ReadyEvent.Set();
+                                container.LoadedEvent.Set();
+                                break;
+                        }
                     }
-                });
+                );
 
-                AddUntilStep($"wait for {stateToWaitFor} state", () => container.LoadState == stateToWaitFor);
+                AddUntilStep(
+                    $"wait for {stateToWaitFor} state",
+                    () => container.LoadState == stateToWaitFor
+                );
             }
 
             bool hasResult = false;
@@ -84,7 +94,10 @@ namespace osu.Framework.Tests.Containers
             {
                 case TestThread.External:
                 {
-                    AddStep("run external thread", () => new Thread(tryThrow) { IsBackground = true }.Start());
+                    AddStep(
+                        "run external thread",
+                        () => new Thread(tryThrow) { IsBackground = true }.Start()
+                    );
                     break;
                 }
 
@@ -116,12 +129,15 @@ namespace osu.Framework.Tests.Containers
             AddUntilStep("wait for result", () => hasResult);
             AddAssert("thrown", () => thrown == shouldThrow);
 
-            AddStep("allow load completion", () =>
-            {
-                container.LoadingEvent.Set();
-                container.ReadyEvent.Set();
-                container.LoadedEvent.Set();
-            });
+            AddStep(
+                "allow load completion",
+                () =>
+                {
+                    container.LoadingEvent.Set();
+                    container.ReadyEvent.Set();
+                    container.LoadedEvent.Set();
+                }
+            );
 
             void tryThrow()
             {
@@ -195,7 +211,7 @@ namespace osu.Framework.Tests.Containers
         {
             External,
             Update,
-            Load
+            Load,
         }
     }
 }

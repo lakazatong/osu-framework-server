@@ -29,7 +29,9 @@ namespace osu.Framework.Screens
         {
             base.UpdateClock(clock);
             if (Parent != null && !(Parent is ScreenStack))
-                throw new InvalidOperationException($"Screens must always be added to a {nameof(ScreenStack)} (attempted to add {GetType()} to {Parent.GetType()})");
+                throw new InvalidOperationException(
+                    $"Screens must always be added to a {nameof(ScreenStack)} (attempted to add {GetType()} to {Parent.GetType()})"
+                );
         }
 
         public virtual void OnEntering(ScreenTransitionEvent e) { }

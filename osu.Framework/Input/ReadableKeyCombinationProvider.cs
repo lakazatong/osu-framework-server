@@ -33,37 +33,54 @@ namespace osu.Framework.Input
         {
             var sortedKeys = c.Keys.GetValuesInOrder().ToArray();
 
-            return string.Join('-', sortedKeys.Select(key =>
-            {
-                switch (key)
-                {
-                    case InputKey.Control:
-                        if (sortedKeys.Contains(InputKey.LControl) || sortedKeys.Contains(InputKey.RControl))
-                            return null;
+            return string.Join(
+                '-',
+                sortedKeys
+                    .Select(key =>
+                    {
+                        switch (key)
+                        {
+                            case InputKey.Control:
+                                if (
+                                    sortedKeys.Contains(InputKey.LControl)
+                                    || sortedKeys.Contains(InputKey.RControl)
+                                )
+                                    return null;
 
-                        break;
+                                break;
 
-                    case InputKey.Shift:
-                        if (sortedKeys.Contains(InputKey.LShift) || sortedKeys.Contains(InputKey.RShift))
-                            return null;
+                            case InputKey.Shift:
+                                if (
+                                    sortedKeys.Contains(InputKey.LShift)
+                                    || sortedKeys.Contains(InputKey.RShift)
+                                )
+                                    return null;
 
-                        break;
+                                break;
 
-                    case InputKey.Alt:
-                        if (sortedKeys.Contains(InputKey.LAlt) || sortedKeys.Contains(InputKey.RAlt))
-                            return null;
+                            case InputKey.Alt:
+                                if (
+                                    sortedKeys.Contains(InputKey.LAlt)
+                                    || sortedKeys.Contains(InputKey.RAlt)
+                                )
+                                    return null;
 
-                        break;
+                                break;
 
-                    case InputKey.Super:
-                        if (sortedKeys.Contains(InputKey.LSuper) || sortedKeys.Contains(InputKey.RSuper))
-                            return null;
+                            case InputKey.Super:
+                                if (
+                                    sortedKeys.Contains(InputKey.LSuper)
+                                    || sortedKeys.Contains(InputKey.RSuper)
+                                )
+                                    return null;
 
-                        break;
-                }
+                                break;
+                        }
 
-                return GetReadableKey(key);
-            }).Where(s => !string.IsNullOrEmpty(s)));
+                        return GetReadableKey(key);
+                    })
+                    .Where(s => !string.IsNullOrEmpty(s))
+            );
         }
 
         protected virtual string GetReadableKey(InputKey key)

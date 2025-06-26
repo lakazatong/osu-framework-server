@@ -17,7 +17,9 @@ namespace osu.Framework.Tests.Visual.Localisation
 {
     public abstract partial class LocalisationTestScene : FrameworkTestScene
     {
-        protected virtual LocalisationManager CreateLocalisationManager(FrameworkConfigManager config) => new LocalisationManager(config);
+        protected virtual LocalisationManager CreateLocalisationManager(
+            FrameworkConfigManager config
+        ) => new LocalisationManager(config);
 
         protected LocalisationManager Manager = null!;
 
@@ -31,7 +33,9 @@ namespace osu.Framework.Tests.Visual.Localisation
         /// </summary>
         protected Bindable<bool> ShowUnicode { get; } = new BindableBool();
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
             var dependencies = new DependencyContainer(parent);
 
@@ -68,28 +72,34 @@ namespace osu.Framework.Tests.Visual.Localisation
 
             private readonly IReadOnlyDictionary<string, string> translations;
 
-            public TestLocalisationStore(CultureInfo culture, IReadOnlyDictionary<string, string> translations)
+            public TestLocalisationStore(
+                CultureInfo culture,
+                IReadOnlyDictionary<string, string> translations
+            )
             {
                 EffectiveCulture = culture;
                 this.translations = translations;
             }
 
-            public TestLocalisationStore(string locale, IReadOnlyDictionary<string, string> translations)
-                : this(new CultureInfo(locale), translations)
-            {
-            }
+            public TestLocalisationStore(
+                string locale,
+                IReadOnlyDictionary<string, string> translations
+            )
+                : this(new CultureInfo(locale), translations) { }
 
-            public string? Get(string key) => translations.TryGetValue(key, out string? value) ? value : null;
+            public string? Get(string key) =>
+                translations.TryGetValue(key, out string? value) ? value : null;
 
-            public Task<string?> GetAsync(string key, CancellationToken cancellationToken = default) => Task.FromResult(Get(key));
+            public Task<string?> GetAsync(
+                string key,
+                CancellationToken cancellationToken = default
+            ) => Task.FromResult(Get(key));
 
             public Stream GetStream(string name) => throw new NotSupportedException();
 
             public IEnumerable<string> GetAvailableResources() => Array.Empty<string>();
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
     }
 }

@@ -6,8 +6,6 @@ namespace osu.Framework.Threading
     internal class GameThreadScheduler : Scheduler
     {
         public GameThreadScheduler(GameThread thread)
-            : base(() => thread.IsCurrent, thread.Clock)
-        {
-        }
+            : base(() => thread.IsCurrent, thread.Clock) { }
     }
 }

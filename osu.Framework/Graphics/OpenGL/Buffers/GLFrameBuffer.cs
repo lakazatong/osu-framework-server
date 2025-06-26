@@ -24,18 +24,30 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
         private readonly bool externalTexture;
 
-        public GLFrameBuffer(GLRenderer renderer, RenderbufferInternalFormat[]? renderBufferFormats = null, All filteringMode = All.Linear)
+        public GLFrameBuffer(
+            GLRenderer renderer,
+            RenderbufferInternalFormat[]? renderBufferFormats = null,
+            All filteringMode = All.Linear
+        )
         {
             this.renderer = renderer;
             FrameBuffer = GL.GenFramebuffer();
 
-            Texture = renderer.CreateTexture(glTexture = new FrameBufferTexture(renderer, filteringMode));
+            Texture = renderer.CreateTexture(
+                glTexture = new FrameBufferTexture(renderer, filteringMode)
+            );
 
             renderer.BindFrameBuffer(this);
 
             Debug.Assert(glTexture.TextureId != 0);
 
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget2d.Texture2D, glTexture.TextureId, 0);
+            GL.FramebufferTexture2D(
+                FramebufferTarget.Framebuffer,
+                FramebufferAttachment.ColorAttachment0,
+                TextureTarget2d.Texture2D,
+                glTexture.TextureId,
+                0
+            );
             renderer.UnbindTexture();
 
             if (renderBufferFormats != null)
@@ -59,7 +71,13 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
             renderer.BindFrameBuffer(this);
 
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget2d.Texture2D, glTexture.TextureId, level);
+            GL.FramebufferTexture2D(
+                FramebufferTarget.Framebuffer,
+                FramebufferAttachment.ColorAttachment0,
+                TextureTarget2d.Texture2D,
+                glTexture.TextureId,
+                level
+            );
 
             renderer.UnbindFrameBuffer(this);
         }

@@ -38,7 +38,9 @@ namespace osu.Framework.Input.StateChanges
                 var lastScroll = mouse.Scroll;
                 mouse.Scroll += Delta;
                 mouse.LastSource = this;
-                handler.HandleInputStateChange(new MouseScrollChangeEvent(state, this, lastScroll, IsPrecise));
+                handler.HandleInputStateChange(
+                    new MouseScrollChangeEvent(state, this, lastScroll, IsPrecise)
+                );
             }
         }
     }

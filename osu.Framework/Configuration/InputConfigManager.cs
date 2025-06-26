@@ -69,14 +69,20 @@ namespace osu.Framework.Configuration
             {
                 try
                 {
-                    using (Stream stream = storage.GetStream(FILENAME, FileAccess.Read, FileMode.Open))
+                    using (
+                        Stream stream = storage.GetStream(FILENAME, FileAccess.Read, FileMode.Open)
+                    )
                     using (var sr = new StreamReader(stream))
                     {
-                        JsonConvert.PopulateObject(sr.ReadToEnd(), this, new JsonSerializerSettings
-                        {
-                            ObjectCreationHandling = ObjectCreationHandling.Reuse,
-                            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate
-                        });
+                        JsonConvert.PopulateObject(
+                            sr.ReadToEnd(),
+                            this,
+                            new JsonSerializerSettings
+                            {
+                                ObjectCreationHandling = ObjectCreationHandling.Reuse,
+                                DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
+                            }
+                        );
                     }
                 }
                 catch (Exception e)
@@ -97,24 +103,34 @@ namespace osu.Framework.Configuration
                 foreach (var property in handler.GetType().GetProperties())
                 {
                     // get the underlying Bindable<T> for this property.
-                    var bindableType = property.PropertyType.EnumerateBaseTypes().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Bindable<>));
+                    var bindableType = property
+                        .PropertyType.EnumerateBaseTypes()
+                        .FirstOrDefault(t =>
+                            t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Bindable<>)
+                        );
 
                     // ignore if this isn't a bindable.
-                    if (bindableType == null) continue;
+                    if (bindableType == null)
+                        continue;
 
                     // get the type that this Bindable<T> encapsulates.
                     var encapsulatedType = bindableType.GetGenericArguments()[0];
 
-                    var subscribeMethod = typeof(InputConfigManager).GetMethod(nameof(subscribe), BindingFlags.NonPublic | BindingFlags.Instance);
+                    var subscribeMethod = typeof(InputConfigManager).GetMethod(
+                        nameof(subscribe),
+                        BindingFlags.NonPublic | BindingFlags.Instance
+                    );
                     Debug.Assert(subscribeMethod != null);
 
                     // call `subscribe` with the type and bindable.
-                    subscribeMethod.MakeGenericMethod(encapsulatedType)
-                                   .Invoke(this, new[] { property.GetValue(handler) });
+                    subscribeMethod
+                        .MakeGenericMethod(encapsulatedType)
+                        .Invoke(this, new[] { property.GetValue(handler) });
                 }
             }
         }
 
-        private void subscribe<T>(Bindable<T> bindable) => bindable.BindValueChanged(_ => QueueBackgroundSave());
+        private void subscribe<T>(Bindable<T> bindable) =>
+            bindable.BindValueChanged(_ => QueueBackgroundSave());
     }
 }

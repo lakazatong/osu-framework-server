@@ -6,10 +6,25 @@ using osu.Framework.Graphics.Rendering.Deferred.Allocation;
 
 namespace osu.Framework.Graphics.Rendering.Deferred.Events
 {
-    internal readonly record struct SetShaderStorageBufferObjectDataEvent(ResourceReference Buffer, int Index, MemoryReference Memory)
+    internal readonly record struct SetShaderStorageBufferObjectDataEvent(
+        ResourceReference Buffer,
+        int Index,
+        MemoryReference Memory
+    )
     {
-        public static RenderEvent Create<T>(DeferredRenderer renderer, IDeferredShaderStorageBufferObject buffer, int index, T data)
-            where T : unmanaged, IEquatable<T>
-            => RenderEvent.Create(new SetShaderStorageBufferObjectDataEvent(renderer.Context.Reference(buffer), index, renderer.Context.AllocateObject(data)));
+        public static RenderEvent Create<T>(
+            DeferredRenderer renderer,
+            IDeferredShaderStorageBufferObject buffer,
+            int index,
+            T data
+        )
+            where T : unmanaged, IEquatable<T> =>
+            RenderEvent.Create(
+                new SetShaderStorageBufferObjectDataEvent(
+                    renderer.Context.Reference(buffer),
+                    index,
+                    renderer.Context.AllocateObject(data)
+                )
+            );
     }
 }

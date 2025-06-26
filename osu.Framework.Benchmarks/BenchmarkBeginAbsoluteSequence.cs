@@ -22,9 +22,7 @@ namespace osu.Framework.Benchmarks
         {
             game.Schedule(() =>
             {
-                using (game.Flat.BeginAbsoluteSequence(1000, false))
-                {
-                }
+                using (game.Flat.BeginAbsoluteSequence(1000, false)) { }
             });
 
             RunSingleFrame();
@@ -36,9 +34,7 @@ namespace osu.Framework.Benchmarks
         {
             game.Schedule(() =>
             {
-                using (game.Flat.BeginAbsoluteSequence(1000, true))
-                {
-                }
+                using (game.Flat.BeginAbsoluteSequence(1000, true)) { }
             });
 
             RunSingleFrame();
@@ -50,9 +46,7 @@ namespace osu.Framework.Benchmarks
         {
             game.Schedule(() =>
             {
-                using (game.SlightlyNested.BeginAbsoluteSequence(1000, false))
-                {
-                }
+                using (game.SlightlyNested.BeginAbsoluteSequence(1000, false)) { }
             });
 
             RunSingleFrame();
@@ -64,9 +58,7 @@ namespace osu.Framework.Benchmarks
         {
             game.Schedule(() =>
             {
-                using (game.SlightlyNested.BeginAbsoluteSequence(1000, true))
-                {
-                }
+                using (game.SlightlyNested.BeginAbsoluteSequence(1000, true)) { }
             });
 
             RunSingleFrame();
@@ -78,9 +70,7 @@ namespace osu.Framework.Benchmarks
         {
             game.Schedule(() =>
             {
-                using (game.VeryNested.BeginAbsoluteSequence(1000, false))
-                {
-                }
+                using (game.VeryNested.BeginAbsoluteSequence(1000, false)) { }
             });
 
             RunSingleFrame();
@@ -92,9 +82,7 @@ namespace osu.Framework.Benchmarks
         {
             game.Schedule(() =>
             {
-                using (game.VeryNested.BeginAbsoluteSequence(1000, true))
-                {
-                }
+                using (game.VeryNested.BeginAbsoluteSequence(1000, true)) { }
             });
 
             RunSingleFrame();
@@ -116,11 +104,7 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < 1000; i++)
                 {
-                    var box = new Box
-                    {
-                        Size = new Vector2(100),
-                        Colour = Color4.Black
-                    };
+                    var box = new Box { Size = new Vector2(100), Colour = Color4.Black };
 
                     Flat.Add(box);
                 }
@@ -129,19 +113,17 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < 1000; i++)
                 {
-                    SlightlyNested.Add(new Container
-                    {
-                        Size = new Vector2(100),
-                        Colour = Color4.Black,
-                        Children = new Drawable[]
+                    SlightlyNested.Add(
+                        new Container
                         {
-                            new Box
+                            Size = new Vector2(100),
+                            Colour = Color4.Black,
+                            Children = new Drawable[]
                             {
-                                Colour = Color4.Black,
-                                RelativeSizeAxes = Axes.Both,
+                                new Box { Colour = Color4.Black, RelativeSizeAxes = Axes.Both },
                             },
                         }
-                    });
+                    );
                 }
 
                 Add(VeryNested = new Container());
@@ -150,7 +132,11 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < 1000; i++)
                 {
-                    var container = new Container { Size = new Vector2(100), Colour = Color4.Black };
+                    var container = new Container
+                    {
+                        Size = new Vector2(100),
+                        Colour = Color4.Black,
+                    };
 
                     target.Add(container);
 

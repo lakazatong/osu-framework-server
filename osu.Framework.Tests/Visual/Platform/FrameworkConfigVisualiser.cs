@@ -30,15 +30,8 @@ namespace osu.Framework.Tests.Visual.Platform
             Direction = FillDirection.Horizontal;
             Children = new Drawable[]
             {
-                new SpriteText
-                {
-                    Font = FrameworkFont.Condensed,
-                    Text = $"{lookup}:"
-                },
-                valueText = new SpriteText
-                {
-                    Font = FrameworkFont.Condensed,
-                }
+                new SpriteText { Font = FrameworkFont.Condensed, Text = $"{lookup}:" },
+                valueText = new SpriteText { Font = FrameworkFont.Condensed },
             };
         }
 
@@ -52,11 +45,13 @@ namespace osu.Framework.Tests.Visual.Platform
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            bindable.BindValueChanged(_ => Scheduler.AddOnce(() =>
-            {
-                updateText();
-                this.FlashColour(Colour4.Yellow, 1000, Easing.OutQuart);
-            }));
+            bindable.BindValueChanged(_ =>
+                Scheduler.AddOnce(() =>
+                {
+                    updateText();
+                    this.FlashColour(Colour4.Yellow, 1000, Easing.OutQuart);
+                })
+            );
         }
 
         private void updateText() => valueText.Text = bindable.ToString() ?? "<null>";

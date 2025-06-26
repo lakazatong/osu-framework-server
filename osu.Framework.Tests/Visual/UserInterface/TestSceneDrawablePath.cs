@@ -44,118 +44,57 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestSimplePath()
         {
-            AddStep("create path", () =>
-            {
-                Child = new TexturedPath
+            AddStep(
+                "create path",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Vertices = new List<Vector2> { Vector2.Zero, new Vector2(300, 300) },
-                    Texture = gradientTexture,
-                };
-            });
+                    Child = new TexturedPath
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Vertices = new List<Vector2> { Vector2.Zero, new Vector2(300, 300) },
+                        Texture = gradientTexture,
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestMultiplePointPath()
         {
-            AddStep("create path", () =>
-            {
-                Child = new TexturedPath
+            AddStep(
+                "create path",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Vertices = new List<Vector2>
+                    Child = new TexturedPath
                     {
-                        new Vector2(50, 50),
-                        new Vector2(50, 150),
-                        new Vector2(150, 150),
-                        new Vector2(150, 50),
-                        new Vector2(50, 50),
-                    },
-                    Texture = gradientTexture,
-                };
-            });
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Vertices = new List<Vector2>
+                        {
+                            new Vector2(50, 50),
+                            new Vector2(50, 150),
+                            new Vector2(150, 150),
+                            new Vector2(150, 50),
+                            new Vector2(50, 50),
+                        },
+                        Texture = gradientTexture,
+                    };
+                }
+            );
         }
 
         [Test]
         public void TestSelfOverlappingPath()
         {
-            AddStep("create path", () =>
-            {
-                Child = new TexturedPath
+            AddStep(
+                "create path",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Vertices = new List<Vector2>
-                    {
-                        new Vector2(50, 50),
-                        new Vector2(50, 150),
-                        new Vector2(150, 150),
-                        new Vector2(150, 100),
-                        new Vector2(20, 100),
-                    },
-                    Texture = gradientTexture,
-                };
-            });
-        }
-
-        [Test]
-        public void TestSmoothPath()
-        {
-            AddStep("create path", () =>
-            {
-                Child = new SmoothPath
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    PathRadius = 10,
-                    Vertices = new List<Vector2>
-                    {
-                        Vector2.Zero,
-                        new Vector2(200)
-                    },
-                };
-            });
-        }
-
-        [Test]
-        public void TestUnsmoothPath()
-        {
-            AddStep("create path", () =>
-            {
-                Child = new Path
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    PathRadius = 10,
-                    Vertices = new List<Vector2>
-                    {
-                        Vector2.Zero,
-                        new Vector2(200)
-                    },
-                };
-            });
-        }
-
-        [Test]
-        public void TestPathBlending()
-        {
-            AddStep("create path", () =>
-            {
-                Children = new Drawable[]
-                {
-                    new Box
+                    Child = new TexturedPath
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Size = new Vector2(200)
-                    },
-                    new TexturedPath
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Colour = Color4.Red,
                         Vertices = new List<Vector2>
                         {
                             new Vector2(50, 50),
@@ -165,9 +104,80 @@ namespace osu.Framework.Tests.Visual.UserInterface
                             new Vector2(20, 100),
                         },
                         Texture = gradientTexture,
-                    }
-                };
-            });
+                    };
+                }
+            );
+        }
+
+        [Test]
+        public void TestSmoothPath()
+        {
+            AddStep(
+                "create path",
+                () =>
+                {
+                    Child = new SmoothPath
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        PathRadius = 10,
+                        Vertices = new List<Vector2> { Vector2.Zero, new Vector2(200) },
+                    };
+                }
+            );
+        }
+
+        [Test]
+        public void TestUnsmoothPath()
+        {
+            AddStep(
+                "create path",
+                () =>
+                {
+                    Child = new Path
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        PathRadius = 10,
+                        Vertices = new List<Vector2> { Vector2.Zero, new Vector2(200) },
+                    };
+                }
+            );
+        }
+
+        [Test]
+        public void TestPathBlending()
+        {
+            AddStep(
+                "create path",
+                () =>
+                {
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(200),
+                        },
+                        new TexturedPath
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = Color4.Red,
+                            Vertices = new List<Vector2>
+                            {
+                                new Vector2(50, 50),
+                                new Vector2(50, 150),
+                                new Vector2(150, 150),
+                                new Vector2(150, 100),
+                                new Vector2(20, 100),
+                            },
+                            Texture = gradientTexture,
+                        },
+                    };
+                }
+            );
         }
 
         [Test]
@@ -175,45 +185,60 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             Path path = null;
 
-            AddStep("create autosize path", () =>
-            {
-                Child = new Container
+            AddStep(
+                "create autosize path",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(200),
-                    Child = path = new Path
+                    Child = new Container
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        PathRadius = 10,
-                        Vertices = new List<Vector2>
-                        {
-                            Vector2.Zero,
-                            new Vector2(100, 0)
-                        },
-                    }
-                };
-            });
+                        Size = new Vector2(200),
+                        Child = path =
+                            new Path
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                PathRadius = 10,
+                                Vertices = new List<Vector2> { Vector2.Zero, new Vector2(100, 0) },
+                            },
+                    };
+                }
+            );
 
-            AddAssert("size = (120, 20)", () => Precision.AlmostEquals(new Vector2(120, 20), path.DrawSize));
+            AddAssert(
+                "size = (120, 20)",
+                () => Precision.AlmostEquals(new Vector2(120, 20), path.DrawSize)
+            );
 
-            AddStep("make path relative-sized", () =>
-            {
-                path.AutoSizeAxes = Axes.None;
-                path.RelativeSizeAxes = Axes.Both;
-                path.Size = Vector2.One;
-            });
+            AddStep(
+                "make path relative-sized",
+                () =>
+                {
+                    path.AutoSizeAxes = Axes.None;
+                    path.RelativeSizeAxes = Axes.Both;
+                    path.Size = Vector2.One;
+                }
+            );
 
-            AddAssert("size = (200, 200)", () => Precision.AlmostEquals(new Vector2(200), path.DrawSize));
+            AddAssert(
+                "size = (200, 200)",
+                () => Precision.AlmostEquals(new Vector2(200), path.DrawSize)
+            );
 
-            AddStep("make path absolute-sized", () =>
-            {
-                path.RelativeSizeAxes = Axes.None;
-                path.Size = new Vector2(100);
-            });
+            AddStep(
+                "make path absolute-sized",
+                () =>
+                {
+                    path.RelativeSizeAxes = Axes.None;
+                    path.Size = new Vector2(100);
+                }
+            );
 
-            AddAssert("size = (100, 100)", () => Precision.AlmostEquals(new Vector2(100), path.DrawSize));
+            AddAssert(
+                "size = (100, 100)",
+                () => Precision.AlmostEquals(new Vector2(100), path.DrawSize)
+            );
         }
     }
 }

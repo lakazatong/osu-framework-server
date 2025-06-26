@@ -45,7 +45,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
         {
             var receiver = new Receiver2();
 
-            Assert.Throws<DependencyNotRegisteredException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -74,7 +76,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
         {
             var receiver = new Receiver5();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -83,7 +87,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
         {
             var receiver = new Receiver6();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -92,7 +98,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
         {
             var receiver = new Receiver7();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -109,7 +117,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
         {
             var receiver = new Receiver9();
 
-            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<AccessModifierNotAllowedForPropertySetterException>(() =>
+                createDependencies().Inject(receiver)
+            );
         }
 
         [Test]
@@ -132,7 +142,10 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
 
             var testObject = new PartialCachedStructProvider();
 
-            var dependencies = DependencyActivator.MergeDependencies(testObject, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                testObject,
+                new DependencyContainer()
+            );
 
             Assert.DoesNotThrow(() => dependencies.Inject(receiver));
             Assert.AreEqual(testObject.CachedObject.Value, receiver.Obj.Value);
@@ -147,7 +160,10 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             var testObject = new PartialCachedNullableProvider();
             testObject.SetValue(testValue);
 
-            var dependencies = DependencyActivator.MergeDependencies(testObject, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                testObject,
+                new DependencyContainer()
+            );
 
             dependencies.Inject(receiver);
 
@@ -157,7 +173,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
         [Test]
         public void TestResolveStructWithoutNullPermits()
         {
-            Assert.Throws<DependencyNotRegisteredException>(() => new DependencyContainer().Inject(new Receiver14()));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                new DependencyContainer().Inject(new Receiver14())
+            );
         }
 
         [Test]
@@ -203,7 +221,9 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             var receiver = new Receiver18();
 
             // Throws with non-nullable dependency not cached.
-            Assert.Throws<DependencyNotRegisteredException>(() => createDependencies().Inject(receiver));
+            Assert.Throws<DependencyNotRegisteredException>(() =>
+                createDependencies().Inject(receiver)
+            );
 
             // Does not throw with the non-nullable dependency cached.
             Assert.DoesNotThrow(() => createDependencies(new Bindable<int>(10)).Inject(receiver));
@@ -218,9 +238,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             return dependencies;
         }
 
-        private partial class BaseObject
-        {
-        }
+        private partial class BaseObject { }
 
         private partial class Receiver1 : IDependencyInjectionCandidate
         {
@@ -284,9 +302,7 @@ namespace osu.Framework.Tests.Dependencies.SourceGeneration
             public BaseObject Obj { get; protected internal set; }
         }
 
-        private partial class Receiver11 : Receiver8
-        {
-        }
+        private partial class Receiver11 : Receiver8 { }
 
         private partial class Receiver12 : IDependencyInjectionCandidate
         {

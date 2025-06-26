@@ -22,7 +22,12 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(selector = new BasicFileSelector(null, new[] { ".png", ".jpg", ".jpeg" }) { RelativeSizeAxes = Axes.Both });
+            Add(
+                selector = new BasicFileSelector(null, new[] { ".png", ".jpg", ".jpeg" })
+                {
+                    RelativeSizeAxes = Axes.Both,
+                }
+            );
         }
 
         protected override void LoadComplete()
@@ -31,15 +36,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             selector.CurrentFile.BindValueChanged(f =>
             {
-                using var resources = new StorageBackedResourceStore(host.GetStorage(f.NewValue.Directory!.FullName));
-                using var store = new TextureStore(host.Renderer, host.CreateTextureLoaderStore(resources));
+                using var resources = new StorageBackedResourceStore(
+                    host.GetStorage(f.NewValue.Directory!.FullName)
+                );
+                using var store = new TextureStore(
+                    host.Renderer,
+                    host.CreateTextureLoaderStore(resources)
+                );
 
-                Add(new Sprite
-                {
-                    FillMode = FillMode.Fit,
-                    RelativeSizeAxes = Axes.Both,
-                    Texture = store.Get(Path.GetFileName(f.NewValue.FullName)),
-                });
+                Add(
+                    new Sprite
+                    {
+                        FillMode = FillMode.Fit,
+                        RelativeSizeAxes = Axes.Both,
+                        Texture = store.Get(Path.GetFileName(f.NewValue.FullName)),
+                    }
+                );
             });
         }
     }

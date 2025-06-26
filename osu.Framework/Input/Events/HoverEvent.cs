@@ -12,8 +12,6 @@ namespace osu.Framework.Input.Events
     public class HoverEvent : MouseEvent
     {
         public HoverEvent(InputState state)
-            : base(state)
-        {
-        }
+            : base(state) { }
     }
 }

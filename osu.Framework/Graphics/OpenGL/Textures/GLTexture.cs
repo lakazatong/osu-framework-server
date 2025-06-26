@@ -43,7 +43,9 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
         public virtual int Width { get; set; }
         public virtual int Height { get; set; }
+
         public virtual int GetByteSize() => Width * Height * 4;
+
         public bool Available { get; private set; } = true;
 
         private int? mipLevel;
@@ -54,8 +56,16 @@ namespace osu.Framework.Graphics.OpenGL.Textures
             set
             {
                 mipLevel = value;
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinLod, mipLevel ?? 0);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLod, mipLevel ?? IRenderer.MAX_MIPMAP_LEVELS);
+                GL.TexParameter(
+                    TextureTarget.Texture2D,
+                    TextureParameterName.TextureMinLod,
+                    mipLevel ?? 0
+                );
+                GL.TexParameter(
+                    TextureTarget.Texture2D,
+                    TextureParameterName.TextureMaxLod,
+                    mipLevel ?? IRenderer.MAX_MIPMAP_LEVELS
+                );
             }
         }
 
@@ -81,7 +91,14 @@ namespace osu.Framework.Graphics.OpenGL.Textures
         /// <param name="manualMipmaps">Whether manual mipmaps will be uploaded to the texture. If false, the texture will compute mipmaps automatically.</param>
         /// <param name="filteringMode">The filtering mode.</param>
         /// <param name="initialisationColour">The colour to initialise texture levels with (in the case of sub region initial uploads). If null, no initialisation is provided out-of-the-box.</param>
-        public GLTexture(GLRenderer renderer, int width, int height, bool manualMipmaps = false, All filteringMode = All.Linear, Color4? initialisationColour = null)
+        public GLTexture(
+            GLRenderer renderer,
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            All filteringMode = All.Linear,
+            Color4? initialisationColour = null
+        )
         {
             Renderer = renderer;
             Width = width;
@@ -114,23 +131,26 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
         protected virtual void Dispose(bool isDisposing)
         {
-            Renderer.ScheduleDisposal(texture =>
-            {
-                while (texture.tryGetNextUpload(out var upload))
-                    upload.Dispose();
+            Renderer.ScheduleDisposal(
+                texture =>
+                {
+                    while (texture.tryGetNextUpload(out var upload))
+                        upload.Dispose();
 
-                int disposableId = texture.textureId;
+                    int disposableId = texture.textureId;
 
-                if (disposableId <= 0)
-                    return;
+                    if (disposableId <= 0)
+                        return;
 
-                GL.DeleteTextures(1, new[] { disposableId });
+                    GL.DeleteTextures(1, new[] { disposableId });
 
-                texture.memoryLease?.Dispose();
+                    texture.memoryLease?.Dispose();
 
-                texture.textureId = 0;
-                texture.Available = false;
-            }, this);
+                    texture.textureId = 0;
+                    texture.Available = false;
+                },
+                this
+            );
         }
 
         #endregion
@@ -189,7 +209,9 @@ namespace osu.Framework.Graphics.OpenGL.Textures
             lock (uploadQueue)
             {
                 if (uploadQueue.Count >= 100 && uploadQueue.Count % 100 == 0)
-                    Logger.Log($"Texture {Identifier}'s upload queue is large ({uploadQueue.Count})");
+                    Logger.Log(
+                        $"Texture {Identifier}'s upload queue is large ({uploadQueue.Count})"
+                    );
 
                 bool requireUpload = uploadQueue.Count == 0;
                 uploadQueue.Enqueue(upload);
@@ -413,34 +435,87 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
                     Renderer.BindTexture(this);
 
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBaseLevel, 0);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, IRenderer.MAX_MIPMAP_LEVELS);
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureBaseLevel,
+                        0
+                    );
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureMaxLevel,
+                        IRenderer.MAX_MIPMAP_LEVELS
+                    );
 
                     // These shouldn't be required, but on some older Intel drivers the MAX_LOD chosen by the shader isn't clamped to the MAX_LEVEL from above, resulting in disappearing textures.
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinLod, 0);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLod, IRenderer.MAX_MIPMAP_LEVELS);
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureMaxLod,
+                        IRenderer.MAX_MIPMAP_LEVELS
+                    );
 
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                        (int)(manualMipmaps ? filteringMode : filteringMode == All.Linear ? All.LinearMipmapLinear : All.Nearest));
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)filteringMode);
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureMinFilter,
+                        (int)(
+                            manualMipmaps ? filteringMode
+                            : filteringMode == All.Linear ? All.LinearMipmapLinear
+                            : All.Nearest
+                        )
+                    );
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureMagFilter,
+                        (int)filteringMode
+                    );
 
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureWrapS,
+                        (int)TextureWrapMode.ClampToEdge
+                    );
+                    GL.TexParameter(
+                        TextureTarget.Texture2D,
+                        TextureParameterName.TextureWrapT,
+                        (int)TextureWrapMode.ClampToEdge
+                    );
                 }
                 else
                     Renderer.BindTexture(this);
 
-                if ((Width == upload.Bounds.Width && Height == upload.Bounds.Height) || dataPointer == IntPtr.Zero)
+                if (
+                    (Width == upload.Bounds.Width && Height == upload.Bounds.Height)
+                    || dataPointer == IntPtr.Zero
+                )
                 {
                     updateMemoryUsage(upload.Level, (long)Width * Height * 4);
-                    GL.TexImage2D(TextureTarget2d.Texture2D, upload.Level, TextureComponentCount.Rgba8, Width, Height, 0, upload.Format, PixelType.UnsignedByte, dataPointer);
+                    GL.TexImage2D(
+                        TextureTarget2d.Texture2D,
+                        upload.Level,
+                        TextureComponentCount.Rgba8,
+                        Width,
+                        Height,
+                        0,
+                        upload.Format,
+                        PixelType.UnsignedByte,
+                        dataPointer
+                    );
                 }
                 else
                 {
                     initializeLevel(upload.Level, Width, Height);
 
-                    GL.TexSubImage2D(TextureTarget2d.Texture2D, upload.Level, upload.Bounds.X, upload.Bounds.Y, upload.Bounds.Width, upload.Bounds.Height, upload.Format,
-                        PixelType.UnsignedByte, dataPointer);
+                    GL.TexSubImage2D(
+                        TextureTarget2d.Texture2D,
+                        upload.Level,
+                        upload.Bounds.X,
+                        upload.Bounds.Y,
+                        upload.Bounds.Width,
+                        upload.Bounds.Height,
+                        upload.Format,
+                        PixelType.UnsignedByte,
+                        dataPointer
+                    );
                 }
             }
             // Just update content of the current texture
@@ -466,8 +541,17 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
                 int div = (int)Math.Pow(2, upload.Level);
 
-                GL.TexSubImage2D(TextureTarget2d.Texture2D, upload.Level, upload.Bounds.X / div, upload.Bounds.Y / div, upload.Bounds.Width / div, upload.Bounds.Height / div,
-                    upload.Format, PixelType.UnsignedByte, dataPointer);
+                GL.TexSubImage2D(
+                    TextureTarget2d.Texture2D,
+                    upload.Level,
+                    upload.Bounds.X / div,
+                    upload.Bounds.Y / div,
+                    upload.Bounds.Width / div,
+                    upload.Bounds.Height / div,
+                    upload.Format,
+                    PixelType.UnsignedByte,
+                    dataPointer
+                );
             }
         }
 
@@ -476,18 +560,35 @@ namespace osu.Framework.Graphics.OpenGL.Textures
             if (initialisationColour == null)
                 return;
 
-            var rgbaColour = new Rgba32(new Vector4(initialisationColour.Value.R, initialisationColour.Value.G, initialisationColour.Value.B, initialisationColour.Value.A));
+            var rgbaColour = new Rgba32(
+                new Vector4(
+                    initialisationColour.Value.R,
+                    initialisationColour.Value.G,
+                    initialisationColour.Value.B,
+                    initialisationColour.Value.A
+                )
+            );
 
             // it is faster to initialise without a background specification if transparent black is all that's required.
-            using var image = initialisationColour == default
-                ? new Image<Rgba32>(width, height)
-                : new Image<Rgba32>(width, height, rgbaColour);
+            using var image =
+                initialisationColour == default
+                    ? new Image<Rgba32>(width, height)
+                    : new Image<Rgba32>(width, height, rgbaColour);
 
             using (var pixels = image.CreateReadOnlyPixelSpan())
             {
                 updateMemoryUsage(level, (long)width * height * 4);
-                GL.TexImage2D(TextureTarget2d.Texture2D, level, TextureComponentCount.Rgba8, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
-                    ref MemoryMarshal.GetReference(pixels.Span));
+                GL.TexImage2D(
+                    TextureTarget2d.Texture2D,
+                    level,
+                    TextureComponentCount.Rgba8,
+                    width,
+                    height,
+                    0,
+                    PixelFormat.Rgba,
+                    PixelType.UnsignedByte,
+                    ref MemoryMarshal.GetReference(pixels.Span)
+                );
             }
         }
     }

@@ -50,7 +50,8 @@ namespace osu.Framework.Graphics.Cursor
 
         private void onLongPressBegan(Vector2 position, double duration)
         {
-            if (Parent == null) return;
+            if (Parent == null)
+                return;
 
             longPressFeedback.Position = Parent.ToLocalSpace(position);
             longPressFeedback.BeginAnimation(duration);
@@ -61,7 +62,8 @@ namespace osu.Framework.Graphics.Cursor
         /// <summary>
         /// Creates a drawable providing visual feedback for touch long-presses, signaled via <see cref="TouchLongPressFeedback.BeginAnimation"/> and <see cref="TouchLongPressFeedback.CancelAnimation"/>.
         /// </summary>
-        protected virtual TouchLongPressFeedback CreateLongPressFeedback() => new CircularLongPressFeedback();
+        protected virtual TouchLongPressFeedback CreateLongPressFeedback() =>
+            new CircularLongPressFeedback();
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -110,7 +112,7 @@ namespace osu.Framework.Graphics.Cursor
                 {
                     Type = EdgeEffectType.Glow,
                     Colour = new Color4(247, 99, 164, 6),
-                    Radius = 50
+                    Radius = 50,
                 };
 
                 Child = new Box
@@ -131,10 +133,7 @@ namespace osu.Framework.Graphics.Cursor
                 AutoSizeAxes = Axes.Both;
                 Origin = Anchor.Centre;
 
-                InternalChild = progress = new CircularProgress
-                {
-                    Size = new Vector2(180),
-                };
+                InternalChild = progress = new CircularProgress { Size = new Vector2(180) };
 
                 Alpha = 0;
             }
@@ -145,18 +144,20 @@ namespace osu.Framework.Graphics.Cursor
                 {
                     this.FadeInFromZero();
 
-                    progress.FadeColour(Color4.SkyBlue)
-                            .TransformTo(nameof(progress.InnerRadius), 0.2f)
-                            .TransformTo(nameof(progress.InnerRadius), 0.3f, 150, Easing.OutQuint)
-                            .ProgressTo(0)
-                            .ProgressTo(1, duration / 3 * 2);
+                    progress
+                        .FadeColour(Color4.SkyBlue)
+                        .TransformTo(nameof(progress.InnerRadius), 0.2f)
+                        .TransformTo(nameof(progress.InnerRadius), 0.3f, 150, Easing.OutQuint)
+                        .ProgressTo(0)
+                        .ProgressTo(1, duration / 3 * 2);
 
                     using (BeginDelayedSequence(duration / 3 * 2))
                     {
                         this.FadeOut(500, Easing.OutQuint);
 
-                        progress.FadeColour(Color4.White, 800, Easing.OutQuint)
-                                .TransformTo(nameof(progress.InnerRadius), 0.6f, 500, Easing.OutQuint);
+                        progress
+                            .FadeColour(Color4.White, 800, Easing.OutQuint)
+                            .TransformTo(nameof(progress.InnerRadius), 0.6f, 500, Easing.OutQuint);
                     }
                 }
             }
@@ -165,8 +166,9 @@ namespace osu.Framework.Graphics.Cursor
             {
                 this.FadeOut(400, Easing.OutQuint);
 
-                progress.ProgressTo(0, 400, Easing.OutQuint)
-                        .TransformTo(nameof(progress.InnerRadius), 0.2f, 50, Easing.OutQuint);
+                progress
+                    .ProgressTo(0, 400, Easing.OutQuint)
+                    .TransformTo(nameof(progress.InnerRadius), 0.2f, 50, Easing.OutQuint);
             }
         }
     }

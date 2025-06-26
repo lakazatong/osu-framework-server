@@ -22,17 +22,22 @@ namespace osu.Framework.Tests.Visual.Drawables
             Box box = null;
             Drawable proxy = null;
 
-            AddStep("add proxy", () =>
-            {
-                Add(box = new Box
+            AddStep(
+                "add proxy",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100)
-                });
+                    Add(
+                        box = new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(100),
+                        }
+                    );
 
-                Add(proxy = box.CreateProxy());
-            });
+                    Add(proxy = box.CreateProxy());
+                }
+            );
 
             AddAssert("proxy should be alive", () => proxy.ShouldBeAlive);
             AddAssert("proxy is alive", () => proxy.IsAlive);
@@ -50,28 +55,43 @@ namespace osu.Framework.Tests.Visual.Drawables
             Drawable proxy = null;
             bool lifetimeChanged = false;
 
-            AddStep("add proxy", () =>
-            {
-                lifetimeChanged = false;
-
-                Add(box = new Box
+            AddStep(
+                "add proxy",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100)
-                });
+                    lifetimeChanged = false;
 
-                Add(proxy = box.CreateProxy().With(d => d.LifetimeChanged += _ => lifetimeChanged = true));
-            });
+                    Add(
+                        box = new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(100),
+                        }
+                    );
 
-            AddStep("set lifetimes", () =>
-            {
-                box.LifetimeStart = Time.Current - 5000;
-                box.LifetimeEnd = Time.Current + 5000;
-            });
+                    Add(
+                        proxy = box.CreateProxy()
+                            .With(d => d.LifetimeChanged += _ => lifetimeChanged = true)
+                    );
+                }
+            );
+
+            AddStep(
+                "set lifetimes",
+                () =>
+                {
+                    box.LifetimeStart = Time.Current - 5000;
+                    box.LifetimeEnd = Time.Current + 5000;
+                }
+            );
 
             AddAssert("lifetime changed", () => lifetimeChanged);
-            AddAssert("lifetime transferred from box", () => proxy.LifetimeStart == box.LifetimeStart && proxy.LifetimeEnd == box.LifetimeEnd);
+            AddAssert(
+                "lifetime transferred from box",
+                () =>
+                    proxy.LifetimeStart == box.LifetimeStart && proxy.LifetimeEnd == box.LifetimeEnd
+            );
         }
 
         [Test]
@@ -81,22 +101,24 @@ namespace osu.Framework.Tests.Visual.Drawables
             Box box = null;
             Drawable proxy = null;
 
-            AddStep("add proxy", () =>
-            {
-                Add(container = new Container
+            AddStep(
+                "add proxy",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both
-                });
+                    Add(container = new Container { RelativeSizeAxes = Axes.Both });
 
-                container.Add(box = new Box
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100)
-                });
+                    container.Add(
+                        box = new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(100),
+                        }
+                    );
 
-                container.Add(proxy = box.CreateProxy());
-            });
+                    container.Add(proxy = box.CreateProxy());
+                }
+            );
 
             AddStep("expire box", () => box.Expire(true));
 

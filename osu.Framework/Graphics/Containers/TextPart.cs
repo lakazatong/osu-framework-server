@@ -39,6 +39,8 @@ namespace osu.Framework.Graphics.Containers
         /// Creates drawables representing the contents of this <see cref="TextPart"/>,
         /// to be appended to the <paramref name="textFlowContainer"/>.
         /// </summary>
-        protected abstract IEnumerable<Drawable> CreateDrawablesFor(TextFlowContainer textFlowContainer);
+        protected abstract IEnumerable<Drawable> CreateDrawablesFor(
+            TextFlowContainer textFlowContainer
+        );
     }
 }

@@ -51,12 +51,24 @@ namespace osu.Framework.Allocation
     /// </list>
     /// </remarks>
     [MeansImplicitUse]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Interface, AllowMultiple = true, Inherited = false)]
+    [AttributeUsage(
+        AttributeTargets.Class
+            | AttributeTargets.Field
+            | AttributeTargets.Property
+            | AttributeTargets.Interface,
+        AllowMultiple = true,
+        Inherited = false
+    )]
     public class CachedAttribute : Attribute
     {
-        private static readonly GlobalStatistic<int> count_reflection_attributes = GlobalStatistics.Get<int>("Dependencies", "Reflected [Cached]s");
+        private static readonly GlobalStatistic<int> count_reflection_attributes =
+            GlobalStatistics.Get<int>("Dependencies", "Reflected [Cached]s");
 
-        internal const BindingFlags ACTIVATOR_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        internal const BindingFlags ACTIVATOR_FLAGS =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.DeclaredOnly;
 
         /// <summary>
         /// The type to cache the value as. If null, the type depends on the type of member that the attribute is placed on:
@@ -107,9 +119,7 @@ namespace osu.Framework.Allocation
         /// <summary>
         /// Identifies a member to be cached to a <see cref="DependencyContainer"/>.
         /// </summary>
-        public CachedAttribute()
-        {
-        }
+        public CachedAttribute() { }
 
         /// <summary>
         /// Identifies a member to be cached to a <see cref="DependencyContainer"/>.
@@ -131,16 +141,44 @@ namespace osu.Framework.Allocation
             foreach (var iface in type.GetInterfaces())
             {
                 foreach (var attribute in iface.GetCustomAttributes<CachedAttribute>())
-                    additionActivators.Add((target, dc, info) => SourceGeneratorUtils.CacheDependency(dc, type, target, info, attribute.Type ?? iface, attribute.Name, null));
+                    additionActivators.Add(
+                        (target, dc, info) =>
+                            SourceGeneratorUtils.CacheDependency(
+                                dc,
+                                type,
+                                target,
+                                info,
+                                attribute.Type ?? iface,
+                                attribute.Name,
+                                null
+                            )
+                    );
             }
 
             foreach (var attribute in type.GetCustomAttributes<CachedAttribute>())
-                additionActivators.Add((target, dc, info) => SourceGeneratorUtils.CacheDependency(dc, type, target, info, attribute.Type ?? type, attribute.Name, null));
+                additionActivators.Add(
+                    (target, dc, info) =>
+                        SourceGeneratorUtils.CacheDependency(
+                            dc,
+                            type,
+                            target,
+                            info,
+                            attribute.Type ?? type,
+                            attribute.Name,
+                            null
+                        )
+                );
 
-            foreach (var property in type.GetProperties(ACTIVATOR_FLAGS).Where(f => f.GetCustomAttributes<CachedAttribute>().Any()))
+            foreach (
+                var property in type.GetProperties(ACTIVATOR_FLAGS)
+                    .Where(f => f.GetCustomAttributes<CachedAttribute>().Any())
+            )
                 additionActivators.AddRange(createMemberActivator(property, type));
 
-            foreach (var field in type.GetFields(ACTIVATOR_FLAGS).Where(f => f.GetCustomAttributes<CachedAttribute>().Any()))
+            foreach (
+                var field in type.GetFields(ACTIVATOR_FLAGS)
+                    .Where(f => f.GetCustomAttributes<CachedAttribute>().Any())
+            )
                 additionActivators.AddRange(createMemberActivator(field, type));
 
             if (additionActivators.Count == 0)
@@ -156,7 +194,9 @@ namespace osu.Framework.Allocation
             };
         }
 
-        private static IEnumerable<Action<object, DependencyContainer, CacheInfo>> createMemberActivator(MemberInfo member, Type type)
+        private static IEnumerable<
+            Action<object, DependencyContainer, CacheInfo>
+        > createMemberActivator(MemberInfo member, Type type)
         {
             switch (member)
             {
@@ -164,10 +204,16 @@ namespace osu.Framework.Allocation
                 {
                     var getMethod = pi.GetMethod;
                     if (getMethod == null)
-                        throw new AccessModifierNotAllowedForCachedValueException(AccessModifier.None, pi);
+                        throw new AccessModifierNotAllowedForCachedValueException(
+                            AccessModifier.None,
+                            pi
+                        );
 
                     if (getMethod.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
-                        throw new AccessModifierNotAllowedForCachedValueException(AccessModifier.None, pi);
+                        throw new AccessModifierNotAllowedForCachedValueException(
+                            AccessModifier.None,
+                            pi
+                        );
 
                     var setMethod = pi.SetMethod;
 
@@ -175,10 +221,16 @@ namespace osu.Framework.Allocation
                     {
                         var modifier = setMethod.GetAccessModifier();
                         if (modifier != AccessModifier.Private)
-                            throw new AccessModifierNotAllowedForCachedValueException(modifier, setMethod);
+                            throw new AccessModifierNotAllowedForCachedValueException(
+                                modifier,
+                                setMethod
+                            );
 
                         if (setMethod.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
-                            throw new AccessModifierNotAllowedForCachedValueException(AccessModifier.None, pi);
+                            throw new AccessModifierNotAllowedForCachedValueException(
+                                AccessModifier.None,
+                                pi
+                            );
                     }
 
                     break;
@@ -206,7 +258,15 @@ namespace osu.Framework.Allocation
                     if (member is FieldInfo f)
                         value = f.GetValue(target);
 
-                    SourceGeneratorUtils.CacheDependency(dc, type, value, info, attribute.Type, attribute.Name, member.Name);
+                    SourceGeneratorUtils.CacheDependency(
+                        dc,
+                        type,
+                        value,
+                        info,
+                        attribute.Type,
+                        attribute.Name,
+                        member.Name
+                    );
                 };
             }
         }
@@ -218,8 +278,6 @@ namespace osu.Framework.Allocation
     public sealed class NullDependencyException : InvalidOperationException
     {
         public NullDependencyException(string message)
-            : base(message)
-        {
-        }
+            : base(message) { }
     }
 }

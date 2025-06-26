@@ -18,7 +18,8 @@ namespace osu.Framework.Platform.SDL3
         {
             // Apple devices don't have the notion of NumLock (they have a Clear key instead).
             // treat them as if they always have NumLock on (the numpad always performs its primary actions).
-            bool numLockOn = sdlKeyboardEvent.mod.HasFlagFast(SDL_Keymod.SDL_KMOD_NUM) || RuntimeInfo.IsApple;
+            bool numLockOn =
+                sdlKeyboardEvent.mod.HasFlagFast(SDL_Keymod.SDL_KMOD_NUM) || RuntimeInfo.IsApple;
 
             switch (sdlKeyboardEvent.scancode)
             {
@@ -859,7 +860,10 @@ namespace osu.Framework.Platform.SDL3
             }
         }
 
-        public static WindowState ToWindowState(this SDL_WindowFlags windowFlags, bool isFullscreenBorderless)
+        public static WindowState ToWindowState(
+            this SDL_WindowFlags windowFlags,
+            bool isFullscreenBorderless
+        )
         {
             // for windows
             if (windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_BORDERLESS))
@@ -869,7 +873,9 @@ namespace osu.Framework.Platform.SDL3
                 return WindowState.Minimised;
 
             if (windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN))
-                return isFullscreenBorderless ? WindowState.FullscreenBorderless : WindowState.Fullscreen;
+                return isFullscreenBorderless
+                    ? WindowState.FullscreenBorderless
+                    : WindowState.Fullscreen;
 
             if (windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_MAXIMIZED))
                 return WindowState.Maximised;
@@ -1045,7 +1051,13 @@ namespace osu.Framework.Platform.SDL3
             int bpp;
             uint unused;
             SDL_GetMasksForPixelFormat(mode.format, &bpp, &unused, &unused, &unused, &unused);
-            return new DisplayMode(SDL_GetPixelFormatName(mode.format), new Size(mode.w, mode.h), bpp, mode.refresh_rate, displayIndex);
+            return new DisplayMode(
+                SDL_GetPixelFormatName(mode.format),
+                new Size(mode.w, mode.h),
+                bpp,
+                mode.refresh_rate,
+                displayIndex
+            );
         }
 
         public static string ReadableName(this SDL_LogCategory category)
@@ -1117,7 +1129,8 @@ namespace osu.Framework.Platform.SDL3
         /// <returns>
         /// <c>string</c> in the format of <c>1920x1080@60</c>.
         /// </returns>
-        public static string ReadableString(this SDL_DisplayMode mode) => $"{mode.w}x{mode.h}@{mode.refresh_rate}";
+        public static string ReadableString(this SDL_DisplayMode mode) =>
+            $"{mode.w}x{mode.h}@{mode.refresh_rate}";
 
         /// <summary>
         /// Gets the SDL error, and then clears it.

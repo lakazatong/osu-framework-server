@@ -66,6 +66,7 @@ namespace osu.Framework.Input
             }
         }
 
-        public static bool SupportsIme(this TextInputType type) => type == TextInputType.Name || type == TextInputType.Text;
+        public static bool SupportsIme(this TextInputType type) =>
+            type == TextInputType.Name || type == TextInputType.Text;
     }
 }

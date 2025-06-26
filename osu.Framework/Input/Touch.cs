@@ -36,6 +36,7 @@ namespace osu.Framework.Input
         public bool Equals(Touch other) => Source == other.Source;
 
         public static bool operator ==(Touch left, Touch right) => left.Equals(right);
+
         public static bool operator !=(Touch left, Touch right) => !(left == right);
 
         public override bool Equals(object obj) => obj is Touch other && Equals(other);

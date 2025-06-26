@@ -6,7 +6,8 @@ using osu.Framework.Graphics.Shapes;
 
 namespace osu.Framework.Tests.Visual.Performance
 {
-    public sealed partial class TestSceneFastCirclePerformance : RepeatedDrawablePerformanceTestScene
+    public sealed partial class TestSceneFastCirclePerformance
+        : RepeatedDrawablePerformanceTestScene
     {
         protected override Drawable CreateDrawable() => new FastCircle();
     }

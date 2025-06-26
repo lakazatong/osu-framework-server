@@ -31,14 +31,12 @@ namespace osu.Framework.Graphics.Veldrid
         /// <summary>
         /// The platform graphics resource factory.
         /// </summary>
-        public ResourceFactory Factory
-            => Device.ResourceFactory;
+        public ResourceFactory Factory => Device.ResourceFactory;
 
         /// <summary>
         /// The graphics surface type.
         /// </summary>
-        public GraphicsSurfaceType SurfaceType
-            => graphicsSurface.Type;
+        public GraphicsSurfaceType SurfaceType => graphicsSurface.Type;
 
         /// <summary>
         /// Enables or disables vertical sync.
@@ -61,26 +59,23 @@ namespace osu.Framework.Graphics.Veldrid
         /// <summary>
         /// Whether the depth is in the range [0, 1] (i.e. Reversed-Z). If <c>false</c>, depth is in the range [-1, 1].
         /// </summary>
-        public bool IsDepthRangeZeroToOne
-            => Device.IsDepthRangeZeroToOne;
+        public bool IsDepthRangeZeroToOne => Device.IsDepthRangeZeroToOne;
 
         /// <summary>
         /// Whether the texture coordinates begin in the top-left of the texture. If <c>false</c>, (0, 0) corresponds to the bottom-left texel of the texture.
         /// </summary>
-        public bool IsUvOriginTopLeft
-            => Device.IsUvOriginTopLeft;
+        public bool IsUvOriginTopLeft => Device.IsUvOriginTopLeft;
 
         /// <summary>
         /// Whether the y-coordinate ranges from -1 (top) to 1 (bottom). If <c>false</c>, the y-coordinate ranges from -1 (bottom) to 1 (top).
         /// </summary>
-        public bool IsClipSpaceYInverted
-            => Device.IsClipSpaceYInverted;
+        public bool IsClipSpaceYInverted => Device.IsClipSpaceYInverted;
 
         /// <summary>
         /// Whether shader storage buffer objects can be used.
         /// </summary>
-        public bool UseStructuredBuffers
-            => !FrameworkEnvironment.NoStructuredBuffers && Device.Features.StructuredBuffer;
+        public bool UseStructuredBuffers =>
+            !FrameworkEnvironment.NoStructuredBuffers && Device.Features.StructuredBuffer;
 
         /// <summary>
         /// The maximum allowed texture size.
@@ -99,7 +94,10 @@ namespace osu.Framework.Graphics.Veldrid
         {
             // Veldrid must either be initialised on the main/"input" thread, or in a separate thread away from the draw thread at least.
             // Otherwise the window may not render anything on some platforms (macOS at least).
-            Debug.Assert(!ThreadSafety.IsDrawThread, "Veldrid cannot be initialised on the draw thread.");
+            Debug.Assert(
+                !ThreadSafety.IsDrawThread,
+                "Veldrid cannot be initialised on the draw thread."
+            );
 
             this.graphicsSurface = graphicsSurface;
 
@@ -128,7 +126,10 @@ namespace osu.Framework.Graphics.Veldrid
             {
                 case RuntimeInfo.Platform.Windows:
                 {
-                    swapchain.Source = SwapchainSource.CreateWin32(this.graphicsSurface.WindowHandle, IntPtr.Zero);
+                    swapchain.Source = SwapchainSource.CreateWin32(
+                        this.graphicsSurface.WindowHandle,
+                        IntPtr.Zero
+                    );
                     break;
                 }
 
@@ -139,7 +140,9 @@ namespace osu.Framework.Graphics.Veldrid
                     if (this.graphicsSurface.Type == GraphicsSurfaceType.Metal)
                     {
                         var metalGraphics = (IMetalGraphicsSurface)this.graphicsSurface;
-                        swapchain.Source = SwapchainSource.CreateNSView(metalGraphics.CreateMetalView());
+                        swapchain.Source = SwapchainSource.CreateNSView(
+                            metalGraphics.CreateMetalView()
+                        );
                     }
 
                     break;
@@ -152,7 +155,9 @@ namespace osu.Framework.Graphics.Veldrid
                     if (this.graphicsSurface.Type == GraphicsSurfaceType.Metal)
                     {
                         var metalGraphics = (IMetalGraphicsSurface)this.graphicsSurface;
-                        swapchain.Source = SwapchainSource.CreateUIView(metalGraphics.CreateMetalView());
+                        swapchain.Source = SwapchainSource.CreateUIView(
+                            metalGraphics.CreateMetalView()
+                        );
                     }
 
                     break;
@@ -162,15 +167,24 @@ namespace osu.Framework.Graphics.Veldrid
                 {
                     var linuxGraphics = (ILinuxGraphicsSurface)this.graphicsSurface;
                     swapchain.Source = linuxGraphics.IsWayland
-                        ? SwapchainSource.CreateWayland(linuxGraphics.DisplayHandle, this.graphicsSurface.WindowHandle)
-                        : SwapchainSource.CreateXlib(linuxGraphics.DisplayHandle, this.graphicsSurface.WindowHandle);
+                        ? SwapchainSource.CreateWayland(
+                            linuxGraphics.DisplayHandle,
+                            this.graphicsSurface.WindowHandle
+                        )
+                        : SwapchainSource.CreateXlib(
+                            linuxGraphics.DisplayHandle,
+                            this.graphicsSurface.WindowHandle
+                        );
                     break;
                 }
 
                 case RuntimeInfo.Platform.Android:
                 {
                     var androidGraphics = (IAndroidGraphicsSurface)this.graphicsSurface;
-                    swapchain.Source = SwapchainSource.CreateAndroidSurface(androidGraphics.SurfaceHandle, androidGraphics.JniEnvHandle);
+                    swapchain.Source = SwapchainSource.CreateAndroidSurface(
+                        androidGraphics.SurfaceHandle,
+                        androidGraphics.JniEnvHandle
+                    );
                     break;
                 }
             }
@@ -188,10 +202,20 @@ namespace osu.Framework.Graphics.Veldrid
                         deleteContext: openGLGraphics.DeleteContext,
                         swapBuffers: openGLGraphics.SwapBuffers,
                         setSyncToVerticalBlank: v => openGLGraphics.VerticalSync = v,
-                        setSwapchainFramebuffer: () => OpenGLNative.glBindFramebuffer(FramebufferTarget.Framebuffer, (uint)(openGLGraphics.BackbufferFramebuffer ?? 0)),
-                        null);
+                        setSwapchainFramebuffer: () =>
+                            OpenGLNative.glBindFramebuffer(
+                                FramebufferTarget.Framebuffer,
+                                (uint)(openGLGraphics.BackbufferFramebuffer ?? 0)
+                            ),
+                        null
+                    );
 
-                    Device = GraphicsDevice.CreateOpenGL(options, openGLInfo, swapchain.Width, swapchain.Height);
+                    Device = GraphicsDevice.CreateOpenGL(
+                        options,
+                        openGLInfo,
+                        swapchain.Width,
+                        swapchain.Height
+                    );
                     Device.LogOpenGL(out maxTextureSize);
                     break;
 
@@ -235,8 +259,7 @@ namespace osu.Framework.Graphics.Veldrid
         /// <summary>
         /// Swaps the back buffer with the front buffer to display the new frame.
         /// </summary>
-        public void SwapBuffers()
-            => Device.SwapBuffers();
+        public void SwapBuffers() => Device.SwapBuffers();
 
         /// <summary>
         /// Waits until all renderer commands have been fully executed GPU-side, as signaled by the graphics backend.
@@ -244,14 +267,12 @@ namespace osu.Framework.Graphics.Veldrid
         /// <remarks>
         /// This is equivalent to a <c>glFinish</c> call.
         /// </remarks>
-        public void WaitUntilIdle()
-            => Device.WaitForIdle();
+        public void WaitUntilIdle() => Device.WaitForIdle();
 
         /// <summary>
         /// Waits until the GPU signals that the next frame is ready to be rendered.
         /// </summary>
-        public void WaitUntilNextFrameReady()
-            => Device.WaitForNextFrameReady();
+        public void WaitUntilNextFrameReady() => Device.WaitForNextFrameReady();
 
         /// <summary>
         /// Invoked when the rendering thread is active and commands will be enqueued.
@@ -292,17 +313,32 @@ namespace osu.Framework.Graphics.Veldrid
                 // OpenGL already provides a method for reading pixels directly from the active framebuffer, so let's just use that for now.
                 case GraphicsSurfaceType.OpenGL:
                 {
-                    var pixelData = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<Rgba32>((int)(texture.Width * texture.Height));
+                    var pixelData =
+                        SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<Rgba32>(
+                            (int)(texture.Width * texture.Height)
+                        );
 
                     var info = Device.GetOpenGLInfo();
 
                     info.ExecuteOnGLThread(() =>
                     {
                         fixed (Rgba32* data = pixelData.Memory.Span)
-                            OpenGLNative.glReadPixels(0, 0, texture.Width, texture.Height, GLPixelFormat.Rgba, GLPixelType.UnsignedByte, data);
+                            OpenGLNative.glReadPixels(
+                                0,
+                                0,
+                                texture.Width,
+                                texture.Height,
+                                GLPixelFormat.Rgba,
+                                GLPixelType.UnsignedByte,
+                                data
+                            );
                     });
 
-                    var glImage = Image.LoadPixelData<Rgba32>(pixelData.Memory.Span, (int)texture.Width, (int)texture.Height);
+                    var glImage = Image.LoadPixelData<Rgba32>(
+                        pixelData.Memory.Span,
+                        (int)texture.Width,
+                        (int)texture.Height
+                    );
                     glImage.Mutate(i => i.Flip(FlipMode.Vertical));
                     return glImage;
                 }
@@ -312,13 +348,25 @@ namespace osu.Framework.Graphics.Veldrid
             }
         }
 
-        public unsafe Image<Rgba32> ExtractTexture<TPixel>(Texture texture, bool flipVertical = false)
+        public unsafe Image<Rgba32> ExtractTexture<TPixel>(
+            Texture texture,
+            bool flipVertical = false
+        )
             where TPixel : unmanaged, IPixel<TPixel>
         {
             uint width = texture.Width;
             uint height = texture.Height;
 
-            using var staging = Factory.CreateTexture(TextureDescription.Texture2D(width, height, texture.MipLevels, texture.ArrayLayers, texture.Format, TextureUsage.Staging));
+            using var staging = Factory.CreateTexture(
+                TextureDescription.Texture2D(
+                    width,
+                    height,
+                    texture.MipLevels,
+                    texture.ArrayLayers,
+                    texture.Format,
+                    TextureUsage.Staging
+                )
+            );
             using var commands = Factory.CreateCommandList();
             using var fence = Factory.CreateFence(false);
 
@@ -329,16 +377,26 @@ namespace osu.Framework.Graphics.Veldrid
 
             if (!waitForFence(fence, 5000))
             {
-                Logger.Log("Failed to capture framebuffer content within reasonable time.", level: LogLevel.Important);
+                Logger.Log(
+                    "Failed to capture framebuffer content within reasonable time.",
+                    level: LogLevel.Important
+                );
                 return new Image<Rgba32>((int)width, (int)height);
             }
 
             var resource = Device.Map(staging, MapMode.Read);
-            var span = new Span<TPixel>(resource.Data.ToPointer(), (int)(resource.SizeInBytes / Marshal.SizeOf<TPixel>()));
+            var span = new Span<TPixel>(
+                resource.Data.ToPointer(),
+                (int)(resource.SizeInBytes / Marshal.SizeOf<TPixel>())
+            );
 
             // on some backends (Direct3D11, in particular), the staging resource data may contain padding at the end of each row for alignment,
             // which means that for the image width, we cannot use the framebuffer's width raw.
-            using var image = Image.LoadPixelData<TPixel>(span, (int)(resource.RowPitch / Marshal.SizeOf<TPixel>()), (int)height);
+            using var image = Image.LoadPixelData<TPixel>(
+                span,
+                (int)(resource.RowPitch / Marshal.SizeOf<TPixel>()),
+                (int)height
+            );
 
             if (flipVertical)
                 image.Mutate(i => i.Flip(FlipMode.Vertical));

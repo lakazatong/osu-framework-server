@@ -25,11 +25,15 @@ namespace osu.Framework.Allocation
     /// </remarks>
     internal class DependencyActivator
     {
-        private static readonly ConcurrentDictionary<Type, DependencyActivator> activator_cache = new ConcurrentDictionary<Type, DependencyActivator>();
-        private static readonly DependencyActivatorProxy activator_proxy = new DependencyActivatorProxy();
+        private static readonly ConcurrentDictionary<Type, DependencyActivator> activator_cache =
+            new ConcurrentDictionary<Type, DependencyActivator>();
+        private static readonly DependencyActivatorProxy activator_proxy =
+            new DependencyActivatorProxy();
 
-        private readonly List<InjectDependencyDelegate> injectionActivators = new List<InjectDependencyDelegate>();
-        private readonly List<CacheDependencyDelegate> buildCacheActivators = new List<CacheDependencyDelegate>();
+        private readonly List<InjectDependencyDelegate> injectionActivators =
+            new List<InjectDependencyDelegate>();
+        private readonly List<CacheDependencyDelegate> buildCacheActivators =
+            new List<CacheDependencyDelegate>();
 
         static DependencyActivator()
         {
@@ -38,7 +42,11 @@ namespace osu.Framework.Allocation
         }
 
         // Source generator pathway.
-        private DependencyActivator(Type type, InjectDependencyDelegate injectDel, CacheDependencyDelegate cacheDel)
+        private DependencyActivator(
+            Type type,
+            InjectDependencyDelegate injectDel,
+            CacheDependencyDelegate cacheDel
+        )
         {
             injectionActivators.Add(injectDel);
             buildCacheActivators.Add(cacheDel);
@@ -70,7 +78,11 @@ namespace osu.Framework.Allocation
             initialiseSourceGeneratedActivators(obj);
             activateRecursively(obj, dependencies, obj.GetType());
 
-            static void activateRecursively(object obj, IReadOnlyDependencyContainer dependencies, Type currentType)
+            static void activateRecursively(
+                object obj,
+                IReadOnlyDependencyContainer dependencies,
+                Type currentType
+            )
             {
                 if (currentType == typeof(object))
                     return;
@@ -89,13 +101,22 @@ namespace osu.Framework.Allocation
         /// <param name="dependencies">The existing dependencies.</param>
         /// <param name="info">Extra information to identify parameters of <paramref name="obj"/> in the cache with.</param>
         /// <returns>A new <see cref="IReadOnlyDependencyContainer"/> if <paramref name="obj"/> provides any dependencies, otherwise <paramref name="dependencies"/>.</returns>
-        public static IReadOnlyDependencyContainer MergeDependencies<T>(T obj, IReadOnlyDependencyContainer dependencies, CacheInfo info = default)
+        public static IReadOnlyDependencyContainer MergeDependencies<T>(
+            T obj,
+            IReadOnlyDependencyContainer dependencies,
+            CacheInfo info = default
+        )
             where T : IDependencyInjectionCandidate
         {
             initialiseSourceGeneratedActivators(obj);
             return mergeRecursively(obj, dependencies, info, obj.GetType());
 
-            static IReadOnlyDependencyContainer mergeRecursively(object obj, IReadOnlyDependencyContainer dependencies, CacheInfo info, Type currentType)
+            static IReadOnlyDependencyContainer mergeRecursively(
+                object obj,
+                IReadOnlyDependencyContainer dependencies,
+                CacheInfo info,
+                Type currentType
+            )
             {
                 if (currentType == typeof(object))
                     return dependencies;
@@ -137,13 +158,18 @@ namespace osu.Framework.Allocation
         {
             public bool IsRegistered(Type type) => activator_cache.ContainsKey(type);
 
-            public void Register(Type type, InjectDependencyDelegate injectDel, CacheDependencyDelegate cacheDel)
+            public void Register(
+                Type type,
+                InjectDependencyDelegate injectDel,
+                CacheDependencyDelegate cacheDel
+            )
             {
                 // The DependencyActivator constructor stores itself to a static dictionary.
                 _ = new DependencyActivator(
                     type,
                     injectDel ?? ((_, _) => { }),
-                    cacheDel ?? ((_, d, _) => d));
+                    cacheDel ?? ((_, d, _) => d)
+                );
             }
         }
     }
@@ -154,10 +180,10 @@ namespace osu.Framework.Allocation
     public class MultipleDependencyLoaderMethodsException : Exception
     {
         public MultipleDependencyLoaderMethodsException(Type type)
-            : base($"The type {type.ReadableName()} has more than one method marked with a {nameof(BackgroundDependencyLoaderAttribute)}."
-                   + "Any given type may only have one such method.")
-        {
-        }
+            : base(
+                $"The type {type.ReadableName()} has more than one method marked with a {nameof(BackgroundDependencyLoaderAttribute)}."
+                    + "Any given type may only have one such method."
+            ) { }
     }
 
     /// <summary>
@@ -168,9 +194,9 @@ namespace osu.Framework.Allocation
     public class DependencyNotRegisteredException : Exception
     {
         public DependencyNotRegisteredException(Type type, Type requestedType)
-            : base($"The type {type.ReadableName()} has a dependency on {requestedType.ReadableName()}, but the dependency is not registered.")
-        {
-        }
+            : base(
+                $"The type {type.ReadableName()} has a dependency on {requestedType.ReadableName()}, but the dependency is not registered."
+            ) { }
     }
 
     /// <summary>
@@ -178,47 +204,76 @@ namespace osu.Framework.Allocation
     /// </summary>
     public abstract class AccessModifierNotAllowedForMemberException : InvalidOperationException
     {
-        protected AccessModifierNotAllowedForMemberException(AccessModifier modifier, MemberInfo member, string description)
-            : base($"The access modifier(s) [ {modifier.ToString()} ] are not allowed on \"{member.DeclaringType.ReadableName()}.{member.Name}\". {description}")
-        {
-        }
+        protected AccessModifierNotAllowedForMemberException(
+            AccessModifier modifier,
+            MemberInfo member,
+            string description
+        )
+            : base(
+                $"The access modifier(s) [ {modifier.ToString()} ] are not allowed on \"{member.DeclaringType.ReadableName()}.{member.Name}\". {description}"
+            ) { }
     }
 
     /// <summary>
     /// Occurs when attempting to cache a non-private and non-readonly field with an attached <see cref="CachedAttribute"/>.
     /// </summary>
-    public class AccessModifierNotAllowedForCachedValueException : AccessModifierNotAllowedForMemberException
+    public class AccessModifierNotAllowedForCachedValueException
+        : AccessModifierNotAllowedForMemberException
     {
-        public AccessModifierNotAllowedForCachedValueException(AccessModifier modifier, MemberInfo member)
-            : base(modifier, member, $"A field with an attached {nameof(CachedAttribute)} must be private, readonly,"
-                                     + " or be an auto-property with a getter and private (or non-existing) setter.")
-        {
-        }
+        public AccessModifierNotAllowedForCachedValueException(
+            AccessModifier modifier,
+            MemberInfo member
+        )
+            : base(
+                modifier,
+                member,
+                $"A field with an attached {nameof(CachedAttribute)} must be private, readonly,"
+                    + " or be an auto-property with a getter and private (or non-existing) setter."
+            ) { }
     }
 
     /// <summary>
     /// Occurs when a method with an attached <see cref="BackgroundDependencyLoaderAttribute"/> isn't private.
     /// </summary>
-    public class AccessModifierNotAllowedForLoaderMethodException : AccessModifierNotAllowedForMemberException
+    public class AccessModifierNotAllowedForLoaderMethodException
+        : AccessModifierNotAllowedForMemberException
     {
-        public AccessModifierNotAllowedForLoaderMethodException(AccessModifier modifier, MemberInfo member)
-            : base(modifier, member, $"A method with an attached {nameof(BackgroundDependencyLoaderAttribute)} must be private.")
-        {
-        }
+        public AccessModifierNotAllowedForLoaderMethodException(
+            AccessModifier modifier,
+            MemberInfo member
+        )
+            : base(
+                modifier,
+                member,
+                $"A method with an attached {nameof(BackgroundDependencyLoaderAttribute)} must be private."
+            ) { }
     }
 
     /// <summary>
     /// Occurs when the setter of a property with an attached <see cref="ResolvedAttribute"/> isn't private.
     /// </summary>
-    public class AccessModifierNotAllowedForPropertySetterException : AccessModifierNotAllowedForMemberException
+    public class AccessModifierNotAllowedForPropertySetterException
+        : AccessModifierNotAllowedForMemberException
     {
-        public AccessModifierNotAllowedForPropertySetterException(AccessModifier modifier, MemberInfo member)
-            : base(modifier, member, $"A property with an attached {nameof(ResolvedAttribute)} must have a private setter.")
-        {
-        }
+        public AccessModifierNotAllowedForPropertySetterException(
+            AccessModifier modifier,
+            MemberInfo member
+        )
+            : base(
+                modifier,
+                member,
+                $"A property with an attached {nameof(ResolvedAttribute)} must have a private setter."
+            ) { }
     }
 
-    public delegate void InjectDependencyDelegate(object target, IReadOnlyDependencyContainer dependencies);
+    public delegate void InjectDependencyDelegate(
+        object target,
+        IReadOnlyDependencyContainer dependencies
+    );
 
-    public delegate IReadOnlyDependencyContainer CacheDependencyDelegate(object target, IReadOnlyDependencyContainer existingDependencies, CacheInfo info);
+    public delegate IReadOnlyDependencyContainer CacheDependencyDelegate(
+        object target,
+        IReadOnlyDependencyContainer existingDependencies,
+        CacheInfo info
+    );
 }

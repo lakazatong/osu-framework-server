@@ -20,29 +20,53 @@ namespace osu.Framework.Tests.Visual.Performance
             base.LoadComplete();
 
             AddLabel("Sprite Texts");
-            AddSliderStep("word length", 1, 10, 5, v =>
-            {
-                wordLength = v;
-                recreate();
-            });
+            AddSliderStep(
+                "word length",
+                1,
+                10,
+                5,
+                v =>
+                {
+                    wordLength = v;
+                    recreate();
+                }
+            );
 
-            AddSliderStep("words count", 1, 1000, 256, v =>
-            {
-                wordsCount = v;
-                recreate();
-            });
+            AddSliderStep(
+                "words count",
+                1,
+                1000,
+                256,
+                v =>
+                {
+                    wordsCount = v;
+                    recreate();
+                }
+            );
 
-            AddSliderStep("paragraphs count", 1, 20, 2, v =>
-            {
-                paragraphsCount = v;
-                recreate();
-            });
+            AddSliderStep(
+                "paragraphs count",
+                1,
+                20,
+                2,
+                v =>
+                {
+                    paragraphsCount = v;
+                    recreate();
+                }
+            );
 
-            AddSliderStep("character variance", 1, 26, 26, v =>
-            {
-                characterVariance = v;
-                recreate();
-            });
+            AddSliderStep(
+                "character variance",
+                1,
+                26,
+                26,
+                v =>
+                {
+                    characterVariance = v;
+                    recreate();
+                }
+            );
         }
 
         private void recreate()

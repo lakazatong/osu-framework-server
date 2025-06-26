@@ -18,13 +18,12 @@ namespace osu.Framework.Audio.Callbacks
             dataStream = data ?? throw new ArgumentNullException(nameof(data));
         }
 
-        public void Close(IntPtr user)
-        {
-        }
+        public void Close(IntPtr user) { }
 
         public long Length(IntPtr user)
         {
-            if (!dataStream.CanSeek) return 0;
+            if (!dataStream.CanSeek)
+                return 0;
 
             try
             {
@@ -38,7 +37,8 @@ namespace osu.Framework.Audio.Callbacks
 
         public unsafe int Read(IntPtr buffer, int length, IntPtr user)
         {
-            if (!dataStream.CanRead) return 0;
+            if (!dataStream.CanRead)
+                return 0;
 
             try
             {
@@ -52,7 +52,8 @@ namespace osu.Framework.Audio.Callbacks
 
         public bool Seek(long offset, IntPtr user)
         {
-            if (!dataStream.CanSeek) return false;
+            if (!dataStream.CanSeek)
+                return false;
 
             try
             {

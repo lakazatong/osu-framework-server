@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -18,37 +18,52 @@ namespace osu.Framework.Tests.Visual.Drawables
         public TestScenePathApproximator()
             : base(2, 2)
         {
-            Cell(0).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.BezierToPiecewiseLinear)),
-                new ApproximatedPathTest(PathApproximator.BezierToPiecewiseLinear),
-            });
+            Cell(0)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.BezierToPiecewiseLinear)),
+                        new ApproximatedPathTest(PathApproximator.BezierToPiecewiseLinear),
+                    }
+                );
 
-            Cell(1).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.CatmullToPiecewiseLinear)),
-                new ApproximatedPathTest(PathApproximator.CatmullToPiecewiseLinear),
-            });
+            Cell(1)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.CatmullToPiecewiseLinear)),
+                        new ApproximatedPathTest(PathApproximator.CatmullToPiecewiseLinear),
+                    }
+                );
 
-            Cell(2).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.CircularArcToPiecewiseLinear)),
-                new ApproximatedPathTest(PathApproximator.CircularArcToPiecewiseLinear),
-            });
+            Cell(2)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.CircularArcToPiecewiseLinear)),
+                        new ApproximatedPathTest(PathApproximator.CircularArcToPiecewiseLinear),
+                    }
+                );
 
-            Cell(3).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.LagrangePolynomialToPiecewiseLinear)),
-                new ApproximatedPathTest(PathApproximator.LagrangePolynomialToPiecewiseLinear),
-            });
+            Cell(3)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.LagrangePolynomialToPiecewiseLinear)),
+                        new ApproximatedPathTest(
+                            PathApproximator.LagrangePolynomialToPiecewiseLinear
+                        ),
+                    }
+                );
         }
 
-        private Drawable createLabel(string text) => new SpriteText
-        {
-            Text = text,
-            Font = new FontUsage(size: 20),
-            Colour = Color4.White,
-        };
+        private Drawable createLabel(string text) =>
+            new SpriteText
+            {
+                Text = text,
+                Font = new FontUsage(size: 20),
+                Colour = Color4.White,
+            };
 
         public delegate List<Vector2> ApproximatorFunc(ReadOnlySpan<Vector2> controlPoints);
 

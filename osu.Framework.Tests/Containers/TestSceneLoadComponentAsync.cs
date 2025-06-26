@@ -44,7 +44,9 @@ namespace osu.Framework.Tests.Containers
             AddAssert("invocation count is 1", () => invocationCount == 1);
         }
 
-        private IEnumerable<AsyncChildLoadingComposite> getEnumerableComponent(Func<AsyncChildLoadingComposite> createComponent)
+        private IEnumerable<AsyncChildLoadingComposite> getEnumerableComponent(
+            Func<AsyncChildLoadingComposite> createComponent
+        )
         {
             yield return createComponent();
         }
@@ -54,11 +56,20 @@ namespace osu.Framework.Tests.Containers
         {
             AsyncChildLoadingComposite composite = null;
 
-            AddStep("Add new composite", () => { Child = composite = new AsyncChildLoadingComposite(); });
+            AddStep(
+                "Add new composite",
+                () =>
+                {
+                    Child = composite = new AsyncChildLoadingComposite();
+                }
+            );
 
             AddStep("Allow load", () => composite.AllowChildLoad());
 
-            AddUntilStep("Wait for child load", () => composite.AsyncChild.LoadState == LoadState.Ready);
+            AddUntilStep(
+                "Wait for child load",
+                () => composite.AsyncChild.LoadState == LoadState.Ready
+            );
 
             AddStep("Dispose composite", Clear);
 
@@ -70,7 +81,13 @@ namespace osu.Framework.Tests.Containers
         {
             AsyncChildLoadingComposite composite = null;
 
-            AddStep("Add new composite", () => { Child = composite = new AsyncChildLoadingComposite(); });
+            AddStep(
+                "Add new composite",
+                () =>
+                {
+                    Child = composite = new AsyncChildLoadingComposite();
+                }
+            );
 
             AddUntilStep("Wait for child load began", () => composite.AsyncChildLoadBegan);
 
@@ -84,7 +101,10 @@ namespace osu.Framework.Tests.Containers
 
             AddStep("Allow load", () => composite.AllowChildLoad());
 
-            AddUntilStep("Wait for child load", () => composite.AsyncChild.LoadState == LoadState.Ready);
+            AddUntilStep(
+                "Wait for child load",
+                () => composite.AsyncChild.LoadState == LoadState.Ready
+            );
 
             AddUntilStep("Composite was disposed", () => composite.IsDisposed);
 
@@ -96,18 +116,31 @@ namespace osu.Framework.Tests.Containers
         {
             AsyncChildrenLoadingComposite composite = null;
 
-            AddStep("Add new composite", () => { Child = composite = new AsyncChildrenLoadingComposite(); });
+            AddStep(
+                "Add new composite",
+                () =>
+                {
+                    Child = composite = new AsyncChildrenLoadingComposite();
+                }
+            );
 
             AddStep("Dispose child 2", () => composite.AsyncChild2.Dispose());
 
             AddStep("Allow child 1 load", () => composite.AllowChild1Load());
 
-            AddUntilStep("Wait for child load", () => composite.AsyncChild1.LoadState == LoadState.Ready);
+            AddUntilStep(
+                "Wait for child load",
+                () => composite.AsyncChild1.LoadState == LoadState.Ready
+            );
 
             AddUntilStep("Wait for loaded callback", () => composite.LoadedChildren != null);
 
-            AddAssert("Only child1 loaded", () => composite.LoadedChildren.Count() == 1
-                                                  && composite.LoadedChildren.First() == composite.AsyncChild1);
+            AddAssert(
+                "Only child1 loaded",
+                () =>
+                    composite.LoadedChildren.Count() == 1
+                    && composite.LoadedChildren.First() == composite.AsyncChild1
+            );
         }
 
         [Test]
@@ -117,15 +150,21 @@ namespace osu.Framework.Tests.Containers
 
             bool scheduleRun = false;
 
-            AddStep("Async load drawable", () =>
-            {
-                LoadComponentAsync(composite = new TestLoadBlockingDrawable(), d => Child = d);
-            });
+            AddStep(
+                "Async load drawable",
+                () =>
+                {
+                    LoadComponentAsync(composite = new TestLoadBlockingDrawable(), d => Child = d);
+                }
+            );
 
-            AddStep("Attempt to schedule on child 1", () =>
-            {
-                composite.Schedule(() => scheduleRun = true);
-            });
+            AddStep(
+                "Attempt to schedule on child 1",
+                () =>
+                {
+                    composite.Schedule(() => scheduleRun = true);
+                }
+            );
 
             AddStep("Allow child 1 load", () => composite.AllowLoad.Set());
 
@@ -150,43 +189,55 @@ namespace osu.Framework.Tests.Containers
 
             int runCount = 0;
 
-            AddStep("set limited threadpool capacity", () =>
-            {
-                ThreadPool.GetMinThreads(out workerMin, out completionMin);
-                ThreadPool.GetMaxThreads(out workerMax, out completionMax);
-
-                ThreadPool.SetMinThreads(2, 2);
-                ThreadPool.SetMaxThreads(2, 2);
-            });
-
-            AddStep("saturate threadpool", () =>
-            {
-                for (int i = 0; i < 4; i++)
+            AddStep(
+                "set limited threadpool capacity",
+                () =>
                 {
-                    Task.Run(() =>
-                    {
-                        Interlocked.Increment(ref runCount);
-                        return resetEvent.Wait(60000);
-                    });
+                    ThreadPool.GetMinThreads(out workerMin, out completionMin);
+                    ThreadPool.GetMaxThreads(out workerMax, out completionMax);
+
+                    ThreadPool.SetMinThreads(2, 2);
+                    ThreadPool.SetMaxThreads(2, 2);
                 }
-            });
+            );
+
+            AddStep(
+                "saturate threadpool",
+                () =>
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Task.Run(() =>
+                        {
+                            Interlocked.Increment(ref runCount);
+                            return resetEvent.Wait(60000);
+                        });
+                    }
+                }
+            );
 
             AddAssert("Not all tasks started", () => runCount <= 2);
 
-            AddStep("load component asynchronously", () =>
-            {
-                LoadComponentAsync(container = new Container(), Add);
-            });
+            AddStep(
+                "load component asynchronously",
+                () =>
+                {
+                    LoadComponentAsync(container = new Container(), Add);
+                }
+            );
 
             AddUntilStep("wait for load", () => container.IsLoaded);
 
-            AddStep("restore capacity", () =>
-            {
-                resetEvent.Set();
+            AddStep(
+                "restore capacity",
+                () =>
+                {
+                    resetEvent.Set();
 
-                ThreadPool.SetMinThreads(workerMin, completionMin);
-                ThreadPool.SetMaxThreads(workerMax, completionMax);
-            });
+                    ThreadPool.SetMinThreads(workerMin, completionMin);
+                    ThreadPool.SetMaxThreads(workerMax, completionMax);
+                }
+            );
         }
 
         private partial class AsyncChildrenLoadingComposite : CompositeDrawable
@@ -213,7 +264,8 @@ namespace osu.Framework.Tests.Containers
                 base.LoadComplete();
             }
 
-            private void loadComplete(IEnumerable<TestLoadBlockingDrawable> loadedChildren) => LoadedChildren = loadedChildren;
+            private void loadComplete(IEnumerable<TestLoadBlockingDrawable> loadedChildren) =>
+                LoadedChildren = loadedChildren;
         }
 
         private partial class AsyncChildLoadingComposite : CompositeDrawable

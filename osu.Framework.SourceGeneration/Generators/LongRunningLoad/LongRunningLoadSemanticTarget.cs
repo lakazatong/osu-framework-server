@@ -11,10 +11,11 @@ namespace osu.Framework.SourceGeneration.Generators.LongRunningLoad
     {
         public bool IsLongRunning { get; private set; }
 
-        public LongRunningLoadSemanticTarget(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
-            : base(classSyntax, semanticModel)
-        {
-        }
+        public LongRunningLoadSemanticTarget(
+            ClassDeclarationSyntax classSyntax,
+            SemanticModel semanticModel
+        )
+            : base(classSyntax, semanticModel) { }
 
         protected override bool CheckValid(INamedTypeSymbol symbol)
         {
@@ -42,7 +43,7 @@ namespace osu.Framework.SourceGeneration.Generators.LongRunningLoad
             IsLongRunning = symbol.GetAttributes().Any(SyntaxHelpers.IsLongRunningLoadAttribute);
         }
 
-        private static bool isDrawableType(INamedTypeSymbol type)
-            => SyntaxHelpers.GetFullyQualifiedTypeName(type) == "osu.Framework.Graphics.Drawable";
+        private static bool isDrawableType(INamedTypeSymbol type) =>
+            SyntaxHelpers.GetFullyQualifiedTypeName(type) == "osu.Framework.Graphics.Drawable";
     }
 }

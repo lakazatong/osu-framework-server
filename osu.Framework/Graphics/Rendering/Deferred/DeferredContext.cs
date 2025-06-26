@@ -12,11 +12,9 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 {
     internal class DeferredContext
     {
-        public GraphicsDevice Device
-            => Renderer.Device;
+        public GraphicsDevice Device => Renderer.Device;
 
-        public GraphicsPipeline Graphics
-            => Renderer.Graphics;
+        public GraphicsPipeline Graphics => Renderer.Graphics;
 
         public readonly List<RenderEvent> RenderEvents = new List<RenderEvent>();
 
@@ -48,8 +46,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred
         /// <typeparam name="T">The object type.</typeparam>
         /// <returns>A reference to the object. May be dereferenced via <see cref="Dereference{T}"/>.</returns>
         public ResourceReference Reference<T>(T obj)
-            where T : class?
-            => Allocator.Reference(obj);
+            where T : class? => Allocator.Reference(obj);
 
         /// <summary>
         /// Dereferences an object.
@@ -58,8 +55,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred
         /// <typeparam name="T">The object type.</typeparam>
         /// <returns>The object.</returns>
         public T Dereference<T>(ResourceReference reference)
-            where T : class?
-            => Allocator.Dereference<T>(reference);
+            where T : class? => Allocator.Dereference<T>(reference);
 
         /// <summary>
         /// Allocates a region of memory containing an object.
@@ -68,8 +64,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred
         /// <typeparam name="T">The object type.</typeparam>
         /// <returns>A reference to the memory region containing the object.</returns>
         public MemoryReference AllocateObject<T>(T data)
-            where T : unmanaged
-            => Allocator.AllocateObject(data);
+            where T : unmanaged => Allocator.AllocateObject(data);
 
         /// <summary>
         /// Allocates a region of memory containing some data.
@@ -78,30 +73,26 @@ namespace osu.Framework.Graphics.Rendering.Deferred
         /// <typeparam name="T">The data type.</typeparam>
         /// <returns>A reference to the memory region containing the data.</returns>
         public MemoryReference AllocateRegion<T>(ReadOnlySpan<T> data)
-            where T : unmanaged
-            => Allocator.AllocateRegion(data);
+            where T : unmanaged => Allocator.AllocateRegion(data);
 
         /// <summary>
         /// Allocates an empty memory region of the specified length.
         /// </summary>
         /// <param name="length">The length.</param>
         /// <returns>A reference to the memory region.</returns>
-        public MemoryReference AllocateRegion(int length)
-            => Allocator.AllocateRegion(length);
+        public MemoryReference AllocateRegion(int length) => Allocator.AllocateRegion(length);
 
         /// <summary>
         /// Retrieves a <see cref="Span{T}"/> over a referenced memory region.
         /// </summary>
         /// <param name="reference">The memory reference.</param>
         /// <returns>The <see cref="Span{T}"/>.</returns>
-        public Span<byte> GetRegion(MemoryReference reference)
-            => Allocator.GetRegion(reference);
+        public Span<byte> GetRegion(MemoryReference reference) => Allocator.GetRegion(reference);
 
         /// <summary>
         /// Enqueues a render event.
         /// </summary>
         /// <param name="renderEvent">The render event.</param>
-        public void EnqueueEvent(in RenderEvent renderEvent)
-            => RenderEvents.Add(renderEvent);
+        public void EnqueueEvent(in RenderEvent renderEvent) => RenderEvents.Add(renderEvent);
     }
 }

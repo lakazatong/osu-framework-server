@@ -1,8 +1,8 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Statistics;
 using System;
+using osu.Framework.Statistics;
 
 namespace osu.Framework.Caching
 {
@@ -15,11 +15,12 @@ namespace osu.Framework.Caching
             get
             {
                 if (!IsValid)
-                    throw new InvalidOperationException($"May not query {nameof(Value)} of an invalid {nameof(Cached<T>)}.");
+                    throw new InvalidOperationException(
+                        $"May not query {nameof(Value)} of an invalid {nameof(Cached<T>)}."
+                    );
 
                 return value;
             }
-
             set
             {
                 this.value = value;

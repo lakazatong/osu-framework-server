@@ -56,8 +56,8 @@ namespace osu.Framework.Tests.Visual.Audio
                                         RelativeSizeAxes = Axes.Both,
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.CentreLeft,
-                                    }
-                                }
+                                    },
+                                },
                             },
                         },
                         new Drawable[]
@@ -65,20 +65,20 @@ namespace osu.Framework.Tests.Visual.Audio
                             amplitudeBoxes = new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                ChildrenEnumerable =
-                                    Enumerable.Range(0, length)
-                                              .Select(i => new Box
-                                              {
-                                                  RelativeSizeAxes = Axes.Both,
-                                                  RelativePositionAxes = Axes.X,
-                                                  Anchor = Anchor.BottomLeft,
-                                                  Origin = Anchor.BottomLeft,
-                                                  Width = 1f / length,
-                                                  X = (float)i / length
-                                              })
+                                ChildrenEnumerable = Enumerable
+                                    .Range(0, length)
+                                    .Select(i => new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        RelativePositionAxes = Axes.X,
+                                        Anchor = Anchor.BottomLeft,
+                                        Origin = Anchor.BottomLeft,
+                                        Width = 1f / length,
+                                        X = (float)i / length,
+                                    }),
                             },
-                        }
-                    }
+                        },
+                    },
                 },
             };
         }

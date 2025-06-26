@@ -51,9 +51,9 @@ namespace osu.Framework.Graphics.Containers.Markdown
                 {
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0,
-                    AlwaysPresent = true
+                    AlwaysPresent = true,
                 },
-                textFlow = CreateTextFlow()
+                textFlow = CreateTextFlow(),
             };
 
             textFlow.Anchor = Anchor.CentreLeft;

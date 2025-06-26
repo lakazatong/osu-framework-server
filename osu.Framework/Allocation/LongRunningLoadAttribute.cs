@@ -14,7 +14,5 @@ namespace osu.Framework.Allocation
     /// This forces immediate consumers to use <see cref="CompositeDrawable.LoadComponentAsync{TLoadable}"/> when loading the component.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class)]
-    public class LongRunningLoadAttribute : Attribute
-    {
-    }
+    public class LongRunningLoadAttribute : Attribute { }
 }

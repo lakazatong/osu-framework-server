@@ -32,34 +32,30 @@ namespace osu.Framework.Tests.Visual.Testing
                         Text = nameof(AssertButton),
                         IsSetupStep = false,
                         Assertion = () => true,
-                        CallStack = new StackTrace()
+                        CallStack = new StackTrace(),
                     },
                     new SingleStepButton
                     {
                         Text = nameof(SingleStepButton),
                         IsSetupStep = false,
-                        Action = () => { }
+                        Action = () => { },
                     },
-                    new RepeatStepButton
-                    {
-                        Text = nameof(RepeatStepButton),
-                        IsSetupStep = false
-                    },
+                    new RepeatStepButton { Text = nameof(RepeatStepButton), IsSetupStep = false },
                     new ToggleStepButton
                     {
                         Text = nameof(ToggleStepButton),
                         IsSetupStep = false,
-                        Action = _ => { }
+                        Action = _ => { },
                     },
                     new UntilStepButton
                     {
                         Text = nameof(UntilStepButton),
                         IsSetupStep = false,
                         Assertion = () => true,
-                        CallStack = new StackTrace()
+                        CallStack = new StackTrace(),
                     },
                     new StepSlider<int>(nameof(StepSlider<int>), 0, 10, 5),
-                }
+                },
             };
         }
     }

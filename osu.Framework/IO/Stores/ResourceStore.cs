@@ -24,9 +24,7 @@ namespace osu.Framework.IO.Stores
         /// <summary>
         /// Initializes a resource store with no stores.
         /// </summary>
-        public ResourceStore()
-        {
-        }
+        public ResourceStore() { }
 
         /// <summary>
         /// Initializes a resource store with a single store.
@@ -80,7 +78,10 @@ namespace osu.Framework.IO.Stores
                 stores.Remove(store);
         }
 
-        public virtual async Task<T> GetAsync(string name, CancellationToken cancellationToken = default)
+        public virtual async Task<T> GetAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        )
         {
             if (name == null)
                 return null;
@@ -166,7 +167,9 @@ namespace osu.Framework.IO.Stores
 
             // Check if there's already a reload action bound
             if (!actionList.TryAdd(name, onReload))
-                throw new InvalidOperationException($"A reload delegate is already bound to the resource '{name}'.");
+                throw new InvalidOperationException(
+                    $"A reload delegate is already bound to the resource '{name}'."
+                );
         }
 
         /// <summary>
@@ -182,12 +185,14 @@ namespace osu.Framework.IO.Stores
 
         public virtual IEnumerable<string> GetAvailableResources()
         {
-            lock (stores) return stores.SelectMany(s => s.GetAvailableResources()).ExcludeSystemFileNames();
+            lock (stores)
+                return stores.SelectMany(s => s.GetAvailableResources()).ExcludeSystemFileNames();
         }
 
         private IResourceStore<T>[] getStores()
         {
-            lock (stores) return stores.ToArray();
+            lock (stores)
+                return stores.ToArray();
         }
 
         #region IDisposable Support
@@ -205,7 +210,8 @@ namespace osu.Framework.IO.Stores
             if (!isDisposed)
             {
                 isDisposed = true;
-                lock (stores) stores.ForEach(s => s.Dispose());
+                lock (stores)
+                    stores.ForEach(s => s.Dispose());
             }
         }
 

@@ -134,12 +134,7 @@ namespace osu.Framework.Tests.Lists
         [Test]
         public void TestAddAfterRemoveFromEnd()
         {
-            var objects = new List<object>
-            {
-                new object(),
-                new object(),
-                new object(),
-            };
+            var objects = new List<object> { new object(), new object(), new object() };
 
             object newLastObject = new object();
 
@@ -253,12 +248,7 @@ namespace osu.Framework.Tests.Lists
         [Test]
         public void TestAddAfterClear()
         {
-            var objects = new List<object>
-            {
-                new object(),
-                new object(),
-                new object(),
-            };
+            var objects = new List<object> { new object(), new object(), new object() };
 
             object newObject = new object();
 

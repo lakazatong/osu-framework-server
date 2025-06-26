@@ -25,7 +25,7 @@ namespace osu.Framework.Testing
             InternalChildren = new Drawable[]
             {
                 new InputCapturingDrawable { RelativeSizeAxes = Axes.Both },
-                content = new Container { RelativeSizeAxes = Axes.Both }
+                content = new Container { RelativeSizeAxes = Axes.Both },
             };
         }
 
@@ -41,7 +41,11 @@ namespace osu.Framework.Testing
 
         protected override bool CanBeFlattened => false;
 
-        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+        internal override DrawNode GenerateDrawNodeSubtree(
+            ulong frame,
+            int treeIndex,
+            bool forceNewDrawNode
+        )
         {
             switch (recordState.Value)
             {

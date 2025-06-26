@@ -8,9 +8,7 @@ namespace osu.Framework.Graphics.Rendering
     /// <summary>
     /// A buffer which stores data for a uniform block.
     /// </summary>
-    public interface IUniformBuffer : IDisposable
-    {
-    }
+    public interface IUniformBuffer : IDisposable { }
 
     /// <inheritdoc cref="IUniformBuffer"/>
     /// <typeparam name="TData">The type of data in the buffer.</typeparam>

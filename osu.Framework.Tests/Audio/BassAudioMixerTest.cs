@@ -146,11 +146,14 @@ namespace osu.Framework.Tests.Audio
 
             bass.Update();
 
-            Assert.That(() =>
-            {
-                bass.Update();
-                return !track.IsRunning;
-            }, Is.True.After(3000));
+            Assert.That(
+                () =>
+                {
+                    bass.Update();
+                    return !track.IsRunning;
+                },
+                Is.True.After(3000)
+            );
         }
 
         [Test]

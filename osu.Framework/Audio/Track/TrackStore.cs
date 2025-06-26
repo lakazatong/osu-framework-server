@@ -40,7 +40,8 @@ namespace osu.Framework.Audio.Track
         {
             ObjectDisposedException.ThrowIf(IsDisposed, this);
 
-            if (string.IsNullOrEmpty(name)) return null;
+            if (string.IsNullOrEmpty(name))
+                return null;
 
             var dataStream = store.GetStream(name);
 

@@ -93,22 +93,21 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             for (int i = 0; i < Rows * Cols; ++i)
             {
-                Cell(i).AddRange(new Drawable[]
-                {
-                    new SpriteText
-                    {
-                        Text = labels[i],
-                        Font = new FontUsage(size: 20),
-                    },
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(0.5f),
-                        Colour = colours[i],
-                    },
-                });
+                Cell(i)
+                    .AddRange(
+                        new Drawable[]
+                        {
+                            new SpriteText { Text = labels[i], Font = new FontUsage(size: 20) },
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(0.5f),
+                                Colour = colours[i],
+                            },
+                        }
+                    );
             }
         }
     }

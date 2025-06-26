@@ -103,20 +103,60 @@ namespace osu.Framework.Tests.Graphics
 
             manager.Update(2);
             checkNoCrossing(manager.Entries[0]);
-            checkCrossing(manager.Entries[1], 0, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Forward);
-            checkCrossing(manager.Entries[2], 0, LifetimeBoundaryKind.Start, LifetimeBoundaryCrossingDirection.Forward);
-            checkCrossing(manager.Entries[2], 1, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Forward);
+            checkCrossing(
+                manager.Entries[1],
+                0,
+                LifetimeBoundaryKind.End,
+                LifetimeBoundaryCrossingDirection.Forward
+            );
+            checkCrossing(
+                manager.Entries[2],
+                0,
+                LifetimeBoundaryKind.Start,
+                LifetimeBoundaryCrossingDirection.Forward
+            );
+            checkCrossing(
+                manager.Entries[2],
+                1,
+                LifetimeBoundaryKind.End,
+                LifetimeBoundaryCrossingDirection.Forward
+            );
 
             manager.Update(1);
             checkNoCrossing(manager.Entries[0]);
             checkNoCrossing(manager.Entries[1]);
-            checkCrossing(manager.Entries[2], 0, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Backward);
+            checkCrossing(
+                manager.Entries[2],
+                0,
+                LifetimeBoundaryKind.End,
+                LifetimeBoundaryCrossingDirection.Backward
+            );
 
             manager.Update(-1);
-            checkCrossing(manager.Entries[0], 0, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Backward);
-            checkCrossing(manager.Entries[1], 0, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Backward);
-            checkCrossing(manager.Entries[1], 1, LifetimeBoundaryKind.Start, LifetimeBoundaryCrossingDirection.Backward);
-            checkCrossing(manager.Entries[2], 0, LifetimeBoundaryKind.Start, LifetimeBoundaryCrossingDirection.Backward);
+            checkCrossing(
+                manager.Entries[0],
+                0,
+                LifetimeBoundaryKind.End,
+                LifetimeBoundaryCrossingDirection.Backward
+            );
+            checkCrossing(
+                manager.Entries[1],
+                0,
+                LifetimeBoundaryKind.End,
+                LifetimeBoundaryCrossingDirection.Backward
+            );
+            checkCrossing(
+                manager.Entries[1],
+                1,
+                LifetimeBoundaryKind.Start,
+                LifetimeBoundaryCrossingDirection.Backward
+            );
+            checkCrossing(
+                manager.Entries[2],
+                0,
+                LifetimeBoundaryKind.Start,
+                LifetimeBoundaryCrossingDirection.Backward
+            );
         }
 
         [Test]
@@ -129,15 +169,18 @@ namespace osu.Framework.Tests.Graphics
             {
                 switch (kind)
                 {
-                    case LifetimeBoundaryKind.End when direction == LifetimeBoundaryCrossingDirection.Forward:
+                    case LifetimeBoundaryKind.End
+                        when direction == LifetimeBoundaryCrossingDirection.Forward:
                         entry.LifetimeEnd = 2;
                         break;
 
-                    case LifetimeBoundaryKind.Start when direction == LifetimeBoundaryCrossingDirection.Backward:
+                    case LifetimeBoundaryKind.Start
+                        when direction == LifetimeBoundaryCrossingDirection.Backward:
                         entry.LifetimeEnd = 1;
                         break;
 
-                    case LifetimeBoundaryKind.Start when direction == LifetimeBoundaryCrossingDirection.Forward:
+                    case LifetimeBoundaryKind.Start
+                        when direction == LifetimeBoundaryCrossingDirection.Forward:
                         entry.LifetimeStart = entry.LifetimeStart == 0 ? 1 : 0;
                         break;
                 }
@@ -287,12 +330,16 @@ namespace osu.Framework.Tests.Graphics
             }
         }
 
-        private void checkCountAliveAt(int time, int expectedCount) => checkCountAliveAt(time, time, expectedCount);
+        private void checkCountAliveAt(int time, int expectedCount) =>
+            checkCountAliveAt(time, time, expectedCount);
 
         private void checkCountAliveAt(int startTime, int endTime, int expectedCount)
         {
             checkAlivenessAt(startTime, endTime);
-            Assert.That(manager.Entries.Count(entry => entry.State == LifetimeEntryState.Current), Is.EqualTo(expectedCount));
+            Assert.That(
+                manager.Entries.Count(entry => entry.State == LifetimeEntryState.Current),
+                Is.EqualTo(expectedCount)
+            );
         }
 
         private void checkAlivenessAt(int time) => checkAlivenessAt(time, time);
@@ -305,16 +352,26 @@ namespace osu.Framework.Tests.Graphics
             {
                 var entry = manager.Entries[i];
                 bool isAlive = entry.State == LifetimeEntryState.Current;
-                bool shouldBeAlive = endTime >= entry.LifetimeStart && startTime < entry.LifetimeEnd;
+                bool shouldBeAlive =
+                    endTime >= entry.LifetimeStart && startTime < entry.LifetimeEnd;
 
-                Assert.That(isAlive, Is.EqualTo(shouldBeAlive), $"Aliveness is invalid for entry {i}");
+                Assert.That(
+                    isAlive,
+                    Is.EqualTo(shouldBeAlive),
+                    $"Aliveness is invalid for entry {i}"
+                );
             }
         }
 
-        private void checkNoCrossing(LifetimeEntry entry) => Assert.That(manager.Crossings, Does.Not.Contain(entry));
+        private void checkNoCrossing(LifetimeEntry entry) =>
+            Assert.That(manager.Crossings, Does.Not.Contain(entry));
 
-        private void checkCrossing(LifetimeEntry entry, int index, LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)
-            => Assert.That(manager.Crossings[entry][index], Is.EqualTo((kind, direction)));
+        private void checkCrossing(
+            LifetimeEntry entry,
+            int index,
+            LifetimeBoundaryKind kind,
+            LifetimeBoundaryCrossingDirection direction
+        ) => Assert.That(manager.Crossings[entry][index], Is.EqualTo((kind, direction)));
 
         private class TestLifetimeEntryManager : LifetimeEntryManager
         {
@@ -322,17 +379,30 @@ namespace osu.Framework.Tests.Graphics
 
             private readonly List<LifetimeEntry> entries = new List<LifetimeEntry>();
 
-            public IReadOnlyDictionary<LifetimeEntry, List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>> Crossings => crossings;
+            public IReadOnlyDictionary<
+                LifetimeEntry,
+                List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>
+            > Crossings => crossings;
 
-            private readonly Dictionary<LifetimeEntry, List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>> crossings =
-                new Dictionary<LifetimeEntry, List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>>();
+            private readonly Dictionary<
+                LifetimeEntry,
+                List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>
+            > crossings =
+                new Dictionary<
+                    LifetimeEntry,
+                    List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>
+                >();
 
             public TestLifetimeEntryManager()
             {
                 EntryCrossedBoundary += (entry, kind, direction) =>
                 {
                     if (!crossings.ContainsKey(entry))
-                        crossings[entry] = new List<(LifetimeBoundaryKind kind, LifetimeBoundaryCrossingDirection direction)>();
+                        crossings[entry] =
+                            new List<(
+                                LifetimeBoundaryKind kind,
+                                LifetimeBoundaryCrossingDirection direction
+                            )>();
                     crossings[entry].Add((kind, direction));
                 };
             }

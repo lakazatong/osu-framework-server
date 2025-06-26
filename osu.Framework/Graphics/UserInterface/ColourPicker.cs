@@ -38,18 +38,20 @@ namespace osu.Framework.Graphics.UserInterface
                     Direction = FillDirection.Vertical,
                     Children = new Drawable[]
                     {
-                        hsvColourPicker = CreateHSVColourPicker().With(d =>
-                        {
-                            d.RelativeSizeAxes = Axes.X;
-                            d.Width = 1;
-                        }),
-                        hexColourPicker = CreateHexColourPicker().With(d =>
-                        {
-                            d.RelativeSizeAxes = Axes.X;
-                            d.Width = 1;
-                        })
-                    }
-                }
+                        hsvColourPicker = CreateHSVColourPicker()
+                            .With(d =>
+                            {
+                                d.RelativeSizeAxes = Axes.X;
+                                d.Width = 1;
+                            }),
+                        hexColourPicker = CreateHexColourPicker()
+                            .With(d =>
+                            {
+                                d.RelativeSizeAxes = Axes.X;
+                                d.Width = 1;
+                            }),
+                    },
+                },
             };
         }
 

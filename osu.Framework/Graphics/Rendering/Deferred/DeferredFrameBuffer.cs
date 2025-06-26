@@ -25,7 +25,11 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
         private Vector2I size = Vector2I.One;
 
-        public DeferredFrameBuffer(DeferredRenderer renderer, PixelFormat[]? formats, SamplerFilter filteringMode)
+        public DeferredFrameBuffer(
+            DeferredRenderer renderer,
+            PixelFormat[]? formats,
+            SamplerFilter filteringMode
+        )
         {
             this.renderer = renderer;
             this.formats = formats;
@@ -35,20 +39,15 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             Texture = renderer.CreateTexture(nativeTexture);
         }
 
-        public void Resize(Vector2I size)
-            => nativeTexture.Resize(size);
+        public void Resize(Vector2I size) => nativeTexture.Resize(size);
 
-        public void DeleteResources()
-            => nativeTexture.Dispose();
+        public void DeleteResources() => nativeTexture.Dispose();
 
-        Framebuffer IVeldridFrameBuffer.Framebuffer
-            => nativeTexture.Framebuffer;
+        Framebuffer IVeldridFrameBuffer.Framebuffer => nativeTexture.Framebuffer;
 
-        void IFrameBuffer.Bind()
-            => renderer.BindFrameBuffer(this);
+        void IFrameBuffer.Bind() => renderer.BindFrameBuffer(this);
 
-        void IFrameBuffer.Unbind()
-            => renderer.UnbindFrameBuffer(this);
+        void IFrameBuffer.Unbind() => renderer.UnbindFrameBuffer(this);
 
         Vector2 IFrameBuffer.Size
         {
@@ -57,7 +56,8 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             {
                 size = new Vector2I(
                     Math.Clamp((int)Math.Ceiling(value.X), 1, renderer.MaxTextureSize),
-                    Math.Clamp((int)Math.Ceiling(value.Y), 1, renderer.MaxTextureSize));
+                    Math.Clamp((int)Math.Ceiling(value.Y), 1, renderer.MaxTextureSize)
+                );
 
                 renderer.Context.EnqueueEvent(ResizeFrameBufferEvent.Create(renderer, this, size));
             }
@@ -90,7 +90,8 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             public bool Available { get; private set; } = true;
 
             private readonly DeferredFrameBuffer deferredFrameBuffer;
-            private readonly VeldridTextureResources?[] resourcesArray = new VeldridTextureResources?[1];
+            private readonly VeldridTextureResources?[] resourcesArray =
+                new VeldridTextureResources?[1];
 
             private global::Veldrid.Texture? depthTexture;
             private Framebuffer? framebuffer;
@@ -141,12 +142,15 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
                 resources = new VeldridTextureResources(
                     deferredFrameBuffer.renderer.Factory.CreateTexture(
-                        TextureDescription.Texture2D((uint)resourceSize.X,
+                        TextureDescription.Texture2D(
+                            (uint)resourceSize.X,
                             (uint)resourceSize.Y,
                             1,
                             1,
                             PixelFormat.R8G8B8A8UNorm,
-                            TextureUsage.Sampled | TextureUsage.RenderTarget)),
+                            TextureUsage.Sampled | TextureUsage.RenderTarget
+                        )
+                    ),
                     deferredFrameBuffer.renderer.Factory.CreateSampler(
                         new SamplerDescription(
                             SamplerAddressMode.Clamp,
@@ -158,7 +162,10 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                             0,
                             uint.MaxValue,
                             0,
-                            SamplerBorderColor.TransparentBlack)));
+                            SamplerBorderColor.TransparentBlack
+                        )
+                    )
+                );
 
                 if (deferredFrameBuffer.formats?[0] is PixelFormat depth)
                 {
@@ -169,14 +176,24 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                             1,
                             1,
                             depth,
-                            TextureUsage.DepthStencil));
+                            TextureUsage.DepthStencil
+                        )
+                    );
                 }
 
-                framebuffer = deferredFrameBuffer.renderer.Factory.CreateFramebuffer(new FramebufferDescription
-                {
-                    ColorTargets = new[] { new FramebufferAttachmentDescription(resources.Texture, 0) },
-                    DepthTarget = depthTexture == null ? null : new FramebufferAttachmentDescription(depthTexture, 0)
-                });
+                framebuffer = deferredFrameBuffer.renderer.Factory.CreateFramebuffer(
+                    new FramebufferDescription
+                    {
+                        ColorTargets = new[]
+                        {
+                            new FramebufferAttachmentDescription(resources.Texture, 0),
+                        },
+                        DepthTarget =
+                            depthTexture == null
+                                ? null
+                                : new FramebufferAttachmentDescription(depthTexture, 0),
+                    }
+                );
             }
 
             private VeldridTextureResources? resources
@@ -185,14 +202,11 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                 set => resourcesArray[0] = value;
             }
 
-            IRenderer INativeTexture.Renderer
-                => deferredFrameBuffer.renderer;
+            IRenderer INativeTexture.Renderer => deferredFrameBuffer.renderer;
 
-            string INativeTexture.Identifier
-                => string.Empty;
+            string INativeTexture.Identifier => string.Empty;
 
-            int INativeTexture.MaxSize
-                => deferredFrameBuffer.renderer.MaxTextureSize;
+            int INativeTexture.MaxSize => deferredFrameBuffer.renderer.MaxTextureSize;
 
             int? INativeTexture.MipLevel
             {
@@ -220,22 +234,16 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                 set { }
             }
 
-            bool INativeTexture.UploadComplete
-                => true;
+            bool INativeTexture.UploadComplete => true;
 
-            void INativeTexture.FlushUploads()
-            {
-            }
+            void INativeTexture.FlushUploads() { }
 
-            void INativeTexture.SetData(ITextureUpload upload)
-            {
-            }
+            void INativeTexture.SetData(ITextureUpload upload) { }
 
-            bool INativeTexture.Upload()
-                => false;
+            bool INativeTexture.Upload() => false;
 
-            int INativeTexture.GetByteSize()
-                => deferredFrameBuffer.size.X * deferredFrameBuffer.size.Y * 4;
+            int INativeTexture.GetByteSize() =>
+                deferredFrameBuffer.size.X * deferredFrameBuffer.size.Y * 4;
 
             private bool isDisposed;
 

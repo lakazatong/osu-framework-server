@@ -33,34 +33,48 @@ namespace osu.Framework.Tests.Visual.Containers
                     new OverrideTestContainer(Edges.Bottom | Edges.Right),
                     new OverrideTestContainer(Edges.Bottom),
                     new OverrideTestContainer(Edges.Bottom | Edges.Left),
-                }
+                },
             };
 
             foreach (var child in container.Children)
                 addBoxAssert(child);
 
-            AddStep("Ensure negative size handles correctly", () =>
-            {
-                foreach (var child in container.Children)
+            AddStep(
+                "Ensure negative size handles correctly",
+                () =>
                 {
-                    child.SafeAreaContainer.Size = -child.SafeAreaContainer.Size;
-                    child.SafeAreaContainer.Position = -child.SafeAreaContainer.Position;
+                    foreach (var child in container.Children)
+                    {
+                        child.SafeAreaContainer.Size = -child.SafeAreaContainer.Size;
+                        child.SafeAreaContainer.Position = -child.SafeAreaContainer.Position;
+                    }
                 }
-            });
+            );
         }
 
         private void addBoxAssert(OverrideTestContainer container)
         {
-            bool leftOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(Edges.Left);
-            bool topOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(Edges.Top);
-            bool rightOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(Edges.Right);
-            bool bottomOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(Edges.Bottom);
+            bool leftOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(
+                Edges.Left
+            );
+            bool topOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(
+                Edges.Top
+            );
+            bool rightOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(
+                Edges.Right
+            );
+            bool bottomOverridden = container.SafeAreaContainer.SafeAreaOverrideEdges.HasFlagFast(
+                Edges.Bottom
+            );
 
-            AddAssert($"\"{container.Name}\" overrides correctly", () =>
-                leftOverridden == container.SafeAreaContainer.Padding.Left < 0
-                && topOverridden == container.SafeAreaContainer.Padding.Top < 0
-                && rightOverridden == container.SafeAreaContainer.Padding.Right < 0
-                && bottomOverridden == container.SafeAreaContainer.Padding.Bottom < 0);
+            AddAssert(
+                $"\"{container.Name}\" overrides correctly",
+                () =>
+                    leftOverridden == container.SafeAreaContainer.Padding.Left < 0
+                    && topOverridden == container.SafeAreaContainer.Padding.Top < 0
+                    && rightOverridden == container.SafeAreaContainer.Padding.Right < 0
+                    && bottomOverridden == container.SafeAreaContainer.Padding.Bottom < 0
+            );
         }
 
         private partial class OverrideTestContainer : SafeAreaDefiningContainer
@@ -74,22 +88,14 @@ namespace osu.Framework.Tests.Visual.Containers
                 Size = new Vector2(50);
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.Blue,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.Blue, RelativeSizeAxes = Axes.Both },
                     SafeAreaContainer = new SafeAreaContainer
                     {
                         SafeAreaOverrideEdges = overriddenEdges,
                         Position = new Vector2(inset),
                         Size = Size - new Vector2(inset * 2),
-                        Child = new Box
-                        {
-                            Colour = Color4.Green,
-                            RelativeSizeAxes = Axes.Both
-                        }
-                    }
+                        Child = new Box { Colour = Color4.Green, RelativeSizeAxes = Axes.Both },
+                    },
                 };
             }
         }

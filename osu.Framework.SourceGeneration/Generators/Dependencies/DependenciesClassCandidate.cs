@@ -11,20 +11,30 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies
 {
     public class DependenciesClassCandidate : IncrementalSemanticTarget
     {
-        public readonly HashSet<CachedAttributeData> CachedInterfaces = new HashSet<CachedAttributeData>();
-        public readonly HashSet<CachedAttributeData> CachedMembers = new HashSet<CachedAttributeData>();
-        public readonly HashSet<CachedAttributeData> CachedClasses = new HashSet<CachedAttributeData>();
-        public readonly HashSet<ResolvedAttributeData> ResolvedMembers = new HashSet<ResolvedAttributeData>();
-        public readonly HashSet<BackgroundDependencyLoaderAttributeData> DependencyLoaderMembers = new HashSet<BackgroundDependencyLoaderAttributeData>();
+        public readonly HashSet<CachedAttributeData> CachedInterfaces =
+            new HashSet<CachedAttributeData>();
+        public readonly HashSet<CachedAttributeData> CachedMembers =
+            new HashSet<CachedAttributeData>();
+        public readonly HashSet<CachedAttributeData> CachedClasses =
+            new HashSet<CachedAttributeData>();
+        public readonly HashSet<ResolvedAttributeData> ResolvedMembers =
+            new HashSet<ResolvedAttributeData>();
+        public readonly HashSet<BackgroundDependencyLoaderAttributeData> DependencyLoaderMembers =
+            new HashSet<BackgroundDependencyLoaderAttributeData>();
 
-        public DependenciesClassCandidate(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
-            : base(classSyntax, semanticModel)
-        {
-        }
+        public DependenciesClassCandidate(
+            ClassDeclarationSyntax classSyntax,
+            SemanticModel semanticModel
+        )
+            : base(classSyntax, semanticModel) { }
 
-        protected override bool CheckValid(INamedTypeSymbol symbol) => symbol.AllInterfaces.Any(SyntaxHelpers.IsIDependencyInjectionCandidateInterface);
+        protected override bool CheckValid(INamedTypeSymbol symbol) =>
+            symbol.AllInterfaces.Any(SyntaxHelpers.IsIDependencyInjectionCandidateInterface);
 
-        protected override bool CheckNeedsOverride(INamedTypeSymbol symbol) => symbol.BaseType!.AllInterfaces.Any(SyntaxHelpers.IsIDependencyInjectionCandidateInterface);
+        protected override bool CheckNeedsOverride(INamedTypeSymbol symbol) =>
+            symbol.BaseType!.AllInterfaces.Any(
+                SyntaxHelpers.IsIDependencyInjectionCandidateInterface
+            );
 
         protected override void Process(INamedTypeSymbol symbol)
         {
@@ -47,8 +57,14 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies
                 {
                     case IFieldSymbol field:
                     {
-                        foreach (var attrib in field.GetAttributes().Where(SyntaxHelpers.IsCachedAttribute))
-                            CachedMembers.Add(CachedAttributeData.FromPropertyOrField(field, attrib));
+                        foreach (
+                            var attrib in field
+                                .GetAttributes()
+                                .Where(SyntaxHelpers.IsCachedAttribute)
+                        )
+                            CachedMembers.Add(
+                                CachedAttributeData.FromPropertyOrField(field, attrib)
+                            );
 
                         break;
                     }
@@ -58,9 +74,13 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies
                         foreach (var attrib in property.GetAttributes())
                         {
                             if (SyntaxHelpers.IsCachedAttribute(attrib))
-                                CachedMembers.Add(CachedAttributeData.FromPropertyOrField(property, attrib));
+                                CachedMembers.Add(
+                                    CachedAttributeData.FromPropertyOrField(property, attrib)
+                                );
                             if (SyntaxHelpers.IsResolvedAttribute(attrib))
-                                ResolvedMembers.Add(ResolvedAttributeData.FromProperty(property, attrib));
+                                ResolvedMembers.Add(
+                                    ResolvedAttributeData.FromProperty(property, attrib)
+                                );
                         }
 
                         break;
@@ -68,8 +88,14 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies
 
                     case IMethodSymbol method:
                     {
-                        foreach (var attrib in method.GetAttributes().Where(SyntaxHelpers.IsBackgroundDependencyLoaderAttribute))
-                            DependencyLoaderMembers.Add(BackgroundDependencyLoaderAttributeData.FromMethod(method, attrib));
+                        foreach (
+                            var attrib in method
+                                .GetAttributes()
+                                .Where(SyntaxHelpers.IsBackgroundDependencyLoaderAttribute)
+                        )
+                            DependencyLoaderMembers.Add(
+                                BackgroundDependencyLoaderAttributeData.FromMethod(method, attrib)
+                            );
 
                         break;
                     }

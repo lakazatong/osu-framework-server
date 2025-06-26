@@ -36,7 +36,8 @@ namespace osu.Framework.Localisation
             Romanised = romanised;
         }
 
-        public string GetLocalised(LocalisationParameters parameters) => GetPreferred(parameters.PreferOriginalScript);
+        public string GetLocalised(LocalisationParameters parameters) =>
+            GetPreferred(parameters.PreferOriginalScript);
 
         /// <summary>
         /// Get the best match for this string based on a user preference for which should be displayed.
@@ -45,8 +46,10 @@ namespace osu.Framework.Localisation
         /// <returns>The best match for the provided criteria.</returns>
         public string GetPreferred(bool preferUnicode)
         {
-            if (string.IsNullOrEmpty(Romanised)) return Original ?? string.Empty;
-            if (string.IsNullOrEmpty(Original)) return Romanised ?? string.Empty;
+            if (string.IsNullOrEmpty(Romanised))
+                return Original ?? string.Empty;
+            if (string.IsNullOrEmpty(Original))
+                return Romanised ?? string.Empty;
 
             return preferUnicode ? Original : Romanised;
         }
@@ -55,15 +58,19 @@ namespace osu.Framework.Localisation
 
         public bool Equals(RomanisableString? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
-            return Original == other.Original
-                   && Romanised == other.Romanised;
+            return Original == other.Original && Romanised == other.Romanised;
         }
 
-        public bool Equals(ILocalisableStringData? other) => other is RomanisableString romanisable && Equals(romanisable);
-        public override bool Equals(object? obj) => obj is RomanisableString romanisable && Equals(romanisable);
+        public bool Equals(ILocalisableStringData? other) =>
+            other is RomanisableString romanisable && Equals(romanisable);
+
+        public override bool Equals(object? obj) =>
+            obj is RomanisableString romanisable && Equals(romanisable);
 
         public override int GetHashCode()
         {

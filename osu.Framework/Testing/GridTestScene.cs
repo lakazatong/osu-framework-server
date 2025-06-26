@@ -48,6 +48,7 @@ namespace osu.Framework.Testing
         }
 
         protected Container Cell(int index) => (Container)cells[index / Cols, index % Cols];
+
         protected Container Cell(int row, int col) => (Container)cells[row, col];
     }
 }

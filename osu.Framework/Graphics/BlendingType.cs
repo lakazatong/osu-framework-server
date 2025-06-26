@@ -20,6 +20,6 @@ namespace osu.Framework.Graphics
         SrcAlpha,
         SrcAlphaSaturate,
         SrcColor,
-        Zero
+        Zero,
     }
 }

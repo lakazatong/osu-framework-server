@@ -12,12 +12,12 @@ using System.Runtime.CompilerServices;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Extensions.TypeExtensions;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
 using osuTK.Graphics;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Extensions.TypeExtensions;
 
 namespace osu.Framework.Graphics.Visualisation
 {
@@ -33,26 +33,25 @@ namespace osu.Framework.Graphics.Visualisation
         {
             RelativeSizeAxes = Axes.Both;
 
-            AddRangeInternal(new Drawable[]
-            {
-                new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    Colour = FrameworkColour.GreenDarker,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                new BasicScrollContainer<Drawable>
-                {
-                    Padding = new MarginPadding(10),
-                    RelativeSizeAxes = Axes.Both,
-                    ScrollbarOverlapsContent = false,
-                    Child = flow = new FillFlowContainer
+                    new Box { Colour = FrameworkColour.GreenDarker, RelativeSizeAxes = Axes.Both },
+                    new BasicScrollContainer<Drawable>
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Direction = FillDirection.Vertical
-                    }
+                        Padding = new MarginPadding(10),
+                        RelativeSizeAxes = Axes.Both,
+                        ScrollbarOverlapsContent = false,
+                        Child = flow =
+                            new FillFlowContainer
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Vertical,
+                            },
+                    },
                 }
-            });
+            );
         }
 
         [BackgroundDependencyLoader]
@@ -65,7 +64,10 @@ namespace osu.Framework.Graphics.Visualisation
         {
             base.LoadComplete();
 
-            inspectedDrawable.BindValueChanged(inspected => updateProperties(inspected.NewValue), true);
+            inspectedDrawable.BindValueChanged(
+                inspected => updateProperties(inspected.NewValue),
+                true
+            );
         }
 
         private void updateProperties(IDrawable source)
@@ -79,16 +81,35 @@ namespace osu.Framework.Graphics.Visualisation
 
             foreach (var type in source.GetType().EnumerateBaseTypes())
             {
-                type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                    .Where(m => m is FieldInfo || (m is PropertyInfo pi && pi.GetMethod != null && pi.GetIndexParameters().Length == 0))
+                type.GetMembers(
+                        BindingFlags.Instance
+                            | BindingFlags.Public
+                            | BindingFlags.NonPublic
+                            | BindingFlags.DeclaredOnly
+                    )
+                    .Where(m =>
+                        m is FieldInfo
+                        || (
+                            m is PropertyInfo pi
+                            && pi.GetMethod != null
+                            && pi.GetIndexParameters().Length == 0
+                        )
+                    )
                     .ForEach(m => allMembers.Add(m));
             }
 
             // Order by upper then lower-case, and exclude auto-generated backing fields of properties
-            AddRange(allMembers.OrderBy(m => m.Name[0]).ThenBy(m => m.Name)
-                               .Where(m => m.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
-                               .Where(m => m.GetCustomAttribute<DebuggerBrowsableAttribute>()?.State != DebuggerBrowsableState.Never)
-                               .Select(m => new PropertyItem(m, source)));
+            AddRange(
+                allMembers
+                    .OrderBy(m => m.Name[0])
+                    .ThenBy(m => m.Name)
+                    .Where(m => m.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                    .Where(m =>
+                        m.GetCustomAttribute<DebuggerBrowsableAttribute>()?.State
+                        != DebuggerBrowsableState.Never
+                    )
+                    .Select(m => new PropertyItem(m, source))
+            );
         }
 
         private partial class PropertyItem : Container
@@ -120,52 +141,51 @@ namespace osu.Framework.Graphics.Visualisation
                 RelativeSizeAxes = Axes.X;
                 AutoSizeAxes = Axes.Y;
 
-                AddRangeInternal(new Drawable[]
-                {
-                    new Container
+                AddRangeInternal(
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding
-                        {
-                            Right = 6
-                        },
-                        Child = new FillFlowContainer<SpriteText>
+                        new Container
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Horizontal,
-                            Spacing = new Vector2(10f),
-                            Children = new[]
+                            Padding = new MarginPadding { Right = 6 },
+                            Child = new FillFlowContainer<SpriteText>
                             {
-                                new SpriteText
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Horizontal,
+                                Spacing = new Vector2(10f),
+                                Children = new[]
                                 {
-                                    Text = info.Name,
-                                    Colour = FrameworkColour.Yellow,
-                                    Font = FrameworkFont.Regular
+                                    new SpriteText
+                                    {
+                                        Text = info.Name,
+                                        Colour = FrameworkColour.Yellow,
+                                        Font = FrameworkFont.Regular,
+                                    },
+                                    new SpriteText
+                                    {
+                                        Text = $@"[{type.Name}]:",
+                                        Colour = FrameworkColour.YellowGreen,
+                                        Font = FrameworkFont.Regular,
+                                    },
+                                    valueText = new SpriteText
+                                    {
+                                        Colour = Color4.White,
+                                        Font = FrameworkFont.Regular,
+                                    },
                                 },
-                                new SpriteText
-                                {
-                                    Text = $@"[{type.Name}]:",
-                                    Colour = FrameworkColour.YellowGreen,
-                                    Font = FrameworkFont.Regular
-                                },
-                                valueText = new SpriteText
-                                {
-                                    Colour = Color4.White,
-                                    Font = FrameworkFont.Regular
-                                },
-                            }
-                        }
-                    },
-                    changeMarker = new Box
-                    {
-                        Size = new Vector2(4, 18),
-                        Anchor = Anchor.CentreRight,
-                        Origin = Anchor.CentreRight,
-                        Colour = Color4.Red
+                            },
+                        },
+                        changeMarker = new Box
+                        {
+                            Size = new Vector2(4, 18),
+                            Anchor = Anchor.CentreRight,
+                            Origin = Anchor.CentreRight,
+                            Colour = Color4.Red,
+                        },
                     }
-                });
+                );
 
                 // Update the value once
                 updateValue();
@@ -189,7 +209,8 @@ namespace osu.Framework.Graphics.Visualisation
                 }
                 catch (Exception e)
                 {
-                    value = $@"<{((e as TargetInvocationException)?.InnerException ?? e).GetType().ReadableName()} occured during evaluation>";
+                    value =
+                        $@"<{((e as TargetInvocationException)?.InnerException ?? e).GetType().ReadableName()} occured during evaluation>";
                 }
 
                 // An alternative of object.Equals, which is banned.

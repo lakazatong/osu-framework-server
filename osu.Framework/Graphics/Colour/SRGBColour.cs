@@ -1,10 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
+using osu.Framework.Extensions.Color4Extensions;
 using osuTK;
 using osuTK.Graphics;
-using osu.Framework.Extensions.Color4Extensions;
-using System;
 
 namespace osu.Framework.Graphics.Colour
 {
@@ -32,9 +32,12 @@ namespace osu.Framework.Graphics.Colour
 
         // todo: these implicit operators should be replaced with explicit static methods (https://github.com/ppy/osu-framework/issues/5714).
         public static implicit operator SRGBColour(Color4 value) => new SRGBColour { SRGB = value };
+
         public static implicit operator Color4(SRGBColour value) => value.SRGB;
 
-        public static implicit operator SRGBColour(Colour4 value) => new SRGBColour { SRGB = value };
+        public static implicit operator SRGBColour(Colour4 value) =>
+            new SRGBColour { SRGB = value };
+
         public static implicit operator Colour4(SRGBColour value) => value.SRGB;
 
         public static SRGBColour operator *(SRGBColour first, SRGBColour second)
@@ -50,7 +53,8 @@ namespace osu.Framework.Graphics.Colour
                         second.SRGB.R,
                         second.SRGB.G,
                         second.SRGB.B,
-                        first.Alpha * second.Alpha)
+                        first.Alpha * second.Alpha
+                    ),
                 };
             }
 
@@ -65,7 +69,8 @@ namespace osu.Framework.Graphics.Colour
                         first.SRGB.R,
                         first.SRGB.G,
                         first.SRGB.B,
-                        first.Alpha * second.Alpha)
+                        first.Alpha * second.Alpha
+                    ),
                 };
             }
 
@@ -78,7 +83,8 @@ namespace osu.Framework.Graphics.Colour
                     firstLinear.R * secondLinear.R,
                     firstLinear.G * secondLinear.G,
                     firstLinear.B * secondLinear.B,
-                    firstLinear.A * secondLinear.A).ToSRGB(),
+                    firstLinear.A * secondLinear.A
+                ).ToSRGB(),
             };
         }
 
@@ -95,7 +101,8 @@ namespace osu.Framework.Graphics.Colour
                     firstLinear.R * second,
                     firstLinear.G * second,
                     firstLinear.B * second,
-                    firstLinear.A * second).ToSRGB(),
+                    firstLinear.A * second
+                ).ToSRGB(),
             };
         }
 
@@ -112,12 +119,15 @@ namespace osu.Framework.Graphics.Colour
                     firstLinear.R + secondLinear.R,
                     firstLinear.G + secondLinear.G,
                     firstLinear.B + secondLinear.B,
-                    firstLinear.A + secondLinear.A).ToSRGB(),
+                    firstLinear.A + secondLinear.A
+                ).ToSRGB(),
             };
         }
 
         public readonly Vector4 ToVector() => new Vector4(SRGB.R, SRGB.G, SRGB.B, SRGB.A);
-        public static SRGBColour FromVector(Vector4 v) => new SRGBColour { SRGB = new Color4(v.X, v.Y, v.Z, v.W) };
+
+        public static SRGBColour FromVector(Vector4 v) =>
+            new SRGBColour { SRGB = new Color4(v.X, v.Y, v.Z, v.W) };
 
         /// <summary>
         /// Multiplies the alpha value of this colour by the given alpha factor.
@@ -125,9 +135,11 @@ namespace osu.Framework.Graphics.Colour
         /// <param name="alpha">The alpha factor to multiply with.</param>
         public void MultiplyAlpha(float alpha) => SRGB.A *= alpha;
 
-        private static bool isWhite(SRGBColour colour) => colour.SRGB.R == 1 && colour.SRGB.G == 1 && colour.SRGB.B == 1;
+        private static bool isWhite(SRGBColour colour) =>
+            colour.SRGB.R == 1 && colour.SRGB.G == 1 && colour.SRGB.B == 1;
 
         public readonly bool Equals(SRGBColour other) => SRGB.Equals(other.SRGB);
+
         public override string ToString() => $"srgb: {SRGB}, linear: {Linear}";
     }
 }

@@ -20,15 +20,23 @@ namespace osu.Framework.Tests.Visual.Platform
         [BackgroundDependencyLoader]
         private void load(FrameworkConfigManager configManager)
         {
-            executionMode = configManager.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode);
+            executionMode = configManager.GetBindable<ExecutionMode>(
+                FrameworkSetting.ExecutionMode
+            );
         }
 
         [Test]
         public void ToggleModeSmokeTest()
         {
-            AddRepeatStep("toggle execution mode", () => executionMode.Value = executionMode.Value == ExecutionMode.MultiThreaded
-                ? ExecutionMode.SingleThread
-                : ExecutionMode.MultiThreaded, 2);
+            AddRepeatStep(
+                "toggle execution mode",
+                () =>
+                    executionMode.Value =
+                        executionMode.Value == ExecutionMode.MultiThreaded
+                            ? ExecutionMode.SingleThread
+                            : ExecutionMode.MultiThreaded,
+                2
+            );
         }
 
         [Test]
@@ -37,14 +45,24 @@ namespace osu.Framework.Tests.Visual.Platform
             ScheduledDelegate switchStep = null;
             int switchCount = 0;
 
-            AddStep("install quick switch step", () =>
-            {
-                switchStep = Scheduler.AddDelayed(() =>
+            AddStep(
+                "install quick switch step",
+                () =>
                 {
-                    executionMode.Value = executionMode.Value == ExecutionMode.MultiThreaded ? ExecutionMode.SingleThread : ExecutionMode.MultiThreaded;
-                    switchCount++;
-                }, 0, true);
-            });
+                    switchStep = Scheduler.AddDelayed(
+                        () =>
+                        {
+                            executionMode.Value =
+                                executionMode.Value == ExecutionMode.MultiThreaded
+                                    ? ExecutionMode.SingleThread
+                                    : ExecutionMode.MultiThreaded;
+                            switchCount++;
+                        },
+                        0,
+                        true
+                    );
+                }
+            );
 
             AddUntilStep("switch count sufficiently high", () => switchCount > 1000);
 

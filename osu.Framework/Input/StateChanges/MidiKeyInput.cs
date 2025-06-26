@@ -50,7 +50,8 @@ namespace osu.Framework.Input.StateChanges
         /// <summary>
         /// Retrieves the <see cref="ButtonStates{TButton}"/> from a <see cref="MidiKeyInput"/>.
         /// </summary>
-        protected override ButtonStates<MidiKey> GetButtonStates(InputState state) => state.Midi.Keys;
+        protected override ButtonStates<MidiKey> GetButtonStates(InputState state) =>
+            state.Midi.Keys;
 
         public override void Apply(InputState state, IInputStateChangeHandler handler)
         {

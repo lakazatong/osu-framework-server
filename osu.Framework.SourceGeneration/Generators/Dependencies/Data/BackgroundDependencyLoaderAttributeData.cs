@@ -13,26 +13,45 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Data
         public readonly bool CanBeNull;
         public readonly ImmutableArray<BackgroundDependencyLoaderParameterData> Parameters;
 
-        public BackgroundDependencyLoaderAttributeData(string methodName, bool canBeNull, ImmutableArray<BackgroundDependencyLoaderParameterData> parameters)
+        public BackgroundDependencyLoaderAttributeData(
+            string methodName,
+            bool canBeNull,
+            ImmutableArray<BackgroundDependencyLoaderParameterData> parameters
+        )
         {
             MethodName = methodName;
             CanBeNull = canBeNull;
             Parameters = parameters;
         }
 
-        public static BackgroundDependencyLoaderAttributeData FromMethod(IMethodSymbol method, AttributeData attributeData)
+        public static BackgroundDependencyLoaderAttributeData FromMethod(
+            IMethodSymbol method,
+            AttributeData attributeData
+        )
         {
-            bool canBeNull = (bool)
-                (attributeData.NamedArguments.SingleOrDefault(arg => arg.Key == "permitNulls").Value.Value
-                 ?? attributeData.ConstructorArguments.ElementAtOrDefault(0).Value
-                 ?? false);
+            bool canBeNull = (bool)(
+                attributeData
+                    .NamedArguments.SingleOrDefault(arg => arg.Key == "permitNulls")
+                    .Value.Value
+                ?? attributeData.ConstructorArguments.ElementAtOrDefault(0).Value
+                ?? false
+            );
 
-            ImmutableArray<BackgroundDependencyLoaderParameterData>.Builder parameterBuilder = ImmutableArray.CreateBuilder<BackgroundDependencyLoaderParameterData>(method.Parameters.Length);
+            ImmutableArray<BackgroundDependencyLoaderParameterData>.Builder parameterBuilder =
+                ImmutableArray.CreateBuilder<BackgroundDependencyLoaderParameterData>(
+                    method.Parameters.Length
+                );
 
             foreach (var parameter in method.Parameters)
-                parameterBuilder.Add(BackgroundDependencyLoaderParameterData.FromParameter(parameter));
+                parameterBuilder.Add(
+                    BackgroundDependencyLoaderParameterData.FromParameter(parameter)
+                );
 
-            return new BackgroundDependencyLoaderAttributeData(method.Name, canBeNull, parameterBuilder.MoveToImmutable());
+            return new BackgroundDependencyLoaderAttributeData(
+                method.Name,
+                canBeNull,
+                parameterBuilder.MoveToImmutable()
+            );
         }
     }
 }

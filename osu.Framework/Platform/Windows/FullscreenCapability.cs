@@ -18,6 +18,6 @@ namespace osu.Framework.Platform.Windows
         /// <summary>
         /// Able to enter exclusive fullscreen.
         /// </summary>
-        Capable
+        Capable,
     }
 }

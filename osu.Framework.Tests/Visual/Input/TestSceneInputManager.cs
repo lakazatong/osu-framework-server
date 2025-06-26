@@ -13,8 +13,8 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
-using osu.Framework.Platform;
 using osu.Framework.Input.Handlers.Mouse;
+using osu.Framework.Platform;
 using osuTK;
 using osuTK.Graphics;
 
@@ -24,40 +24,42 @@ namespace osu.Framework.Tests.Visual.Input
     {
         public TestSceneInputManager()
         {
-            Add(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1),
-                Children = new Drawable[]
+            Add(
+                new Container
                 {
-                    new Container
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1),
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        RelativePositionAxes = Axes.Both,
-                        Position = new Vector2(0, -0.1f),
-                        Size = new Vector2(0.7f, 0.8f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Child = new ContainingInputManagerStatusText(),
+                        new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            RelativePositionAxes = Axes.Both,
+                            Position = new Vector2(0, -0.1f),
+                            Size = new Vector2(0.7f, 0.8f),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Child = new ContainingInputManagerStatusText(),
+                        },
+                        new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Size = new Vector2(0.7f, 0.1f),
+                        },
+                        new PassThroughInputManager
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            RelativePositionAxes = Axes.Both,
+                            Position = new Vector2(0, 0.1f),
+                            Size = new Vector2(0.7f, 0.5f),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Child = new ContainingInputManagerStatusText(),
+                        },
                     },
-                    new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Anchor = Anchor.Centre,
-                        Size = new Vector2(0.7f, 0.1f),
-                    },
-                    new PassThroughInputManager
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        RelativePositionAxes = Axes.Both,
-                        Position = new Vector2(0, 0.1f),
-                        Size = new Vector2(0.7f, 0.5f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Child = new ContainingInputManagerStatusText(),
-                    }
                 }
-            });
+            );
         }
 
         public partial class SmallText : SpriteText
@@ -71,28 +73,24 @@ namespace osu.Framework.Tests.Visual.Input
         public partial class ContainingInputManagerStatusText : Container
         {
             private readonly SpriteText inputManagerStatus,
-                                        mouseStatus,
-                                        keyboardStatus,
-                                        joystickStatus,
-                                        touchStatus,
-                                        midiStatus,
-                                        tabletStatus,
-                                        onMouseDownStatus,
-                                        onMouseUpStatus,
-                                        onMouseMoveStatus,
-                                        onScrollStatus,
-                                        onHoverStatus;
+                mouseStatus,
+                keyboardStatus,
+                joystickStatus,
+                touchStatus,
+                midiStatus,
+                tabletStatus,
+                onMouseDownStatus,
+                onMouseUpStatus,
+                onMouseMoveStatus,
+                onScrollStatus,
+                onHoverStatus;
 
             public ContainingInputManagerStatusText()
             {
                 RelativeSizeAxes = Axes.Both;
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = new Color4(1, 1, 1, 0.2f),
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = new Color4(1, 1, 1, 0.2f) },
                     new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -111,8 +109,8 @@ namespace osu.Framework.Tests.Visual.Input
                             onMouseMoveStatus = new SmallText { Text = "OnMouseMove 0" },
                             onScrollStatus = new SmallText { Text = "OnScroll 0" },
                             onHoverStatus = new SmallText { Text = "OnHover 0" },
-                        }
-                    }
+                        },
+                    },
                 };
             }
 
@@ -121,12 +119,27 @@ namespace osu.Framework.Tests.Visual.Input
                 var inputManager = GetContainingInputManager();
                 var currentState = inputManager!.CurrentState;
                 inputManagerStatus.Text = $"{inputManager}";
-                mouseStatus.Text = $"Mouse: {currentState.Mouse.Position} {currentState.Mouse.Scroll} " + string.Join(' ', currentState.Mouse.Buttons);
+                mouseStatus.Text =
+                    $"Mouse: {currentState.Mouse.Position} {currentState.Mouse.Scroll} "
+                    + string.Join(' ', currentState.Mouse.Buttons);
                 keyboardStatus.Text = "Keyboard: " + string.Join(' ', currentState.Keyboard.Keys);
-                joystickStatus.Text = "Joystick: " + string.Join(' ', currentState.Joystick.Buttons);
-                touchStatus.Text = $"Touch: {string.Join(' ', currentState.Touch.ActiveSources.Select(s => $"({s},{currentState.Touch.GetTouchPosition(s)})"))}";
-                midiStatus.Text = "MIDI: " + string.Join(' ', currentState.Midi.Keys.Select(k => $"({k},{currentState.Midi.Velocities[k]})"));
-                tabletStatus.Text = "Tablet: " + string.Join(' ', currentState.Tablet.PenButtons) + " " + string.Join(' ', currentState.Tablet.AuxiliaryButtons);
+                joystickStatus.Text =
+                    "Joystick: " + string.Join(' ', currentState.Joystick.Buttons);
+                touchStatus.Text =
+                    $"Touch: {string.Join(' ', currentState.Touch.ActiveSources.Select(s => $"({s},{currentState.Touch.GetTouchPosition(s)})"))}";
+                midiStatus.Text =
+                    "MIDI: "
+                    + string.Join(
+                        ' ',
+                        currentState.Midi.Keys.Select(k =>
+                            $"({k},{currentState.Midi.Velocities[k]})"
+                        )
+                    );
+                tabletStatus.Text =
+                    "Tablet: "
+                    + string.Join(' ', currentState.Tablet.PenButtons)
+                    + " "
+                    + string.Join(' ', currentState.Tablet.AuxiliaryButtons);
                 base.Update();
             }
 
@@ -135,7 +148,8 @@ namespace osu.Framework.Tests.Visual.Input
             protected override bool OnMouseDown(MouseDownEvent e)
             {
                 ++MouseDownCount;
-                onMouseDownStatus.Text = $"OnMouseDown {MouseDownCount}: Position={e.MousePosition}";
+                onMouseDownStatus.Text =
+                    $"OnMouseDown {MouseDownCount}: Position={e.MousePosition}";
                 return true;
             }
 
@@ -144,7 +158,8 @@ namespace osu.Framework.Tests.Visual.Input
             protected override void OnMouseUp(MouseUpEvent e)
             {
                 ++MouseUpCount;
-                onMouseUpStatus.Text = $"OnMouseUp {MouseUpCount}: Position={e.MousePosition}, MouseDownPosition={e.MouseDownPosition}";
+                onMouseUpStatus.Text =
+                    $"OnMouseUp {MouseUpCount}: Position={e.MousePosition}, MouseDownPosition={e.MouseDownPosition}";
                 base.OnMouseUp(e);
             }
 
@@ -153,7 +168,8 @@ namespace osu.Framework.Tests.Visual.Input
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
                 ++MouseMoveCount;
-                onMouseMoveStatus.Text = $"OnMouseMove {MouseMoveCount}: Position={e.MousePosition}, Delta={e.Delta}";
+                onMouseMoveStatus.Text =
+                    $"OnMouseMove {MouseMoveCount}: Position={e.MousePosition}, Delta={e.Delta}";
                 return base.OnMouseMove(e);
             }
 
@@ -162,7 +178,8 @@ namespace osu.Framework.Tests.Visual.Input
             protected override bool OnScroll(ScrollEvent e)
             {
                 ++ScrollCount;
-                onScrollStatus.Text = $"OnScroll {ScrollCount}: ScrollDelta={e.ScrollDelta}, IsPrecise={e.IsPrecise}";
+                onScrollStatus.Text =
+                    $"OnScroll {ScrollCount}: ScrollDelta={e.ScrollDelta}, IsPrecise={e.IsPrecise}";
                 return base.OnScroll(e);
             }
 
@@ -185,7 +202,9 @@ namespace osu.Framework.Tests.Visual.Input
 
             protected override bool OnClick(ClickEvent e)
             {
-                this.MoveToOffset(new Vector2(100, 0)).Then().MoveToOffset(new Vector2(-100, 0), 1000, Easing.In);
+                this.MoveToOffset(new Vector2(100, 0))
+                    .Then()
+                    .MoveToOffset(new Vector2(-100, 0), 1000, Easing.In);
                 return true;
             }
         }
@@ -202,9 +221,18 @@ namespace osu.Framework.Tests.Visual.Input
             AddSliderStep("Cursor sensitivity", 0.5, 5, 1, setCursorSensitivityConfig);
             setCursorSensitivityConfig(1);
             AddToggleStep("Toggle relative mode", setRelativeMode);
-            AddStep("Set confine to Never", () => setConfineMouseModeConfig(ConfineMouseMode.Never));
-            AddStep("Set confine to Fullscreen", () => setConfineMouseModeConfig(ConfineMouseMode.Fullscreen));
-            AddStep("Set confine to Always", () => setConfineMouseModeConfig(ConfineMouseMode.Always));
+            AddStep(
+                "Set confine to Never",
+                () => setConfineMouseModeConfig(ConfineMouseMode.Never)
+            );
+            AddStep(
+                "Set confine to Fullscreen",
+                () => setConfineMouseModeConfig(ConfineMouseMode.Fullscreen)
+            );
+            AddStep(
+                "Set confine to Always",
+                () => setConfineMouseModeConfig(ConfineMouseMode.Always)
+            );
             AddToggleStep("Toggle cursor visibility", setCursorVisibility);
             AddToggleStep("Toggle cursor confine rect", setCursorConfineRect);
 

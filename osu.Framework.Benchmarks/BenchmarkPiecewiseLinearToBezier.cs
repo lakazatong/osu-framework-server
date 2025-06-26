@@ -37,7 +37,12 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public List<Vector2> PiecewiseLinearToBezier()
         {
-            return PathApproximator.PiecewiseLinearToBezier(inputPath, NumControlPoints, NumTestPoints, MaxIterations);
+            return PathApproximator.PiecewiseLinearToBezier(
+                inputPath,
+                NumControlPoints,
+                NumTestPoints,
+                MaxIterations
+            );
         }
     }
 }

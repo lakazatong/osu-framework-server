@@ -29,9 +29,16 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         protected virtual bool BlockNonPositionalInput => false;
 
-        internal override bool BuildNonPositionalInputQueue(List<Drawable> queue, bool allowBlocking = true)
+        internal override bool BuildNonPositionalInputQueue(
+            List<Drawable> queue,
+            bool allowBlocking = true
+        )
         {
-            if (PropagateNonPositionalInputSubTree && HandleNonPositionalInput && BlockNonPositionalInput)
+            if (
+                PropagateNonPositionalInputSubTree
+                && HandleNonPositionalInput
+                && BlockNonPositionalInput
+            )
             {
                 // when blocking non-positional input behind us, we still want to make sure the global handlers receive events
                 // but we don't want other drawables behind us handling them.
@@ -44,8 +51,12 @@ namespace osu.Framework.Graphics.Containers
         public override bool DragBlocksClick => false;
 
         protected override bool OnHover(HoverEvent e) => BlockPositionalInput;
+
         protected override bool OnMouseDown(MouseDownEvent e) => BlockPositionalInput;
+
         protected override bool OnMouseMove(MouseMoveEvent e) => BlockPositionalInput;
-        protected override bool OnScroll(ScrollEvent e) => BlockScrollInput && base.ReceivePositionalInputAt(e.ScreenSpaceMousePosition);
+
+        protected override bool OnScroll(ScrollEvent e) =>
+            BlockScrollInput && base.ReceivePositionalInputAt(e.ScreenSpaceMousePosition);
     }
 }

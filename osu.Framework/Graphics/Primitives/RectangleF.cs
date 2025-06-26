@@ -149,20 +149,45 @@ namespace osu.Framework.Graphics.Primitives
         /// <filterpriority>3</filterpriority>
         public static bool operator !=(RectangleF left, RectangleF right) => !(left == right);
 
-        public static RectangleF operator *(RectangleF rectangle, float scale) => new RectangleF(rectangle.X * scale, rectangle.Y * scale, rectangle.Width * scale, rectangle.Height * scale);
+        public static RectangleF operator *(RectangleF rectangle, float scale) =>
+            new RectangleF(
+                rectangle.X * scale,
+                rectangle.Y * scale,
+                rectangle.Width * scale,
+                rectangle.Height * scale
+            );
 
-        public static RectangleF operator /(RectangleF rectangle, float scale) => new RectangleF(rectangle.X / scale, rectangle.Y / scale, rectangle.Width / scale, rectangle.Height / scale);
+        public static RectangleF operator /(RectangleF rectangle, float scale) =>
+            new RectangleF(
+                rectangle.X / scale,
+                rectangle.Y / scale,
+                rectangle.Width / scale,
+                rectangle.Height / scale
+            );
 
-        public static RectangleF operator *(RectangleF rectangle, Vector2 scale) => new RectangleF(rectangle.X * scale.X, rectangle.Y * scale.Y, rectangle.Width * scale.X, rectangle.Height * scale.Y);
+        public static RectangleF operator *(RectangleF rectangle, Vector2 scale) =>
+            new RectangleF(
+                rectangle.X * scale.X,
+                rectangle.Y * scale.Y,
+                rectangle.Width * scale.X,
+                rectangle.Height * scale.Y
+            );
 
-        public static RectangleF operator /(RectangleF rectangle, Vector2 scale) => new RectangleF(rectangle.X / scale.X, rectangle.Y / scale.Y, rectangle.Width / scale.X, rectangle.Height / scale.Y);
+        public static RectangleF operator /(RectangleF rectangle, Vector2 scale) =>
+            new RectangleF(
+                rectangle.X / scale.X,
+                rectangle.Y / scale.Y,
+                rectangle.Width / scale.X,
+                rectangle.Height / scale.Y
+            );
 
         /// <summary>Determines if the specified point is contained within this <see cref="RectangleF"/> structure.</summary>
         /// <returns>This method returns true if the point defined by x and y is contained within this <see cref="RectangleF"/> structure; otherwise false.</returns>
         /// <param name="y">The y-coordinate of the point to test.</param>
         /// <param name="x">The x-coordinate of the point to test.</param>
         /// <filterpriority>1</filterpriority>
-        public bool Contains(float x, float y) => X <= x && x < X + Width && Y <= y && y < Y + Height;
+        public bool Contains(float x, float y) =>
+            X <= x && x < X + Width && Y <= y && y < Y + Height;
 
         /// <summary>Determines if the specified point is contained within this <see cref="RectangleF"/> structure.</summary>
         /// <returns>This method returns true if the point defined by x and y is contained within this <see cref="RectangleF"/> structure; otherwise false.</returns>
@@ -181,15 +206,22 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="rect">The <see cref="RectangleF"/> to test.</param>
         /// <filterpriority>1</filterpriority>
         public bool Contains(RectangleF rect) =>
-            X <= rect.X && rect.X + rect.Width <= X + Width && Y <= rect.Y &&
-            rect.Y + rect.Height <= Y + Height;
+            X <= rect.X
+            && rect.X + rect.Width <= X + Width
+            && Y <= rect.Y
+            && rect.Y + rect.Height <= Y + Height;
 
         /// <summary>Gets the hash code for this <see cref="RectangleF"/> structure. For information about the use of hash codes, see Object.GetHashCode.</summary>
         /// <returns>The hash code for this <see cref="RectangleF"/>.</returns>
         /// <filterpriority>1</filterpriority>
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode() =>
-            (int)(((uint)X ^ ((uint)Y << 13)) | (((uint)Y >> 0x13) ^ ((uint)Width << 0x1a)) | (((uint)Width >> 6) ^ ((uint)Height << 7)) | ((uint)Height >> 0x19));
+            (int)(
+                ((uint)X ^ ((uint)Y << 13))
+                | (((uint)Y >> 0x13) ^ ((uint)Width << 0x1a))
+                | (((uint)Width >> 6) ^ ((uint)Height << 7))
+                | ((uint)Height >> 0x19)
+            );
 
         /// <summary>Gets the Area of this <see cref="RectangleF"/>.</summary>
         public float Area => Width * Height;
@@ -243,7 +275,16 @@ namespace osu.Framework.Graphics.Primitives
         /// </summary>
         /// <param name="amount">The amount both <see cref="Width"/> and <see cref="Height"/> will be increased in the returned <see cref="RectangleF"/>.</param>
         /// <returns>This method returns a <see cref="RectangleF"/> with both <see cref="Width"/> and <see cref="Height"/> inflated by the given <paramref name="amount"/>.</returns>
-        public RectangleF Inflate(Vector2 amount) => Inflate(new MarginPadding { Left = amount.X, Right = amount.X, Top = amount.Y, Bottom = amount.Y });
+        public RectangleF Inflate(Vector2 amount) =>
+            Inflate(
+                new MarginPadding
+                {
+                    Left = amount.X,
+                    Right = amount.X,
+                    Top = amount.Y,
+                    Bottom = amount.Y,
+                }
+            );
 
         /// <summary>
         /// Gets a <see cref="RectangleF"/> with both <see cref="Width"/> and <see cref="Height"/> increased.
@@ -251,15 +292,26 @@ namespace osu.Framework.Graphics.Primitives
         /// </summary>
         /// <param name="amount">The amount both <see cref="Width"/> and <see cref="Height"/> will be increased in the returned <see cref="RectangleF"/>.</param>
         /// <returns>This method returns a <see cref="RectangleF"/> with both <see cref="Width"/> and <see cref="Height"/> inflated by the given <paramref name="amount"/>.</returns>
-        public RectangleF Inflate(MarginPadding amount) => new RectangleF(
-            X - amount.Left,
-            Y - amount.Top,
-            Width + amount.TotalHorizontal,
-            Height + amount.TotalVertical);
+        public RectangleF Inflate(MarginPadding amount) =>
+            new RectangleF(
+                X - amount.Left,
+                Y - amount.Top,
+                Width + amount.TotalHorizontal,
+                Height + amount.TotalVertical
+            );
 
         public RectangleF Shrink(float amount) => Shrink(new Vector2(amount, amount));
 
-        public RectangleF Shrink(Vector2 amount) => Shrink(new MarginPadding { Left = amount.X, Right = amount.X, Top = amount.Y, Bottom = amount.Y });
+        public RectangleF Shrink(Vector2 amount) =>
+            Shrink(
+                new MarginPadding
+                {
+                    Left = amount.X,
+                    Right = amount.X,
+                    Top = amount.Y,
+                    Bottom = amount.Y,
+                }
+            );
 
         public RectangleF Shrink(MarginPadding amount) => Inflate(-amount);
 
@@ -298,14 +350,20 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="rect">The rectangle to test.</param>
         /// <filterpriority>1</filterpriority>
         public bool IntersectsWith(RectangleF rect) =>
-            rect.X <= X + Width && X <= rect.X + rect.Width && rect.Y <= Y + Height && Y <= rect.Y + rect.Height;
+            rect.X <= X + Width
+            && X <= rect.X + rect.Width
+            && rect.Y <= Y + Height
+            && Y <= rect.Y + rect.Height;
 
         /// <summary>Determines if this rectangle intersects with rect.</summary>
         /// <returns>This method returns true if there is any intersection.</returns>
         /// <param name="rect">The rectangle to test.</param>
         /// <filterpriority>1</filterpriority>
         public bool IntersectsWith(RectangleI rect) =>
-            rect.X <= X + Width && X <= rect.X + rect.Width && rect.Y <= Y + Height && Y <= rect.Y + rect.Height;
+            rect.X <= X + Width
+            && X <= rect.X + rect.Width
+            && rect.Y <= Y + Height
+            && Y <= rect.Y + rect.Height;
 
         /// <summary>Creates the smallest possible third rectangle that can contain both of two rectangles that form a union.</summary>
         /// <returns>A third <see cref="RectangleF"/> structure that contains both of the two rectangles that form the union.</returns>
@@ -363,7 +421,8 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="right">The right coordinate.</param>
         /// <param name="bottom">The bottom coordinate.</param>
         /// <returns>The <see cref="RectangleF"/>.</returns>
-        public static RectangleF FromLTRB(float left, float top, float right, float bottom) => new RectangleF(left, top, right - left, bottom - top);
+        public static RectangleF FromLTRB(float left, float top, float right, float bottom) =>
+            new RectangleF(left, top, right - left, bottom - top);
 
         /// <summary>
         /// Creates a new <see cref="RectangleF"/> in relative coordinate space to another <see cref="RectangleF"/>.
@@ -374,30 +433,45 @@ namespace osu.Framework.Graphics.Primitives
         {
             float scaleX = Width / other.Width;
             float scaleY = Height / other.Height;
-            return new RectangleF((X - other.X) / other.Width, (Y - other.Y) / other.Height, scaleX, scaleY);
+            return new RectangleF(
+                (X - other.X) / other.Width,
+                (Y - other.Y) / other.Height,
+                scaleX,
+                scaleY
+            );
         }
 
         /// <summary>
         /// Create a new <see cref="RectangleF"/> congruent to this rectangle but with non-negative <see cref="Width"/> and <see cref="Height"/>.
         /// </summary>
-        public RectangleF Normalize() => new RectangleF(Math.Min(Left, Right), Math.Min(Top, Bottom), Math.Abs(Width), Math.Abs(Height));
+        public RectangleF Normalize() =>
+            new RectangleF(
+                Math.Min(Left, Right),
+                Math.Min(Top, Bottom),
+                Math.Abs(Width),
+                Math.Abs(Height)
+            );
 
         /// <summary>Converts the specified <see cref="RectangleI"/> structure to a <see cref="RectangleF"/> structure.</summary>
         /// <returns>The <see cref="RectangleF"/> structure that is converted from the specified <see cref="RectangleI"/> structure.</returns>
         /// <param name="r">The <see cref="RectangleI"/> structure to convert.</param>
         /// <filterpriority>3</filterpriority>
-        public static implicit operator RectangleF(RectangleI r) => new RectangleF(r.X, r.Y, r.Width, r.Height);
+        public static implicit operator RectangleF(RectangleI r) =>
+            new RectangleF(r.X, r.Y, r.Width, r.Height);
 
-        public static implicit operator System.Drawing.RectangleF(RectangleF r) => new System.Drawing.RectangleF(r.X, r.Y, r.Width, r.Height);
+        public static implicit operator System.Drawing.RectangleF(RectangleF r) =>
+            new System.Drawing.RectangleF(r.X, r.Y, r.Width, r.Height);
 
         /// <summary>Converts the Location and <see cref="Size"/> of this <see cref="RectangleF"/> to a human-readable string.</summary>
         /// <returns>A string that contains the position, width, and height of this <see cref="RectangleF"/> structure¾for example, "{X=20, Y=20, Width=100, Height=50}".</returns>
         /// <filterpriority>1</filterpriority>
-        public override string ToString() => $"X={Math.Round(X, 3).ToString(CultureInfo.CurrentCulture)}, "
-                                             + $"Y={Math.Round(Y, 3).ToString(CultureInfo.CurrentCulture)}, "
-                                             + $"Width={Math.Round(Width, 3).ToString(CultureInfo.CurrentCulture)}, "
-                                             + $"Height={Math.Round(Height, 3).ToString(CultureInfo.CurrentCulture)}";
+        public override string ToString() =>
+            $"X={Math.Round(X, 3).ToString(CultureInfo.CurrentCulture)}, "
+            + $"Y={Math.Round(Y, 3).ToString(CultureInfo.CurrentCulture)}, "
+            + $"Width={Math.Round(Width, 3).ToString(CultureInfo.CurrentCulture)}, "
+            + $"Height={Math.Round(Height, 3).ToString(CultureInfo.CurrentCulture)}";
 
-        public bool Equals(RectangleF other) => X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
+        public bool Equals(RectangleF other) =>
+            X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
     }
 }

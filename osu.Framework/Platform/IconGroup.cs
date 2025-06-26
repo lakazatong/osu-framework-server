@@ -1,11 +1,11 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.IO;
-using System.Runtime.InteropServices;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using osu.Framework.Platform.Windows.Native;
 
@@ -50,9 +50,7 @@ namespace osu.Framework.Platform
                 iconGroup = new IconGroup(data);
                 return true;
             }
-            catch (Exception)
-            {
-            }
+            catch (Exception) { }
 
             iconGroup = null;
             return false;
@@ -107,7 +105,7 @@ namespace osu.Framework.Platform
                     Planes = reader.ReadUInt16(),
                     BitCount = reader.ReadUInt16(),
                     BytesInResource = reader.ReadUInt32(),
-                    ImageOffset = reader.ReadUInt32()
+                    ImageOffset = reader.ReadUInt32(),
                 };
             }
         }
@@ -122,13 +120,19 @@ namespace osu.Framework.Platform
         /// <param name="requireRawData">If true, only icon entries that provide raw PNG data will be considered.</param>
         /// <returns>The index of the icon in the icon directory, or -1 if a valid icon could not be found.</returns>
         private int findClosestEntry(int width, int height, int bpp, bool requireRawData) =>
-            Enumerable.Range(0, iconDir.Count)
-                      .Where(i => iconDir.Entries[i].Width <= width && iconDir.Entries[i].Height <= height && iconDir.Entries[i].BitCount <= bpp)
-                      .Where(i => iconDir.Entries[i].HasRawData || !requireRawData)
-                      .OrderByDescending(i => iconDir.Entries[i].Width)
-                      .ThenByDescending(i => iconDir.Entries[i].Height)
-                      .ThenByDescending(i => iconDir.Entries[i].BitCount)
-                      .DefaultIfEmpty(-1).First();
+            Enumerable
+                .Range(0, iconDir.Count)
+                .Where(i =>
+                    iconDir.Entries[i].Width <= width
+                    && iconDir.Entries[i].Height <= height
+                    && iconDir.Entries[i].BitCount <= bpp
+                )
+                .Where(i => iconDir.Entries[i].HasRawData || !requireRawData)
+                .OrderByDescending(i => iconDir.Entries[i].Width)
+                .ThenByDescending(i => iconDir.Entries[i].Height)
+                .ThenByDescending(i => iconDir.Entries[i].BitCount)
+                .DefaultIfEmpty(-1)
+                .First();
 
         /// <summary>
         /// Attempts to create a Windows-specific icon matching the requested dimensions as closely as possible.
@@ -148,10 +152,22 @@ namespace osu.Framework.Platform
 
             var entry = iconDir.Entries[closest];
             IntPtr hIcon = IntPtr.Zero;
-            var span = new ReadOnlySpan<byte>(data, (int)entry.ImageOffset, (int)entry.BytesInResource);
+            var span = new ReadOnlySpan<byte>(
+                data,
+                (int)entry.ImageOffset,
+                (int)entry.BytesInResource
+            );
 
             if (!entry.HasRawData)
-                hIcon = CreateIconFromResourceEx(span.ToArray(), entry.BytesInResource, true, 0x00030000, width, height, lr_defaultcolor);
+                hIcon = CreateIconFromResourceEx(
+                    span.ToArray(),
+                    entry.BytesInResource,
+                    true,
+                    0x00030000,
+                    width,
+                    height,
+                    lr_defaultcolor
+                );
 
             if (hIcon == IntPtr.Zero)
                 throw new InvalidOperationException("Couldn't create native icon handle.");
@@ -174,13 +190,25 @@ namespace osu.Framework.Platform
                 return null;
 
             var entry = iconDir.Entries[closest];
-            var span = new ReadOnlySpan<byte>(data, (int)entry.ImageOffset, (int)entry.BytesInResource);
+            var span = new ReadOnlySpan<byte>(
+                data,
+                (int)entry.ImageOffset,
+                (int)entry.BytesInResource
+            );
 
             return span.ToArray();
         }
 
         [SupportedOSPlatform("windows")]
         [DllImport("user32.dll")]
-        private static extern IntPtr CreateIconFromResourceEx(byte[] pbIconBits, uint cbIconBits, bool fIcon, uint dwVersion, int cxDesired, int cyDesired, uint uFlags);
+        private static extern IntPtr CreateIconFromResourceEx(
+            byte[] pbIconBits,
+            uint cbIconBits,
+            bool fIcon,
+            uint dwVersion,
+            int cxDesired,
+            int cyDesired,
+            uint uFlags
+        );
     }
 }

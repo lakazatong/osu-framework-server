@@ -9,7 +9,5 @@ namespace osu.Framework.Input
     /// Guarantees that a drawable will receive at least one OnMouseMove position update
     /// per update frame (in addition to any input-triggered occurrences).
     /// </summary>
-    public interface IRequireHighFrequencyMousePosition : IDrawable
-    {
-    }
+    public interface IRequireHighFrequencyMousePosition : IDrawable { }
 }

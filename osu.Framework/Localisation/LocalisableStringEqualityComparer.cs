@@ -11,7 +11,8 @@ namespace osu.Framework.Localisation
     /// </summary>
     public class LocalisableStringEqualityComparer : IEqualityComparer<LocalisableString>
     {
-        public static LocalisableStringEqualityComparer Default { get; } = new LocalisableStringEqualityComparer();
+        public static LocalisableStringEqualityComparer Default { get; } =
+            new LocalisableStringEqualityComparer();
 
         public bool Equals(LocalisableString x, LocalisableString y)
         {
@@ -39,6 +40,7 @@ namespace osu.Framework.Localisation
             return false;
         }
 
-        public int GetHashCode(LocalisableString obj) => HashCode.Combine(obj.Data?.GetType(), obj.Data);
+        public int GetHashCode(LocalisableString obj) =>
+            HashCode.Combine(obj.Data?.GetType(), obj.Data);
     }
 }

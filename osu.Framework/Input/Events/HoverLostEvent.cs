@@ -12,8 +12,6 @@ namespace osu.Framework.Input.Events
     public class HoverLostEvent : MouseEvent
     {
         public HoverLostEvent(InputState state)
-            : base(state)
-        {
-        }
+            : base(state) { }
     }
 }

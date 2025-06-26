@@ -27,7 +27,10 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
 
             unsafe
             {
-                Span<byte> targetSpan = new Span<byte>(target.Data.ToPointer(), (int)target.SizeInBytes);
+                Span<byte> targetSpan = new Span<byte>(
+                    target.Data.ToPointer(),
+                    (int)target.SizeInBytes
+                );
                 context.GetRegion(this).CopyTo(targetSpan[offsetInTarget..]);
             }
         }

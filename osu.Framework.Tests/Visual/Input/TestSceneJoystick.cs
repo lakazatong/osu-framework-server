@@ -27,13 +27,13 @@ namespace osu.Framework.Tests.Visual.Input
             var hatFlow = new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y
+                AutoSizeAxes = Axes.Y,
             };
 
             var axisFlow = new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y
+                AutoSizeAxes = Axes.Y,
             };
 
             for (int i = 0; i < 64; i++)
@@ -49,7 +49,7 @@ namespace osu.Framework.Tests.Visual.Input
             {
                 RelativeSizeAxes = Axes.Both,
                 Direction = FillDirection.Vertical,
-                Children = new[] { buttonFlow, hatFlow, axisFlow }
+                Children = new[] { buttonFlow, hatFlow, axisFlow },
             };
         }
 
@@ -72,15 +72,15 @@ namespace osu.Framework.Tests.Visual.Input
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.DarkGreen,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Font = FrameworkFont.Condensed,
-                        Text = $"B{buttonIndex + 1}"
-                    }
+                        Text = $"B{buttonIndex + 1}",
+                    },
                 };
             }
 
@@ -128,7 +128,7 @@ namespace osu.Framework.Tests.Visual.Input
                         Colour = Color4.DarkGreen,
                         Height = 10,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     downBox = new Container
                     {
@@ -138,7 +138,7 @@ namespace osu.Framework.Tests.Visual.Input
                         Colour = Color4.DarkGreen,
                         Height = 10,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     leftBox = new Container
                     {
@@ -146,7 +146,7 @@ namespace osu.Framework.Tests.Visual.Input
                         Colour = Color4.DarkGreen,
                         Width = 10,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     rightBox = new Container
                     {
@@ -156,14 +156,14 @@ namespace osu.Framework.Tests.Visual.Input
                         Colour = Color4.DarkGreen,
                         Width = 10,
                         Alpha = 0,
-                        Child = new Box { RelativeSizeAxes = Axes.Both }
+                        Child = new Box { RelativeSizeAxes = Axes.Both },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = $"H{hatIndex + 1}"
-                    }
+                        Text = $"H{hatIndex + 1}",
+                    },
                 };
             }
 
@@ -232,20 +232,24 @@ namespace osu.Framework.Tests.Visual.Input
                         RelativeSizeAxes = Axes.Both,
                         Masking = true,
                         BorderThickness = 3,
-                        Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Transparent },
+                        Child = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.Transparent,
+                        },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = $"Axis {trackedAxis + 1}"
+                        Text = $"Axis {trackedAxis + 1}",
                     },
                     rawValue = new SpriteText
                     {
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
-                        Text = "-"
-                    }
+                        Text = "-",
+                    },
                 };
             }
 

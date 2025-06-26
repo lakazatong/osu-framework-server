@@ -25,45 +25,49 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create content", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(0, 10),
-                    Children = new Drawable[]
+                    Child = new FillFlowContainer
                     {
-                        hexColourPicker = new TestHexColourPicker(),
-                        new FillFlowContainer
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 10),
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Horizontal,
-                            Spacing = new Vector2(10, 0),
-                            Children = new Drawable[]
+                            hexColourPicker = new TestHexColourPicker(),
+                            new FillFlowContainer
                             {
-                                currentText = new SpriteText(),
-                                new Container
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Direction = FillDirection.Horizontal,
+                                Spacing = new Vector2(10, 0),
+                                Children = new Drawable[]
                                 {
-                                    Width = 50,
-                                    RelativeSizeAxes = Axes.Y,
-                                    Child = currentPreview = new Box
+                                    currentText = new SpriteText(),
+                                    new Container
                                     {
-                                        RelativeSizeAxes = Axes.Both
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
+                                        Width = 50,
+                                        RelativeSizeAxes = Axes.Y,
+                                        Child = currentPreview =
+                                            new Box { RelativeSizeAxes = Axes.Both },
+                                    },
+                                },
+                            },
+                        },
+                    };
 
-                hexColourPicker.Current.BindValueChanged(colour =>
-                {
-                    currentText.Text = $"Current.Value = {colour.NewValue.ToHex()}";
-                    currentPreview.Colour = colour.NewValue;
-                }, true);
-            });
+                    hexColourPicker.Current.BindValueChanged(
+                        colour =>
+                        {
+                            currentText.Text = $"Current.Value = {colour.NewValue.ToHex()}";
+                            currentPreview.Colour = colour.NewValue;
+                        },
+                        true
+                    );
+                }
+            );
         }
 
         [Test]
@@ -73,7 +77,10 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             AddStep("set current colour", () => hexColourPicker.Current.Value = colour);
 
-            AddAssert("hex code updated", () => hexColourPicker.HexCodeTextBox.Text == colour.ToHex());
+            AddAssert(
+                "hex code updated",
+                () => hexColourPicker.HexCodeTextBox.Text == colour.ToHex()
+            );
             assertPreviewUpdated(colour);
         }
 
@@ -83,7 +90,10 @@ namespace osu.Framework.Tests.Visual.UserInterface
             clickTextBox();
             AddStep("insert valid colour", () => hexColourPicker.HexCodeTextBox.Text = "#ff00ff");
             assertPreviewUpdated(Colour4.Magenta);
-            AddAssert("current not changed yet", () => hexColourPicker.Current.Value == Colour4.White);
+            AddAssert(
+                "current not changed yet",
+                () => hexColourPicker.Current.Value == Colour4.White
+            );
 
             AddStep("commit text", () => InputManager.Key(Key.Enter));
             AddAssert("current updated", () => hexColourPicker.Current.Value == Colour4.Magenta);
@@ -91,19 +101,31 @@ namespace osu.Framework.Tests.Visual.UserInterface
             clickTextBox();
             AddStep("insert invalid colour", () => hexColourPicker.HexCodeTextBox.Text = "c0d0");
             AddStep("commit text", () => InputManager.Key(Key.Enter));
-            AddAssert("current not changed", () => hexColourPicker.Current.Value == Colour4.Magenta);
-            AddAssert("old hex code restored", () => hexColourPicker.HexCodeTextBox.Text == "#FF00FF");
+            AddAssert(
+                "current not changed",
+                () => hexColourPicker.Current.Value == Colour4.Magenta
+            );
+            AddAssert(
+                "old hex code restored",
+                () => hexColourPicker.HexCodeTextBox.Text == "#FF00FF"
+            );
         }
 
-        private void clickTextBox()
-            => AddStep("click text box", () =>
-            {
-                InputManager.MoveMouseTo(hexColourPicker.HexCodeTextBox);
-                InputManager.Click(MouseButton.Left);
-            });
+        private void clickTextBox() =>
+            AddStep(
+                "click text box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(hexColourPicker.HexCodeTextBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-        private void assertPreviewUpdated(Colour4 expected)
-            => AddAssert("preview colour updated", () => hexColourPicker.Preview.Current.Value == expected);
+        private void assertPreviewUpdated(Colour4 expected) =>
+            AddAssert(
+                "preview colour updated",
+                () => hexColourPicker.Preview.Current.Value == expected
+            );
 
         private partial class TestHexColourPicker : BasicHexColourPicker
         {

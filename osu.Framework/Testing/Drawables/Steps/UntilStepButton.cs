@@ -13,7 +13,9 @@ namespace osu.Framework.Testing.Drawables.Steps
 {
     public partial class UntilStepButton : StepButton
     {
-        private static readonly int max_attempt_milliseconds = FrameworkEnvironment.NoTestTimeout ? int.MaxValue : 10000;
+        private static readonly int max_attempt_milliseconds = FrameworkEnvironment.NoTestTimeout
+            ? int.MaxValue
+            : 10000;
 
         public required StackTrace CallStack { get; init; }
         public required Func<bool> Assertion { get; init; }
@@ -53,7 +55,10 @@ namespace osu.Framework.Testing.Drawables.Steps
                 success = true;
                 Success();
             }
-            else if (!Debugger.IsAttached && elapsedTime.ElapsedMilliseconds >= max_attempt_milliseconds)
+            else if (
+                !Debugger.IsAttached
+                && elapsedTime.ElapsedMilliseconds >= max_attempt_milliseconds
+            )
             {
                 StringBuilder builder = new StringBuilder();
 
@@ -62,7 +67,10 @@ namespace osu.Framework.Testing.Drawables.Steps
                 if (GetFailureMessage != null)
                     builder.Append($": {GetFailureMessage()}");
 
-                throw ExceptionDispatchInfo.SetRemoteStackTrace(new AssertionException(builder.ToString()), CallStack.ToString());
+                throw ExceptionDispatchInfo.SetRemoteStackTrace(
+                    new AssertionException(builder.ToString()),
+                    CallStack.ToString()
+                );
             }
 
             Action?.Invoke();

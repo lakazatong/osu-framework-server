@@ -5,7 +5,5 @@ using System;
 
 namespace osu.Framework.Graphics.Rendering
 {
-    public interface IShaderPart : IDisposable
-    {
-    }
+    public interface IShaderPart : IDisposable { }
 }

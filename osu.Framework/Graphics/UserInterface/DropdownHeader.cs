@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using osuTK.Graphics;
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -13,6 +12,7 @@ using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace osu.Framework.Graphics.UserInterface
@@ -84,25 +84,17 @@ namespace osu.Framework.Graphics.UserInterface
                     Origin = Anchor.CentreLeft,
                     RelativeSizeAxes = Axes.Both,
                     Colour = Color4.DarkGray,
-                    Child = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.White,
-                    },
+                    Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.White },
                 },
                 Foreground = new Container
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y
+                    AutoSizeAxes = Axes.Y,
                 },
                 SearchBar = CreateSearchBar(),
-                new ClickHandler
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Click = onClick
-                }
+                new ClickHandler { RelativeSizeAxes = Axes.Both, Click = onClick },
             };
         }
 
@@ -131,7 +123,8 @@ namespace osu.Framework.Graphics.UserInterface
         private void updateState()
         {
             Colour = Enabled.Value ? Color4.White : DisabledColour;
-            Background.Colour = IsHovered && Enabled.Value ? BackgroundColourHover : BackgroundColour;
+            Background.Colour =
+                IsHovered && Enabled.Value ? BackgroundColourHover : BackgroundColour;
         }
 
         /// <summary>
@@ -140,7 +133,10 @@ namespace osu.Framework.Graphics.UserInterface
         private bool onClick(ClickEvent e)
         {
             // Allow input to fall through to the search bar (and its contained textbox) if there's any search text.
-            if (SearchBar.State.Value == Visibility.Visible && !string.IsNullOrEmpty(SearchTerm.Value))
+            if (
+                SearchBar.State.Value == Visibility.Visible
+                && !string.IsNullOrEmpty(SearchTerm.Value)
+            )
                 return false;
 
             // Otherwise, the header acts as a button to show/hide the menu.
@@ -190,9 +186,7 @@ namespace osu.Framework.Graphics.UserInterface
             }
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
         public enum DropdownSelectionAction
         {
@@ -201,12 +195,13 @@ namespace osu.Framework.Graphics.UserInterface
             First,
             Last,
             FirstVisible,
-            LastVisible
+            LastVisible,
         }
 
         private partial class ClickHandler : Drawable
         {
             public required Func<ClickEvent, bool> Click { get; init; }
+
             protected override bool OnClick(ClickEvent e) => Click(e);
         }
     }

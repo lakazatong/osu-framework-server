@@ -192,7 +192,10 @@ namespace osu.Framework.Graphics.Containers
                 for (int col = 0; col < columnCount; col++)
                 {
                     if (row == 0)
-                        result[row, col] = CreateHeader(col, col >= Columns?.Length ? null : Columns?[col]);
+                        result[row, col] = CreateHeader(
+                            col,
+                            col >= Columns?.Length ? null : Columns?[col]
+                        );
                     else if (col < content.GetLength(1))
                         result[row, col] = content[row - 1, col];
                 }
@@ -255,7 +258,8 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="index">The column index.</param>
         /// <param name="column">The column definition.</param>
         /// <returns>The cell content.</returns>
-        protected virtual Drawable CreateHeader(int index, [CanBeNull] TableColumn column) => new SpriteText { Text = column?.Header ?? string.Empty };
+        protected virtual Drawable CreateHeader(int index, [CanBeNull] TableColumn column) =>
+            new SpriteText { Text = column?.Header ?? string.Empty };
     }
 
     /// <summary>
@@ -284,7 +288,11 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="header">The localisable text to be displayed in the cell.</param>
         /// <param name="anchor">The anchor of all cells in this column of the <see cref="TableContainer"/>.</param>
         /// <param name="dimension">The dimension of the column in the table.</param>
-        public TableColumn(LocalisableString? header = null, Anchor anchor = Anchor.TopLeft, Dimension dimension = null)
+        public TableColumn(
+            LocalisableString? header = null,
+            Anchor anchor = Anchor.TopLeft,
+            Dimension dimension = null
+        )
         {
             Header = header ?? string.Empty;
             Anchor = anchor;

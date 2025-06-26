@@ -10,7 +10,9 @@ using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics.OpenGL.Buffers
 {
-    internal class GLShaderStorageBufferObject<TData> : IShaderStorageBufferObject<TData>, IGLShaderStorageBufferObject
+    internal class GLShaderStorageBufferObject<TData>
+        : IShaderStorageBufferObject<TData>,
+            IGLShaderStorageBufferObject
         where TData : unmanaged, IEquatable<TData>
     {
         public int Size { get; }
@@ -30,7 +32,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             elementSize = Marshal.SizeOf(default(TData));
 
             GL.BindBuffer(BufferTarget.UniformBuffer, Id);
-            GL.BufferData(BufferTarget.UniformBuffer, elementSize * Size, ref data[0], BufferUsageHint.DynamicDraw);
+            GL.BufferData(
+                BufferTarget.UniformBuffer,
+                elementSize * Size,
+                ref data[0],
+                BufferUsageHint.DynamicDraw
+            );
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
         }
 
@@ -73,7 +80,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                 return;
 
             GL.BindBuffer(BufferTarget.UniformBuffer, Id);
-            GL.BufferSubData(BufferTarget.UniformBuffer, changeBeginIndex * elementSize, elementSize * changeCount, ref data[changeBeginIndex]);
+            GL.BufferSubData(
+                BufferTarget.UniformBuffer,
+                changeBeginIndex * elementSize,
+                elementSize * changeCount,
+                ref data[changeBeginIndex]
+            );
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
 
             changeBeginIndex = -1;

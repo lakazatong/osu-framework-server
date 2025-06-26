@@ -36,7 +36,8 @@ namespace osu.Framework.Graphics.Containers.Markdown
         /// Creates the content of this <see cref="MarkdownImage"/>, including the <see cref="ImageContainer"/>.
         /// </summary>
         /// <param name="url">The image url.</param>
-        protected virtual Drawable CreateContent(string url) => new DelayedLoadWrapper(CreateImageContainer(url));
+        protected virtual Drawable CreateContent(string url) =>
+            new DelayedLoadWrapper(CreateImageContainer(url));
 
         /// <summary>
         /// Creates an <see cref="ImageContainer"/> to display the image.

@@ -55,7 +55,7 @@ namespace osu.Framework.IO.Stores
             "__MACOSX",
             ".DS_Store",
             // Windows-specific
-            "Thumbs.db"
+            "Thumbs.db",
         };
 
         /// <summary>
@@ -63,16 +63,30 @@ namespace osu.Framework.IO.Stores
         /// </summary>
         /// <param name="store">The store which the resources was retrieved from.</param>
         /// <param name="resourceName">The resource retrieved.</param>
-        internal static void LogIfNonBackgroundThread<T>(this IResourceStore<T> store, string resourceName)
+        internal static void LogIfNonBackgroundThread<T>(
+            this IResourceStore<T> store,
+            string resourceName
+        )
             where T : class
         {
             if (!DebugUtils.LogPerformanceIssues)
                 return;
 
-            if (ThreadSafety.IsUpdateThread || ThreadSafety.IsDrawThread || ThreadSafety.IsAudioThread)
+            if (
+                ThreadSafety.IsUpdateThread
+                || ThreadSafety.IsDrawThread
+                || ThreadSafety.IsAudioThread
+            )
             {
-                Logger.Log($"Resource {resourceName} was retrieved from a {store.GetType().ReadableName()} on a non-background thread.", LoggingTarget.Performance);
-                Logger.Log(new StackTrace(1).ToString(), LoggingTarget.Performance, outputToListeners: false);
+                Logger.Log(
+                    $"Resource {resourceName} was retrieved from a {store.GetType().ReadableName()} on a non-background thread.",
+                    LoggingTarget.Performance
+                );
+                Logger.Log(
+                    new StackTrace(1).ToString(),
+                    LoggingTarget.Performance,
+                    outputToListeners: false
+                );
             }
         }
 
@@ -82,6 +96,10 @@ namespace osu.Framework.IO.Stores
         /// <param name="source">A list of filenames.</param>
         /// <returns>A list of filenames excluding common system files.</returns>
         public static IEnumerable<string> ExcludeSystemFileNames(this IEnumerable<string> source) =>
-            source.Where(entry => !system_filename_ignore_list.Any(ignoredName => entry.Contains(ignoredName, StringComparison.OrdinalIgnoreCase)));
+            source.Where(entry =>
+                !system_filename_ignore_list.Any(ignoredName =>
+                    entry.Contains(ignoredName, StringComparison.OrdinalIgnoreCase)
+                )
+            );
     }
 }

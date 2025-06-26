@@ -9,7 +9,12 @@ namespace osu.Framework.Platform.Apple.Native
     internal static partial class Class
     {
         [LibraryImport(Interop.LIB_OBJ_C, StringMarshalling = StringMarshalling.Utf8)]
-        private static partial IntPtr class_replaceMethod(IntPtr classHandle, IntPtr selector, IntPtr method, string types);
+        private static partial IntPtr class_replaceMethod(
+            IntPtr classHandle,
+            IntPtr selector,
+            IntPtr method,
+            string types
+        );
 
         [LibraryImport(Interop.LIB_OBJ_C)]
         private static partial IntPtr class_getInstanceMethod(IntPtr classHandle, IntPtr selector);
@@ -29,8 +34,18 @@ namespace osu.Framework.Platform.Apple.Native
             return id;
         }
 
-        public static void RegisterMethod(IntPtr handle, Delegate action, string selector, string typeString) =>
-            class_replaceMethod(handle, Selector.Get(selector), Marshal.GetFunctionPointerForDelegate(action), typeString);
+        public static void RegisterMethod(
+            IntPtr handle,
+            Delegate action,
+            string selector,
+            string typeString
+        ) =>
+            class_replaceMethod(
+                handle,
+                Selector.Get(selector),
+                Marshal.GetFunctionPointerForDelegate(action),
+                typeString
+            );
 
         /// <summary>
         /// Performs method swizzling for a given selector, using a given delegate implementation.
@@ -46,7 +61,12 @@ namespace osu.Framework.Platform.Apple.Native
         /// <param name="typeString">The type encoding of the selector.</param>
         /// <param name="action">The delegate to use as the new implementation.</param>
         /// <returns>A selector for the newly registered method, containing the old implementation.</returns>
-        public static IntPtr SwizzleMethod(IntPtr classHandle, string selector, string typeString, Delegate action)
+        public static IntPtr SwizzleMethod(
+            IntPtr classHandle,
+            string selector,
+            string typeString,
+            Delegate action
+        )
         {
             IntPtr targetSelector = Selector.Get(selector);
             IntPtr targetMethod = class_getInstanceMethod(classHandle, targetSelector);

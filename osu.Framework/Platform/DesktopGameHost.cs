@@ -27,7 +27,12 @@ namespace osu.Framework.Platform
 
         protected sealed override Storage GetDefaultGameStorage()
         {
-            if (IsPortableInstallation || File.Exists(Path.Combine(RuntimeInfo.StartupDirectory, FrameworkConfigManager.FILENAME)))
+            if (
+                IsPortableInstallation
+                || File.Exists(
+                    Path.Combine(RuntimeInfo.StartupDirectory, FrameworkConfigManager.FILENAME)
+                )
+            )
                 return GetStorage(RuntimeInfo.StartupDirectory);
 
             return base.GetDefaultGameStorage();
@@ -78,7 +83,10 @@ namespace osu.Framework.Platform
         public override void OpenUrlExternally(string url)
         {
             if (!url.CheckIsValidUrl())
-                throw new ArgumentException("The provided URL must be one of either http://, https:// or mailto: protocols.", nameof(url));
+                throw new ArgumentException(
+                    "The provided URL must be one of either http://, https:// or mailto: protocols.",
+                    nameof(url)
+                );
 
             try
             {
@@ -97,11 +105,14 @@ namespace osu.Framework.Platform
             return true;
         }
 
-        private static void openUsingShellExecute(string path) => Process.Start(new ProcessStartInfo
-        {
-            FileName = path,
-            UseShellExecute = true //see https://github.com/dotnet/corefx/issues/10361
-        });
+        private static void openUsingShellExecute(string path) =>
+            Process.Start(
+                new ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true, //see https://github.com/dotnet/corefx/issues/10361
+                }
+            );
 
         public override Task SendMessageAsync(IpcMessage message)
         {

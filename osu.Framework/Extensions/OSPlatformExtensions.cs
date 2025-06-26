@@ -40,7 +40,9 @@ namespace osu.Framework.Extensions
         private static bool matchesCurrentPlatform(OSPlatformAttribute attribute)
         {
             if (attribute.PlatformName.Contains('.'))
-                throw new NotImplementedException($"{nameof(OSPlatformExtensions)} doesn't currently support version identifiers in {nameof(OSPlatformAttribute)}.");
+                throw new NotImplementedException(
+                    $"{nameof(OSPlatformExtensions)} doesn't currently support version identifiers in {nameof(OSPlatformAttribute)}."
+                );
 
             return OperatingSystem.IsOSPlatform(attribute.PlatformName);
         }

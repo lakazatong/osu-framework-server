@@ -75,12 +75,16 @@ namespace osu.Framework.Graphics.Sprites
                     Vector2 conversion = Vector2.One;
 
                     if ((value & Axes.X) > 0 && (textureInsetRelativeAxes & Axes.X) == 0)
-                        conversion.X = Precision.AlmostEquals(textureSize.X, 0) ? 0 : 1 / textureSize.X;
+                        conversion.X = Precision.AlmostEquals(textureSize.X, 0)
+                            ? 0
+                            : 1 / textureSize.X;
                     else if ((value & Axes.X) == 0 && (textureInsetRelativeAxes & Axes.X) > 0)
                         conversion.X = textureSize.X;
 
                     if ((value & Axes.Y) > 0 && (textureInsetRelativeAxes & Axes.Y) == 0)
-                        conversion.Y = Precision.AlmostEquals(textureSize.Y, 0) ? 0 : 1 / textureSize.Y;
+                        conversion.Y = Precision.AlmostEquals(textureSize.Y, 0)
+                            ? 0
+                            : 1 / textureSize.Y;
                     else if ((value & Axes.Y) == 0 && (textureInsetRelativeAxes & Axes.Y) > 0)
                         conversion.Y = textureSize.Y;
 
@@ -103,10 +107,14 @@ namespace osu.Framework.Graphics.Sprites
                 Vector2 conversion = Vector2.One;
 
                 if ((TextureInsetRelativeAxes & Axes.X) == 0)
-                    conversion.X = Precision.AlmostEquals(Texture.DisplayWidth, 0) ? 0 : 1 / Texture.DisplayWidth;
+                    conversion.X = Precision.AlmostEquals(Texture.DisplayWidth, 0)
+                        ? 0
+                        : 1 / Texture.DisplayWidth;
 
                 if ((TextureInsetRelativeAxes & Axes.Y) == 0)
-                    conversion.Y = Precision.AlmostEquals(Texture.DisplayHeight, 0) ? 0 : 1 / Texture.DisplayHeight;
+                    conversion.Y = Precision.AlmostEquals(Texture.DisplayHeight, 0)
+                        ? 0
+                        : 1 / Texture.DisplayHeight;
 
                 return textureInset * conversion;
             }
@@ -140,9 +148,7 @@ namespace osu.Framework.Graphics.Sprites
         private class NineSliceSpriteDrawNode : SpriteDrawNode
         {
             public NineSliceSpriteDrawNode(NineSliceSprite source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             protected new NineSliceSprite Source => (NineSliceSprite)base.Source;
 
@@ -152,7 +158,16 @@ namespace osu.Framework.Graphics.Sprites
                     return;
 
                 for (int i = 0; i < DrawQuads.Length; i++)
-                    renderer.DrawQuad(Texture, DrawQuads[i], ColourInfo[i], null, null, Vector2.Zero, null, TextureRects[i]);
+                    renderer.DrawQuad(
+                        Texture,
+                        DrawQuads[i],
+                        ColourInfo[i],
+                        null,
+                        null,
+                        Vector2.Zero,
+                        null,
+                        TextureRects[i]
+                    );
             }
 
             protected readonly RectangleF[] TextureRects = new RectangleF[9];
@@ -180,7 +195,8 @@ namespace osu.Framework.Graphics.Sprites
                 DrawQuads[7] = computePart(Anchor.BottomCentre);
                 DrawQuads[8] = computePart(Anchor.BottomRight);
 
-                Quad computePart(Anchor anchor) => getInterpolatedQuad(ScreenSpaceDrawQuad, inset, anchor);
+                Quad computePart(Anchor anchor) =>
+                    getInterpolatedQuad(ScreenSpaceDrawQuad, inset, anchor);
             }
 
             private void computeTextureRects(MarginPadding inset)

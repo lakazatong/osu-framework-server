@@ -28,7 +28,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
     {
         private readonly int amountVertices;
 
-        public GLLinearBuffer(GLRenderer renderer, int amountVertices, PrimitiveTopology topology, BufferUsageHint usage)
+        public GLLinearBuffer(
+            GLRenderer renderer,
+            int amountVertices,
+            PrimitiveTopology topology,
+            BufferUsageHint usage
+        )
             : base(renderer, amountVertices, usage)
         {
             this.amountVertices = amountVertices;
@@ -51,7 +56,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                 for (int i = 0; i < amountVertices; i++)
                     indices[i] = (ushort)i;
 
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(amountVertices * sizeof(ushort)), indices, BufferUsageHint.StaticDraw);
+                GL.BufferData(
+                    BufferTarget.ElementArrayBuffer,
+                    (IntPtr)(amountVertices * sizeof(ushort)),
+                    indices,
+                    BufferUsageHint.StaticDraw
+                );
 
                 GLLinearIndexData.MaxAmountIndices = amountVertices;
             }

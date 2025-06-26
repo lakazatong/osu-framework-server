@@ -21,9 +21,17 @@ namespace osu.Framework.Testing
 
         public override IEnumerable<string> UserStoragePaths { get; }
 
-        public static string TemporaryTestDirectory = Path.Combine(Path.GetTempPath(), "of-test-headless");
+        public static string TemporaryTestDirectory = Path.Combine(
+            Path.GetTempPath(),
+            "of-test-headless"
+        );
 
-        public TestRunHeadlessGameHost(string gameName = null, HostOptions options = null, bool bypassCleanup = false, bool realtime = false)
+        public TestRunHeadlessGameHost(
+            string gameName = null,
+            HostOptions options = null,
+            bool bypassCleanup = false,
+            bool realtime = false
+        )
             : base(gameName, options, realtime)
         {
             this.bypassCleanup = bypassCleanup;
@@ -44,9 +52,7 @@ namespace osu.Framework.Testing
                 {
                     Storage.DeleteDirectory(string.Empty);
                 }
-                catch
-                {
-                }
+                catch { }
             }
         }
     }

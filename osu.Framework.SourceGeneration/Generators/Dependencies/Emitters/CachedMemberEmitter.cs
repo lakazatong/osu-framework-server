@@ -31,7 +31,8 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                     data.GlobalPrefixedTypeName,
                     data.Name,
                     data.PropertyName
-                ));
+                )
+            );
         }
 
         private ExpressionSyntax createMemberAccessor()
@@ -41,8 +42,11 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                 SyntaxFactory.ParenthesizedExpression(
                     SyntaxFactory.CastExpression(
                         SyntaxFactory.ParseTypeName(fileEmitter.Target.GlobalPrefixedTypeName),
-                        SyntaxFactory.IdentifierName(DependenciesFileEmitter.TARGET_PARAMETER_NAME))),
-                SyntaxFactory.IdentifierName(data.PropertyName!));
+                        SyntaxFactory.IdentifierName(DependenciesFileEmitter.TARGET_PARAMETER_NAME)
+                    )
+                ),
+                SyntaxFactory.IdentifierName(data.PropertyName!)
+            );
         }
     }
 }

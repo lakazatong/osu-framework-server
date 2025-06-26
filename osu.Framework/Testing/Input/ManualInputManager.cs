@@ -1,8 +1,8 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Linq;
 using System;
+using System.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input;
@@ -66,7 +66,9 @@ namespace osu.Framework.Testing.Input
 
             InternalChildren = new Drawable[]
             {
-                platformActionContainer = new LocalPlatformActionContainer().WithChild(content = new Container { RelativeSizeAxes = Axes.Both }),
+                platformActionContainer = new LocalPlatformActionContainer().WithChild(
+                    content = new Container { RelativeSizeAxes = Axes.Both }
+                ),
                 testCursor = new TestCursorContainer(),
             };
 
@@ -119,23 +121,52 @@ namespace osu.Framework.Testing.Input
                 ReleaseKey((Key)k);
         }
 
-        public void ScrollBy(Vector2 delta, bool isPrecise = false) => Input(new MouseScrollRelativeInput { Delta = delta, IsPrecise = isPrecise });
-        public void ScrollHorizontalBy(float delta, bool isPrecise = false) => ScrollBy(new Vector2(delta, 0), isPrecise);
-        public void ScrollVerticalBy(float delta, bool isPrecise = false) => ScrollBy(new Vector2(0, delta), isPrecise);
+        public void ScrollBy(Vector2 delta, bool isPrecise = false) =>
+            Input(new MouseScrollRelativeInput { Delta = delta, IsPrecise = isPrecise });
 
-        public void MoveMouseTo(Drawable drawable, Vector2? offset = null) => MoveMouseTo(drawable.ToScreenSpace(drawable.LayoutRectangle.Centre) + (offset ?? Vector2.Zero));
-        public void MoveMouseTo(Vector2 position) => Input(new MousePositionAbsoluteInput { Position = position });
+        public void ScrollHorizontalBy(float delta, bool isPrecise = false) =>
+            ScrollBy(new Vector2(delta, 0), isPrecise);
 
-        public void MoveTouchTo(Touch touch) => Input(new TouchInput(touch, CurrentState.Touch.IsActive(touch.Source)));
+        public void ScrollVerticalBy(float delta, bool isPrecise = false) =>
+            ScrollBy(new Vector2(0, delta), isPrecise);
 
-        public void MovePenTo(Drawable drawable, Vector2? offset = null, TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown)
-            => MovePenTo(drawable.ToScreenSpace(drawable.LayoutRectangle.Centre) + (offset ?? Vector2.Zero), deviceType);
+        public void MoveMouseTo(Drawable drawable, Vector2? offset = null) =>
+            MoveMouseTo(
+                drawable.ToScreenSpace(drawable.LayoutRectangle.Centre) + (offset ?? Vector2.Zero)
+            );
 
-        public void MovePenTo(Vector2 position, TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown)
-            => Input(new MousePositionAbsoluteInputFromPen { Position = position, DeviceType = deviceType });
+        public void MoveMouseTo(Vector2 position) =>
+            Input(new MousePositionAbsoluteInput { Position = position });
+
+        public void MoveTouchTo(Touch touch) =>
+            Input(new TouchInput(touch, CurrentState.Touch.IsActive(touch.Source)));
+
+        public void MovePenTo(
+            Drawable drawable,
+            Vector2? offset = null,
+            TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown
+        ) =>
+            MovePenTo(
+                drawable.ToScreenSpace(drawable.LayoutRectangle.Centre) + (offset ?? Vector2.Zero),
+                deviceType
+            );
+
+        public void MovePenTo(
+            Vector2 position,
+            TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown
+        ) =>
+            Input(
+                new MousePositionAbsoluteInputFromPen
+                {
+                    Position = position,
+                    DeviceType = deviceType,
+                }
+            );
 
         public new bool TriggerClick() =>
-            throw new InvalidOperationException($"To trigger a click via a {nameof(ManualInputManager)} use {nameof(Click)} instead.");
+            throw new InvalidOperationException(
+                $"To trigger a click via a {nameof(ManualInputManager)} use {nameof(Click)} instead."
+            );
 
         /// <summary>
         /// Press and release the specified button.
@@ -162,23 +193,39 @@ namespace osu.Framework.Testing.Input
         /// <param name="button">The button to release.</param>
         public void ReleaseButton(MouseButton button) => Input(new MouseButtonInput(button, false));
 
-        public void PressJoystickButton(JoystickButton button) => Input(new JoystickButtonInput(button, true));
-        public void ReleaseJoystickButton(JoystickButton button) => Input(new JoystickButtonInput(button, false));
+        public void PressJoystickButton(JoystickButton button) =>
+            Input(new JoystickButtonInput(button, true));
+
+        public void ReleaseJoystickButton(JoystickButton button) =>
+            Input(new JoystickButtonInput(button, false));
 
         public void BeginTouch(Touch touch) => Input(new TouchInput(touch, true));
+
         public void EndTouch(Touch touch) => Input(new TouchInput(touch, false));
 
-        public void PressMidiKey(MidiKey key, byte velocity) => Input(new MidiKeyInput(key, velocity, true));
-        public void ReleaseMidiKey(MidiKey key, byte velocity) => Input(new MidiKeyInput(key, velocity, false));
+        public void PressMidiKey(MidiKey key, byte velocity) =>
+            Input(new MidiKeyInput(key, velocity, true));
 
-        public void PressPen(TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown) => Input(new MouseButtonInputFromPen(true) { DeviceType = deviceType });
-        public void ReleasePen(TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown) => Input(new MouseButtonInputFromPen(false) { DeviceType = deviceType });
+        public void ReleaseMidiKey(MidiKey key, byte velocity) =>
+            Input(new MidiKeyInput(key, velocity, false));
 
-        public void PressTabletPenButton(TabletPenButton penButton) => Input(new TabletPenButtonInput(penButton, true));
-        public void ReleaseTabletPenButton(TabletPenButton penButton) => Input(new TabletPenButtonInput(penButton, false));
+        public void PressPen(TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown) =>
+            Input(new MouseButtonInputFromPen(true) { DeviceType = deviceType });
 
-        public void PressTabletAuxiliaryButton(TabletAuxiliaryButton auxiliaryButton) => Input(new TabletAuxiliaryButtonInput(auxiliaryButton, true));
-        public void ReleaseTabletAuxiliaryButton(TabletAuxiliaryButton auxiliaryButton) => Input(new TabletAuxiliaryButtonInput(auxiliaryButton, false));
+        public void ReleasePen(TabletPenDeviceType deviceType = TabletPenDeviceType.Unknown) =>
+            Input(new MouseButtonInputFromPen(false) { DeviceType = deviceType });
+
+        public void PressTabletPenButton(TabletPenButton penButton) =>
+            Input(new TabletPenButtonInput(penButton, true));
+
+        public void ReleaseTabletPenButton(TabletPenButton penButton) =>
+            Input(new TabletPenButtonInput(penButton, false));
+
+        public void PressTabletAuxiliaryButton(TabletAuxiliaryButton auxiliaryButton) =>
+            Input(new TabletAuxiliaryButtonInput(auxiliaryButton, true));
+
+        public void ReleaseTabletAuxiliaryButton(TabletAuxiliaryButton auxiliaryButton) =>
+            Input(new TabletAuxiliaryButtonInput(auxiliaryButton, false));
 
         private partial class LocalPlatformActionContainer : PlatformActionContainer
         {
@@ -196,6 +243,7 @@ namespace osu.Framework.Testing.Input
         private class ManualInputHandler : InputHandler
         {
             public override bool Initialize(GameHost host) => true;
+
             public override bool IsActive => true;
 
             public void EnqueueInput(IInput input)

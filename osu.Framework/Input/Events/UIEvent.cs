@@ -39,7 +39,8 @@ namespace osu.Framework.Input.Events
         /// <summary>
         /// Convert a coordinate to <see cref="Target"/>'s parent space.
         /// </summary>
-        protected Vector2 ToLocalSpace(Vector2 screenSpacePosition) => Target?.Parent?.ToLocalSpace(screenSpacePosition) ?? screenSpacePosition;
+        protected Vector2 ToLocalSpace(Vector2 screenSpacePosition) =>
+            Target?.Parent?.ToLocalSpace(screenSpacePosition) ?? screenSpacePosition;
 
         /// <summary>
         /// The current mouse position in screen space.

@@ -26,11 +26,7 @@ namespace osu.Framework.Platform.Linux.Native
         // .NET tries possible library names if 'libc' is given, but it may fail to find it.
         private static bool testNanoSleep()
         {
-            TimeSpec test = new TimeSpec
-            {
-                Seconds = 0,
-                NanoSeconds = 1,
-            };
+            TimeSpec test = new TimeSpec { Seconds = 0, NanoSeconds = 1 };
 
             try
             {
@@ -62,7 +58,10 @@ namespace osu.Framework.Platform.Linux.Native
 
             int ret;
 
-            while ((ret = nanosleep(in timeSpec, out var remaining)) == -1 && Marshal.GetLastPInvokeError() == interrupt_error)
+            while (
+                (ret = nanosleep(in timeSpec, out var remaining)) == -1
+                && Marshal.GetLastPInvokeError() == interrupt_error
+            )
             {
                 // The pause can be interrupted by a signal that was delivered to the thread.
                 // Sleep again with remaining time if it happened.
@@ -72,8 +71,6 @@ namespace osu.Framework.Platform.Linux.Native
             return ret == 0; // Any errors other than interrupt_error should return false.
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

@@ -50,7 +50,7 @@ namespace FlappyDon.Game.Elements
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.TopCentre,
-                Position = new Vector2(0.0f, 110 + VerticalPositionAdjust)
+                Position = new Vector2(0.0f, 110 + VerticalPositionAdjust),
             };
 
             AddInternal(bottomPipe);

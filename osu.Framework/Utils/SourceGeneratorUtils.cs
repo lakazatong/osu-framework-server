@@ -25,7 +25,15 @@ namespace osu.Framework.Utils
         /// <param name="cachedName">The name which <paramref name="obj"/> should be cached as.</param>
         /// <param name="propertyName">A fallback name for <paramref name="obj"/> to be cached as.</param>
         /// <exception cref="NullDependencyException">If <paramref name="obj"/> is <c>null</c>.</exception>
-        public static void CacheDependency(DependencyContainer container, Type callerType, object? obj, CacheInfo info, Type? asType, string? cachedName, string? propertyName)
+        public static void CacheDependency(
+            DependencyContainer container,
+            Type callerType,
+            object? obj,
+            CacheInfo info,
+            Type? asType,
+            string? cachedName,
+            string? propertyName
+        )
         {
             bool allowValueTypes = callerType.Assembly == typeof(Drawable).Assembly;
 
@@ -34,7 +42,9 @@ namespace osu.Framework.Utils
                 if (allowValueTypes)
                     return;
 
-                throw new NullDependencyException($"Attempted to cache a null value: {callerType.ReadableName()}.{propertyName}.");
+                throw new NullDependencyException(
+                    $"Attempted to cache a null value: {callerType.ReadableName()}.{propertyName}."
+                );
             }
 
             CacheInfo cacheInfo = new CacheInfo(info.Name ?? cachedName);
@@ -60,9 +70,24 @@ namespace osu.Framework.Utils
         /// <typeparam name="T">The type of the object.</typeparam>
         /// <returns>The object.</returns>
         /// <exception cref="DependencyNotRegisteredException">If the dependency is not in <paramref name="container"/>.</exception>
-        public static T GetDependency<T>(IReadOnlyDependencyContainer container, Type callerType, string? cachedName, Type? cachedParent, bool allowNulls, bool rebindBindables)
+        public static T GetDependency<T>(
+            IReadOnlyDependencyContainer container,
+            Type callerType,
+            string? cachedName,
+            Type? cachedParent,
+            bool allowNulls,
+            bool rebindBindables
+        )
         {
-            object? val = GetDependency(container, typeof(T), callerType, cachedName, cachedParent, allowNulls, rebindBindables);
+            object? val = GetDependency(
+                container,
+                typeof(T),
+                callerType,
+                cachedName,
+                cachedParent,
+                allowNulls,
+                rebindBindables
+            );
 
             // `(int)(object)null` throws a NRE, so `default` is used instead.
             return val == null ? default! : (T)val;
@@ -80,7 +105,15 @@ namespace osu.Framework.Utils
         /// <param name="rebindBindables">If the object is a <see cref="IBindable"/>, whether it should be re-bound via <see cref="IBindable.GetBoundCopy"/>.</param>
         /// <returns>The object.</returns>
         /// <exception cref="DependencyNotRegisteredException">If the dependency is not in <paramref name="container"/>.</exception>
-        public static object? GetDependency(IReadOnlyDependencyContainer container, Type type, Type callerType, string? cachedName, Type? cachedParent, bool allowNulls, bool rebindBindables)
+        public static object? GetDependency(
+            IReadOnlyDependencyContainer container,
+            Type type,
+            Type callerType,
+            string? cachedName,
+            Type? cachedParent,
+            bool allowNulls,
+            bool rebindBindables
+        )
         {
             object? val = container.Get(type, new CacheInfo(cachedName, cachedParent));
 

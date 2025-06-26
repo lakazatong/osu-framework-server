@@ -5,7 +5,5 @@ using osu.Framework.Graphics.Containers;
 
 namespace osu.Framework.Graphics.UserInterface
 {
-    public abstract partial class Button : ClickableContainer
-    {
-    }
+    public abstract partial class Button : ClickableContainer { }
 }

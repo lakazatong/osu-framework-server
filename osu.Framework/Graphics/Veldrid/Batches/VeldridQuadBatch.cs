@@ -12,10 +12,17 @@ namespace osu.Framework.Graphics.Veldrid.Batches
         where T : unmanaged, IEquatable<T>, IVertex
     {
         public VeldridQuadBatch(VeldridRenderer renderer, int quads)
-            : base(renderer, quads * IRenderer.VERTICES_PER_QUAD, PrimitiveTopology.Triangles, VeldridIndexLayout.Quad)
+            : base(
+                renderer,
+                quads * IRenderer.VERTICES_PER_QUAD,
+                PrimitiveTopology.Triangles,
+                VeldridIndexLayout.Quad
+            )
         {
             if (quads > IRenderer.MAX_QUADS)
-                throw new OverflowException($"Attempted to initialise a {nameof(VeldridQuadBatch<T>)} with more than {nameof(IRenderer)}.{nameof(IRenderer.MAX_QUADS)} quads ({IRenderer.MAX_QUADS}).");
+                throw new OverflowException(
+                    $"Attempted to initialise a {nameof(VeldridQuadBatch<T>)} with more than {nameof(IRenderer)}.{nameof(IRenderer.MAX_QUADS)} quads ({IRenderer.MAX_QUADS})."
+                );
         }
     }
 }

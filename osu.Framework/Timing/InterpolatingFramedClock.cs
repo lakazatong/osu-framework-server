@@ -106,7 +106,9 @@ namespace osu.Framework.Timing
                     // TODO: this is frame rate depending, and can result in unexpected results.
                     currentTime += (framedSourceClock.CurrentTime - currentTime) / 8;
 
-                    bool withinAllowableError = Math.Abs(framedSourceClock.CurrentTime - currentTime) <= AllowableErrorMilliseconds * Rate;
+                    bool withinAllowableError =
+                        Math.Abs(framedSourceClock.CurrentTime - currentTime)
+                        <= AllowableErrorMilliseconds * Rate;
 
                     if (!withinAllowableError)
                     {
@@ -126,9 +128,14 @@ namespace osu.Framework.Timing
                 }
 
                 // seeking backwards should only be allowed if the source is explicitly doing that.
-                bool elapsedInOpposingDirection = framedSourceClock.ElapsedFrameTime != 0 && Math.Sign(framedSourceClock.ElapsedFrameTime) != Math.Sign(Rate);
+                bool elapsedInOpposingDirection =
+                    framedSourceClock.ElapsedFrameTime != 0
+                    && Math.Sign(framedSourceClock.ElapsedFrameTime) != Math.Sign(Rate);
                 if (!elapsedInOpposingDirection)
-                    currentTime = Rate >= 0 ? Math.Max(lastTime, currentTime) : Math.Min(lastTime, currentTime);
+                    currentTime =
+                        Rate >= 0
+                            ? Math.Max(lastTime, currentTime)
+                            : Math.Min(lastTime, currentTime);
             }
             finally
             {

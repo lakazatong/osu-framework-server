@@ -52,10 +52,7 @@ namespace osu.Framework.Graphics.UserInterface
 
             InternalChildren = new Drawable[]
             {
-                Background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                Background = new Box { RelativeSizeAxes = Axes.Both },
                 content = new Container
                 {
                     RelativeSizeAxes = Axes.X,
@@ -68,27 +65,26 @@ namespace osu.Framework.Graphics.UserInterface
                         {
                             new Dimension(),
                             new Dimension(GridSizeMode.AutoSize),
-                            new Dimension()
+                            new Dimension(),
                         },
-                        RowDimensions = new[]
-                        {
-                            new Dimension(GridSizeMode.AutoSize)
-                        },
+                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
                         Content = new[]
                         {
                             new[]
                             {
-                                hexCodeTextBox = CreateHexCodeTextBox().With(d =>
-                                {
-                                    d.RelativeSizeAxes = Axes.X;
-                                    d.CommitOnFocusLost = true;
-                                }),
+                                hexCodeTextBox = CreateHexCodeTextBox()
+                                    .With(d =>
+                                    {
+                                        d.RelativeSizeAxes = Axes.X;
+                                        d.CommitOnFocusLost = true;
+                                    }),
                                 spacer = Empty(),
-                                colourPreview = CreateColourPreview().With(d => d.RelativeSizeAxes = Axes.Both)
-                            }
-                        }
-                    }
-                }
+                                colourPreview = CreateColourPreview()
+                                    .With(d => d.RelativeSizeAxes = Axes.Both),
+                            },
+                        },
+                    },
+                },
             };
         }
 

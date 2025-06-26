@@ -60,11 +60,13 @@ namespace osu.Framework.Platform
             {
                 listener.Start();
 
-                (thread = new Thread(() => listen(listener))
-                {
-                    Name = $"{GetType().Name} (listening on {port})",
-                    IsBackground = true
-                }).Start();
+                (
+                    thread = new Thread(() => listen(listener))
+                    {
+                        Name = $"{GetType().Name} (listening on {port})",
+                        IsBackground = true,
+                    }
+                ).Start();
 
                 return true;
             }
@@ -118,18 +120,14 @@ namespace osu.Framework.Platform
                     }
                 }
             }
-            catch (TaskCanceledException)
-            {
-            }
+            catch (TaskCanceledException) { }
             finally
             {
                 try
                 {
                     listener.Stop();
                 }
-                catch
-                {
-                }
+                catch { }
             }
         }
 
@@ -178,13 +176,18 @@ namespace osu.Framework.Platform
             await stream.FlushAsync().ConfigureAwait(false);
         }
 
-        private async Task<IpcMessage?> receive(Stream stream, CancellationToken cancellationToken = default)
+        private async Task<IpcMessage?> receive(
+            Stream stream,
+            CancellationToken cancellationToken = default
+        )
         {
             const int header_length = sizeof(int);
 
             byte[] header = new byte[header_length];
 
-            int read = await stream.ReadAsync(header.AsMemory(), cancellationToken).ConfigureAwait(false);
+            int read = await stream
+                .ReadAsync(header.AsMemory(), cancellationToken)
+                .ConfigureAwait(false);
 
             if (read < header_length)
                 return null;
@@ -194,7 +197,9 @@ namespace osu.Framework.Platform
             if (contentLength == 0)
                 return null;
 
-            byte[] data = await stream.ReadBytesToArrayAsync(contentLength, cancellationToken).ConfigureAwait(false);
+            byte[] data = await stream
+                .ReadBytesToArrayAsync(contentLength, cancellationToken)
+                .ConfigureAwait(false);
 
             string str = Encoding.UTF8.GetString(data);
 
@@ -202,13 +207,18 @@ namespace osu.Framework.Platform
 
             string? typeName = json["Type"]?.Value<string>();
 
-            if (typeName == null) throw new InvalidOperationException("Response JSON has missing Type field.");
+            if (typeName == null)
+                throw new InvalidOperationException("Response JSON has missing Type field.");
 
             var type = Type.GetType(typeName);
             var value = json["Value"];
 
-            if (type == null) throw new InvalidOperationException($"Response type could not be mapped ({typeName}).");
-            if (value == null) throw new InvalidOperationException("Response JSON has missing Value field.");
+            if (type == null)
+                throw new InvalidOperationException(
+                    $"Response type could not be mapped ({typeName})."
+                );
+            if (value == null)
+                throw new InvalidOperationException("Response JSON has missing Value field.");
 
             return new IpcMessage
             {
@@ -225,7 +235,11 @@ namespace osu.Framework.Platform
             {
                 cancellationSource.Cancel();
                 if (!thread.Join(thread_join_timeout))
-                    Logger.Log($"IPC thread failed to exit in allocated time ({thread_join_timeout}ms).", LoggingTarget.Runtime, LogLevel.Important);
+                    Logger.Log(
+                        $"IPC thread failed to exit in allocated time ({thread_join_timeout}ms).",
+                        LoggingTarget.Runtime,
+                        LogLevel.Important
+                    );
             }
         }
     }

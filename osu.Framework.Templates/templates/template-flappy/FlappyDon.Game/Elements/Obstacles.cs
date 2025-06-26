@@ -97,7 +97,8 @@ namespace FlappyDon.Game.Elements
 
         public void Reset()
         {
-            if (!Running) return;
+            if (!Running)
+                return;
 
             Running = false;
             frozen = false;
@@ -110,11 +111,14 @@ namespace FlappyDon.Game.Elements
             ClearInternal();
         }
 
-        public bool CheckForCollision(Quad birdQuad) => InternalChildren.Cast<PipeObstacle>().FirstOrDefault()?.CheckCollision(birdQuad) ?? false;
+        public bool CheckForCollision(Quad birdQuad) =>
+            InternalChildren.Cast<PipeObstacle>().FirstOrDefault()?.CheckCollision(birdQuad)
+            ?? false;
 
         protected override void Update()
         {
-            if (!Running) return;
+            if (!Running)
+                return;
 
             if (InternalChildren.Count == 0)
             {
@@ -172,11 +176,13 @@ namespace FlappyDon.Game.Elements
 
         private void spawnNewObstacle()
         {
-            AddInternal(new PipeObstacle
-            {
-                Position = new Vector2(DrawWidth, 0.0f),
-                VerticalPositionAdjust = RNG.NextSingle(-140.0f, 60.0f)
-            });
+            AddInternal(
+                new PipeObstacle
+                {
+                    Position = new Vector2(DrawWidth, 0.0f),
+                    VerticalPositionAdjust = RNG.NextSingle(-140.0f, 60.0f),
+                }
+            );
         }
     }
 }

@@ -140,7 +140,10 @@ namespace osu.Framework.Graphics.Containers
 
         private readonly Cached cellContent = new Cached();
         private readonly LayoutValue cellLayout = new LayoutValue(Invalidation.DrawSize);
-        private readonly LayoutValue cellChildLayout = new LayoutValue(Invalidation.RequiredParentSizeToFit | Invalidation.Presence, InvalidationSource.Child);
+        private readonly LayoutValue cellChildLayout = new LayoutValue(
+            Invalidation.RequiredParentSizeToFit | Invalidation.Presence,
+            InvalidationSource.Child
+        );
 
         private CellContainer[,] cells = new CellContainer[0, 0];
         private int cellRows => cells.GetLength(0);
@@ -216,8 +219,16 @@ namespace osu.Framework.Graphics.Containers
             if (cellLayout.IsValid)
                 return;
 
-            float[] widths = distribute(columnDimensions, DrawWidth - Padding.TotalHorizontal, getCellSizesAlongAxis(Axes.X, DrawWidth - Padding.TotalHorizontal));
-            float[] heights = distribute(rowDimensions, DrawHeight - Padding.TotalVertical, getCellSizesAlongAxis(Axes.Y, DrawHeight - Padding.TotalVertical));
+            float[] widths = distribute(
+                columnDimensions,
+                DrawWidth - Padding.TotalHorizontal,
+                getCellSizesAlongAxis(Axes.X, DrawWidth - Padding.TotalHorizontal)
+            );
+            float[] heights = distribute(
+                rowDimensions,
+                DrawHeight - Padding.TotalVertical,
+                getCellSizesAlongAxis(Axes.Y, DrawHeight - Padding.TotalVertical)
+            );
 
             for (int col = 0; col < cellColumns; col++)
             {
@@ -262,7 +273,9 @@ namespace osu.Framework.Graphics.Containers
                 switch (dimension.Mode)
                 {
                     default:
-                        throw new InvalidOperationException($"Unsupported dimension: {dimension.Mode}.");
+                        throw new InvalidOperationException(
+                            $"Unsupported dimension: {dimension.Mode}."
+                        );
 
                     case GridSizeMode.Distributed:
                         break;
@@ -313,9 +326,14 @@ namespace osu.Framework.Graphics.Containers
             return sizes;
         }
 
-        private static bool shouldConsiderCell(Drawable cell) => cell != null && cell.IsAlive && cell.IsPresent;
-        private static float getCellWidth(Drawable cell) => shouldConsiderCell(cell) ? cell.BoundingBox.Width : 0;
-        private static float getCellHeight(Drawable cell) => shouldConsiderCell(cell) ? cell.BoundingBox.Height : 0;
+        private static bool shouldConsiderCell(Drawable cell) =>
+            cell != null && cell.IsAlive && cell.IsPresent;
+
+        private static float getCellWidth(Drawable cell) =>
+            shouldConsiderCell(cell) ? cell.BoundingBox.Width : 0;
+
+        private static float getCellHeight(Drawable cell) =>
+            shouldConsiderCell(cell) ? cell.BoundingBox.Height : 0;
 
         /// <summary>
         /// Distributes any available length along all distributed dimensions, if required.
@@ -327,10 +345,17 @@ namespace osu.Framework.Graphics.Containers
         private float[] distribute(Dimension[] dimensions, float spanLength, float[] cellSizes)
         {
             // Indices of all distributed cells
-            int[] distributedIndices = Enumerable.Range(0, cellSizes.Length).Where(i => i >= dimensions.Length || dimensions[i].Mode == GridSizeMode.Distributed).ToArray();
+            int[] distributedIndices = Enumerable
+                .Range(0, cellSizes.Length)
+                .Where(i =>
+                    i >= dimensions.Length || dimensions[i].Mode == GridSizeMode.Distributed
+                )
+                .ToArray();
 
             // The dimensions corresponding to all distributed cells
-            IEnumerable<DimensionEntry> distributedDimensions = distributedIndices.Select(i => new DimensionEntry(i, i >= dimensions.Length ? new Dimension() : dimensions[i]));
+            IEnumerable<DimensionEntry> distributedDimensions = distributedIndices.Select(
+                i => new DimensionEntry(i, i >= dimensions.Length ? new Dimension() : dimensions[i])
+            );
 
             // Total number of distributed cells
             int distributionCount = distributedIndices.Length;
@@ -345,12 +370,16 @@ namespace osu.Framework.Graphics.Containers
             foreach (var entry in distributedDimensions.OrderBy(d => d.Dimension.Range))
             {
                 // Cells start off at their minimum size, and the total size should not exceed their maximum size
-                cellSizes[entry.Index] = Math.Min(entry.Dimension.MaxSize, entry.Dimension.MinSize + distributionSize);
+                cellSizes[entry.Index] = Math.Min(
+                    entry.Dimension.MaxSize,
+                    entry.Dimension.MinSize + distributionSize
+                );
 
                 // If there's no excess, any further distributions are guaranteed to also have no excess, so this becomes a null-op
                 // If there is an excess, the excess should be re-distributed among all other n-1 distributed cells
                 if (--distributionCount > 0)
-                    distributionSize += Math.Max(0, distributionSize - entry.Dimension.Range) / distributionCount;
+                    distributionSize +=
+                        Math.Max(0, distributionSize - entry.Dimension.Range) / distributionCount;
             }
 
             return cellSizes;
@@ -373,11 +402,20 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         private partial class CellContainer : Container
         {
-            protected override bool OnInvalidate(Invalidation invalidation, InvalidationSource source)
+            protected override bool OnInvalidate(
+                Invalidation invalidation,
+                InvalidationSource source
+            )
             {
                 bool result = base.OnInvalidate(invalidation, source);
 
-                if (source == InvalidationSource.Child && (invalidation & (Invalidation.RequiredParentSizeToFit | Invalidation.Presence)) > 0)
+                if (
+                    source == InvalidationSource.Child
+                    && (
+                        invalidation
+                        & (Invalidation.RequiredParentSizeToFit | Invalidation.Presence)
+                    ) > 0
+                )
                     result |= Parent?.Invalidate(invalidation, InvalidationSource.Child) ?? false;
 
                 return result;
@@ -418,7 +456,12 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="size">The size of this row or column. This only has an effect if <paramref name="mode"/> is not <see cref="GridSizeMode.Distributed"/>.</param>
         /// <param name="minSize">The minimum size of this row or column.</param>
         /// <param name="maxSize">The maximum size of this row or column.</param>
-        public Dimension(GridSizeMode mode = GridSizeMode.Distributed, float size = 0, float minSize = 0, float maxSize = float.MaxValue)
+        public Dimension(
+            GridSizeMode mode = GridSizeMode.Distributed,
+            float size = 0,
+            float minSize = 0,
+            float maxSize = float.MaxValue
+        )
         {
             ArgumentOutOfRangeException.ThrowIfNegative(minSize);
             ArgumentOutOfRangeException.ThrowIfGreaterThan(minSize, maxSize);
@@ -456,6 +499,6 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// This element will be sized to the maximum size along its span.
         /// </summary>
-        AutoSize
+        AutoSize,
     }
 }

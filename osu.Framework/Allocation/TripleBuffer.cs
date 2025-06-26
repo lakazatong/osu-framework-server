@@ -110,7 +110,7 @@ namespace osu.Framework.Allocation
         public enum UsageType
         {
             Read,
-            Write
+            Write,
         }
     }
 }

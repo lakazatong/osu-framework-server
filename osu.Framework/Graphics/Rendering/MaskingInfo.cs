@@ -39,23 +39,25 @@ namespace osu.Framework.Graphics.Rendering
         public readonly bool Equals(MaskingInfo other) => this == other;
 
         public static bool operator ==(in MaskingInfo left, in MaskingInfo right) =>
-            left.ScreenSpaceAABB == right.ScreenSpaceAABB &&
-            left.MaskingRect == right.MaskingRect &&
-            left.ConservativeScreenSpaceQuad.Equals(right.ConservativeScreenSpaceQuad) &&
-            left.ToMaskingSpace == right.ToMaskingSpace &&
-            left.CornerRadius == right.CornerRadius &&
-            left.CornerExponent == right.CornerExponent &&
-            left.BorderThickness == right.BorderThickness &&
-            left.BorderColour.Equals(right.BorderColour) &&
-            left.BlendRange == right.BlendRange &&
-            left.AlphaExponent == right.AlphaExponent &&
-            left.EdgeOffset == right.EdgeOffset &&
-            left.Hollow == right.Hollow &&
-            left.HollowCornerRadius == right.HollowCornerRadius;
+            left.ScreenSpaceAABB == right.ScreenSpaceAABB
+            && left.MaskingRect == right.MaskingRect
+            && left.ConservativeScreenSpaceQuad.Equals(right.ConservativeScreenSpaceQuad)
+            && left.ToMaskingSpace == right.ToMaskingSpace
+            && left.CornerRadius == right.CornerRadius
+            && left.CornerExponent == right.CornerExponent
+            && left.BorderThickness == right.BorderThickness
+            && left.BorderColour.Equals(right.BorderColour)
+            && left.BlendRange == right.BlendRange
+            && left.AlphaExponent == right.AlphaExponent
+            && left.EdgeOffset == right.EdgeOffset
+            && left.Hollow == right.Hollow
+            && left.HollowCornerRadius == right.HollowCornerRadius;
 
-        public static bool operator !=(in MaskingInfo left, in MaskingInfo right) => !(left == right);
+        public static bool operator !=(in MaskingInfo left, in MaskingInfo right) =>
+            !(left == right);
 
-        public override readonly bool Equals(object? obj) => obj is MaskingInfo other && this == other;
+        public override readonly bool Equals(object? obj) =>
+            obj is MaskingInfo other && this == other;
 
         public override readonly int GetHashCode() => 0; // Shouldn't be used; simplifying implementation here.
     }

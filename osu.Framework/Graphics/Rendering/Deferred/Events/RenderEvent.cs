@@ -72,119 +72,82 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Events
         [FieldOffset(8)]
         private SetViewportEvent setViewport;
 
-        public static RenderEvent Create(in AddPrimitiveToBatchEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.AddPrimitiveToBatch,
-            addPrimitiveToBatch = @event
-        };
+        public static RenderEvent Create(in AddPrimitiveToBatchEvent @event) =>
+            new RenderEvent
+            {
+                Type = RenderEventType.AddPrimitiveToBatch,
+                addPrimitiveToBatch = @event,
+            };
 
-        public static RenderEvent Create(in ClearEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.Clear,
-            clear = @event
-        };
+        public static RenderEvent Create(in ClearEvent @event) =>
+            new RenderEvent { Type = RenderEventType.Clear, clear = @event };
 
-        public static RenderEvent Create(in DrawNodeActionEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.DrawNodeAction,
-            drawNodeAction = @event
-        };
+        public static RenderEvent Create(in DrawNodeActionEvent @event) =>
+            new RenderEvent { Type = RenderEventType.DrawNodeAction, drawNodeAction = @event };
 
-        public static RenderEvent Create(in FlushEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.Flush,
-            flush = @event
-        };
+        public static RenderEvent Create(in FlushEvent @event) =>
+            new RenderEvent { Type = RenderEventType.Flush, flush = @event };
 
-        public static RenderEvent Create(in ResizeFrameBufferEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.ResizeFrameBuffer,
-            resizeFrameBuffer = @event
-        };
+        public static RenderEvent Create(in ResizeFrameBufferEvent @event) =>
+            new RenderEvent
+            {
+                Type = RenderEventType.ResizeFrameBuffer,
+                resizeFrameBuffer = @event,
+            };
 
-        public static RenderEvent Create(in SetBlendEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetBlend,
-            setBlend = @event
-        };
+        public static RenderEvent Create(in SetBlendEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetBlend, setBlend = @event };
 
-        public static RenderEvent Create(in SetBlendMaskEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetBlendMask,
-            setBlendMask = @event
-        };
+        public static RenderEvent Create(in SetBlendMaskEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetBlendMask, setBlendMask = @event };
 
-        public static RenderEvent Create(in SetDepthInfoEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetDepthInfo,
-            setDepthInfo = @event
-        };
+        public static RenderEvent Create(in SetDepthInfoEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetDepthInfo, setDepthInfo = @event };
 
-        public static RenderEvent Create(in SetFrameBufferEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetFrameBuffer,
-            setFrameBuffer = @event
-        };
+        public static RenderEvent Create(in SetFrameBufferEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetFrameBuffer, setFrameBuffer = @event };
 
-        public static RenderEvent Create(in SetScissorEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetScissor,
-            setScissor = @event
-        };
+        public static RenderEvent Create(in SetScissorEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetScissor, setScissor = @event };
 
-        public static RenderEvent Create(in SetShaderEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetShader,
-            setShader = @event
-        };
+        public static RenderEvent Create(in SetShaderEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetShader, setShader = @event };
 
-        public static RenderEvent Create(in SetScissorStateEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetScissorState,
-            setScissorState = @event
-        };
+        public static RenderEvent Create(in SetScissorStateEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetScissorState, setScissorState = @event };
 
-        public static RenderEvent Create(in SetShaderStorageBufferObjectDataEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetShaderStorageBufferObjectData,
-            setShaderStorageBufferObjectData = @event
-        };
+        public static RenderEvent Create(in SetShaderStorageBufferObjectDataEvent @event) =>
+            new RenderEvent
+            {
+                Type = RenderEventType.SetShaderStorageBufferObjectData,
+                setShaderStorageBufferObjectData = @event,
+            };
 
-        public static RenderEvent Create(in SetStencilInfoEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetStencilInfo,
-            setStencilInfo = @event
-        };
+        public static RenderEvent Create(in SetStencilInfoEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetStencilInfo, setStencilInfo = @event };
 
-        public static RenderEvent Create(in SetTextureEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetTexture,
-            setTexture = @event
-        };
+        public static RenderEvent Create(in SetTextureEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetTexture, setTexture = @event };
 
-        public static RenderEvent Create(in SetUniformBufferDataEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetUniformBufferData,
-            setUniformBufferData = @event
-        };
+        public static RenderEvent Create(in SetUniformBufferDataEvent @event) =>
+            new RenderEvent
+            {
+                Type = RenderEventType.SetUniformBufferData,
+                setUniformBufferData = @event,
+            };
 
-        public static RenderEvent Create(in SetUniformBufferDataRangeEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetUniformBufferDataRange,
-            setUniformBufferDataRange = @event
-        };
+        public static RenderEvent Create(in SetUniformBufferDataRangeEvent @event) =>
+            new RenderEvent
+            {
+                Type = RenderEventType.SetUniformBufferDataRange,
+                setUniformBufferDataRange = @event,
+            };
 
-        public static RenderEvent Create(in SetUniformBufferEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetUniformBuffer,
-            setUniformBuffer = @event
-        };
+        public static RenderEvent Create(in SetUniformBufferEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetUniformBuffer, setUniformBuffer = @event };
 
-        public static RenderEvent Create(in SetViewportEvent @event) => new RenderEvent
-        {
-            Type = RenderEventType.SetViewport,
-            setViewport = @event
-        };
+        public static RenderEvent Create(in SetViewportEvent @event) =>
+            new RenderEvent { Type = RenderEventType.SetViewport, setViewport = @event };
 
         public static explicit operator AddPrimitiveToBatchEvent(RenderEvent @event)
         {

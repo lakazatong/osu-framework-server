@@ -37,11 +37,17 @@ namespace osu.Framework.Benchmarks
         {
             if (ClearCaches)
                 DependencyActivator.ClearCache();
-            DependencyActivator.Activate(new ClassInjectedWithSourceGenerator(), dependencyContainer);
+            DependencyActivator.Activate(
+                new ClassInjectedWithSourceGenerator(),
+                dependencyContainer
+            );
         }
     }
 
-    [SuppressMessage("Performance", "OFSG001:Class contributes to dependency injection and should be partial")]
+    [SuppressMessage(
+        "Performance",
+        "OFSG001:Class contributes to dependency injection and should be partial"
+    )]
     public class ClassInjectedWithReflection : IDependencyInjectionCandidate
     {
         // ReSharper disable once UnusedAutoPropertyAccessor.Local

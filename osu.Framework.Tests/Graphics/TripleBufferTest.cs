@@ -20,9 +20,7 @@ namespace osu.Framework.Tests.Graphics
 
             for (int i = 0; i < 1000; i++)
             {
-                using (tripleBuffer.GetForWrite())
-                {
-                }
+                using (tripleBuffer.GetForWrite()) { }
             }
         }
 
@@ -61,9 +59,7 @@ namespace osu.Framework.Tests.Graphics
             var tripleBuffer = createWithIDsMatchingIndices();
 
             // Test with first write in use during second.
-            using (tripleBuffer.GetForWrite())
-            {
-            }
+            using (tripleBuffer.GetForWrite()) { }
 
             int? lastRead = null;
             int? lastWrite = null;
@@ -117,21 +113,27 @@ namespace osu.Framework.Tests.Graphics
                 var obj = new TestObject(i);
                 ManualResetEventSlim resetEventSlim = new ManualResetEventSlim();
 
-                var readTask = Task.Factory.StartNew(() =>
-                {
-                    resetEventSlim.Set();
-                    using (var buffer = tripleBuffer.GetForRead())
-                        Assert.That(buffer?.Object, Is.EqualTo(obj));
-                }, TaskCreationOptions.LongRunning);
+                var readTask = Task.Factory.StartNew(
+                    () =>
+                    {
+                        resetEventSlim.Set();
+                        using (var buffer = tripleBuffer.GetForRead())
+                            Assert.That(buffer?.Object, Is.EqualTo(obj));
+                    },
+                    TaskCreationOptions.LongRunning
+                );
 
-                Task.Factory.StartNew(() =>
-                {
-                    resetEventSlim.Wait(1000);
-                    Thread.Sleep(10);
+                Task.Factory.StartNew(
+                    () =>
+                    {
+                        resetEventSlim.Wait(1000);
+                        Thread.Sleep(10);
 
-                    using (var write = tripleBuffer.GetForWrite())
-                        write.Object = obj;
-                }, TaskCreationOptions.LongRunning);
+                        using (var write = tripleBuffer.GetForWrite())
+                            write.Object = obj;
+                    },
+                    TaskCreationOptions.LongRunning
+                );
 
                 readTask.WaitSafely();
             }

@@ -50,45 +50,49 @@ namespace osu.Framework.Graphics
 
         #region Default Blending Parameter Types
 
-        public static BlendingParameters None => new BlendingParameters
-        {
-            Source = BlendingType.One,
-            Destination = BlendingType.Zero,
-            SourceAlpha = BlendingType.One,
-            DestinationAlpha = BlendingType.Zero,
-            RGBEquation = BlendingEquation.Add,
-            AlphaEquation = BlendingEquation.Add,
-        };
+        public static BlendingParameters None =>
+            new BlendingParameters
+            {
+                Source = BlendingType.One,
+                Destination = BlendingType.Zero,
+                SourceAlpha = BlendingType.One,
+                DestinationAlpha = BlendingType.Zero,
+                RGBEquation = BlendingEquation.Add,
+                AlphaEquation = BlendingEquation.Add,
+            };
 
-        public static BlendingParameters Inherit => new BlendingParameters
-        {
-            Source = BlendingType.Inherit,
-            Destination = BlendingType.Inherit,
-            SourceAlpha = BlendingType.Inherit,
-            DestinationAlpha = BlendingType.Inherit,
-            RGBEquation = BlendingEquation.Inherit,
-            AlphaEquation = BlendingEquation.Inherit,
-        };
+        public static BlendingParameters Inherit =>
+            new BlendingParameters
+            {
+                Source = BlendingType.Inherit,
+                Destination = BlendingType.Inherit,
+                SourceAlpha = BlendingType.Inherit,
+                DestinationAlpha = BlendingType.Inherit,
+                RGBEquation = BlendingEquation.Inherit,
+                AlphaEquation = BlendingEquation.Inherit,
+            };
 
-        public static BlendingParameters Mixture => new BlendingParameters
-        {
-            Source = BlendingType.SrcAlpha,
-            Destination = BlendingType.OneMinusSrcAlpha,
-            SourceAlpha = BlendingType.One,
-            DestinationAlpha = BlendingType.One,
-            RGBEquation = BlendingEquation.Add,
-            AlphaEquation = BlendingEquation.Add,
-        };
+        public static BlendingParameters Mixture =>
+            new BlendingParameters
+            {
+                Source = BlendingType.SrcAlpha,
+                Destination = BlendingType.OneMinusSrcAlpha,
+                SourceAlpha = BlendingType.One,
+                DestinationAlpha = BlendingType.One,
+                RGBEquation = BlendingEquation.Add,
+                AlphaEquation = BlendingEquation.Add,
+            };
 
-        public static BlendingParameters Additive => new BlendingParameters
-        {
-            Source = BlendingType.SrcAlpha,
-            Destination = BlendingType.One,
-            SourceAlpha = BlendingType.One,
-            DestinationAlpha = BlendingType.One,
-            RGBEquation = BlendingEquation.Add,
-            AlphaEquation = BlendingEquation.Add,
-        };
+        public static BlendingParameters Additive =>
+            new BlendingParameters
+            {
+                Source = BlendingType.SrcAlpha,
+                Destination = BlendingType.One,
+                SourceAlpha = BlendingType.One,
+                DestinationAlpha = BlendingType.One,
+                RGBEquation = BlendingEquation.Add,
+                AlphaEquation = BlendingEquation.Add,
+            };
 
         #endregion
 
@@ -150,19 +154,29 @@ namespace osu.Framework.Graphics
             && other.AlphaEquation == AlphaEquation;
 
         public static bool operator ==(in BlendingParameters left, in BlendingParameters right) =>
-            left.Source == right.Source &&
-            left.Destination == right.Destination &&
-            left.SourceAlpha == right.SourceAlpha &&
-            left.DestinationAlpha == right.DestinationAlpha &&
-            left.RGBEquation == right.RGBEquation &&
-            left.AlphaEquation == right.AlphaEquation;
+            left.Source == right.Source
+            && left.Destination == right.Destination
+            && left.SourceAlpha == right.SourceAlpha
+            && left.DestinationAlpha == right.DestinationAlpha
+            && left.RGBEquation == right.RGBEquation
+            && left.AlphaEquation == right.AlphaEquation;
 
-        public static bool operator !=(in BlendingParameters left, in BlendingParameters right) => !(left == right);
+        public static bool operator !=(in BlendingParameters left, in BlendingParameters right) =>
+            !(left == right);
 
-        public override readonly bool Equals(object obj) => obj is BlendingParameters other && this == other;
+        public override readonly bool Equals(object obj) =>
+            obj is BlendingParameters other && this == other;
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        public override readonly int GetHashCode() => HashCode.Combine(Source, Destination, SourceAlpha, DestinationAlpha, RGBEquation, AlphaEquation);
+        public override readonly int GetHashCode() =>
+            HashCode.Combine(
+                Source,
+                Destination,
+                SourceAlpha,
+                DestinationAlpha,
+                RGBEquation,
+                AlphaEquation
+            );
 
         public readonly bool IsDisabled =>
             Source == BlendingType.One
@@ -172,7 +186,8 @@ namespace osu.Framework.Graphics
             && RGBEquation == BlendingEquation.Add
             && AlphaEquation == BlendingEquation.Add;
 
-        public override readonly string ToString() => $"BlendingParameter: Factor: {Source}/{Destination}/{SourceAlpha}/{DestinationAlpha} RGBEquation: {RGBEquation} AlphaEquation: {AlphaEquation}";
+        public override readonly string ToString() =>
+            $"BlendingParameter: Factor: {Source}/{Destination}/{SourceAlpha}/{DestinationAlpha} RGBEquation: {RGBEquation} AlphaEquation: {AlphaEquation}";
 
         #region GL Type Getters
 
@@ -189,22 +204,26 @@ namespace osu.Framework.Graphics
         /// <summary>
         /// Gets the <see cref="BlendingFactorSrc"/> for the currently specified source blending mode.
         /// </summary>
-        public readonly BlendingFactorSrc SourceBlendingFactor => translateBlendingFactorSrc(Source);
+        public readonly BlendingFactorSrc SourceBlendingFactor =>
+            translateBlendingFactorSrc(Source);
 
         /// <summary>
         /// Gets the <see cref="BlendingFactorDest"/> for the currently specified destination blending mode.
         /// </summary>
-        public readonly BlendingFactorDest DestinationBlendingFactor => translateBlendingFactorDest(Destination);
+        public readonly BlendingFactorDest DestinationBlendingFactor =>
+            translateBlendingFactorDest(Destination);
 
         /// <summary>
         /// Gets the <see cref="BlendingFactorSrc"/> for the currently specified source alpha mode.
         /// </summary>
-        public readonly BlendingFactorSrc SourceAlphaBlendingFactor => translateBlendingFactorSrc(SourceAlpha);
+        public readonly BlendingFactorSrc SourceAlphaBlendingFactor =>
+            translateBlendingFactorSrc(SourceAlpha);
 
         /// <summary>
         /// Gets the <see cref="BlendingFactorDest"/> for the currently specified destination alpha mode.
         /// </summary>
-        public readonly BlendingFactorDest DestinationAlphaBlendingFactor => translateBlendingFactorDest(DestinationAlpha);
+        public readonly BlendingFactorDest DestinationAlphaBlendingFactor =>
+            translateBlendingFactorDest(DestinationAlpha);
 
         private static BlendingFactorSrc translateBlendingFactorSrc(BlendingType factor)
         {

@@ -14,20 +14,30 @@ namespace osu.Framework.Tests.Visual.Sprites
             SpriteText text = null!;
             float initialSize = 0;
 
-            AddStep("add initial text and get size", () =>
-            {
-                Child = text = new SpriteText { Text = "First" };
-                initialSize = text.DrawWidth;
-            });
+            AddStep(
+                "add initial text and get size",
+                () =>
+                {
+                    Child = text = new SpriteText { Text = "First" };
+                    initialSize = text.DrawWidth;
+                }
+            );
 
             float updatedSize = 0;
-            AddStep("set new text and grab size", () =>
-            {
-                text.Text = "Second";
-                updatedSize = text.DrawWidth;
-            });
+            AddStep(
+                "set new text and grab size",
+                () =>
+                {
+                    text.Text = "Second";
+                    updatedSize = text.DrawWidth;
+                }
+            );
 
-            AddAssert("updated size is not equal to the initial size", () => updatedSize, () => Is.Not.EqualTo(initialSize));
+            AddAssert(
+                "updated size is not equal to the initial size",
+                () => updatedSize,
+                () => Is.Not.EqualTo(initialSize)
+            );
         }
     }
 }

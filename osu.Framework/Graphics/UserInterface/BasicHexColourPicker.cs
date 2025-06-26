@@ -15,10 +15,7 @@ namespace osu.Framework.Graphics.UserInterface
             Spacing = 10;
         }
 
-        protected override TextBox CreateHexCodeTextBox() => new BasicTextBox
-        {
-            Height = 40
-        };
+        protected override TextBox CreateHexCodeTextBox() => new BasicTextBox { Height = 40 };
 
         protected override ColourPreview CreateColourPreview() => new BasicColourPreview();
 
@@ -28,10 +25,7 @@ namespace osu.Framework.Graphics.UserInterface
 
             public BasicColourPreview()
             {
-                InternalChild = previewBox = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                };
+                InternalChild = previewBox = new Box { RelativeSizeAxes = Axes.Both };
             }
 
             protected override void LoadComplete()

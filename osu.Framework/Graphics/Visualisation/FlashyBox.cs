@@ -3,9 +3,9 @@
 
 #nullable disable
 
+using System;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
-using System;
 
 namespace osu.Framework.Graphics.Visualisation
 {
@@ -24,6 +24,7 @@ namespace osu.Framework.Graphics.Visualisation
             set => target = value;
         }
 
-        public override Quad ScreenSpaceDrawQuad => target == null ? new Quad() : getScreenSpaceQuad(target);
+        public override Quad ScreenSpaceDrawQuad =>
+            target == null ? new Quad() : getScreenSpaceQuad(target);
     }
 }

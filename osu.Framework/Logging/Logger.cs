@@ -34,7 +34,8 @@ namespace osu.Framework.Logging
         /// Logs are stored with a consistent unix timestamp prefix per session (across all loggers) for logical grouping of
         /// log files on disk.
         /// </summary>
-        private static readonly long session_startup_timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        private static readonly long session_startup_timestamp =
+            DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         /// <summary>
         /// Whether logging is enabled. Setting this to false will disable all logging.
@@ -91,7 +92,9 @@ namespace osu.Framework.Logging
 
         private readonly GlobalStatistic<int> logCount;
 
-        private static readonly HashSet<string> reserved_names = new HashSet<string>(Enum.GetNames<LoggingTarget>().Select(n => n.ToLowerInvariant()));
+        private static readonly HashSet<string> reserved_names = new HashSet<string>(
+            Enum.GetNames<LoggingTarget>().Select(n => n.ToLowerInvariant())
+        );
 
         private Logger(LoggingTarget target = LoggingTarget.Runtime)
             : this(target.ToString(), false)
@@ -104,10 +107,15 @@ namespace osu.Framework.Logging
             name = name.ToLowerInvariant();
 
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("The name of a logger must be non-null and may not contain only white space.", nameof(name));
+                throw new ArgumentException(
+                    "The name of a logger must be non-null and may not contain only white space.",
+                    nameof(name)
+                );
 
             if (checkedReserved && reserved_names.Contains(name))
-                throw new ArgumentException($"The name \"{name}\" is reserved. Please use the {nameof(LoggingTarget)}-value corresponding to the name instead.");
+                throw new ArgumentException(
+                    $"The name \"{name}\" is reserved. Please use the {nameof(LoggingTarget)}-value corresponding to the name instead."
+                );
 
             Name = name;
             logCount = GlobalStatistics.Get<int>(nameof(Logger), Name);
@@ -121,7 +129,8 @@ namespace osu.Framework.Logging
         /// </summary>
         public static void AddFilteredText(string text)
         {
-            if (string.IsNullOrEmpty(text)) return;
+            if (string.IsNullOrEmpty(text))
+                return;
 
             lock (static_sync_lock)
                 filters.Add(text);
@@ -150,7 +159,12 @@ namespace osu.Framework.Logging
         /// <param name="description">The description of the error that should be logged with the exception.</param>
         /// <param name="target">The logging target (file).</param>
         /// <param name="recursive">Whether the inner exceptions of the given exception <paramref name="e"/> should be logged recursively.</param>
-        public static void Error(Exception e, string description, LoggingTarget target = LoggingTarget.Runtime, bool recursive = false)
+        public static void Error(
+            Exception e,
+            string description,
+            LoggingTarget target = LoggingTarget.Runtime,
+            bool recursive = false
+        )
         {
             error(e, description, target, null, recursive);
         }
@@ -162,12 +176,23 @@ namespace osu.Framework.Logging
         /// <param name="description">The description of the error that should be logged with the exception.</param>
         /// <param name="name">The logger name (file).</param>
         /// <param name="recursive">Whether the inner exceptions of the given exception <paramref name="e"/> should be logged recursively.</param>
-        public static void Error(Exception e, string description, string name, bool recursive = false)
+        public static void Error(
+            Exception e,
+            string description,
+            string name,
+            bool recursive = false
+        )
         {
             error(e, description, null, name, recursive);
         }
 
-        private static void error(Exception e, string description, LoggingTarget? target, string name, bool recursive)
+        private static void error(
+            Exception e,
+            string description,
+            LoggingTarget? target,
+            string name,
+            bool recursive
+        )
         {
             log($@"{description}", target, name, LogLevel.Error, e);
 
@@ -182,7 +207,12 @@ namespace osu.Framework.Logging
         /// <param name="target">The logging target (file).</param>
         /// <param name="level">The verbosity level.</param>
         /// <param name="outputToListeners">Whether the message should be sent to listeners of <see cref="Debug"/> and <see cref="Console"/>. True by default.</param>
-        public static void Log(string message, LoggingTarget target = LoggingTarget.Runtime, LogLevel level = LogLevel.Verbose, bool outputToListeners = true)
+        public static void Log(
+            string message,
+            LoggingTarget target = LoggingTarget.Runtime,
+            LogLevel level = LogLevel.Verbose,
+            bool outputToListeners = true
+        )
         {
             log(message, target, null, level, outputToListeners: outputToListeners);
         }
@@ -194,12 +224,24 @@ namespace osu.Framework.Logging
         /// <param name="name">The logger name (file).</param>
         /// <param name="level">The verbosity level.</param>
         /// <param name="outputToListeners">Whether the message should be sent to listeners of <see cref="Debug"/> and <see cref="Console"/>. True by default.</param>
-        public static void Log(string message, string name, LogLevel level = LogLevel.Verbose, bool outputToListeners = true)
+        public static void Log(
+            string message,
+            string name,
+            LogLevel level = LogLevel.Verbose,
+            bool outputToListeners = true
+        )
         {
             log(message, null, name, level, outputToListeners: outputToListeners);
         }
 
-        private static void log(string message, LoggingTarget? target, string loggerName, LogLevel level, Exception exception = null, bool outputToListeners = true)
+        private static void log(
+            string message,
+            LoggingTarget? target,
+            string loggerName,
+            LogLevel level,
+            Exception exception = null,
+            bool outputToListeners = true
+        )
         {
             try
             {
@@ -208,9 +250,7 @@ namespace osu.Framework.Logging
                 else
                     GetLogger(loggerName).Add(message, level, exception, outputToListeners);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         /// <summary>
@@ -219,7 +259,11 @@ namespace osu.Framework.Logging
         /// <param name="message">The message to log. Can include newline (\n) characters to split into multiple lines.</param>
         /// <param name="target">The logging target (file).</param>
         /// <param name="level">The verbosity level.</param>
-        public static void LogPrint(string message, LoggingTarget target = LoggingTarget.Runtime, LogLevel level = LogLevel.Verbose)
+        public static void LogPrint(
+            string message,
+            LoggingTarget target = LoggingTarget.Runtime,
+            LogLevel level = LogLevel.Verbose
+        )
         {
             if (Enabled && DebugUtils.IsDebugBuild)
                 System.Diagnostics.Debug.Print(message);
@@ -246,7 +290,8 @@ namespace osu.Framework.Logging
         /// </summary>
         /// <param name="target">The logging target.</param>
         /// <returns>The logger responsible for the given logging target.</returns>
-        public static Logger GetLogger(LoggingTarget target = LoggingTarget.Runtime) => GetLogger(target.ToString());
+        public static Logger GetLogger(LoggingTarget target = LoggingTarget.Runtime) =>
+            GetLogger(target.ToString());
 
         /// <summary>
         /// For classes that regularly log to the same target, this method may be preferred over the static Log method.
@@ -260,7 +305,13 @@ namespace osu.Framework.Logging
                 string nameLower = name.ToLowerInvariant();
 
                 if (!static_loggers.TryGetValue(nameLower, out Logger l))
-                    static_loggers[nameLower] = l = Enum.TryParse(name, true, out LoggingTarget target) ? new Logger(target) : new Logger(name, true);
+                    static_loggers[nameLower] = l = Enum.TryParse(
+                        name,
+                        true,
+                        out LoggingTarget target
+                    )
+                        ? new Logger(target)
+                        : new Logger(name, true);
 
                 return l;
             }
@@ -285,14 +336,23 @@ namespace osu.Framework.Logging
         /// <param name="level">The verbosity level.</param>
         /// <param name="exception">An optional related exception.</param>
         /// <param name="outputToListeners">Whether the message should be sent to listeners of <see cref="Debug"/> and <see cref="Console"/>. True by default.</param>
-        public void Add(string message = @"", LogLevel level = LogLevel.Verbose, Exception exception = null, bool outputToListeners = true) =>
-            add(message, level, exception, outputToListeners && OutputToListeners);
+        public void Add(
+            string message = @"",
+            LogLevel level = LogLevel.Verbose,
+            Exception exception = null,
+            bool outputToListeners = true
+        ) => add(message, level, exception, outputToListeners && OutputToListeners);
 
         private readonly RollingTime debugOutputRollingTime = new RollingTime(50, 10000);
 
         private readonly Queue<string> pendingFileOutput = new Queue<string>();
 
-        private void add(string message = @"", LogLevel level = LogLevel.Verbose, Exception exception = null, bool outputToListeners = true)
+        private void add(
+            string message = @"",
+            LogLevel level = LogLevel.Verbose,
+            Exception exception = null,
+            bool outputToListeners = true
+        )
         {
             if (!Enabled || level < Level)
                 return;
@@ -308,20 +368,24 @@ namespace osu.Framework.Logging
                 logOutput += $"\n{ApplyFilters(exception.ToString())}";
 
             IEnumerable<string> lines = logOutput
-                                        .Replace(@"\r\n", @"\n")
-                                        .Split('\n')
-                                        .Select(s => $@"{DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)} [{level.ToString().ToLowerInvariant()}]: {s.Trim()}");
+                .Replace(@"\r\n", @"\n")
+                .Split('\n')
+                .Select(s =>
+                    $@"{DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)} [{level.ToString().ToLowerInvariant()}]: {s.Trim()}"
+                );
 
             if (outputToListeners)
             {
-                NewEntry?.Invoke(new LogEntry
-                {
-                    Level = level,
-                    Target = Target,
-                    LoggerName = Name,
-                    Message = message,
-                    Exception = exception
-                });
+                NewEntry?.Invoke(
+                    new LogEntry
+                    {
+                        Level = level,
+                        Target = Target,
+                        LoggerName = Name,
+                        Message = message,
+                        Exception = exception,
+                    }
+                );
 
                 if (DebugUtils.IsDebugBuild)
                 {
@@ -342,7 +406,9 @@ namespace osu.Framework.Logging
                             consoleLog($"[{Name.ToLowerInvariant()}] {line}");
 
                             if (!bypassRateLimit && debugOutputRollingTime.IsAtLimit)
-                                consoleLog($"Console output is being limited. Please check {Filename} for full logs.");
+                                consoleLog(
+                                    $"Console output is being limited. Please check {Filename} for full logs."
+                                );
                         }
                     }
                 }
@@ -389,11 +455,19 @@ namespace osu.Framework.Logging
                 {
                     if (!headerAdded)
                     {
-                        writer.WriteLine("----------------------------------------------------------");
+                        writer.WriteLine(
+                            "----------------------------------------------------------"
+                        );
                         writer.WriteLine($"{Name} Log (LogLevel: {Level})");
-                        writer.WriteLine($"Running {GameIdentifier} {VersionIdentifier} on .NET {Environment.Version}");
-                        writer.WriteLine($"Environment: {RuntimeInfo.OS} ({Environment.OSVersion}), {Environment.ProcessorCount} cores ");
-                        writer.WriteLine("----------------------------------------------------------");
+                        writer.WriteLine(
+                            $"Running {GameIdentifier} {VersionIdentifier} on .NET {Environment.Version}"
+                        );
+                        writer.WriteLine(
+                            $"Environment: {RuntimeInfo.OS} ({Environment.OSVersion}), {Environment.ProcessorCount} cores "
+                        );
+                        writer.WriteLine(
+                            "----------------------------------------------------------"
+                        );
 
                         headerAdded = true;
                     }
@@ -402,9 +476,7 @@ namespace osu.Framework.Logging
                         writer.WriteLine(line);
                 }
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         /// <summary>
@@ -428,7 +500,9 @@ namespace osu.Framework.Logging
                     return;
 
                 DateTime logCycleCutoff = DateTime.UtcNow.AddDays(-7);
-                var logFiles = new DirectoryInfo(storage.GetFullPath(string.Empty)).GetFiles("*.log");
+                var logFiles = new DirectoryInfo(storage.GetFullPath(string.Empty)).GetFiles(
+                    "*.log"
+                );
 
                 foreach (var fileInfo in logFiles)
                 {
@@ -443,7 +517,8 @@ namespace osu.Framework.Logging
         }
 
         private static readonly List<string> filters = new List<string>();
-        private static readonly Dictionary<string, Logger> static_loggers = new Dictionary<string, Logger>();
+        private static readonly Dictionary<string, Logger> static_loggers =
+            new Dictionary<string, Logger>();
 
         private static readonly Scheduler scheduler = new Scheduler();
 
@@ -454,15 +529,20 @@ namespace osu.Framework.Logging
             Timer timer = null;
 
             // timer has a very low overhead.
-            timer = new Timer(_ =>
-            {
-                if ((Storage != null ? scheduler.Update() : 0) == 0)
-                    writer_idle.Set();
+            timer = new Timer(
+                _ =>
+                {
+                    if ((Storage != null ? scheduler.Update() : 0) == 0)
+                        writer_idle.Set();
 
-                // reschedule every 50ms. avoids overlapping callbacks.
-                // ReSharper disable once AccessToModifiedClosure
-                timer?.Change(50, Timeout.Infinite);
-            }, null, 0, Timeout.Infinite);
+                    // reschedule every 50ms. avoids overlapping callbacks.
+                    // ReSharper disable once AccessToModifiedClosure
+                    timer?.Change(50, Timeout.Infinite);
+                },
+                null,
+                0,
+                Timeout.Infinite
+            );
         }
 
         /// <summary>
@@ -540,7 +620,7 @@ namespace osu.Framework.Logging
         /// <summary>
         /// Log-level for error messages. This is the highest level (lowest verbosity).
         /// </summary>
-        Error
+        Error,
     }
 
     /// <summary>
@@ -576,6 +656,6 @@ namespace osu.Framework.Logging
         /// <summary>
         /// Logging target for input-related information.
         /// </summary>
-        Input
+        Input,
     }
 }

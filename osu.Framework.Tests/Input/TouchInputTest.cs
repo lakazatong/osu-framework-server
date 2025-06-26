@@ -27,29 +27,41 @@ namespace osu.Framework.Tests.Input
             Container receptorParent = null;
             Vector2 lastPosition = Vector2.Zero;
 
-            AddStep("create hierarchy", () =>
-            {
-                Children = new Drawable[]
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    receptorParent = new Container
+                    Children = new Drawable[]
                     {
-                        Children = new Drawable[]
+                        receptorParent = new Container
                         {
-                            receptor = new InputReceptor { Size = new Vector2(100) }
-                        }
-                    }
-                };
-            });
+                            Children = new Drawable[]
+                            {
+                                receptor = new InputReceptor { Size = new Vector2(100) },
+                            },
+                        },
+                    };
+                }
+            );
 
-            AddStep("begin touch on receptor", () =>
-            {
-                lastPosition = receptor.ToScreenSpace(receptor.LayoutRectangle.Centre);
-                InputManager.BeginTouch(new Touch(TouchSource.Touch1, lastPosition));
-            });
+            AddStep(
+                "begin touch on receptor",
+                () =>
+                {
+                    lastPosition = receptor.ToScreenSpace(receptor.LayoutRectangle.Centre);
+                    InputManager.BeginTouch(new Touch(TouchSource.Touch1, lastPosition));
+                }
+            );
 
             AddStep("remove receptor parent", () => Remove(receptorParent, true));
 
-            AddStep("move touch", () => InputManager.MoveTouchTo(new Touch(TouchSource.Touch1, lastPosition + new Vector2(10))));
+            AddStep(
+                "move touch",
+                () =>
+                    InputManager.MoveTouchTo(
+                        new Touch(TouchSource.Touch1, lastPosition + new Vector2(10))
+                    )
+            );
             AddAssert("receptor did not receive touch move", () => !receptor.TouchMoveReceived);
         }
 

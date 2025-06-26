@@ -12,8 +12,8 @@ using osu.Framework.Platform.SDL2;
 using osu.Framework.Platform.Windows.Native;
 using osuTK;
 using osuTK.Input;
-using Icon = osu.Framework.Platform.Windows.Native.Icon;
 using static SDL2.SDL;
+using Icon = osu.Framework.Platform.Windows.Native.Icon;
 
 namespace osu.Framework.Platform.Windows
 {
@@ -60,7 +60,9 @@ namespace osu.Framework.Platform.Windows
         {
             try
             {
-                return SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+                return SetProcessDpiAwarenessContext(
+                    DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+                );
             }
             catch
             {
@@ -128,11 +130,15 @@ namespace osu.Framework.Platform.Windows
         /// </remarks>
         private void warpCursorFromFocusLoss()
         {
-            if (LastMousePosition.HasValue
+            if (
+                LastMousePosition.HasValue
                 && WindowMode.Value == Configuration.WindowMode.Fullscreen
-                && RelativeMouseMode)
+                && RelativeMouseMode
+            )
             {
-                var pt = PointToScreen(new Point((int)LastMousePosition.Value.X, (int)LastMousePosition.Value.Y));
+                var pt = PointToScreen(
+                    new Point((int)LastMousePosition.Value.X, (int)LastMousePosition.Value.Y)
+                );
                 SDL_WarpMouseGlobal(pt.X, pt.Y); // this directly calls the SetCursorPos win32 API
             }
         }
@@ -142,10 +148,16 @@ namespace osu.Framework.Platform.Windows
         public override void StartTextInput(TextInputProperties properties)
         {
             base.StartTextInput(properties);
-            ScheduleCommand(() => Imm.SetImeAllowed(WindowHandle, properties.Type.SupportsIme() && properties.AllowIme));
+            ScheduleCommand(() =>
+                Imm.SetImeAllowed(
+                    WindowHandle,
+                    properties.Type.SupportsIme() && properties.AllowIme
+                )
+            );
         }
 
-        public override void ResetIme() => ScheduleCommand(() => Imm.CancelComposition(WindowHandle));
+        public override void ResetIme() =>
+            ScheduleCommand(() => Imm.CancelComposition(WindowHandle));
 
         protected override unsafe void HandleTextInputEvent(SDL_TextInputEvent evtText)
         {
@@ -163,7 +175,8 @@ namespace osu.Framework.Platform.Windows
             }
 
             // also block if there is an ongoing composition (unlikely to occur).
-            if (imeCompositionActive) return;
+            if (imeCompositionActive)
+                return;
 
             base.HandleTextInputEvent(evtText);
         }
@@ -206,7 +219,13 @@ namespace osu.Framework.Platform.Windows
                             ScheduleEvent(() => TriggerTextInput(resultText));
                         }
 
-                        if (inputContext.TryGetImeComposition(out string? compositionText, out int start, out int length))
+                        if (
+                            inputContext.TryGetImeComposition(
+                                out string? compositionText,
+                                out int start,
+                                out int length
+                            )
+                        )
                         {
                             ScheduleEvent(() => TriggerTextEditing(compositionText, start, length));
                         }
@@ -328,7 +347,7 @@ namespace osu.Framework.Platform.Windows
         {
             Process_DPI_Unaware = 0,
             Process_System_DPI_Aware = 1,
-            Process_Per_Monitor_DPI_Aware = 2
+            Process_Per_Monitor_DPI_Aware = 2,
         }
 
         [DllImport("User32.dll", SetLastError = true)]
@@ -352,6 +371,11 @@ namespace osu.Framework.Platform.Windows
         internal static extern bool ClientToScreen(IntPtr hWnd, ref Point point);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr SendMessage(
+            IntPtr hWnd,
+            int msg,
+            IntPtr wParam,
+            IntPtr lParam
+        );
     }
 }

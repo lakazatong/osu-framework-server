@@ -26,9 +26,7 @@ namespace osu.Framework.Allocation
         internal readonly Type Type;
 
         public CacheInfo(string name = null, Type parent = null)
-            : this(null, name, parent)
-        {
-        }
+            : this(null, name, parent) { }
 
         private CacheInfo(Type type, string name, Type parent)
         {
@@ -39,11 +37,13 @@ namespace osu.Framework.Allocation
 
         internal CacheInfo WithType(Type type) => new CacheInfo(type, Name, Parent);
 
-        public override string ToString() => $"{nameof(Type)} = {Type?.ReadableName()}, {nameof(Name)} = {Name}, {nameof(Parent)} = {Parent?.ReadableName()}";
+        public override string ToString() =>
+            $"{nameof(Type)} = {Type?.ReadableName()}, {nameof(Name)} = {Name}, {nameof(Parent)} = {Parent?.ReadableName()}";
 
         public override bool Equals(object obj) => obj is CacheInfo cacheInfo && Equals(cacheInfo);
 
-        public bool Equals(CacheInfo other) => Name == other.Name && Parent == other.Parent && Type == other.Type;
+        public bool Equals(CacheInfo other) =>
+            Name == other.Name && Parent == other.Parent && Type == other.Type;
 
         public override int GetHashCode() => HashCode.Combine(Name, Parent, Type);
     }

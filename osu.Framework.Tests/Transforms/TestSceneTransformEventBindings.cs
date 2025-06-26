@@ -18,13 +18,16 @@ namespace osu.Framework.Tests.Transforms
             Container container;
             int completedFired = 0;
 
-            AddStep("setup", () =>
-            {
-                Child = container = new Container();
+            AddStep(
+                "setup",
+                () =>
+                {
+                    Child = container = new Container();
 
-                completedFired = 0;
-                container.FadeIn(500).Then().FadeOut(500).OnComplete(_ => completedFired++);
-            });
+                    completedFired = 0;
+                    container.FadeIn(500).Then().FadeOut(500).OnComplete(_ => completedFired++);
+                }
+            );
 
             AddAssert("not immediately fired", () => completedFired == 0);
             AddUntilStep("wait for single fire", () => completedFired == 1);
@@ -36,13 +39,23 @@ namespace osu.Framework.Tests.Transforms
             Container container;
             int completedFired = 0;
 
-            AddStep("setup", () =>
-            {
-                Child = container = new Container();
+            AddStep(
+                "setup",
+                () =>
+                {
+                    Child = container = new Container();
 
-                completedFired = 0;
-                container.FadeIn(500).Then().FadeOut().OnComplete(_ => { completedFired++; });
-            });
+                    completedFired = 0;
+                    container
+                        .FadeIn(500)
+                        .Then()
+                        .FadeOut()
+                        .OnComplete(_ =>
+                        {
+                            completedFired++;
+                        });
+                }
+            );
 
             AddAssert("not immediately fired", () => completedFired == 0);
             AddUntilStep("wait for single fire", () => completedFired == 1);
@@ -55,16 +68,19 @@ namespace osu.Framework.Tests.Transforms
             int completedFired = 0;
             int abortFired = 0;
 
-            AddStep("setup", () =>
-            {
-                Child = container = new Container();
+            AddStep(
+                "setup",
+                () =>
+                {
+                    Child = container = new Container();
 
-                completedFired = 0;
-                abortFired = 0;
+                    completedFired = 0;
+                    abortFired = 0;
 
-                container.FadeIn(500).Then().FadeOut(500).OnAbort(_ => abortFired++);
-                container.FadeIn(500).OnComplete(_ => completedFired++);
-            });
+                    container.FadeIn(500).Then().FadeOut(500).OnAbort(_ => abortFired++);
+                    container.FadeIn(500).OnComplete(_ => completedFired++);
+                }
+            );
 
             AddAssert("not immediately fired", () => completedFired == 0);
             AddAssert("abort fired", () => abortFired == 1);
@@ -77,14 +93,17 @@ namespace osu.Framework.Tests.Transforms
             Container container;
             int completedFired = 0;
 
-            AddStep("setup", () =>
-            {
-                Child = container = new Container();
+            AddStep(
+                "setup",
+                () =>
+                {
+                    Child = container = new Container();
 
-                completedFired = 0;
-                container.FadeIn(500).Then().FadeOut(500).OnComplete(_ => completedFired++);
-                container.FinishTransforms();
-            });
+                    completedFired = 0;
+                    container.FadeIn(500).Then().FadeOut(500).OnComplete(_ => completedFired++);
+                    container.FinishTransforms();
+                }
+            );
 
             AddAssert("immediately fired", () => completedFired == 1);
         }

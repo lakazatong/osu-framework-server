@@ -8,11 +8,13 @@ namespace osu.Framework.Platform.SDL2
     internal class SDL2DesktopWindow : SDL2Window
     {
         public SDL2DesktopWindow(GraphicsSurfaceType surfaceType, string appName)
-            : base(surfaceType, appName)
-        {
-        }
+            : base(surfaceType, appName) { }
 
-        protected override void UpdateWindowStateAndSize(WindowState state, Display display, DisplayMode displayMode)
+        protected override void UpdateWindowStateAndSize(
+            WindowState state,
+            Display display,
+            DisplayMode displayMode
+        )
         {
             // this reset is required even on changing from one fullscreen resolution to another.
             // if it is not included, the GL context will not get the correct size.

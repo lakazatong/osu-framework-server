@@ -15,9 +15,7 @@ namespace osu.Framework.Graphics
         protected new ITexturedShaderDrawable Source => (ITexturedShaderDrawable)base.Source;
 
         protected TexturedShaderDrawNode(ITexturedShaderDrawable source)
-            : base(source)
-        {
-        }
+            : base(source) { }
 
         public override void ApplyState()
         {
@@ -44,8 +42,6 @@ namespace osu.Framework.Graphics
         /// </summary>
         /// <param name="shader">The shader to bind uniform resources against.</param>
         /// <param name="renderer">The renderer to use for setting up uniform resources.</param>
-        protected virtual void BindUniformResources(IShader shader, IRenderer renderer)
-        {
-        }
+        protected virtual void BindUniformResources(IShader shader, IRenderer renderer) { }
     }
 }

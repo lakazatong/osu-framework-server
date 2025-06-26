@@ -28,58 +28,67 @@ namespace osu.Framework.Tests.Visual.Graphics
         [BackgroundDependencyLoader]
         private void load(GameHost host)
         {
-            textures = new TextureStore(host.Renderer, host.CreateTextureLoaderStore(new CustomResourceStore()), false, TextureFilteringMode.Nearest);
+            textures = new TextureStore(
+                host.Renderer,
+                host.CreateTextureLoaderStore(new CustomResourceStore()),
+                false,
+                TextureFilteringMode.Nearest
+            );
         }
 
         [Test]
         public void TestComparison()
         {
-            AddStep("setup", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "setup",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Spacing = new Vector2(0f, 5f),
-                    Direction = FillDirection.Vertical,
-                    Children = new Drawable[]
+                    Child = new FillFlowContainer
                     {
-                        new Container
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Spacing = new Vector2(0f, 5f),
+                        Direction = FillDirection.Vertical,
+                        Children = new Drawable[]
                         {
-                            AutoSizeAxes = Axes.Both,
-                            Children = new[]
+                            new Container
                             {
-                                new Box
+                                AutoSizeAxes = Axes.Both,
+                                Children = new[]
                                 {
-                                    Size = new Vector2(256, 128),
-                                    Colour = Color4.Blue,
+                                    new Box { Size = new Vector2(256, 128), Colour = Color4.Blue },
+                                    new Sprite
+                                    {
+                                        Texture = textures.Get("zero-to-red"),
+                                        Size = new Vector2(256, 128),
+                                    },
                                 },
-                                new Sprite
-                                {
-                                    Texture = textures.Get("zero-to-red"),
-                                    Size = new Vector2(256, 128),
-                                }
+                            },
+                            new SpriteText
+                            {
+                                Text =
+                                    "Rendering of the sprite above should be identical to the one below",
+                            },
+                            new Sprite
+                            {
+                                Texture = textures.Get("blue-to-red"),
+                                Size = new Vector2(256, 128),
                             },
                         },
-                        new SpriteText
-                        {
-                            Text = "Rendering of the sprite above should be identical to the one below",
-                        },
-                        new Sprite
-                        {
-                            Texture = textures.Get("blue-to-red"),
-                            Size = new Vector2(256, 128),
-                        },
-                    }
-                };
-            });
+                    };
+                }
+            );
         }
 
         private class CustomResourceStore : IResourceStore<byte[]>
         {
             public byte[] Get(string name) => throw new System.NotImplementedException();
-            public Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
+
+            public Task<byte[]> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            ) => throw new System.NotImplementedException();
 
             public Stream GetStream(string name)
             {
@@ -118,11 +127,10 @@ namespace osu.Framework.Tests.Visual.Graphics
                 }
             }
 
-            public IEnumerable<string> GetAvailableResources() => new[] { "zero-to-red", "blue-to-red" };
+            public IEnumerable<string> GetAvailableResources() =>
+                new[] { "zero-to-red", "blue-to-red" };
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
     }
 }

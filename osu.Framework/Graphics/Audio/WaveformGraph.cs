@@ -32,7 +32,10 @@ namespace osu.Framework.Graphics.Audio
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders, IRenderer renderer)
         {
-            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            shader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
             texture = renderer.WhitePixel;
         }
 
@@ -176,58 +179,75 @@ namespace osu.Framework.Graphics.Audio
         private double resampledMaxMidIntensity;
         private double resampledMaxLowIntensity;
 
-        private void queueRegeneration() => Scheduler.AddOnce(() =>
-        {
-            int requiredPointCount = (int)Math.Max(0, Math.Ceiling(DrawWidth * Scale.X) * Resolution);
-            if (requiredPointCount == resampledPointCount && cancelSource?.IsCancellationRequested != false)
-                return;
-
-            cancelGeneration();
-
-            lastGeneratedDrawSize = DrawSize;
-
-            var originalWaveform = Waveform;
-
-            if (originalWaveform == null)
-                return;
-
-            // This should be set before the operation is run.
-            // It will stop unnecessary task churn if invalidation is occuring often.
-            resampledPointCount = requiredPointCount;
-
-            cancelSource = new CancellationTokenSource();
-            var token = cancelSource.Token;
-
-            Task.Run(async () =>
+        private void queueRegeneration() =>
+            Scheduler.AddOnce(() =>
             {
-                var resampled = await originalWaveform.GenerateResampledAsync(requiredPointCount, token).ConfigureAwait(false);
+                int requiredPointCount = (int)
+                    Math.Max(0, Math.Ceiling(DrawWidth * Scale.X) * Resolution);
+                if (
+                    requiredPointCount == resampledPointCount
+                    && cancelSource?.IsCancellationRequested != false
+                )
+                    return;
 
-                int originalPointCount = (await originalWaveform.GetPointsAsync().ConfigureAwait(false)).Length;
+                cancelGeneration();
 
-                Logger.Log($"Waveform resampled with {requiredPointCount:N0} points (original {originalPointCount:N0})...");
+                lastGeneratedDrawSize = DrawSize;
 
-                var points = await resampled.GetPointsAsync().ConfigureAwait(false);
+                var originalWaveform = Waveform;
 
-                double maxHighIntensity = points.Length > 0 ? points.Max(p => p.HighIntensity) : 0;
-                double maxMidIntensity = points.Length > 0 ? points.Max(p => p.MidIntensity) : 0;
-                double maxLowIntensity = points.Length > 0 ? points.Max(p => p.LowIntensity) : 0;
+                if (originalWaveform == null)
+                    return;
 
-                Schedule(() =>
-                {
-                    if (token.IsCancellationRequested)
-                        return;
+                // This should be set before the operation is run.
+                // It will stop unnecessary task churn if invalidation is occuring often.
+                resampledPointCount = requiredPointCount;
 
-                    resampledPoints = points;
-                    resampledMaxHighIntensity = maxHighIntensity;
-                    resampledMaxMidIntensity = maxMidIntensity;
-                    resampledMaxLowIntensity = maxLowIntensity;
-                    resampledVersion = InvalidationID;
+                cancelSource = new CancellationTokenSource();
+                var token = cancelSource.Token;
 
-                    OnWaveformRegenerated(resampled);
-                    Invalidate(Invalidation.DrawNode);
-                });
-            }, token);
-        });
+                Task.Run(
+                    async () =>
+                    {
+                        var resampled = await originalWaveform
+                            .GenerateResampledAsync(requiredPointCount, token)
+                            .ConfigureAwait(false);
+
+                        int originalPointCount = (
+                            await originalWaveform.GetPointsAsync().ConfigureAwait(false)
+                        ).Length;
+
+                        Logger.Log(
+                            $"Waveform resampled with {requiredPointCount:N0} points (original {originalPointCount:N0})..."
+                        );
+
+                        var points = await resampled.GetPointsAsync().ConfigureAwait(false);
+
+                        double maxHighIntensity =
+                            points.Length > 0 ? points.Max(p => p.HighIntensity) : 0;
+                        double maxMidIntensity =
+                            points.Length > 0 ? points.Max(p => p.MidIntensity) : 0;
+                        double maxLowIntensity =
+                            points.Length > 0 ? points.Max(p => p.LowIntensity) : 0;
+
+                        Schedule(() =>
+                        {
+                            if (token.IsCancellationRequested)
+                                return;
+
+                            resampledPoints = points;
+                            resampledMaxHighIntensity = maxHighIntensity;
+                            resampledMaxMidIntensity = maxMidIntensity;
+                            resampledMaxLowIntensity = maxLowIntensity;
+                            resampledVersion = InvalidationID;
+
+                            OnWaveformRegenerated(resampled);
+                            Invalidate(Invalidation.DrawNode);
+                        });
+                    },
+                    token
+                );
+            });
 
         private void cancelGeneration()
         {
@@ -240,9 +260,7 @@ namespace osu.Framework.Graphics.Audio
         /// Invoked when the waveform has been regenerated.
         /// </summary>
         /// <param name="waveform">The new <see cref="Waveform"/> to be displayed.</param>
-        protected virtual void OnWaveformRegenerated(Waveform waveform)
-        {
-        }
+        protected virtual void OnWaveformRegenerated(Waveform waveform) { }
 
         protected override DrawNode CreateDrawNode() => new WaveformDrawNode(this);
 
@@ -275,9 +293,7 @@ namespace osu.Framework.Graphics.Audio
             protected new WaveformGraph Source => (WaveformGraph)base.Source;
 
             public WaveformDrawNode(WaveformGraph source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -297,7 +313,9 @@ namespace osu.Framework.Graphics.Audio
                 {
                     // Late initialise list to use a sane initial capacity.
                     if (points == null)
-                        points = new List<Waveform.Point>(Source.resampledPoints ?? Enumerable.Empty<Waveform.Point>());
+                        points = new List<Waveform.Point>(
+                            Source.resampledPoints ?? Enumerable.Empty<Waveform.Point>()
+                        );
                     else
                     {
                         points.Clear();
@@ -328,19 +346,25 @@ namespace osu.Framework.Graphics.Audio
                 shader.Bind();
                 texture.Bind();
 
-                Vector2 localInflationAmount = new Vector2(0, 1) * DrawInfo.MatrixInverse.ExtractScale().Xy;
+                Vector2 localInflationAmount =
+                    new Vector2(0, 1) * DrawInfo.MatrixInverse.ExtractScale().Xy;
 
                 // We're dealing with a _large_ number of points, so we need to optimise the quadToDraw * drawInfo.Matrix multiplications below
                 // for points that are going to be masked out anyway. This allows for higher resolution graphs at larger scales with virtually no performance loss.
                 // Since the points are generated in the local coordinate space, we need to convert the screen space masking quad coordinates into the local coordinate space
-                RectangleF localMaskingRectangle = (Quad.FromRectangle(renderer.CurrentMaskingInfo.ScreenSpaceAABB) * DrawInfo.MatrixInverse).AABBFloat;
+                RectangleF localMaskingRectangle = (
+                    Quad.FromRectangle(renderer.CurrentMaskingInfo.ScreenSpaceAABB)
+                    * DrawInfo.MatrixInverse
+                ).AABBFloat;
 
                 float separation = drawSize.X / (points.Count - 1);
 
                 // Equates to making sure that rightX >= localMaskingRectangle.Left at startIndex and leftX <= localMaskingRectangle.Right at endIndex.
                 // Without this pre-check, very long waveform displays can get slow just from running the loop below (point counts in excess of 1mil).
-                int startIndex = (int)Math.Clamp(localMaskingRectangle.Left / separation, 0, points.Count - 1);
-                int endIndex = (int)Math.Clamp(localMaskingRectangle.Right / separation + 1, 0, points.Count - 1);
+                int startIndex = (int)
+                    Math.Clamp(localMaskingRectangle.Left / separation, 0, points.Count - 1);
+                int endIndex = (int)
+                    Math.Clamp(localMaskingRectangle.Right / separation + 1, 0, points.Count - 1);
 
                 for (int i = startIndex; i < endIndex; i++)
                 {
@@ -350,11 +374,29 @@ namespace osu.Framework.Graphics.Audio
                     Color4 frequencyColour = baseColour;
 
                     // colouring is applied in the order of interest to a viewer.
-                    frequencyColour = Interpolation.ValueAt(points[i].MidIntensity / midMax, frequencyColour, midColour, 0, 1);
+                    frequencyColour = Interpolation.ValueAt(
+                        points[i].MidIntensity / midMax,
+                        frequencyColour,
+                        midColour,
+                        0,
+                        1
+                    );
                     // high end (cymbal) can help find beat, so give it priority over mids.
-                    frequencyColour = Interpolation.ValueAt(points[i].HighIntensity / highMax, frequencyColour, highColour, 0, 1);
+                    frequencyColour = Interpolation.ValueAt(
+                        points[i].HighIntensity / highMax,
+                        frequencyColour,
+                        highColour,
+                        0,
+                        1
+                    );
                     // low end (bass drum) is generally the best visual aid for beat matching, so give it priority over high/mid.
-                    frequencyColour = Interpolation.ValueAt(points[i].LowIntensity / lowMax, frequencyColour, lowColour, 0, 1);
+                    frequencyColour = Interpolation.ValueAt(
+                        points[i].LowIntensity / lowMax,
+                        frequencyColour,
+                        lowColour,
+                        0,
+                        1
+                    );
 
                     ColourInfo finalColour = DrawColourInfo.Colour;
                     finalColour.ApplyChild(frequencyColour);
@@ -371,7 +413,14 @@ namespace osu.Framework.Graphics.Audio
                     quadToDraw *= DrawInfo.Matrix;
 
                     if (quadToDraw.Size.X != 0 && quadToDraw.Size.Y != 0)
-                        renderer.DrawQuad(texture, quadToDraw, finalColour, null, vertexBatch.AddAction, Vector2.Divide(localInflationAmount, quadToDraw.Size));
+                        renderer.DrawQuad(
+                            texture,
+                            quadToDraw,
+                            finalColour,
+                            null,
+                            vertexBatch.AddAction,
+                            Vector2.Divide(localInflationAmount, quadToDraw.Size)
+                        );
                 }
 
                 shader.Unbind();

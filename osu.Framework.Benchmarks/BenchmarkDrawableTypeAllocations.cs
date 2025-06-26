@@ -46,8 +46,6 @@ namespace osu.Framework.Benchmarks
             _ = new SpriteText();
         }
 
-        public partial class SimpleComposite : CompositeDrawable
-        {
-        }
+        public partial class SimpleComposite : CompositeDrawable { }
     }
 }

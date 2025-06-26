@@ -76,9 +76,7 @@ namespace osu.Framework.Allocation
                     return true;
                 }
             }
-            catch (InvalidOperationException)
-            {
-            }
+            catch (InvalidOperationException) { }
 
             target = default;
             return false;

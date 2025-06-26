@@ -78,10 +78,7 @@ namespace osu.Framework.Tests.Containers
             // Non-async
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var unused1 = new Container
-                {
-                    Child = new Container(),
-                };
+                var unused1 = new Container { Child = new Container() };
 
                 _ = new Container { Child = unused1.Child };
             });
@@ -93,26 +90,26 @@ namespace osu.Framework.Tests.Containers
         [Test]
         public void TestLoadedMultipleAdds()
         {
-            AddAssert("Test loaded multiple adds", () =>
-            {
-                var loadedContainer = new Container();
-                Add(loadedContainer);
-
-                try
+            AddAssert(
+                "Test loaded multiple adds",
+                () =>
                 {
-                    var unused = new Container
+                    var loadedContainer = new Container();
+                    Add(loadedContainer);
+
+                    try
                     {
-                        Child = new Container(),
-                    };
+                        var unused = new Container { Child = new Container() };
 
-                    loadedContainer.Add(new Container { Child = unused.Child });
-                    return false;
+                        loadedContainer.Add(new Container { Child = unused.Child });
+                        return false;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        return true;
+                    }
                 }
-                catch (InvalidOperationException)
-                {
-                    return true;
-                }
-            });
+            );
         }
 
         /// <summary>
@@ -123,16 +120,22 @@ namespace osu.Framework.Tests.Containers
         {
             Drawable target = null;
 
-            AddStep("load target", () =>
-            {
-                Add(target = new Box { Size = new Vector2(100) });
+            AddStep(
+                "load target",
+                () =>
+                {
+                    Add(target = new Box { Size = new Vector2(100) });
 
-                // Empty scheduler to force creation of the scheduler.
-                target.Schedule(() => { });
-            });
+                    // Empty scheduler to force creation of the scheduler.
+                    target.Schedule(() => { });
+                }
+            );
 
             AddStep("remove target", () => Remove(target, false));
-            AddStep("add target to unloaded container", () => Add(new Container { Child = target }));
+            AddStep(
+                "add target to unloaded container",
+                () => Add(new Container { Child = target })
+            );
         }
 
         /// <summary>
@@ -147,7 +150,10 @@ namespace osu.Framework.Tests.Containers
             var containerA = new Container { Child = drawableA };
             var containerB = new Container { Child = drawableB };
 
-            var newContainer = new Container<Container> { Children = new[] { containerA, containerB } };
+            var newContainer = new Container<Container>
+            {
+                Children = new[] { containerA, containerB },
+            };
 
             // Because drawableA and drawableB have been added to separate containers,
             // they will both have Depth = 0 and ChildID = 1, which leads to edge cases if a
@@ -157,8 +163,12 @@ namespace osu.Framework.Tests.Containers
             Assert.IsTrue(newContainer.First(c => c.Contains(drawableA)) == containerA);
             Assert.IsTrue(newContainer.First(c => c.Contains(drawableB)) == containerB);
 
-            Assert.DoesNotThrow(() => newContainer.First(c => c.Contains(drawableA)).Remove(drawableA, false));
-            Assert.DoesNotThrow(() => newContainer.First(c => c.Contains(drawableB)).Remove(drawableB, false));
+            Assert.DoesNotThrow(() =>
+                newContainer.First(c => c.Contains(drawableA)).Remove(drawableA, false)
+            );
+            Assert.DoesNotThrow(() =>
+                newContainer.First(c => c.Contains(drawableB)).Remove(drawableB, false)
+            );
         }
 
         [Test]
@@ -169,7 +179,10 @@ namespace osu.Framework.Tests.Containers
             var drawableC = new Sprite();
             var containerA = new Container { Child = drawableC };
 
-            var targetContainer = new Container { Children = new Drawable[] { drawableA, drawableB, containerA } };
+            var targetContainer = new Container
+            {
+                Children = new Drawable[] { drawableA, drawableB, containerA },
+            };
 
             Assert.That(targetContainer, Has.Count.Not.Zero);
 
@@ -188,7 +201,10 @@ namespace osu.Framework.Tests.Containers
         {
             bool unbound = false;
 
-            var drawableA = new Sprite().With(d => { d.OnUnbindAllBindables += () => unbound = true; });
+            var drawableA = new Sprite().With(d =>
+            {
+                d.OnUnbindAllBindables += () => unbound = true;
+            });
 
             var container = new Container { Children = new[] { drawableA } };
 
@@ -206,7 +222,10 @@ namespace osu.Framework.Tests.Containers
         {
             bool disposed = false;
 
-            var drawableA = new Sprite().With(d => { d.OnDispose += () => disposed = true; });
+            var drawableA = new Sprite().With(d =>
+            {
+                d.OnDispose += () => disposed = true;
+            });
 
             var container = new Container { Children = new[] { drawableA } };
 
@@ -245,11 +264,17 @@ namespace osu.Framework.Tests.Containers
             AddStep("add safe container", () => Add(safeContainer = new Container()));
 
             // Get the drawable into an async loading state
-            AddStep("begin async load", () =>
-            {
-                safeContainer.LoadComponentAsync(drawable = new DelayedLoadDrawable(), _ => { });
-                Remove(safeContainer, false);
-            });
+            AddStep(
+                "begin async load",
+                () =>
+                {
+                    safeContainer.LoadComponentAsync(
+                        drawable = new DelayedLoadDrawable(),
+                        _ => { }
+                    );
+                    Remove(safeContainer, false);
+                }
+            );
 
             AddUntilStep("wait until loading", () => drawable.LoadState == LoadState.Loading);
 
@@ -269,13 +294,13 @@ namespace osu.Framework.Tests.Containers
             Container container = null;
             Drawable child = null;
 
-            AddStep("add container and child", () =>
-            {
-                Add(container = new Container
+            AddStep(
+                "add container and child",
+                () =>
                 {
-                    Child = child = new Box()
-                });
-            });
+                    Add(container = new Container { Child = child = new Box() });
+                }
+            );
 
             AddStep("expire child", () => child.Expire());
 
@@ -289,13 +314,16 @@ namespace osu.Framework.Tests.Containers
 
             AddStep("add container", () => Add(container = new Container()));
 
-            AddStep("add expired child", () =>
-            {
-                var child = new Box();
-                child.Expire();
+            AddStep(
+                "add expired child",
+                () =>
+                {
+                    var child = new Box();
+                    child.Expire();
 
-                container.Add(child);
-            });
+                    container.Add(child);
+                }
+            );
 
             AddUntilStep("container has no children", () => container.Count == 0);
         }
@@ -334,21 +362,27 @@ namespace osu.Framework.Tests.Containers
 
             AddStep("create container", () => Child = container = new TestContainer());
 
-            AddStep("perform test", () =>
-            {
-                container.Add(new Box());
-                container.Add(new Box());
-                container.ScheduleAfterChildren(checkCount);
-            });
+            AddStep(
+                "perform test",
+                () =>
+                {
+                    container.Add(new Box());
+                    container.Add(new Box());
+                    container.ScheduleAfterChildren(checkCount);
+                }
+            );
 
             AddAssert("correct count", () => count == 2);
 
-            AddStep("perform test", () =>
-            {
-                container.First().Expire();
-                container.Add(new Box());
-                container.ScheduleAfterChildren(checkCount);
-            });
+            AddStep(
+                "perform test",
+                () =>
+                {
+                    container.First().Expire();
+                    container.Add(new Box());
+                    container.ScheduleAfterChildren(checkCount);
+                }
+            );
 
             AddAssert("correct count", () => count == 2);
         }
@@ -360,26 +394,33 @@ namespace osu.Framework.Tests.Containers
             Drawable aliveChild = null;
             Drawable nonAliveChild = null;
 
-            AddStep("create container", () =>
-            {
-                Child = container = new Container
+            AddStep(
+                "create container",
+                () =>
                 {
-                    Children = new[]
+                    Child = container = new Container
                     {
-                        aliveChild = new Box(),
-                        nonAliveChild = new Box { LifetimeStart = double.MaxValue }
-                    }
-                };
-            });
+                        Children = new[]
+                        {
+                            aliveChild = new Box(),
+                            nonAliveChild = new Box { LifetimeStart = double.MaxValue },
+                        },
+                    };
+                }
+            );
 
             AddAssert("1 alive child", () => container.AliveChildren.Count == 1);
             AddAssert("alive child contained", () => container.AliveChildren.Contains(aliveChild));
-            AddAssert("non-alive child not contained", () => !container.AliveChildren.Contains(nonAliveChild));
+            AddAssert(
+                "non-alive child not contained",
+                () => !container.AliveChildren.Contains(nonAliveChild)
+            );
         }
 
         private partial class TestContainer : Container
         {
-            public new void ScheduleAfterChildren(Action action) => SchedulerAfterChildren.AddDelayed(action, TransformDelay);
+            public new void ScheduleAfterChildren(Action action) =>
+                SchedulerAfterChildren.AddDelayed(action, TransformDelay);
         }
     }
 }

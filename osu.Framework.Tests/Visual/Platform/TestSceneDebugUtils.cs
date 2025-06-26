@@ -21,10 +21,7 @@ namespace osu.Framework.Tests.Visual.Platform
 
         public TestSceneDebugUtils()
         {
-            Child = textFlow = new TextFlowContainer
-            {
-                RelativeSizeAxes = Axes.Both
-            };
+            Child = textFlow = new TextFlowContainer { RelativeSizeAxes = Axes.Both };
         }
 
         [BackgroundDependencyLoader]
@@ -36,22 +33,29 @@ namespace osu.Framework.Tests.Visual.Platform
         [Test]
         public void LogStatics()
         {
-            AddStep("log DebugUtils statics", () =>
-            {
-                textFlow.Clear();
-                log(DebugUtils.IsNUnitRunning);
-                log(DebugUtils.IsDebugBuild);
-                log(RuntimeInfo.EntryAssembly);
+            AddStep(
+                "log DebugUtils statics",
+                () =>
+                {
+                    textFlow.Clear();
+                    log(DebugUtils.IsNUnitRunning);
+                    log(DebugUtils.IsDebugBuild);
+                    log(RuntimeInfo.EntryAssembly);
 #pragma warning disable RS0030
-                log(Assembly.GetEntryAssembly());
+                    log(Assembly.GetEntryAssembly());
 #pragma warning restore RS0030
-            });
+                }
+            );
         }
 
         [Test]
         public void TestIsNUnitRunning()
         {
-            AddAssert("check IsNUnitRunning", () => DebugUtils.IsNUnitRunning, () => Is.EqualTo(isHeadlessTestRun));
+            AddAssert(
+                "check IsNUnitRunning",
+                () => DebugUtils.IsNUnitRunning,
+                () => Is.EqualTo(isHeadlessTestRun)
+            );
         }
 
         [Test]
@@ -59,17 +63,21 @@ namespace osu.Framework.Tests.Visual.Platform
         {
             AddAssert("check IsDebugBuild", () => DebugUtils.IsDebugBuild, () => Is.EqualTo(
 #if DEBUG
-                true
+                        true
 #else
-                false
+                        false
 #endif
-            ));
+                    ));
         }
 
         [Test]
         public void TestEntryAssembly()
         {
-            AddAssert("check RuntimeInfo.EntryAssembly", () => RuntimeInfo.EntryAssembly.FullName, () => Does.StartWith("osu.Framework.Tests"));
+            AddAssert(
+                "check RuntimeInfo.EntryAssembly",
+                () => RuntimeInfo.EntryAssembly.FullName,
+                () => Does.StartWith("osu.Framework.Tests")
+            );
         }
 
         /// <summary>

@@ -23,7 +23,13 @@ namespace osu.Framework.Input.StateChanges.Events
         /// </summary>
         public readonly Vector2? LastPosition;
 
-        public TouchStateChangeEvent(InputState state, IInput input, Touch touch, bool? active, Vector2? lastPosition)
+        public TouchStateChangeEvent(
+            InputState state,
+            IInput input,
+            Touch touch,
+            bool? active,
+            Vector2? lastPosition
+        )
             : base(state, input)
         {
             Touch = touch;

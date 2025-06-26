@@ -47,7 +47,10 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             hoverTooltipProvider(() => tooltipText);
 
-            AddStep("get tooltip instance", () => originalInstance = tooltipContainer.CurrentTooltip);
+            AddStep(
+                "get tooltip instance",
+                () => originalInstance = tooltipContainer.CurrentTooltip
+            );
             assertTooltipText(() => tooltipText.TooltipText);
 
             hoverTooltipProvider(() => tooltipText);
@@ -70,13 +73,22 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             hoverTooltipProvider(() => customTooltipTextA);
 
-            AddStep("get tooltip instance", () => originalInstance = tooltipContainer.CurrentTooltip);
-            AddAssert("custom tooltip used", () => originalInstance.GetType() == typeof(CustomTooltip));
+            AddStep(
+                "get tooltip instance",
+                () => originalInstance = tooltipContainer.CurrentTooltip
+            );
+            AddAssert(
+                "custom tooltip used",
+                () => originalInstance.GetType() == typeof(CustomTooltip)
+            );
             assertTooltipText(() => ((CustomContent)customTooltipTextA.TooltipContent!).Text);
 
             hoverTooltipProvider(() => customTooltipTextB);
 
-            AddAssert("custom tooltip reused", () => tooltipContainer.CurrentTooltip == originalInstance);
+            AddAssert(
+                "custom tooltip reused",
+                () => tooltipContainer.CurrentTooltip == originalInstance
+            );
             assertTooltipText(() => ((CustomContent)customTooltipTextB.TooltipContent!).Text);
         }
 
@@ -86,31 +98,46 @@ namespace osu.Framework.Tests.Visual.UserInterface
             hoverTooltipProvider(() => customTooltipTextA);
             assertTooltipText(() => ((CustomContent)customTooltipTextA.TooltipContent!).Text);
 
-            AddAssert("current tooltip type normal", () => tooltipContainer.CurrentTooltip.GetType() == typeof(CustomTooltip));
+            AddAssert(
+                "current tooltip type normal",
+                () => tooltipContainer.CurrentTooltip.GetType() == typeof(CustomTooltip)
+            );
 
             hoverTooltipProvider(() => customTooltipTextAlt);
             assertTooltipText(() => ((CustomContent)customTooltipTextAlt.TooltipContent!).Text);
 
-            AddAssert("current tooltip type alt", () => tooltipContainer.CurrentTooltip.GetType() == typeof(CustomTooltipAlt));
+            AddAssert(
+                "current tooltip type alt",
+                () => tooltipContainer.CurrentTooltip.GetType() == typeof(CustomTooltipAlt)
+            );
 
             hoverTooltipProvider(() => customTooltipTextB);
             assertTooltipText(() => ((CustomContent)customTooltipTextB.TooltipContent!).Text);
 
-            AddAssert("current tooltip type normal", () => tooltipContainer.CurrentTooltip.GetType() == typeof(CustomTooltip));
+            AddAssert(
+                "current tooltip type normal",
+                () => tooltipContainer.CurrentTooltip.GetType() == typeof(CustomTooltip)
+            );
         }
 
         [Test]
         public void TestEmptyTooltip()
         {
             AddStep("hover empty tooltip", () => InputManager.MoveMouseTo(emptyTooltipText));
-            AddAssert("tooltip not shown", () => tooltipContainer.CurrentTooltip?.IsPresent != true);
+            AddAssert(
+                "tooltip not shown",
+                () => tooltipContainer.CurrentTooltip?.IsPresent != true
+            );
         }
 
         [Test]
         public void TestNullTooltip()
         {
             AddStep("hover null tooltip", () => InputManager.MoveMouseTo(nullTooltipText));
-            AddAssert("tooltip not shown", () => tooltipContainer.CurrentTooltip?.IsPresent != true);
+            AddAssert(
+                "tooltip not shown",
+                () => tooltipContainer.CurrentTooltip?.IsPresent != true
+            );
         }
 
         [Test]
@@ -136,27 +163,56 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             assertTooltipText(() => "updated!");
 
-            AddStep("end touch", () => InputManager.EndTouch(new Touch(TouchSource.Touch1, Vector2.Zero)));
+            AddStep(
+                "end touch",
+                () => InputManager.EndTouch(new Touch(TouchSource.Touch1, Vector2.Zero))
+            );
             AddAssert("tooltip hidden", () => tooltipContainer.CurrentTooltip?.IsPresent != true);
 
-            AddStep("begin touch", () => InputManager.BeginTouch(new Touch(TouchSource.Touch1, Vector2.Zero)));
+            AddStep(
+                "begin touch",
+                () => InputManager.BeginTouch(new Touch(TouchSource.Touch1, Vector2.Zero))
+            );
 
-            int x = 0, y = 0;
+            int x = 0,
+                y = 0;
 
-            AddSliderStep("touch x", -200, 200, 0, v =>
-            {
-                x = v;
+            AddSliderStep(
+                "touch x",
+                -200,
+                200,
+                0,
+                v =>
+                {
+                    x = v;
 
-                if (topLeftBox != null)
-                    InputManager.MoveTouchTo(new Touch(TouchSource.Touch1, topLeftBox.ScreenSpaceDrawQuad.Centre + new Vector2(x, y)));
-            });
-            AddSliderStep("touch y", -200, 200, 0, v =>
-            {
-                y = v;
+                    if (topLeftBox != null)
+                        InputManager.MoveTouchTo(
+                            new Touch(
+                                TouchSource.Touch1,
+                                topLeftBox.ScreenSpaceDrawQuad.Centre + new Vector2(x, y)
+                            )
+                        );
+                }
+            );
+            AddSliderStep(
+                "touch y",
+                -200,
+                200,
+                0,
+                v =>
+                {
+                    y = v;
 
-                if (topLeftBox != null)
-                    InputManager.MoveTouchTo(new Touch(TouchSource.Touch1, topLeftBox.ScreenSpaceDrawQuad.Centre + new Vector2(x, y)));
-            });
+                    if (topLeftBox != null)
+                        InputManager.MoveTouchTo(
+                            new Touch(
+                                TouchSource.Touch1,
+                                topLeftBox.ScreenSpaceDrawQuad.Centre + new Vector2(x, y)
+                            )
+                        );
+                }
+            );
         }
 
         private void hoverTooltipProvider(Func<Drawable> getProvider, bool waitForDisplay = true)
@@ -167,42 +223,76 @@ namespace osu.Framework.Tests.Visual.UserInterface
             AddStep("hover tooltip", () => InputManager.MoveMouseTo(getProvider()));
 
             if (waitForDisplay)
-                AddUntilStep("wait for tooltip", () => tooltipContainer.CurrentTooltip?.IsPresent == true);
+                AddUntilStep(
+                    "wait for tooltip",
+                    () => tooltipContainer.CurrentTooltip?.IsPresent == true
+                );
             else
-                AddAssert("tooltip instantly displayed", () => tooltipContainer.CurrentTooltip?.IsPresent == true);
+                AddAssert(
+                    "tooltip instantly displayed",
+                    () => tooltipContainer.CurrentTooltip?.IsPresent == true
+                );
         }
 
-        private void hoverTooltipProviderViaTouch(Func<Drawable> getProvider, bool waitForDisplay = true, Vector2? offset = null)
+        private void hoverTooltipProviderViaTouch(
+            Func<Drawable> getProvider,
+            bool waitForDisplay = true,
+            Vector2? offset = null
+        )
         {
-            AddStep("hover away from tooltips", () => InputManager.EndTouch(new Touch(TouchSource.Touch1, Vector2.Zero)));
+            AddStep(
+                "hover away from tooltips",
+                () => InputManager.EndTouch(new Touch(TouchSource.Touch1, Vector2.Zero))
+            );
             AddAssert("tooltip hidden", () => tooltipContainer.CurrentTooltip?.IsPresent != true);
 
-            AddStep("begin touch", () => InputManager.BeginTouch(new Touch(TouchSource.Touch1, getProvider().ScreenSpaceDrawQuad.Centre + (offset ?? Vector2.Zero))));
+            AddStep(
+                "begin touch",
+                () =>
+                    InputManager.BeginTouch(
+                        new Touch(
+                            TouchSource.Touch1,
+                            getProvider().ScreenSpaceDrawQuad.Centre + (offset ?? Vector2.Zero)
+                        )
+                    )
+            );
 
             if (waitForDisplay)
-                AddUntilStep("wait for tooltip", () => tooltipContainer.CurrentTooltip?.IsPresent == true);
+                AddUntilStep(
+                    "wait for tooltip",
+                    () => tooltipContainer.CurrentTooltip?.IsPresent == true
+                );
             else
-                AddAssert("tooltip instantly displayed", () => tooltipContainer.CurrentTooltip?.IsPresent == true);
+                AddAssert(
+                    "tooltip instantly displayed",
+                    () => tooltipContainer.CurrentTooltip?.IsPresent == true
+                );
         }
 
         private void assertTooltipText(Func<LocalisableString> expected)
         {
-            AddAssert("tooltip text matching", () =>
-            {
-                var drawableTooltip = (Drawable)tooltipContainer.CurrentTooltip;
-                return drawableTooltip.ChildrenOfType<IHasText>().Count(t => t.Text == expected()) == 1;
-            });
+            AddAssert(
+                "tooltip text matching",
+                () =>
+                {
+                    var drawableTooltip = (Drawable)tooltipContainer.CurrentTooltip;
+                    return drawableTooltip
+                            .ChildrenOfType<IHasText>()
+                            .Count(t => t.Text == expected()) == 1;
+                }
+            );
         }
 
-        private TooltipBox makeBox(Anchor anchor) => new TooltipBox
-        {
-            RelativeSizeAxes = Axes.Both,
-            Size = new Vector2(0.2f),
-            Anchor = anchor,
-            Origin = anchor,
-            Colour = Color4.Blue,
-            TooltipText = $"{anchor}",
-        };
+        private TooltipBox makeBox(Anchor anchor) =>
+            new TooltipBox
+            {
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(0.2f),
+                Anchor = anchor,
+                Origin = anchor,
+                Colour = Color4.Blue,
+                TooltipText = $"{anchor}",
+            };
 
         private void generateTest(bool cursorlessTooltip)
         {
@@ -216,95 +306,121 @@ namespace osu.Framework.Tests.Visual.UserInterface
                 Add(cursor);
             }
 
-            Add(tooltipContainer = new TestTooltipContainer(cursor)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+            Add(
+                tooltipContainer = new TestTooltipContainer(cursor)
                 {
-                    new Container
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        AutoSizeAxes = Axes.Both,
-                        Children = new[]
+                        new Container
                         {
-                            new TooltipBox
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            AutoSizeAxes = Axes.Both,
+                            Children = new[]
                             {
-                                TooltipText = "Outer Tooltip",
-                                Colour = Color4.CornflowerBlue,
-                                Size = new Vector2(300, 300),
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre
+                                new TooltipBox
+                                {
+                                    TooltipText = "Outer Tooltip",
+                                    Colour = Color4.CornflowerBlue,
+                                    Size = new Vector2(300, 300),
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
+                                new TooltipBox
+                                {
+                                    TooltipText = "Inner Tooltip",
+                                    Size = new Vector2(150, 150),
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
                             },
-                            new TooltipBox
-                            {
-                                TooltipText = "Inner Tooltip",
-                                Size = new Vector2(150, 150),
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre
-                            },
-                        }
-                    },
-                    new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(0, 10),
-                        Margin = new MarginPadding { Top = 150f },
-                        Children = new Drawable[]
+                        },
+                        new FillFlowContainer
                         {
-                            tooltipText = new TooltipSpriteText("this text has a tooltip!"),
-                            instantTooltipText = new InstantTooltipSpriteText("this text has an instant tooltip!"),
-                            customTooltipTextA = new CustomTooltipSpriteText("this one is custom!"),
-                            customTooltipTextB = new CustomTooltipSpriteText("this one is also!"),
-                            customTooltipTextAlt = new CustomTooltipSpriteTextAlt("but this one is different."),
-                            emptyTooltipText = new InstantTooltipSpriteText("this text has an empty tooltip!", string.Empty),
-                            nullTooltipText = new InstantTooltipSpriteText("this text has a nulled tooltip!", null),
-                            tooltipTextBox = new TooltipTextBox
+                            RelativeSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 10),
+                            Margin = new MarginPadding { Top = 150f },
+                            Children = new Drawable[]
                             {
-                                Text = "with real time updates!",
-                                Size = new Vector2(400, 30),
-                            },
-                            new TooltipContainer
-                            {
-                                AutoSizeAxes = Axes.Both,
-                                Child = new TooltipSpriteText("Nested tooltip; uses no cursor in all cases!"),
-                            },
-                            new TooltipTooltipContainer("This tooltip container has a tooltip itself!")
-                            {
-                                AutoSizeAxes = Axes.Both,
-                                Child = new Container
+                                tooltipText = new TooltipSpriteText("this text has a tooltip!"),
+                                instantTooltipText = new InstantTooltipSpriteText(
+                                    "this text has an instant tooltip!"
+                                ),
+                                customTooltipTextA = new CustomTooltipSpriteText(
+                                    "this one is custom!"
+                                ),
+                                customTooltipTextB = new CustomTooltipSpriteText(
+                                    "this one is also!"
+                                ),
+                                customTooltipTextAlt = new CustomTooltipSpriteTextAlt(
+                                    "but this one is different."
+                                ),
+                                emptyTooltipText = new InstantTooltipSpriteText(
+                                    "this text has an empty tooltip!",
+                                    string.Empty
+                                ),
+                                nullTooltipText = new InstantTooltipSpriteText(
+                                    "this text has a nulled tooltip!",
+                                    null
+                                ),
+                                tooltipTextBox = new TooltipTextBox
+                                {
+                                    Text = "with real time updates!",
+                                    Size = new Vector2(400, 30),
+                                },
+                                new TooltipContainer
                                 {
                                     AutoSizeAxes = Axes.Both,
-                                    Child = new TooltipSpriteText("Nested tooltip; uses no cursor in all cases; parent TooltipContainer has a tooltip"),
-                                }
-                            },
-                            new Container
-                            {
-                                Child = new FillFlowContainer
+                                    Child = new TooltipSpriteText(
+                                        "Nested tooltip; uses no cursor in all cases!"
+                                    ),
+                                },
+                                new TooltipTooltipContainer(
+                                    "This tooltip container has a tooltip itself!"
+                                )
                                 {
-                                    Direction = FillDirection.Vertical,
-                                    Spacing = new Vector2(0, 8),
-                                    Children = new[]
+                                    AutoSizeAxes = Axes.Both,
+                                    Child = new Container
                                     {
-                                        new Container
+                                        AutoSizeAxes = Axes.Both,
+                                        Child = new TooltipSpriteText(
+                                            "Nested tooltip; uses no cursor in all cases; parent TooltipContainer has a tooltip"
+                                        ),
+                                    },
+                                },
+                                new Container
+                                {
+                                    Child = new FillFlowContainer
+                                    {
+                                        Direction = FillDirection.Vertical,
+                                        Spacing = new Vector2(0, 8),
+                                        Children = new[]
                                         {
-                                            Child = new Container
+                                            new Container
                                             {
-                                                Child = new TooltipSpriteText("Tooltip within containers with zero size; i.e. parent is never hovered."),
-                                            }
+                                                Child = new Container
+                                                {
+                                                    Child = new TooltipSpriteText(
+                                                        "Tooltip within containers with zero size; i.e. parent is never hovered."
+                                                    ),
+                                                },
+                                            },
+                                            new Container
+                                            {
+                                                Child = new TooltipSpriteText(
+                                                    "Other tooltip within containers with zero size; different nesting; overlap."
+                                                ),
+                                            },
                                         },
-                                        new Container
-                                        {
-                                            Child = new TooltipSpriteText("Other tooltip within containers with zero size; different nesting; overlap."),
-                                        }
-                                    }
-                                }
-                            }
+                                    },
+                                },
+                            },
                         },
-                    }
+                    },
                 }
-            });
+            );
 
             tooltipContainer.Add(makeBox(Anchor.BottomLeft));
             tooltipContainer.Add(topLeftBox = makeBox(Anchor.TopLeft));
@@ -317,9 +433,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
             public new ITooltip CurrentTooltip => base.CurrentTooltip;
 
             public TestTooltipContainer(CursorContainer cursor)
-                : base(cursor)
-            {
-            }
+                : base(cursor) { }
         }
 
         private partial class CustomTooltipSpriteText : Container, IHasCustomTooltip
@@ -331,13 +445,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
                 TooltipContent = new CustomContent(tooltipContent ?? displayedContent);
 
                 AutoSizeAxes = Axes.Both;
-                Children = new[]
-                {
-                    new SpriteText
-                    {
-                        Text = displayedContent,
-                    }
-                };
+                Children = new[] { new SpriteText { Text = displayedContent } };
             }
 
             public virtual ITooltip GetCustomTooltip() => new CustomTooltip();
@@ -346,9 +454,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
         private partial class CustomTooltipSpriteTextAlt : CustomTooltipSpriteText
         {
             public CustomTooltipSpriteTextAlt(string displayedContent, string tooltipContent = null)
-                : base(displayedContent, tooltipContent)
-            {
-            }
+                : base(displayedContent, tooltipContent) { }
 
             public override ITooltip GetCustomTooltip() => new CustomTooltipAlt();
         }
@@ -375,11 +481,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = FrameworkColour.GreenDark,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = FrameworkColour.GreenDark },
                     text = new SpriteText
                     {
                         Font = FrameworkFont.Regular.With(size: 16),
@@ -390,7 +492,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
                         Anchor = Anchor.BottomLeft,
                         Font = FontUsage.Default.With(size: 12),
                         Colour = Color4.Yellow,
-                        Text = $"Custom tooltip instance {i++}"
+                        Text = $"Custom tooltip instance {i++}",
                     },
                 };
             }
@@ -415,36 +517,24 @@ namespace osu.Framework.Tests.Visual.UserInterface
             public LocalisableString TooltipText { get; }
 
             public TooltipSpriteText(string displayedContent)
-                : this(displayedContent, displayedContent)
-            {
-            }
+                : this(displayedContent, displayedContent) { }
 
             protected TooltipSpriteText(string displayedContent, string tooltipContent)
             {
                 TooltipText = tooltipContent;
 
                 AutoSizeAxes = Axes.Both;
-                Children = new[]
-                {
-                    new SpriteText
-                    {
-                        Text = displayedContent,
-                    }
-                };
+                Children = new[] { new SpriteText { Text = displayedContent } };
             }
         }
 
         private partial class InstantTooltipSpriteText : TooltipSpriteText, IHasAppearDelay
         {
             public InstantTooltipSpriteText(string tooltipContent)
-                : base(tooltipContent, tooltipContent)
-            {
-            }
+                : base(tooltipContent, tooltipContent) { }
 
             public InstantTooltipSpriteText(string displayedContent, string tooltipContent)
-                : base(displayedContent, tooltipContent)
-            {
-            }
+                : base(displayedContent, tooltipContent) { }
 
             public double AppearDelay => 0;
         }

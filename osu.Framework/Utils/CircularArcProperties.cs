@@ -17,7 +17,13 @@ namespace osu.Framework.Utils
 
         public double ThetaEnd => ThetaStart + ThetaRange * Direction;
 
-        public CircularArcProperties(double thetaStart, double thetaRange, double direction, float radius, Vector2 centre)
+        public CircularArcProperties(
+            double thetaStart,
+            double thetaRange,
+            double direction,
+            float radius,
+            Vector2 centre
+        )
         {
             IsValid = true;
             ThetaStart = thetaStart;
@@ -55,9 +61,11 @@ namespace osu.Framework.Utils
             float bSq = b.LengthSquared;
             float cSq = c.LengthSquared;
 
-            Centre = new Vector2(
-                aSq * (b - c).Y + bSq * (c - a).Y + cSq * (a - b).Y,
-                aSq * (c - b).X + bSq * (a - c).X + cSq * (b - a).X) / d;
+            Centre =
+                new Vector2(
+                    aSq * (b - c).Y + bSq * (c - a).Y + cSq * (a - b).Y,
+                    aSq * (c - b).X + bSq * (a - c).X + cSq * (b - a).X
+                ) / d;
 
             Vector2 dA = a - Centre;
             Vector2 dC = c - Centre;

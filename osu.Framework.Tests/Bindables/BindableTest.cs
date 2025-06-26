@@ -77,7 +77,9 @@ namespace osu.Framework.Tests.Bindables
             Assert.That(bindable4.Value, Is.EqualTo("string value"));
 
             // parsing bindable of different type should throw exception.
-            Assert.Throws<ArgumentException>(() => bindable1.Parse(new BindableDouble(3.0), CultureInfo.InvariantCulture));
+            Assert.Throws<ArgumentException>(() =>
+                bindable1.Parse(new BindableDouble(3.0), CultureInfo.InvariantCulture)
+            );
         }
 
         [Test]
@@ -98,11 +100,20 @@ namespace osu.Framework.Tests.Bindables
         [TestCaseSource(nameof(getParsingConversionTests))]
         public void TestParse(Type type, object input, object output)
         {
-            object bindable = Activator.CreateInstance(typeof(Bindable<>).MakeGenericType(type), type == typeof(string) ? "" : Activator.CreateInstance(type));
+            object bindable = Activator.CreateInstance(
+                typeof(Bindable<>).MakeGenericType(type),
+                type == typeof(string) ? "" : Activator.CreateInstance(type)
+            );
             Debug.Assert(bindable != null);
 
             ((IParseable)bindable).Parse(input, CultureInfo.InvariantCulture);
-            object value = bindable.GetType().GetProperty(nameof(Bindable<object>.Value), BindingFlags.Public | BindingFlags.Instance)?.GetValue(bindable);
+            object value = bindable
+                .GetType()
+                .GetProperty(
+                    nameof(Bindable<object>.Value),
+                    BindingFlags.Public | BindingFlags.Instance
+                )
+                ?.GetValue(bindable);
 
             Assert.That(value, Is.EqualTo(output));
         }
@@ -112,7 +123,10 @@ namespace osu.Framework.Tests.Bindables
         public void TestParseNullIntoValueType()
         {
             Bindable<int> bindable = new Bindable<int>();
-            Assert.That(() => bindable.Parse(null, CultureInfo.InvariantCulture), Throws.ArgumentNullException);
+            Assert.That(
+                () => bindable.Parse(null, CultureInfo.InvariantCulture),
+                Throws.ArgumentNullException
+            );
         }
 
         // Bindable<int>.Parse(string.Empty, CultureInfo.InvariantCulture)
@@ -120,7 +134,9 @@ namespace osu.Framework.Tests.Bindables
         public void TestParseEmptyStringIntoValueType()
         {
             Bindable<int> bindable = new Bindable<int>();
-            Assert.Throws<FormatException>(() => bindable.Parse(string.Empty, CultureInfo.InvariantCulture));
+            Assert.Throws<FormatException>(() =>
+                bindable.Parse(string.Empty, CultureInfo.InvariantCulture)
+            );
         }
 
         // Bindable<int?>.Parse(null, CultureInfo.InvariantCulture)
@@ -195,6 +211,7 @@ namespace osu.Framework.Tests.Bindables
             bindable.Parse(string.Empty, CultureInfo.InvariantCulture);
             Assert.That(bindable.Value, Is.Null);
         }
+
 #nullable disable
 
         [Test]
@@ -245,6 +262,7 @@ namespace osu.Framework.Tests.Bindables
             bindable.Parse(string.Empty, CultureInfo.InvariantCulture);
             Assert.That(bindable.Value, Is.Empty);
         }
+
 #nullable disable
 
         private static IEnumerable<object[]> getParsingConversionTests()
@@ -265,15 +283,31 @@ namespace osu.Framework.Tests.Bindables
                 typeof(byte),
                 typeof(sbyte),
                 typeof(decimal),
-                typeof(string)
+                typeof(string),
             };
 
             object[] inputs =
             {
-                1, "1", 1.0, 1.0f, 1L, 1m,
-                1.5, "1.5", 1.5f, 1.5m,
-                -1, "-1", -1.0, -1.0f, -1L, -1m,
-                -1.5, "-1.5", -1.5f, -1.5m,
+                1,
+                "1",
+                1.0,
+                1.0f,
+                1L,
+                1m,
+                1.5,
+                "1.5",
+                1.5f,
+                1.5m,
+                -1,
+                "-1",
+                -1.0,
+                -1.0f,
+                -1L,
+                -1m,
+                -1.5,
+                "-1.5",
+                -1.5f,
+                -1.5m,
             };
 
             foreach (var type in testTypes)
@@ -284,7 +318,11 @@ namespace osu.Framework.Tests.Bindables
 
                     try
                     {
-                        expectedOutput = Convert.ChangeType(input, type, CultureInfo.InvariantCulture);
+                        expectedOutput = Convert.ChangeType(
+                            input,
+                            type,
+                            CultureInfo.InvariantCulture
+                        );
                     }
                     catch
                     {
@@ -298,8 +336,6 @@ namespace osu.Framework.Tests.Bindables
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local
-        private class TestClass
-        {
-        }
+        private class TestClass { }
     }
 }

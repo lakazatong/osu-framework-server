@@ -8,8 +8,6 @@ namespace osu.Framework.Input.Events
     public class TouchDownEvent : TouchEvent
     {
         public TouchDownEvent(InputState state, Touch touch)
-            : base(state, touch, touch.Position)
-        {
-        }
+            : base(state, touch, touch.Position) { }
     }
 }

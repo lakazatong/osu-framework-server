@@ -99,7 +99,9 @@ namespace osu.Framework.Benchmarks
         public void SetShaderStorageBufferObjectData()
         {
             for (int i = 0; i < 10000; i++)
-                consumer.Consume(RenderEvent.Create(default(SetShaderStorageBufferObjectDataEvent)));
+                consumer.Consume(
+                    RenderEvent.Create(default(SetShaderStorageBufferObjectDataEvent))
+                );
         }
 
         [Benchmark]

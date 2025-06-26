@@ -15,11 +15,12 @@ namespace osu.Framework.Graphics.UserInterface
             Content.Padding = new MarginPadding(10);
         }
 
-        protected override Drawable CreateArrow() => new EquilateralTriangle
-        {
-            Colour = FrameworkColour.GreenDark,
-            Origin = Anchor.TopCentre
-        };
+        protected override Drawable CreateArrow() =>
+            new EquilateralTriangle
+            {
+                Colour = FrameworkColour.GreenDark,
+                Origin = Anchor.TopCentre,
+            };
 
         protected override void AnchorUpdated(Anchor anchor)
         {

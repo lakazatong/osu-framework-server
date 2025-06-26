@@ -9,7 +9,8 @@ namespace osu.Framework.Input.Events
     /// An event representing a press of a key binding combination.
     /// </summary>
     /// <typeparam name="T">The action type.</typeparam>
-    public class KeyBindingPressEvent<T> : KeyBindingEvent<T> where T : struct
+    public class KeyBindingPressEvent<T> : KeyBindingEvent<T>
+        where T : struct
     {
         /// <summary>
         /// Whether this is a repeated event resulted from a held keyboard key.

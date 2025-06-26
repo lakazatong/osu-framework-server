@@ -30,13 +30,9 @@ namespace osu.Framework.Graphics.Rendering.Dummy
             Height = height;
         }
 
-        public void FlushUploads()
-        {
-        }
+        public void FlushUploads() { }
 
-        public void SetData(ITextureUpload upload)
-        {
-        }
+        public void SetData(ITextureUpload upload) { }
 
         public bool Upload() => true;
 
@@ -46,8 +42,6 @@ namespace osu.Framework.Graphics.Rendering.Dummy
 
         public ulong BindCount => 0;
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

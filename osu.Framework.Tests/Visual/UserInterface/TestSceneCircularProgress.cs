@@ -46,7 +46,12 @@ namespace osu.Framework.Tests.Visual.UserInterface
             for (int i = 0; i < width; ++i)
             {
                 float brightness = (float)i / (width - 1);
-                image[i, 0] = new Rgba32((byte)(128 + (1 - brightness) * 127), (byte)(128 + brightness * 127), 128, 255);
+                image[i, 0] = new Rgba32(
+                    (byte)(128 + (1 - brightness) * 127),
+                    (byte)(128 + brightness * 127),
+                    128,
+                    255
+                );
             }
 
             gradientTextureHorizontal.SetData(new TextureUpload(image));
@@ -58,7 +63,12 @@ namespace osu.Framework.Tests.Visual.UserInterface
             for (int i = 0; i < width; ++i)
             {
                 float brightness = (float)i / (width - 1);
-                image[i, 0] = new Rgba32((byte)(128 + (1 - brightness) * 127), (byte)(128 + brightness * 127), 128, 255);
+                image[i, 0] = new Rgba32(
+                    (byte)(128 + (1 - brightness) * 127),
+                    (byte)(128 + brightness * 127),
+                    128,
+                    255
+                );
             }
 
             gradientTextureVertical.SetData(new TextureUpload(image));
@@ -77,7 +87,8 @@ namespace osu.Framework.Tests.Visual.UserInterface
                         (byte)(128 + (1 + brightness - brightness2) / 2 * 127),
                         (byte)(128 + (1 + brightness2 - brightness) / 2 * 127),
                         (byte)(128 + (brightness + brightness2) / 2 * 127),
-                        255);
+                        255
+                    );
                 }
             }
 
@@ -102,41 +113,159 @@ namespace osu.Framework.Tests.Visual.UserInterface
                     Origin = Anchor.Centre,
                     Size = new Vector2(250),
                     CornerRadius = 20,
-                    Child = clock = new CircularProgress
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(400)
-                    }
-                }
+                    Child = clock =
+                        new CircularProgress
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(400),
+                        },
+                },
             };
 
-            AddStep("Forward", delegate { setRotationMode(1); });
-            AddStep("Backward", delegate { setRotationMode(2); });
-            AddStep("Transition Focus", delegate { setRotationMode(3); });
-            AddStep("Transition Focus 2", delegate { setRotationMode(4); });
-            AddStep("Forward/Backward", delegate { setRotationMode(0); });
+            AddStep(
+                "Forward",
+                delegate
+                {
+                    setRotationMode(1);
+                }
+            );
+            AddStep(
+                "Backward",
+                delegate
+                {
+                    setRotationMode(2);
+                }
+            );
+            AddStep(
+                "Transition Focus",
+                delegate
+                {
+                    setRotationMode(3);
+                }
+            );
+            AddStep(
+                "Transition Focus 2",
+                delegate
+                {
+                    setRotationMode(4);
+                }
+            );
+            AddStep(
+                "Forward/Backward",
+                delegate
+                {
+                    setRotationMode(0);
+                }
+            );
 
-            AddStep("Horizontal Gradient Texture", delegate { setTexture(1); });
-            AddStep("Vertical Gradient Texture", delegate { setTexture(2); });
-            AddStep("2D Gradient Texture", delegate { setTexture(3); });
-            AddStep("Texture Atlas Texture", delegate { setTexture(4); });
-            AddStep("White Texture", delegate { setTexture(0); });
+            AddStep(
+                "Horizontal Gradient Texture",
+                delegate
+                {
+                    setTexture(1);
+                }
+            );
+            AddStep(
+                "Vertical Gradient Texture",
+                delegate
+                {
+                    setTexture(2);
+                }
+            );
+            AddStep(
+                "2D Gradient Texture",
+                delegate
+                {
+                    setTexture(3);
+                }
+            );
+            AddStep(
+                "Texture Atlas Texture",
+                delegate
+                {
+                    setTexture(4);
+                }
+            );
+            AddStep(
+                "White Texture",
+                delegate
+                {
+                    setTexture(0);
+                }
+            );
 
-            AddStep("Red Colour", delegate { setColour(1); });
-            AddStep("Horzontal Gradient Colour", delegate { setColour(2); });
-            AddStep("Vertical Gradient Colour", delegate { setColour(3); });
-            AddStep("2D Gradient Colour", delegate { setColour(4); });
-            AddStep("White Colour", delegate { setColour(0); });
+            AddStep(
+                "Red Colour",
+                delegate
+                {
+                    setColour(1);
+                }
+            );
+            AddStep(
+                "Horzontal Gradient Colour",
+                delegate
+                {
+                    setColour(2);
+                }
+            );
+            AddStep(
+                "Vertical Gradient Colour",
+                delegate
+                {
+                    setColour(3);
+                }
+            );
+            AddStep(
+                "2D Gradient Colour",
+                delegate
+                {
+                    setColour(4);
+                }
+            );
+            AddStep(
+                "White Colour",
+                delegate
+                {
+                    setColour(0);
+                }
+            );
 
-            AddStep("Forward Transform", delegate { transform(0); });
-            AddStep("Backward Transform", delegate { transform(1); });
-            AddStep("Fwd/Bwd Transform", delegate { transform(2); });
-            AddStep("Easing Transform", delegate { transform(3); });
+            AddStep(
+                "Forward Transform",
+                delegate
+                {
+                    transform(0);
+                }
+            );
+            AddStep(
+                "Backward Transform",
+                delegate
+                {
+                    transform(1);
+                }
+            );
+            AddStep(
+                "Fwd/Bwd Transform",
+                delegate
+                {
+                    transform(2);
+                }
+            );
+            AddStep(
+                "Easing Transform",
+                delegate
+                {
+                    transform(3);
+                }
+            );
 
             AddToggleStep("Toggle masking", m => maskingContainer.Masking = m);
             AddToggleStep("Toggle rounded caps", r => clock.RoundedCaps = r);
-            AddToggleStep("Toggle aspect ratio", r => clock.Size = r ? new Vector2(600, 400) : new Vector2(400));
+            AddToggleStep(
+                "Toggle aspect ratio",
+                r => clock.Size = r ? new Vector2(600, 400) : new Vector2(400)
+            );
             AddToggleStep("Toggle background", b => background.Alpha = b ? 1 : 0);
             AddSliderStep("Scale", 0f, 2f, 1f, s => clock.Scale = new Vector2(s));
             AddSliderStep("Fill", 0f, 1f, 0.5f, f => clock.InnerRadius = f);
@@ -161,11 +290,14 @@ namespace osu.Framework.Tests.Visual.UserInterface
                     break;
 
                 case 3:
-                    clock.Progress = Time.Current % transition_period / transition_period / 5 - 0.1f;
+                    clock.Progress =
+                        Time.Current % transition_period / transition_period / 5 - 0.1f;
                     break;
 
                 case 4:
-                    clock.Progress = (Time.Current % transition_period / transition_period / 5 - 0.1f + 2) % 2 - 1;
+                    clock.Progress =
+                        (Time.Current % transition_period / transition_period / 5 - 0.1f + 2) % 2
+                        - 1;
                     break;
             }
         }

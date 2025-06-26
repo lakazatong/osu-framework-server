@@ -12,9 +12,11 @@ namespace osu.Framework.Input.Events
     /// </summary>
     public class DoubleClickEvent : MouseButtonEvent
     {
-        public DoubleClickEvent(InputState state, MouseButton button, Vector2? screenSpaceMouseDownPosition = null)
-            : base(state, button, screenSpaceMouseDownPosition)
-        {
-        }
+        public DoubleClickEvent(
+            InputState state,
+            MouseButton button,
+            Vector2? screenSpaceMouseDownPosition = null
+        )
+            : base(state, button, screenSpaceMouseDownPosition) { }
     }
 }

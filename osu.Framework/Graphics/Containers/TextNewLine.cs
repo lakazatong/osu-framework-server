@@ -15,7 +15,9 @@ namespace osu.Framework.Graphics.Containers
             this.indicatesNewParagraph = indicatesNewParagraph;
         }
 
-        protected override IEnumerable<Drawable> CreateDrawablesFor(TextFlowContainer textFlowContainer)
+        protected override IEnumerable<Drawable> CreateDrawablesFor(
+            TextFlowContainer textFlowContainer
+        )
         {
             var newLineContainer = new TextFlowContainer.NewLineContainer(indicatesNewParagraph);
             return newLineContainer.Yield();

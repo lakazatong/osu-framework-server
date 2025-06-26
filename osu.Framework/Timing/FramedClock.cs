@@ -64,7 +64,8 @@ namespace osu.Framework.Timing
 
         public virtual void ProcessFrame()
         {
-            betweenFrameTimes[totalFramesProcessed % betweenFrameTimes.Length] = CurrentTime - LastFrameTime;
+            betweenFrameTimes[totalFramesProcessed % betweenFrameTimes.Length] =
+                CurrentTime - LastFrameTime;
             totalFramesProcessed++;
 
             if (processSource && Source is IFrameBasedClock framedSource)
@@ -81,7 +82,8 @@ namespace osu.Framework.Timing
                 }
                 else
                 {
-                    FramesPerSecond = (int)Math.Ceiling(framesSinceLastCalculation * 1000f / timeSinceLastCalculation);
+                    FramesPerSecond = (int)
+                        Math.Ceiling(framesSinceLastCalculation * 1000f / timeSinceLastCalculation);
 
                     // simple stddev
                     double sum = 0;
@@ -109,6 +111,7 @@ namespace osu.Framework.Timing
             CurrentTime = SourceTime;
         }
 
-        public override string ToString() => $@"{GetType().ReadableName()} ({Math.Truncate(CurrentTime)}ms, {FramesPerSecond} FPS)";
+        public override string ToString() =>
+            $@"{GetType().ReadableName()} ({Math.Truncate(CurrentTime)}ms, {FramesPerSecond} FPS)";
     }
 }

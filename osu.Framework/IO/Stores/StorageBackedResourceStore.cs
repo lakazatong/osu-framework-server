@@ -33,7 +33,10 @@ namespace osu.Framework.IO.Stores
                 return stream?.ReadAllBytesToArray();
         }
 
-        public virtual async Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default)
+        public virtual async Task<byte[]> GetAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        )
         {
             this.LogIfNonBackgroundThread(name);
 
@@ -42,7 +45,9 @@ namespace osu.Framework.IO.Stores
                 if (stream == null)
                     return null;
 
-                return await stream.ReadAllBytesToArrayAsync(cancellationToken).ConfigureAwait(false);
+                return await stream
+                    .ReadAllBytesToArrayAsync(cancellationToken)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -54,13 +59,14 @@ namespace osu.Framework.IO.Stores
         }
 
         public IEnumerable<string> GetAvailableResources() =>
-            storage.GetDirectories(string.Empty).SelectMany(d => storage.GetFiles(d)).ExcludeSystemFileNames();
+            storage
+                .GetDirectories(string.Empty)
+                .SelectMany(d => storage.GetFiles(d))
+                .ExcludeSystemFileNames();
 
         #region IDisposable Support
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         #endregion
     }

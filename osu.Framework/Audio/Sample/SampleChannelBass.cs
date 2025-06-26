@@ -57,7 +57,8 @@ namespace osu.Framework.Audio.Sample
 
         private bool hasChannel => channel != 0;
 
-        public override ChannelAmplitudes CurrentAmplitudes => (bassAmplitudeProcessor ??= new BassAmplitudeProcessor(this)).CurrentAmplitudes;
+        public override ChannelAmplitudes CurrentAmplitudes =>
+            (bassAmplitudeProcessor ??= new BassAmplitudeProcessor(this)).CurrentAmplitudes;
 
         private readonly BassRelativeFrequencyHandler relativeFrequencyHandler;
         private BassAmplitudeProcessor? bassAmplitudeProcessor;
@@ -188,34 +189,40 @@ namespace osu.Framework.Audio.Sample
                 bassMixer.ChannelPause(this);
         }
 
-        private void setLoopFlag(bool value) => EnqueueAction(() =>
-        {
-            if (hasChannel)
-                Bass.ChannelFlags(channel, value ? BassFlags.Loop : BassFlags.Default, BassFlags.Loop);
-        });
+        private void setLoopFlag(bool value) =>
+            EnqueueAction(() =>
+            {
+                if (hasChannel)
+                    Bass.ChannelFlags(
+                        channel,
+                        value ? BassFlags.Loop : BassFlags.Default,
+                        BassFlags.Loop
+                    );
+            });
 
-        private void ensureChannel() => EnqueueAction(() =>
-        {
-            if (hasChannel)
-                return;
+        private void ensureChannel() =>
+            EnqueueAction(() =>
+            {
+                if (hasChannel)
+                    return;
 
-            BassFlags flags = BassFlags.SampleChannelStream | BassFlags.Decode;
+                BassFlags flags = BassFlags.SampleChannelStream | BassFlags.Decode;
 
-            // While this shouldn't cause issues, we've had a small subset of users reporting issues on windows.
-            // To keep things working let's only apply to other platforms until we know more.
-            // See https://github.com/ppy/osu/issues/18652.
-            if (RuntimeInfo.OS != RuntimeInfo.Platform.Windows)
-                flags |= BassFlags.AsyncFile;
+                // While this shouldn't cause issues, we've had a small subset of users reporting issues on windows.
+                // To keep things working let's only apply to other platforms until we know more.
+                // See https://github.com/ppy/osu/issues/18652.
+                if (RuntimeInfo.OS != RuntimeInfo.Platform.Windows)
+                    flags |= BassFlags.AsyncFile;
 
-            channel = Bass.SampleGetChannel(sample.SampleId, flags);
+                channel = Bass.SampleGetChannel(sample.SampleId, flags);
 
-            if (!hasChannel)
-                return;
+                if (!hasChannel)
+                    return;
 
-            setLoopFlag(Looping);
+                setLoopFlag(Looping);
 
-            relativeFrequencyHandler.SetChannel(channel);
-        });
+                relativeFrequencyHandler.SetChannel(channel);
+            });
 
         #region Mixing
 

@@ -149,7 +149,7 @@ namespace osu.Framework.Tests.Lists
             {
                 { 1, 2, null },
                 { null, 3, 4 },
-                { 5, 6, null }
+                { 5, 6, null },
             };
 
             int?[,] result = original.Invert();
@@ -174,7 +174,7 @@ namespace osu.Framework.Tests.Lists
                 new int?[] { 1, 2, null },
                 new int?[] { 3, 4 },
                 null,
-                new int?[] { null, 5, 6, 7, 8 }
+                new int?[] { null, 5, 6, 7, 8 },
             };
 
             int?[][] result = original.Invert();

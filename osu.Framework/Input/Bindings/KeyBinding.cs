@@ -29,16 +29,12 @@ namespace osu.Framework.Input.Bindings
         /// <param name="key">The key which will trigger this binding.</param>
         /// <param name="action">The resultant action which is triggered by this binding. Usually an enum type.</param>
         public KeyBinding(InputKey key, object action)
-            : this((KeyCombination)key, action)
-        {
-        }
+            : this((KeyCombination)key, action) { }
 
         /// <summary>
         /// Constructor for derived classes that may require serialisation.
         /// </summary>
-        public KeyBinding()
-        {
-        }
+        public KeyBinding() { }
 
         public override string ToString() => $"{KeyCombination}=>{Action}";
     }

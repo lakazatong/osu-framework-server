@@ -27,7 +27,10 @@ namespace osu.Framework.Tests.Visual.Testing
         [Test]
         public void AddGameUsingStandardMethodThrows()
         {
-            AddStep("Add game via add throws", () => Assert.Throws<InvalidOperationException>(() => Add(new TestGame())));
+            AddStep(
+                "Add game via add throws",
+                () => Assert.Throws<InvalidOperationException>(() => Add(new TestGame()))
+            );
         }
 
         [Test]
@@ -93,13 +96,15 @@ namespace osu.Framework.Tests.Visual.Testing
             [BackgroundDependencyLoader]
             private void load()
             {
-                Add(box = new Box
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(150, 150),
-                    Colour = Color4.Tomato
-                });
+                Add(
+                    box = new Box
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(150, 150),
+                        Colour = Color4.Tomato,
+                    }
+                );
             }
 
             protected override void Update()

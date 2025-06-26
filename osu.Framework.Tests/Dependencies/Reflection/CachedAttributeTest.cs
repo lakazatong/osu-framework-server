@@ -16,7 +16,10 @@ using osu.Framework.Testing.Dependencies;
 namespace osu.Framework.Tests.Dependencies.Reflection
 {
     [TestFixture]
-    [SuppressMessage("Performance", "OFSG001:Class contributes to dependency injection and should be partial")]
+    [SuppressMessage(
+        "Performance",
+        "OFSG001:Class contributes to dependency injection and should be partial"
+    )]
     public class CachedAttributeTest
     {
         [Test]
@@ -24,7 +27,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider1();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(provider, dependencies.Get<Provider1>());
         }
@@ -34,7 +40,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider2();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(provider, dependencies.Get<object>());
         }
@@ -44,7 +53,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider3();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(provider, dependencies.Get<Provider1>());
             Assert.AreEqual(null, dependencies.Get<Provider3>());
@@ -55,7 +67,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider4();
 
-            Assert.Throws<ArgumentException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<ArgumentException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -63,7 +77,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider5();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNotNull(dependencies.Get<ProvidedType1>());
             Assert.IsNotNull(dependencies.Get<ProvidedType2>());
@@ -74,7 +91,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider6();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(provider.Provided3, dependencies.Get<ProvidedType1>());
         }
@@ -84,7 +104,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider7();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNotNull(dependencies.Get<object>());
             Assert.IsNotNull(dependencies.Get<ProvidedType1>());
@@ -95,7 +118,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider8();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNotNull(dependencies.Get<object>());
             Assert.IsNotNull(dependencies.Get<Provider8>());
@@ -106,7 +132,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider9();
 
-            Assert.Throws<ArgumentException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<ArgumentException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -114,7 +142,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider10();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNull(dependencies.Get<object>());
             Assert.IsNotNull(dependencies.Get<ProvidedType1>());
@@ -125,7 +156,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider11();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNotNull(dependencies.Get<IProvidedInterface1>());
             Assert.IsNotNull(dependencies.Get<ProvidedType1>());
@@ -136,7 +170,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider12();
 
-            Assert.Throws<ArgumentException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<ArgumentException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         /// <summary>
@@ -147,9 +183,15 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new CachedStructProvider();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
-            Assert.AreEqual(provider.CachedObject.Value, dependencies.GetValue<CachedStructProvider.Struct>().Value);
+            Assert.AreEqual(
+                provider.CachedObject.Value,
+                dependencies.GetValue<CachedStructProvider.Struct>().Value
+            );
         }
 
         [Test]
@@ -169,7 +211,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
             provider.SetValue(testValue);
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(testValue, dependencies.GetValue<int?>());
         }
@@ -179,7 +224,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider13();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -187,7 +234,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider14();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -195,7 +244,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider15();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -203,7 +254,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider16();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -211,7 +264,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider17();
 
-            Assert.DoesNotThrow(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.DoesNotThrow(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -219,7 +274,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider18();
 
-            Assert.Throws<NullDependencyException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<NullDependencyException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -227,7 +284,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider19();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNotNull(dependencies.Get<object>());
         }
@@ -237,7 +297,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider20();
 
-            Assert.DoesNotThrow(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.DoesNotThrow(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -245,7 +307,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider21();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -253,7 +317,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider22();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -261,7 +327,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider23();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -269,7 +337,9 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider24();
 
-            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() => DependencyActivator.MergeDependencies(provider, new DependencyContainer()));
+            Assert.Throws<AccessModifierNotAllowedForCachedValueException>(() =>
+                DependencyActivator.MergeDependencies(provider, new DependencyContainer())
+            );
         }
 
         [Test]
@@ -277,7 +347,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider25();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.IsNotNull(dependencies.Get<IProviderInterface3>());
             Assert.IsNotNull(dependencies.Get<IProviderInterface2>());
@@ -288,7 +361,10 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider26();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(provider, dependencies.Get<Provider1>());
             Assert.IsNull(dependencies.Get<Provider26>());
@@ -299,43 +375,32 @@ namespace osu.Framework.Tests.Dependencies.Reflection
         {
             var provider = new Provider27();
 
-            var dependencies = DependencyActivator.MergeDependencies(provider, new DependencyContainer());
+            var dependencies = DependencyActivator.MergeDependencies(
+                provider,
+                new DependencyContainer()
+            );
 
             Assert.AreEqual(provider, dependencies.Get<IProviderInterface2>());
             Assert.IsNull(dependencies.Get<IProviderInterface4>());
             Assert.IsNull(dependencies.Get<Provider27>());
         }
 
-        private interface IProvidedInterface1
-        {
-        }
+        private interface IProvidedInterface1 { }
 
-        private class ProvidedType1 : IProvidedInterface1
-        {
-        }
+        private class ProvidedType1 : IProvidedInterface1 { }
 
-        private class ProvidedType2
-        {
-        }
+        private class ProvidedType2 { }
 
-        private struct ProvidedType3 : IProvidedInterface1
-        {
-        }
+        private struct ProvidedType3 : IProvidedInterface1 { }
 
         [Cached]
-        private class Provider1 : IDependencyInjectionCandidate
-        {
-        }
+        private class Provider1 : IDependencyInjectionCandidate { }
 
         [Cached(Type = typeof(object))]
-        private class Provider2 : IDependencyInjectionCandidate
-        {
-        }
+        private class Provider2 : IDependencyInjectionCandidate { }
 
         [Cached(Type = typeof(Provider1))]
-        private class Provider3 : Provider1
-        {
-        }
+        private class Provider3 : Provider1 { }
 
         private class Provider4 : IDependencyInjectionCandidate
         {
@@ -369,9 +434,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
 
         [Cached]
         [Cached(Type = typeof(object))]
-        private class Provider8 : IDependencyInjectionCandidate
-        {
-        }
+        private class Provider8 : IDependencyInjectionCandidate { }
 
         private class Provider9 : IDependencyInjectionCandidate
         {
@@ -460,9 +523,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             public object Provided1
             {
                 get => null;
-                set
-                {
-                }
+                set { }
             }
         }
 
@@ -471,9 +532,7 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             [Cached]
             public object Provided1
             {
-                set
-                {
-                }
+                set { }
             }
         }
 
@@ -483,30 +542,18 @@ namespace osu.Framework.Tests.Dependencies.Reflection
             public object Provided1 => null;
         }
 
-        private class Provider25 : IProviderInterface3
-        {
-        }
+        private class Provider25 : IProviderInterface3 { }
 
-        private class Provider26 : Provider1
-        {
-        }
+        private class Provider26 : Provider1 { }
 
-        private class Provider27 : IProviderInterface4
-        {
-        }
+        private class Provider27 : IProviderInterface4 { }
 
         [Cached]
-        private interface IProviderInterface3 : IProviderInterface2
-        {
-        }
+        private interface IProviderInterface3 : IProviderInterface2 { }
 
         [Cached]
-        private interface IProviderInterface2 : IDependencyInjectionCandidate
-        {
-        }
+        private interface IProviderInterface2 : IDependencyInjectionCandidate { }
 
-        private interface IProviderInterface4 : IProviderInterface2
-        {
-        }
+        private interface IProviderInterface4 : IProviderInterface2 { }
     }
 }

@@ -2,10 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
-using osuTK;
 using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Sprites;
+using osuTK;
 
 namespace osu.Framework.Graphics.Shapes
 {
@@ -30,31 +30,39 @@ namespace osu.Framework.Graphics.Shapes
             Texture ??= renderer.WhitePixel;
         }
 
-        public override RectangleF BoundingBox => toTriangle(ToParentSpace(LayoutRectangle)).AABBFloat;
+        public override RectangleF BoundingBox =>
+            toTriangle(ToParentSpace(LayoutRectangle)).AABBFloat;
 
-        private static Primitives.Triangle toTriangle(Quad q) => new Primitives.Triangle(
-            (q.TopLeft + q.TopRight) / 2,
-            q.BottomLeft,
-            q.BottomRight);
+        private static Primitives.Triangle toTriangle(Quad q) =>
+            new Primitives.Triangle((q.TopLeft + q.TopRight) / 2, q.BottomLeft, q.BottomRight);
 
-        public override bool Contains(Vector2 screenSpacePos) => toTriangle(ScreenSpaceDrawQuad).Contains(screenSpacePos);
+        public override bool Contains(Vector2 screenSpacePos) =>
+            toTriangle(ScreenSpaceDrawQuad).Contains(screenSpacePos);
 
         protected override DrawNode CreateDrawNode() => new TriangleDrawNode(this);
 
         private class TriangleDrawNode : SpriteDrawNode
         {
             public TriangleDrawNode(Triangle source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             protected override void Blit(IRenderer renderer)
             {
                 if (DrawRectangle.Width == 0 || DrawRectangle.Height == 0)
                     return;
 
-                renderer.DrawTriangle(Texture, toTriangle(ScreenSpaceDrawQuad), DrawColourInfo.Colour, null, null,
-                    new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height), TextureCoords);
+                renderer.DrawTriangle(
+                    Texture,
+                    toTriangle(ScreenSpaceDrawQuad),
+                    DrawColourInfo.Colour,
+                    null,
+                    null,
+                    new Vector2(
+                        InflationAmount.X / DrawRectangle.Width,
+                        InflationAmount.Y / DrawRectangle.Height
+                    ),
+                    TextureCoords
+                );
             }
 
             protected override void BlitOpaqueInterior(IRenderer renderer)

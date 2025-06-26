@@ -15,12 +15,22 @@ namespace osu.Framework.IO.Serialization
     /// </summary>
     internal class BindableJsonConverter : JsonConverter<ISerializableBindable>
     {
-        public override void WriteJson(JsonWriter writer, ISerializableBindable value, JsonSerializer serializer)
-            => value.SerializeTo(writer, serializer);
+        public override void WriteJson(
+            JsonWriter writer,
+            ISerializableBindable value,
+            JsonSerializer serializer
+        ) => value.SerializeTo(writer, serializer);
 
-        public override ISerializableBindable ReadJson(JsonReader reader, Type objectType, ISerializableBindable existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override ISerializableBindable ReadJson(
+            JsonReader reader,
+            Type objectType,
+            ISerializableBindable existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer
+        )
         {
-            var bindable = existingValue ?? (ISerializableBindable)Activator.CreateInstance(objectType, true);
+            var bindable =
+                existingValue ?? (ISerializableBindable)Activator.CreateInstance(objectType, true);
             Debug.Assert(bindable != null);
 
             bindable.DeserializeFrom(reader, serializer);

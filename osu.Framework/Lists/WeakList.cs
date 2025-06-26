@@ -19,7 +19,8 @@ namespace osu.Framework.Lists
         /// </summary>
         private const int opportunistic_trim_threshold = 100;
 
-        private readonly List<InvalidatableWeakReference> list = new List<InvalidatableWeakReference>();
+        private readonly List<InvalidatableWeakReference> list =
+            new List<InvalidatableWeakReference>();
         private int listStart; // The inclusive starting index in the list.
         private int listEnd; // The exclusive ending index in the list.
 
@@ -31,7 +32,8 @@ namespace osu.Framework.Lists
 
         public void Add(T obj) => add(new InvalidatableWeakReference(obj));
 
-        public void Add(WeakReference<T> weakReference) => add(new InvalidatableWeakReference(weakReference));
+        public void Add(WeakReference<T> weakReference) =>
+            add(new InvalidatableWeakReference(weakReference));
 
         private void add(in InvalidatableWeakReference item)
         {
@@ -199,7 +201,9 @@ namespace osu.Framework.Lists
             public InvalidatableWeakReference(WeakReference<T> weakReference)
             {
                 Reference = weakReference;
-                ObjectHashCode = !weakReference.TryGetTarget(out var target) ? 0 : EqualityComparer<T>.Default.GetHashCode(target);
+                ObjectHashCode = !weakReference.TryGetTarget(out var target)
+                    ? 0
+                    : EqualityComparer<T>.Default.GetHashCode(target);
             }
         }
     }

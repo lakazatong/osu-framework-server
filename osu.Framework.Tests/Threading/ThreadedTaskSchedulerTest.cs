@@ -28,11 +28,16 @@ namespace osu.Framework.Tests.Threading
             {
                 for (int i = 0; i < target_count; i++)
                 {
-                    Task.Factory.StartNew(() =>
-                    {
-                        Interlocked.Increment(ref runCount);
-                        Thread.Sleep(100);
-                    }, default, TaskCreationOptions.HideScheduler, taskScheduler);
+                    Task.Factory.StartNew(
+                        () =>
+                        {
+                            Interlocked.Increment(ref runCount);
+                            Thread.Sleep(100);
+                        },
+                        default,
+                        TaskCreationOptions.HideScheduler,
+                        taskScheduler
+                    );
                 }
             }
 
@@ -51,11 +56,16 @@ namespace osu.Framework.Tests.Threading
             {
                 using (var taskScheduler = new ThreadedTaskScheduler(4, "test"))
                 {
-                    Task.Factory.StartNew(() =>
-                    {
-                        while (!exited.IsSet)
-                            Thread.Sleep(100);
-                    }, default, TaskCreationOptions.HideScheduler, taskScheduler);
+                    Task.Factory.StartNew(
+                        () =>
+                        {
+                            while (!exited.IsSet)
+                                Thread.Sleep(100);
+                        },
+                        default,
+                        TaskCreationOptions.HideScheduler,
+                        taskScheduler
+                    );
                 }
 
                 exited.Set();
@@ -76,7 +86,17 @@ namespace osu.Framework.Tests.Threading
             Task.Run(async () =>
             {
                 // ReSharper disable once AccessToDisposedClosure
-                await Task.Factory.StartNew(() => { run.Set(); }, default, TaskCreationOptions.HideScheduler, taskScheduler).ConfigureAwait(false);
+                await Task
+                    .Factory.StartNew(
+                        () =>
+                        {
+                            run.Set();
+                        },
+                        default,
+                        TaskCreationOptions.HideScheduler,
+                        taskScheduler
+                    )
+                    .ConfigureAwait(false);
                 exited.Set();
             });
 
@@ -95,15 +115,20 @@ namespace osu.Framework.Tests.Threading
                 scheduler.Dispose();
             })
             {
-                IsBackground = true
+                IsBackground = true,
             };
 
             Thread queueThread = new Thread(() =>
             {
-                Task.Factory.StartNew(() => { }, CancellationToken.None, TaskCreationOptions.HideScheduler, scheduler);
+                Task.Factory.StartNew(
+                    () => { },
+                    CancellationToken.None,
+                    TaskCreationOptions.HideScheduler,
+                    scheduler
+                );
             })
             {
-                IsBackground = true
+                IsBackground = true,
             };
 
             disposeThread.Start();

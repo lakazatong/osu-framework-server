@@ -28,17 +28,28 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void CreateSequenceThenRewind()
         {
-            target.FadeIn(1000, Easing.OutQuint)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000);
+            target
+                .FadeIn(1000, Easing.OutQuint)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000);
 
             for (int i = 0; i < 1000; i++)
             {
@@ -57,16 +68,24 @@ namespace osu.Framework.Benchmarks
             for (int i = 0; i < 5; i++)
             {
                 nested.Add(new TestBox());
-                nested.FadeOutFromOne(1000)
-                      .Then().FadeOutFromOne(1000)
-                      .Then().FadeOutFromOne(1000)
-                      .Then().FadeOutFromOne(1000);
+                nested
+                    .FadeOutFromOne(1000)
+                    .Then()
+                    .FadeOutFromOne(1000)
+                    .Then()
+                    .FadeOutFromOne(1000)
+                    .Then()
+                    .FadeOutFromOne(1000);
 
                 nested.Add(nested = new TestBox());
-                nested.FadeOutFromOne(1000)
-                      .Then().FadeOutFromOne(1000)
-                      .Then().FadeOutFromOne(1000)
-                      .Then().FadeOutFromOne(1000);
+                nested
+                    .FadeOutFromOne(1000)
+                    .Then()
+                    .FadeOutFromOne(1000)
+                    .Then()
+                    .FadeOutFromOne(1000)
+                    .Then()
+                    .FadeOutFromOne(1000);
             }
 
             for (int i = 0; i < 1000; i++)
@@ -82,17 +101,28 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void CreateSequenceThenClearAfter()
         {
-            target.FadeIn(1000, Easing.OutQuint)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000)
-                  .Then().FadeOut(1000);
+            target
+                .FadeIn(1000, Easing.OutQuint)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000)
+                .Then()
+                .FadeOut(1000);
 
             target.ClearTransformsAfter(5000);
         }
@@ -100,9 +130,10 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void Expiry()
         {
-            target.FadeIn(1000, Easing.OutQuint)
-                  .ScaleTo(2, 1000, Easing.OutQuint)
-                  .RotateTo(2, 1000, Easing.OutQuint);
+            target
+                .FadeIn(1000, Easing.OutQuint)
+                .ScaleTo(2, 1000, Easing.OutQuint)
+                .RotateTo(2, 1000, Easing.OutQuint);
 
             for (int i = 0; i < 1000; i++)
                 target.Expire();
@@ -113,9 +144,12 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void CreateSequenceWithDefaultEasing()
         {
-            target.FadeIn(1000, Easing.OutQuint)
-                  .Then().FadeOut(500)
-                  .Then().ScaleTo(new Vector2(2), 500, Easing.OutQuint);
+            target
+                .FadeIn(1000, Easing.OutQuint)
+                .Then()
+                .FadeOut(500)
+                .Then()
+                .ScaleTo(new Vector2(2), 500, Easing.OutQuint);
             target.ClearTransforms();
         }
 
@@ -130,9 +164,12 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void CreateSequenceWithValueEasing()
         {
-            target.FadeIn(1000, new ValueEasingFunction())
-                  .Then().FadeOut(500, new ValueEasingFunction())
-                  .Then().ScaleTo(new Vector2(2), 500, new ValueEasingFunction());
+            target
+                .FadeIn(1000, new ValueEasingFunction())
+                .Then()
+                .FadeOut(500, new ValueEasingFunction())
+                .Then()
+                .ScaleTo(new Vector2(2), 500, new ValueEasingFunction());
             target.ClearTransforms();
         }
 
@@ -147,9 +184,12 @@ namespace osu.Framework.Benchmarks
         [Benchmark]
         public void CreateSequenceWithReferenceEasing()
         {
-            target.FadeIn(1000, new ReferenceEasingFunction())
-                  .Then().FadeOut(500, new ReferenceEasingFunction())
-                  .Then().ScaleTo(new Vector2(2), 500, new ReferenceEasingFunction());
+            target
+                .FadeIn(1000, new ReferenceEasingFunction())
+                .Then()
+                .FadeOut(500, new ReferenceEasingFunction())
+                .Then()
+                .ScaleTo(new Vector2(2), 500, new ReferenceEasingFunction());
             target.ClearTransforms();
         }
 

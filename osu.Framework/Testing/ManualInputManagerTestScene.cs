@@ -20,7 +20,8 @@ namespace osu.Framework.Testing
     /// </summary>
     public abstract partial class ManualInputManagerTestScene : TestScene
     {
-        protected override Container<Drawable> Content { get; } = new Container { RelativeSizeAxes = Axes.Both };
+        protected override Container<Drawable> Content { get; } =
+            new Container { RelativeSizeAxes = Axes.Both };
 
         /// <summary>
         /// The <see cref="ManualInputManager"/>.
@@ -35,75 +36,77 @@ namespace osu.Framework.Testing
 
         protected ManualInputManagerTestScene()
         {
-            base.Content.AddRange(new Drawable[]
-            {
-                InputManager = new ManualInputManager
+            base.Content.AddRange(
+                new Drawable[]
                 {
-                    UseParentInput = true,
-                    Child = Content,
-                },
-                new Container
-                {
-                    Depth = float.MinValue,
-                    AutoSizeAxes = Axes.Both,
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    Margin = new MarginPadding(5),
-                    CornerRadius = 5,
-                    Masking = true,
-                    Children = new Drawable[]
+                    InputManager = new ManualInputManager
                     {
-                        new Box
+                        UseParentInput = true,
+                        Child = Content,
+                    },
+                    new Container
+                    {
+                        Depth = float.MinValue,
+                        AutoSizeAxes = Axes.Both,
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        Margin = new MarginPadding(5),
+                        CornerRadius = 5,
+                        Masking = true,
+                        Children = new Drawable[]
                         {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = 0.5f,
-                        },
-                        new FillFlowContainer
-                        {
-                            AutoSizeAxes = Axes.Both,
-                            Direction = FillDirection.Vertical,
-                            Margin = new MarginPadding(5),
-                            Spacing = new Vector2(5),
-                            Children = new Drawable[]
+                            new Box
                             {
-                                new SpriteText
+                                Colour = Color4.Black,
+                                RelativeSizeAxes = Axes.Both,
+                                Alpha = 0.5f,
+                            },
+                            new FillFlowContainer
+                            {
+                                AutoSizeAxes = Axes.Both,
+                                Direction = FillDirection.Vertical,
+                                Margin = new MarginPadding(5),
+                                Spacing = new Vector2(5),
+                                Children = new Drawable[]
                                 {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Text = "Input Priority",
-                                    Font = FrameworkFont.Regular,
-                                },
-                                new FillFlowContainer
-                                {
-                                    AutoSizeAxes = Axes.Both,
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Margin = new MarginPadding(5),
-                                    Spacing = new Vector2(5),
-                                    Direction = FillDirection.Horizontal,
-
-                                    Children = new Drawable[]
+                                    new SpriteText
                                     {
-                                        buttonLocal = new BasicButton
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Text = "Input Priority",
+                                        Font = FrameworkFont.Regular,
+                                    },
+                                    new FillFlowContainer
+                                    {
+                                        AutoSizeAxes = Axes.Both,
+                                        Anchor = Anchor.TopCentre,
+                                        Origin = Anchor.TopCentre,
+                                        Margin = new MarginPadding(5),
+                                        Spacing = new Vector2(5),
+                                        Direction = FillDirection.Horizontal,
+
+                                        Children = new Drawable[]
                                         {
-                                            Text = "local",
-                                            Size = new Vector2(50, 30),
-                                            Action = returnUserInput
+                                            buttonLocal = new BasicButton
+                                            {
+                                                Text = "local",
+                                                Size = new Vector2(50, 30),
+                                                Action = returnUserInput,
+                                            },
+                                            buttonTest = new BasicButton
+                                            {
+                                                Text = "test",
+                                                Size = new Vector2(50, 30),
+                                                Action = returnTestInput,
+                                            },
                                         },
-                                        buttonTest = new BasicButton
-                                        {
-                                            Text = "test",
-                                            Size = new Vector2(50, 30),
-                                            Action = returnTestInput
-                                        },
-                                    }
+                                    },
                                 },
-                            }
+                            },
                         },
-                    }
-                },
-            });
+                    },
+                }
+            );
         }
 
         protected override void Update()

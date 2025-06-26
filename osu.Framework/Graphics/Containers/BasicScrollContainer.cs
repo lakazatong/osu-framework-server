@@ -9,20 +9,17 @@ namespace osu.Framework.Graphics.Containers
     public partial class BasicScrollContainer : BasicScrollContainer<Drawable>
     {
         public BasicScrollContainer(Direction scrollDirection = Direction.Vertical)
-            : base(scrollDirection)
-        {
-        }
+            : base(scrollDirection) { }
     }
 
     public partial class BasicScrollContainer<T> : ScrollContainer<T>
         where T : Drawable
     {
         public BasicScrollContainer(Direction scrollDirection = Direction.Vertical)
-            : base(scrollDirection)
-        {
-        }
+            : base(scrollDirection) { }
 
-        protected override ScrollbarContainer CreateScrollbar(Direction direction) => new BasicScrollbar(direction);
+        protected override ScrollbarContainer CreateScrollbar(Direction direction) =>
+            new BasicScrollbar(direction);
 
         protected internal partial class BasicScrollbar : ScrollbarContainer
         {
@@ -34,16 +31,13 @@ namespace osu.Framework.Graphics.Containers
                 Child = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = FrameworkColour.YellowGreen
+                    Colour = FrameworkColour.YellowGreen,
                 };
             }
 
             public override void ResizeTo(float val, int duration = 0, Easing easing = Easing.None)
             {
-                Vector2 size = new Vector2(dim_size)
-                {
-                    [(int)ScrollDirection] = val
-                };
+                Vector2 size = new Vector2(dim_size) { [(int)ScrollDirection] = val };
                 this.ResizeTo(size, duration, easing);
             }
         }

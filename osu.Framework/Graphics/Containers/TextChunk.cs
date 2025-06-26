@@ -22,7 +22,12 @@ namespace osu.Framework.Graphics.Containers
         private readonly Func<TSpriteText> creationFunc;
         private readonly Action<TSpriteText>? creationParameters;
 
-        public TextChunk(LocalisableString text, bool newLineIsParagraph, Func<TSpriteText> creationFunc, Action<TSpriteText>? creationParameters = null)
+        public TextChunk(
+            LocalisableString text,
+            bool newLineIsParagraph,
+            Func<TSpriteText> creationFunc,
+            Action<TSpriteText>? creationParameters = null
+        )
         {
             this.text = text;
             this.newLineIsParagraph = newLineIsParagraph;
@@ -30,9 +35,12 @@ namespace osu.Framework.Graphics.Containers
             this.creationParameters = creationParameters;
         }
 
-        protected override IEnumerable<Drawable> CreateDrawablesFor(TextFlowContainer textFlowContainer)
+        protected override IEnumerable<Drawable> CreateDrawablesFor(
+            TextFlowContainer textFlowContainer
+        )
         {
-            string currentContent = textFlowContainer.Localisation?.GetLocalisedString(text) ?? text.ToString();
+            string currentContent =
+                textFlowContainer.Localisation?.GetLocalisedString(text) ?? text.ToString();
 
             var drawables = new List<Drawable>();
 
@@ -49,7 +57,10 @@ namespace osu.Framework.Graphics.Containers
             return drawables;
         }
 
-        protected virtual IEnumerable<Drawable> CreateDrawablesFor(string text, TextFlowContainer textFlowContainer)
+        protected virtual IEnumerable<Drawable> CreateDrawablesFor(
+            string text,
+            TextFlowContainer textFlowContainer
+        )
         {
             bool first = true;
             var sprites = new List<Drawable>();
@@ -58,7 +69,8 @@ namespace osu.Framework.Graphics.Containers
             {
                 if (!first)
                 {
-                    Drawable? lastChild = sprites.LastOrDefault() ?? textFlowContainer.Children.LastOrDefault();
+                    Drawable? lastChild =
+                        sprites.LastOrDefault() ?? textFlowContainer.Children.LastOrDefault();
 
                     if (lastChild != null)
                     {
@@ -69,7 +81,8 @@ namespace osu.Framework.Graphics.Containers
 
                 foreach (string word in SplitWords(l))
                 {
-                    if (string.IsNullOrEmpty(word)) continue;
+                    if (string.IsNullOrEmpty(word))
+                        continue;
 
                     var textSprite = CreateSpriteText(textFlowContainer);
                     textSprite.Text = word;
@@ -89,13 +102,15 @@ namespace osu.Framework.Graphics.Containers
 
             for (int i = 0; i < text.Length; i++)
             {
-                if (i == 0
+                if (
+                    i == 0
                     || char.IsSeparator(text[i - 1])
                     || char.IsControl(text[i - 1])
                     || char.GetUnicodeCategory(text[i - 1]) == UnicodeCategory.DashPunctuation
                     || text[i - 1] == '/'
                     || text[i - 1] == '\\'
-                    || (isCjkCharacter(text[i - 1]) && !char.IsPunctuation(text[i])))
+                    || (isCjkCharacter(text[i - 1]) && !char.IsPunctuation(text[i]))
+                )
                 {
                     words.Add(builder.ToString());
                     builder.Clear();

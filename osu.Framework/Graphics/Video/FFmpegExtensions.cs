@@ -7,7 +7,8 @@ namespace osu.Framework.Graphics.Video
 {
     internal static class FFmpegExtensions
     {
-        internal static double GetValue(this AVRational rational) => rational.num / (double)rational.den;
+        internal static double GetValue(this AVRational rational) =>
+            rational.num / (double)rational.den;
 
         internal static bool IsHardwarePixelFormat(this AVPixelFormat pixFmt)
         {

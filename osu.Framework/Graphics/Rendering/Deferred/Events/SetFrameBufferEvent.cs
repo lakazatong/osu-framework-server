@@ -7,7 +7,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Events
 {
     internal readonly record struct SetFrameBufferEvent(ResourceReference FrameBuffer)
     {
-        public static RenderEvent Create(DeferredRenderer renderer, IFrameBuffer? frameBuffer)
-            => RenderEvent.Create(new SetFrameBufferEvent(renderer.Context.Reference(frameBuffer)));
+        public static RenderEvent Create(DeferredRenderer renderer, IFrameBuffer? frameBuffer) =>
+            RenderEvent.Create(new SetFrameBufferEvent(renderer.Context.Reference(frameBuffer)));
     }
 }

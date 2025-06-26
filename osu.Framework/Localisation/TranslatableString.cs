@@ -39,19 +39,27 @@ namespace osu.Framework.Localisation
             Key = key;
         }
 
-        protected override string FormatString(string fallback, object?[] args, LocalisationParameters parameters)
-            => base.FormatString(parameters.Store?.Get(Key) ?? fallback, args, parameters);
+        protected override string FormatString(
+            string fallback,
+            object?[] args,
+            LocalisationParameters parameters
+        ) => base.FormatString(parameters.Store?.Get(Key) ?? fallback, args, parameters);
 
         public bool Equals(TranslatableString? other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
 
             return base.Equals(other) && Key == other.Key;
         }
 
-        public override bool Equals(ILocalisableStringData? other) => other is TranslatableString translatable && Equals(translatable);
-        public override bool Equals(object? obj) => obj is TranslatableString translatable && Equals(translatable);
+        public override bool Equals(ILocalisableStringData? other) =>
+            other is TranslatableString translatable && Equals(translatable);
+
+        public override bool Equals(object? obj) =>
+            obj is TranslatableString translatable && Equals(translatable);
 
         public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Key);
     }

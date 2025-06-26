@@ -49,20 +49,12 @@ namespace osu.Framework.Benchmarks
             _.UnbindAllBindables();
         }
 
-        public partial class SimpleComposite3 : SimpleComposite2
-        {
-        }
+        public partial class SimpleComposite3 : SimpleComposite2 { }
 
-        public partial class SimpleComposite2 : SimpleComposite1
-        {
-        }
+        public partial class SimpleComposite2 : SimpleComposite1 { }
 
-        public partial class SimpleComposite1 : SimpleComposite
-        {
-        }
+        public partial class SimpleComposite1 : SimpleComposite { }
 
-        public partial class SimpleComposite : CompositeDrawable
-        {
-        }
+        public partial class SimpleComposite : CompositeDrawable { }
     }
 }

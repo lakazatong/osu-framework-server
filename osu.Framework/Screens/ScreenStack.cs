@@ -94,18 +94,23 @@ namespace osu.Framework.Screens
                 throw new ScreenAlreadyEnteredException();
 
             if (source == null && stack.Count > 0)
-                throw new InvalidOperationException($"A source must be provided when pushing to a non-empty {nameof(ScreenStack)}");
+                throw new InvalidOperationException(
+                    $"A source must be provided when pushing to a non-empty {nameof(ScreenStack)}"
+                );
 
             if (newScreen.AsDrawable().RemoveWhenNotAlive)
                 throw new ScreenWillBeRemovedOnPushException(newScreen.GetType());
 
             // Suspend the current screen, if there is one
-            if (source != null && source != stack.Peek()) throw new ScreenNotCurrentException(nameof(Push));
+            if (source != null && source != stack.Peek())
+                throw new ScreenNotCurrentException(nameof(Push));
 
             var newScreenDrawable = newScreen.AsDrawable();
 
             if (newScreenDrawable.IsLoaded)
-                throw new InvalidOperationException("A screen should not be loaded before being pushed.");
+                throw new InvalidOperationException(
+                    "A screen should not be loaded before being pushed."
+                );
 
             if (suspendImmediately)
                 suspend(source, newScreen);
@@ -114,7 +119,8 @@ namespace osu.Framework.Screens
             ScreenPushed?.Invoke(source, newScreen);
 
             // this needs to be queued here before the load is begun so it preceed any potential OnSuspending event (also attached to OnLoadComplete).
-            newScreenDrawable.OnLoadComplete += _ => newScreen.OnEntering(new ScreenTransitionEvent(source, newScreen));
+            newScreenDrawable.OnLoadComplete += _ =>
+                newScreen.OnEntering(new ScreenTransitionEvent(source, newScreen));
 
             if (source == null)
             {
@@ -128,7 +134,11 @@ namespace osu.Framework.Screens
                 }
             }
             else
-                LoadScreen((CompositeDrawable)source, newScreenDrawable, () => finishPush(source, newScreen));
+                LoadScreen(
+                    (CompositeDrawable)source,
+                    newScreenDrawable,
+                    () => finishPush(source, newScreen)
+                );
         }
 
         /// <summary>
@@ -141,9 +151,15 @@ namespace osu.Framework.Screens
             if (!child.ValidForPush)
             {
                 if (child == CurrentScreen)
-                    exitFrom(null, shouldFireExitEvent: false, shouldFireResumeEvent: suspendImmediately);
+                    exitFrom(
+                        null,
+                        shouldFireExitEvent: false,
+                        shouldFireResumeEvent: suspendImmediately
+                    );
 
-                log($"push of {getTypeString(child)} cancelled due to {nameof(child.ValidForPush)} becoming false");
+                log(
+                    $"push of {getTypeString(child)} cancelled due to {nameof(child.ValidForPush)} becoming false"
+                );
                 return;
             }
 
@@ -187,7 +203,11 @@ namespace osu.Framework.Screens
         /// <param name="loader">The <see cref="CompositeDrawable"/> to load <paramref name="toLoad"/> with.</param>
         /// <param name="toLoad">The <see cref="IScreen"/> to load.</param>
         /// <param name="continuation">The <see cref="Action"/> to invoke after <paramref name="toLoad"/> has finished loading.</param>
-        protected virtual void LoadScreen(CompositeDrawable loader, Drawable toLoad, Action continuation)
+        protected virtual void LoadScreen(
+            CompositeDrawable loader,
+            Drawable toLoad,
+            Action continuation
+        )
         {
             // If the previous screen has already been exited, do not attempt to load the new one.
             if ((loader as IScreen)?.ValidForPush == false)
@@ -200,7 +220,11 @@ namespace osu.Framework.Screens
                 if (loader.LoadState >= LoadState.Ready)
                 {
                     log($"loading {getTypeString(toLoad)}");
-                    loader.LoadComponentAsync(toLoad, _ => continuation?.Invoke(), scheduler: Scheduler);
+                    loader.LoadComponentAsync(
+                        toLoad,
+                        _ => continuation?.Invoke(),
+                        scheduler: Scheduler
+                    );
                 }
                 else
                 {
@@ -216,7 +240,10 @@ namespace osu.Framework.Screens
                 throw new ScreenNotCurrentException(nameof(Exit));
 
             if (CurrentScreen != source)
-                throw new ScreenHasChildException(nameof(Exit), $"Use {nameof(ScreenExtensions.MakeCurrent)} instead.");
+                throw new ScreenHasChildException(
+                    nameof(Exit),
+                    $"Use {nameof(ScreenExtensions.MakeCurrent)} instead."
+                );
 
             exitFrom(null);
         }
@@ -238,7 +265,11 @@ namespace osu.Framework.Screens
                 IScreen exitSource = exitCandidate;
                 exitCandidate = CurrentScreen;
 
-                bool exitBlocked = exitFrom(exitSource, shouldFireResumeEvent: false, destination: target);
+                bool exitBlocked = exitFrom(
+                    exitSource,
+                    shouldFireResumeEvent: false,
+                    destination: target
+                );
 
                 if (exitBlocked)
                 {
@@ -267,11 +298,9 @@ namespace osu.Framework.Screens
 
         internal bool IsCurrentScreen(IScreen source) => source == CurrentScreen;
 
-        internal IScreen GetParentScreen(IScreen source)
-            => stack.GetNext(source);
+        internal IScreen GetParentScreen(IScreen source) => stack.GetNext(source);
 
-        internal IScreen GetChildScreen(IScreen source)
-            => stack.GetPrevious(source);
+        internal IScreen GetChildScreen(IScreen source) => stack.GetPrevious(source);
 
         /// <summary>
         /// Exits the current <see cref="IScreen"/>.
@@ -281,7 +310,12 @@ namespace osu.Framework.Screens
         /// <param name="shouldFireResumeEvent">Whether <see cref="IScreen.OnResuming"/> should be fired on the resuming screen.</param>
         /// <param name="destination">The final <see cref="IScreen"/> of an exit operation.</param>
         /// <returns>Whether the exit was blocked.</returns>
-        private bool exitFrom([CanBeNull] IScreen source, bool shouldFireExitEvent = true, bool shouldFireResumeEvent = true, IScreen destination = null)
+        private bool exitFrom(
+            [CanBeNull] IScreen source,
+            bool shouldFireExitEvent = true,
+            bool shouldFireResumeEvent = true,
+            IScreen destination = null
+        )
         {
             if (stack.Count == 0)
                 return false;
@@ -299,13 +333,17 @@ namespace osu.Framework.Screens
 
                 // if a screen is !ValidForResume, it should not be allowed to block unless it is the current screen (source == null)
                 // OnExiting should still be called regardless.
-                bool blockRequested = toExit.OnExiting(new ScreenExitEvent(toExit, next, destination ?? next));
+                bool blockRequested = toExit.OnExiting(
+                    new ScreenExitEvent(toExit, next, destination ?? next)
+                );
 
                 if ((source == null || toExit.ValidForResume) && blockRequested)
                     return true;
 
                 if (toExit != stack.Pop())
-                    throw new InvalidOperationException($"Cannot push to {nameof(ScreenStack)} during exit without blocking the exit.");
+                    throw new InvalidOperationException(
+                        $"Cannot push to {nameof(ScreenStack)} during exit without blocking the exit."
+                    );
             }
 
             // we will probably want to change this logic when we support returning to a screen after exiting.
@@ -332,7 +370,8 @@ namespace osu.Framework.Screens
             return false;
         }
 
-        private void log(string message) => Logger.Log($"📺 {getTypeString(this)}(depth:{stack.Count}) {message}");
+        private void log(string message) =>
+            Logger.Log($"📺 {getTypeString(this)}(depth:{stack.Count}) {message}");
 
         private static string getTypeString(object o)
         {
@@ -350,7 +389,8 @@ namespace osu.Framework.Screens
         /// leases could potentially be in a leased state during exiting transitions.
         /// This method should be called after exiting is confirmed to ensure a correct leased state before <see cref="IScreen.OnResuming"/>.
         /// </remarks>
-        private void onExited(IScreen prev, IScreen next) => (prev as CompositeDrawable)?.UnbindAllBindablesSubTree();
+        private void onExited(IScreen prev, IScreen next) =>
+            (prev as CompositeDrawable)?.UnbindAllBindablesSubTree();
 
         /// <summary>
         /// Resumes the current <see cref="IScreen"/>.
@@ -372,11 +412,14 @@ namespace osu.Framework.Screens
                 exitFrom(source);
         }
 
-        protected override bool ShouldBeConsideredForInput(Drawable child) => base.ShouldBeConsideredForInput(child) && (!(child is IScreen screen) || screen.IsCurrentScreen());
+        protected override bool ShouldBeConsideredForInput(Drawable child) =>
+            base.ShouldBeConsideredForInput(child)
+            && (!(child is IScreen screen) || screen.IsCurrentScreen());
 
         protected override bool UpdateChildrenLife()
         {
-            if (!base.UpdateChildrenLife()) return false;
+            if (!base.UpdateChildrenLife())
+                return false;
 
             // In order to provide custom suspend/resume logic, screens always have RemoveWhenNotAlive set to false.
             // We need to manually handle removal here (in the opposite order to how the screens were pushed to ensure bindable sanity).
@@ -409,9 +452,7 @@ namespace osu.Framework.Screens
         public class ScreenNotCurrentException : InvalidOperationException
         {
             public ScreenNotCurrentException(string action)
-                : base($"Cannot perform {action} on a non-current screen.")
-            {
-            }
+                : base($"Cannot perform {action} on a non-current screen.") { }
         }
 
         protected override void Dispose(bool isDisposing)
@@ -433,33 +474,28 @@ namespace osu.Framework.Screens
         {
             public ScreenHasChildException(string action, string description)
                 : base($"Cannot perform {action} when a child is already present. {description}")
-            {
-            }
+            { }
         }
 
         public class ScreenAlreadyEnteredException : InvalidOperationException
         {
             public ScreenAlreadyEnteredException()
-                : base("Cannot push a screen in an entered state.")
-            {
-            }
+                : base("Cannot push a screen in an entered state.") { }
         }
 
         public class ScreenWillBeRemovedOnPushException : InvalidOperationException
         {
             public ScreenWillBeRemovedOnPushException(Type type)
-                : base($"The pushed ({type.ReadableName()}) has {nameof(RemoveWhenNotAlive)} = true and will be removed when a child screen is pushed. "
-                       + $"Screens must set {nameof(RemoveWhenNotAlive)} to false.")
-            {
-            }
+                : base(
+                    $"The pushed ({type.ReadableName()}) has {nameof(RemoveWhenNotAlive)} = true and will be removed when a child screen is pushed. "
+                        + $"Screens must set {nameof(RemoveWhenNotAlive)} to false."
+                ) { }
         }
 
         public class ScreenNotInStackException : InvalidOperationException
         {
             public ScreenNotInStackException(string action)
-                : base($"Cannot perform {action} on a screen not in a {nameof(ScreenStack)}.")
-            {
-            }
+                : base($"Cannot perform {action} on a screen not in a {nameof(ScreenStack)}.") { }
         }
     }
 

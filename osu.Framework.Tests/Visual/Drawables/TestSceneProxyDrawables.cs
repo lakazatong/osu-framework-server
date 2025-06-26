@@ -45,8 +45,8 @@ namespace osu.Framework.Tests.Visual.Drawables
                         generateProxyAboveParentOriginalIndirectlyMaskedAway(6),
                         generateProxyBelowParentOriginalIndirectlyMaskedAway(6),
                         generateOpaqueProxyAboveOpaqueBox(),
-                    }
-                }
+                    },
+                },
             };
         }
 
@@ -65,7 +65,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) above, all present")
             {
-                Children = new Drawable[] { box, new ProxyVisualiser(proxy, true) }
+                Children = new Drawable[] { box, new ProxyVisualiser(proxy, true) },
             };
         }
 
@@ -84,17 +84,13 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) below, all present")
             {
-                Children = new Drawable[] { new ProxyVisualiser(proxy, false), box }
+                Children = new Drawable[] { new ProxyVisualiser(proxy, false), box },
             };
         }
 
         private Drawable generateProxyAboveOriginalMaskedAway(int proxyCount)
         {
-            var box = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Position = new Vector2(60, 0)
-            };
+            var box = new Box { RelativeSizeAxes = Axes.Both, Position = new Vector2(60, 0) };
 
             var boxMaskingContainer = new Container
             {
@@ -110,10 +106,10 @@ namespace osu.Framework.Tests.Visual.Drawables
                     {
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0,
-                        AlwaysPresent = true
+                        AlwaysPresent = true,
                     },
-                    box
-                }
+                    box,
+                },
             };
 
             var proxy = box.CreateProxy();
@@ -122,17 +118,13 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) above, original masked away")
             {
-                Children = new Drawable[] { boxMaskingContainer, new ProxyVisualiser(proxy, true) }
+                Children = new Drawable[] { boxMaskingContainer, new ProxyVisualiser(proxy, true) },
             };
         }
 
         private Drawable generateProxyBelowOriginalMaskedAway(int proxyCount)
         {
-            var box = new Box
-            {
-                RelativeSizeAxes = Axes.Both,
-                Position = new Vector2(60, 0)
-            };
+            var box = new Box { RelativeSizeAxes = Axes.Both, Position = new Vector2(60, 0) };
 
             var boxMaskingContainer = new Container
             {
@@ -148,10 +140,10 @@ namespace osu.Framework.Tests.Visual.Drawables
                     {
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0,
-                        AlwaysPresent = true
+                        AlwaysPresent = true,
                     },
-                    box
-                }
+                    box,
+                },
             };
 
             var proxy = box.CreateProxy();
@@ -160,7 +152,11 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) below, original masked away")
             {
-                Children = new Drawable[] { new ProxyVisualiser(proxy, false), boxMaskingContainer }
+                Children = new Drawable[]
+                {
+                    new ProxyVisualiser(proxy, false),
+                    boxMaskingContainer,
+                },
             };
         }
 
@@ -173,11 +169,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Size = new Vector2(50),
-                Child = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = box
-                }
+                Child = new Container { RelativeSizeAxes = Axes.Both, Child = box },
             };
 
             var proxy = box.CreateProxy();
@@ -186,7 +178,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) above, original parent invisible")
             {
-                Children = new Drawable[] { invisibleContainer, new ProxyVisualiser(proxy, true) }
+                Children = new Drawable[] { invisibleContainer, new ProxyVisualiser(proxy, true) },
             };
         }
 
@@ -199,11 +191,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Size = new Vector2(50),
-                Child = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = box
-                }
+                Child = new Container { RelativeSizeAxes = Axes.Both, Child = box },
             };
 
             var proxy = box.CreateProxy();
@@ -212,7 +200,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) below, original parent invisible")
             {
-                Children = new Drawable[] { new ProxyVisualiser(proxy, false), invisibleContainer }
+                Children = new Drawable[] { new ProxyVisualiser(proxy, false), invisibleContainer },
             };
         }
 
@@ -225,11 +213,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Size = new Vector2(50),
-                Child = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = box
-                }
+                Child = new Container { RelativeSizeAxes = Axes.Both, Child = box },
             };
 
             var proxy = box.CreateProxy();
@@ -238,7 +222,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) above, original parent not alive")
             {
-                Children = new Drawable[] { invisibleContainer, new ProxyVisualiser(proxy, true) }
+                Children = new Drawable[] { invisibleContainer, new ProxyVisualiser(proxy, true) },
             };
         }
 
@@ -251,11 +235,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Size = new Vector2(50),
-                Child = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = box
-                }
+                Child = new Container { RelativeSizeAxes = Axes.Both, Child = box },
             };
 
             var proxy = box.CreateProxy();
@@ -264,7 +244,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser($"{proxyCount} proxy(s) below, original parent not alive")
             {
-                Children = new Drawable[] { new ProxyVisualiser(proxy, false), invisibleContainer }
+                Children = new Drawable[] { new ProxyVisualiser(proxy, false), invisibleContainer },
             };
         }
 
@@ -275,7 +255,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Size = new Vector2(50),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Position = new Vector2(-50)
+                Position = new Vector2(-50),
             };
 
             var proxy = box.CreateProxy();
@@ -296,11 +276,15 @@ namespace osu.Framework.Tests.Visual.Drawables
                         CornerRadius = 20,
                         Children = new Drawable[]
                         {
-                            new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Yellow.Opacity(0.2f) },
-                            new ProxyVisualiser(proxy, true)
-                        }
-                    }
-                }
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Yellow.Opacity(0.2f),
+                            },
+                            new ProxyVisualiser(proxy, true),
+                        },
+                    },
+                },
             };
         }
 
@@ -311,7 +295,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Size = new Vector2(50),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Position = new Vector2(-50)
+                Position = new Vector2(-50),
             };
 
             var proxy = box.CreateProxy();
@@ -331,12 +315,16 @@ namespace osu.Framework.Tests.Visual.Drawables
                         CornerRadius = 20,
                         Children = new Drawable[]
                         {
-                            new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Yellow.Opacity(0.2f) },
-                            new ProxyVisualiser(proxy, false)
-                        }
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Yellow.Opacity(0.2f),
+                            },
+                            new ProxyVisualiser(proxy, false),
+                        },
                     },
-                    box
-                }
+                    box,
+                },
             };
         }
 
@@ -353,11 +341,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             return new Visualiser("proxy above opaque box")
             {
-                Children = new Drawable[]
-                {
-                    box,
-                    new ProxyVisualiser(proxy, false, 1.0f)
-                }
+                Children = new Drawable[] { box, new ProxyVisualiser(proxy, false, 1.0f) },
             };
         }
 
@@ -409,16 +393,16 @@ namespace osu.Framework.Tests.Visual.Drawables
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
-                            AlwaysPresent = true
-                        }
+                            AlwaysPresent = true,
+                        },
                     },
                     new SpriteText
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
                         Y = 10,
-                        Text = description
-                    }
+                        Text = description,
+                    },
                 };
             }
         }
@@ -434,32 +418,28 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 original = proxy.Original;
 
-                while (original != (original = original.Original))
-                {
-                }
+                while (original != (original = original.Original)) { }
 
                 if (proxyIsBelow)
                     AddInternal(proxy);
 
-                AddInternal(overlay = new Container
-                {
-                    Colour = proxyIsBelow ? Color4.Red : Color4.Green,
-                    Children = new Drawable[]
+                AddInternal(
+                    overlay = new Container
                     {
-                        new Box
+                        Colour = proxyIsBelow ? Color4.Red : Color4.Green,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = boxAlpha,
+                            new Box { RelativeSizeAxes = Axes.Both, Alpha = boxAlpha },
+                            new SpriteText
+                            {
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.BottomCentre,
+                                Colour = Color4.Black,
+                                Text = "proxy",
+                            },
                         },
-                        new SpriteText
-                        {
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            Colour = Color4.Black,
-                            Text = "proxy"
-                        }
                     }
-                });
+                );
 
                 if (!proxyIsBelow)
                     AddInternal(proxy);

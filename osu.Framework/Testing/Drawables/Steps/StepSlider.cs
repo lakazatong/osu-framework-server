@@ -3,17 +3,17 @@
 
 #nullable disable
 
-using osuTK.Graphics;
+using System;
+using System.Numerics;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
-using System;
-using osu.Framework.Bindables;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Input.Events;
+using osuTK.Graphics;
 using osuTK.Input;
-using System.Numerics;
 
 namespace osu.Framework.Testing.Drawables.Steps
 {
@@ -36,27 +36,25 @@ namespace osu.Framework.Testing.Drawables.Steps
             Height = 25;
             RelativeSizeAxes = Axes.X;
 
-            AddRangeInternal(new Drawable[]
-            {
-                background = new Box
+            AddRangeInternal(
+                new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.RoyalBlue.Darken(0.75f),
-                },
-                selection = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.RoyalBlue,
-                },
-                spriteText = new SpriteText
-                {
-                    Depth = -1,
-                    Padding = new MarginPadding(5),
-                    Font = FrameworkFont.Regular.With(size: 14),
-                    Origin = Anchor.CentreLeft,
-                    Anchor = Anchor.CentreLeft,
-                },
-            });
+                    background = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.RoyalBlue.Darken(0.75f),
+                    },
+                    selection = new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.RoyalBlue },
+                    spriteText = new SpriteText
+                    {
+                        Depth = -1,
+                        Padding = new MarginPadding(5),
+                        Font = FrameworkFont.Regular.With(size: 14),
+                        Origin = Anchor.CentreLeft,
+                        Anchor = Anchor.CentreLeft,
+                    },
+                }
+            );
 
             Masking = true;
 

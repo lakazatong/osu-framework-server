@@ -17,9 +17,7 @@ namespace osu.Framework.Platform.Apple
     internal abstract class AppleTextureLoaderStore : TextureLoaderStore
     {
         protected AppleTextureLoaderStore(IResourceStore<byte[]> store)
-            : base(store)
-        {
-        }
+            : base(store) { }
 
         protected unsafe Image<TPixel> ImageFromCGImage<TPixel>(CGImage cgImage)
             where TPixel : unmanaged, IPixel<TPixel>
@@ -42,7 +40,8 @@ namespace osu.Framework.Platform.Apple
             vImage_Buffer accImage = default;
 
             // perform initial call to retrieve preferred alignment and bytes-per-row values for the given image dimensions.
-            nuint alignment = (nuint)vImage.Init(&accImage, (uint)height, (uint)width, 32, vImage_Flags.NoAllocate);
+            nuint alignment = (nuint)
+                vImage.Init(&accImage, (uint)height, (uint)width, 32, vImage_Flags.NoAllocate);
             Debug.Assert(alignment > 0);
 
             // allocate aligned memory region to contain image pixel data.
@@ -50,7 +49,13 @@ namespace osu.Framework.Platform.Apple
             nuint bytesCount = bytesPerRow * accImage.Height;
             accImage.Data = (byte*)NativeMemory.AlignedAlloc(bytesCount, alignment);
 
-            var result = vImage.InitWithCGImage(&accImage, &format, null, cgImage.Handle, vImage_Flags.NoAllocate);
+            var result = vImage.InitWithCGImage(
+                &accImage,
+                &format,
+                null,
+                cgImage.Handle,
+                vImage_Flags.NoAllocate
+            );
             Debug.Assert(result == vImage_Error.NoError);
 
             var image = new Image<TPixel>(width, height);

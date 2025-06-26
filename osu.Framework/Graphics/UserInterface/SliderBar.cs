@@ -87,8 +87,10 @@ namespace osu.Framework.Graphics.UserInterface
             {
                 if (!currentNumberInstantaneous.HasDefinedRange)
                 {
-                    throw new InvalidOperationException($"A {nameof(SliderBar<T>)}'s {nameof(Current)} must have user-defined {nameof(BindableNumber<T>.MinValue)}"
-                                                        + $" and {nameof(BindableNumber<T>.MaxValue)} to produce a valid {nameof(NormalizedValue)}.");
+                    throw new InvalidOperationException(
+                        $"A {nameof(SliderBar<T>)}'s {nameof(Current)} must have user-defined {nameof(BindableNumber<T>.MinValue)}"
+                            + $" and {nameof(BindableNumber<T>.MaxValue)} to produce a valid {nameof(NormalizedValue)}."
+                    );
                 }
 
                 return currentNumberInstantaneous.NormalizedValue;
@@ -190,8 +192,15 @@ namespace osu.Framework.Graphics.UserInterface
             if (!IsHovered && !HasFocus)
                 return false;
 
-            float step = KeyboardStep != 0 ? KeyboardStep : (Convert.ToSingle(currentNumberInstantaneous.MaxValue) - Convert.ToSingle(currentNumberInstantaneous.MinValue)) / 20;
-            if (currentNumberInstantaneous.IsInteger) step = MathF.Ceiling(step);
+            float step =
+                KeyboardStep != 0
+                    ? KeyboardStep
+                    : (
+                        Convert.ToSingle(currentNumberInstantaneous.MaxValue)
+                        - Convert.ToSingle(currentNumberInstantaneous.MinValue)
+                    ) / 20;
+            if (currentNumberInstantaneous.IsInteger)
+                step = MathF.Ceiling(step);
 
             switch (e.Key)
             {
@@ -250,7 +259,9 @@ namespace osu.Framework.Graphics.UserInterface
 
             if (relativeValueAtMouseDown != null && e is DragEvent drag)
             {
-                newValue = relativeValueAtMouseDown.Value + (localX - ToLocalSpace(drag.ScreenSpaceMouseDownPosition).X) / UsableWidth;
+                newValue =
+                    relativeValueAtMouseDown.Value
+                    + (localX - ToLocalSpace(drag.ScreenSpaceMouseDownPosition).X) / UsableWidth;
             }
             else
             {
@@ -270,8 +281,6 @@ namespace osu.Framework.Graphics.UserInterface
         /// <summary>
         /// Triggered when the value is changed based on end-user input to this control.
         /// </summary>
-        protected virtual void OnUserChange(T value)
-        {
-        }
+        protected virtual void OnUserChange(T value) { }
     }
 }

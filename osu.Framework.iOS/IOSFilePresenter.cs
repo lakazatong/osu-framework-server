@@ -13,7 +13,8 @@ namespace osu.Framework.iOS
     public class IOSFilePresenter : UIDocumentInteractionControllerDelegate
     {
         private readonly IIOSWindow window;
-        private readonly UIDocumentInteractionController documentInteraction = new UIDocumentInteractionController();
+        private readonly UIDocumentInteractionController documentInteraction =
+            new UIDocumentInteractionController();
 
         public IOSFilePresenter(IIOSWindow window)
         {
@@ -55,12 +56,19 @@ namespace osu.Framework.iOS
             documentInteraction.Delegate = this;
 
             if (OperatingSystem.IsIOSVersionAtLeast(14))
-                documentInteraction.Uti = UTType.CreateFromExtension(Path.GetExtension(filename))?.Identifier ?? UTTypes.Data.Identifier;
+                documentInteraction.Uti =
+                    UTType.CreateFromExtension(Path.GetExtension(filename))?.Identifier
+                    ?? UTTypes.Data.Identifier;
         }
 
-        public override UIViewController ViewControllerForPreview(UIDocumentInteractionController controller) => window.ViewController;
+        public override UIViewController ViewControllerForPreview(
+            UIDocumentInteractionController controller
+        ) => window.ViewController;
 
-        public override void WillBeginSendingToApplication(UIDocumentInteractionController controller, string? application)
+        public override void WillBeginSendingToApplication(
+            UIDocumentInteractionController controller,
+            string? application
+        )
         {
             // this path is triggered when a user opens the presented document in another application,
             // the menu does not dismiss afterward and locks the game indefinitely. dismiss it manually.

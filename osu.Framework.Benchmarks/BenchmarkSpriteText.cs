@@ -57,12 +57,14 @@ namespace osu.Framework.Benchmarks
             {
                 for (int i = 0; i < 1000; i++)
                 {
-                    Add(new SpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Text = "i am some relatively long text",
-                    });
+                    Add(
+                        new SpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Text = "i am some relatively long text",
+                        }
+                    );
                 }
             }
 

@@ -22,7 +22,8 @@ namespace osu.Framework.Graphics.Cursor
     /// <summary>
     /// Displays Tooltips for all its children that inherit from the <see cref="IHasTooltip"/> or <see cref="IHasCustomTooltip"/> interfaces. Keep in mind that only children with <see cref="Drawable.HandlePositionalInput"/> set to true will be checked for their tooltips.
     /// </summary>
-    public partial class TooltipContainer : CursorEffectContainer<TooltipContainer, ITooltipContentProvider>
+    public partial class TooltipContainer
+        : CursorEffectContainer<TooltipContainer, ITooltipContentProvider>
     {
         private readonly CursorContainer cursorContainer;
         private readonly ITooltip defaultTooltip;
@@ -65,10 +66,7 @@ namespace osu.Framework.Graphics.Cursor
         public TooltipContainer(CursorContainer cursorContainer = null)
         {
             this.cursorContainer = cursorContainer;
-            AddInternal(content = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(content = new Container { RelativeSizeAxes = Axes.Both });
             AddInternal((Drawable)(CurrentTooltip = CreateTooltip()));
             defaultTooltip = CurrentTooltip;
         }
@@ -117,13 +115,17 @@ namespace osu.Framework.Graphics.Cursor
             }
             else
             {
-                Quad cursorQuad = cursorContainer.ActiveCursor.ToSpaceOfOtherDrawable(cursorContainer.ActiveCursor.DrawRectangle, this);
+                Quad cursorQuad = cursorContainer.ActiveCursor.ToSpaceOfOtherDrawable(
+                    cursorContainer.ActiveCursor.DrawRectangle,
+                    this
+                );
                 cursorCentre = cursorQuad.Centre;
                 // We only need to check 2 of the 4 vertices, because we only allow affine transformations
                 // and the quad is therefore symmetric around the centre.
                 boundingRadius = Math.Max(
                     (cursorQuad.TopLeft - cursorCentre).Length,
-                    (cursorQuad.TopRight - cursorCentre).Length);
+                    (cursorQuad.TopRight - cursorCentre).Length
+                );
             }
 
             Vector2 southEast = new Vector2(1).Normalized();
@@ -183,7 +185,8 @@ namespace osu.Framework.Graphics.Cursor
             public Vector2 Position;
         }
 
-        private object getTargetContent(ITooltipContentProvider target) => (target as IHasCustomTooltip)?.TooltipContent ?? (target as IHasTooltip)?.TooltipText;
+        private object getTargetContent(ITooltipContentProvider target) =>
+            (target as IHasCustomTooltip)?.TooltipContent ?? (target as IHasTooltip)?.TooltipText;
 
         protected override void Update()
         {
@@ -277,7 +280,9 @@ namespace osu.Framework.Graphics.Cursor
             return handlePotentialTarget(targetCandidate);
         }
 
-        private ITooltipContentProvider handlePotentialTarget(ITooltipContentProvider targetCandidate)
+        private ITooltipContentProvider handlePotentialTarget(
+            ITooltipContentProvider targetCandidate
+        )
         {
             // this method is intentionally split out from the main lookup above as it has several expensive delegate (LINQ) allocations.
             // this allows the case where no tooltip is displayed to run with no allocations.
@@ -290,16 +295,25 @@ namespace osu.Framework.Graphics.Cursor
             if (Time.Current - lastRecordedPositionTime >= positionRecordInterval)
             {
                 lastRecordedPositionTime = Time.Current;
-                recentMousePositions.Add(new TimedPosition
-                {
-                    Time = Time.Current,
-                    Position = ToLocalSpace(inputManager.CurrentState.Mouse.Position)
-                });
+                recentMousePositions.Add(
+                    new TimedPosition
+                    {
+                        Time = Time.Current,
+                        Position = ToLocalSpace(inputManager.CurrentState.Mouse.Position),
+                    }
+                );
             }
 
             // check that we have recorded enough positions to make a judgement about whether or not the cursor has been standing still for the required amount of time.
             // we can skip this if the appear-delay is set to 0, since then tooltips can appear instantly and we don't need to wait to record enough positions.
-            if (appearDelay > 0 && (recentMousePositions.Count == 0 || lastRecordedPositionTime - recentMousePositions[0].Time < appearDelay - positionRecordInterval))
+            if (
+                appearDelay > 0
+                && (
+                    recentMousePositions.Count == 0
+                    || lastRecordedPositionTime - recentMousePositions[0].Time
+                        < appearDelay - positionRecordInterval
+                )
+            )
                 return null;
 
             for (int i = recentMousePositions.Count - 1; i >= 0; i--)
@@ -325,7 +339,10 @@ namespace osu.Framework.Graphics.Cursor
                     continue;
 
                 first ??= mPos.Position;
-                if (Vector2Extensions.DistanceSquared(mPos.Position, (Vector2)first) > appearRadiusSq)
+                if (
+                    Vector2Extensions.DistanceSquared(mPos.Position, (Vector2)first)
+                    > appearRadiusSq
+                )
                     return null;
             }
 
@@ -337,7 +354,10 @@ namespace osu.Framework.Graphics.Cursor
         /// </summary>
         /// <param name="tooltip">The tooltip that is refreshed.</param>
         /// <param name="tooltipTarget">The target of the tooltip.</param>
-        protected virtual void RefreshTooltip(ITooltip tooltip, ITooltipContentProvider tooltipTarget)
+        protected virtual void RefreshTooltip(
+            ITooltip tooltip,
+            ITooltipContentProvider tooltipTarget
+        )
         {
             bool isValid = tooltipTarget != null && hasValidTooltip(tooltipTarget);
 
@@ -359,9 +379,12 @@ namespace osu.Framework.Graphics.Cursor
         /// </summary>
         /// <param name="tooltipTarget">The target of the tooltip.</param>
         /// <returns>True if the currently visible tooltip should be hidden, false otherwise.</returns>
-        protected virtual bool ShallHideTooltip(ITooltipContentProvider tooltipTarget) => !hasValidTooltip(tooltipTarget) || (!tooltipTarget.IsHovered && !tooltipTarget.IsDragged);
+        protected virtual bool ShallHideTooltip(ITooltipContentProvider tooltipTarget) =>
+            !hasValidTooltip(tooltipTarget)
+            || (!tooltipTarget.IsHovered && !tooltipTarget.IsDragged);
 
-        private ITooltip getTooltip(ITooltipContentProvider target) => (target as IHasCustomTooltip)?.GetCustomTooltip() ?? defaultTooltip;
+        private ITooltip getTooltip(ITooltipContentProvider target) =>
+            (target as IHasCustomTooltip)?.GetCustomTooltip() ?? defaultTooltip;
 
         /// <summary>
         /// The default tooltip. Simply displays its text on a gray background and performs no easing.
@@ -392,22 +415,16 @@ namespace osu.Framework.Graphics.Cursor
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Gray,
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.Gray },
                     text = new SpriteText
                     {
                         Font = FrameworkFont.Regular.With(size: text_size),
                         Padding = new MarginPadding(5),
-                    }
+                    },
                 };
             }
 
-            public virtual void Refresh()
-            {
-            }
+            public virtual void Refresh() { }
 
             /// <summary>
             /// Called whenever the tooltip appears. When overriding do not forget to fade in.

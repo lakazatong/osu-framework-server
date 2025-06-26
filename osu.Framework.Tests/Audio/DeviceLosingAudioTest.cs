@@ -29,10 +29,12 @@ namespace osu.Framework.Tests.Audio
         }
 
         [Test]
-        public void TestPlaybackWithDeviceLoss() => testPlayback(Manager.SimulateDeviceRestore, Manager.SimulateDeviceLoss);
+        public void TestPlaybackWithDeviceLoss() =>
+            testPlayback(Manager.SimulateDeviceRestore, Manager.SimulateDeviceLoss);
 
         [Test]
-        public void TestPlaybackWithDeviceRestore() => testPlayback(Manager.SimulateDeviceLoss, Manager.SimulateDeviceRestore);
+        public void TestPlaybackWithDeviceRestore() =>
+            testPlayback(Manager.SimulateDeviceLoss, Manager.SimulateDeviceRestore);
 
         private void testPlayback(Action preparation, Action simulate)
         {

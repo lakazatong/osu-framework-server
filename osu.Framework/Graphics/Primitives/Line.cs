@@ -64,7 +64,11 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="t">A parameter representing the position along the line to compute. 0 yields the start point and 1 yields the end point.</param>
         /// <returns>The position along the line.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Vector2 At(float t) => new Vector2(StartPoint.X + (EndPoint.X - StartPoint.X) * t, StartPoint.Y + (EndPoint.Y - StartPoint.Y) * t);
+        public Vector2 At(float t) =>
+            new Vector2(
+                StartPoint.X + (EndPoint.X - StartPoint.X) * t,
+                StartPoint.Y + (EndPoint.Y - StartPoint.Y) * t
+            );
 
         /// <summary>
         /// Intersects this line with another.
@@ -103,12 +107,17 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="distance">The distance along this line at which the intersection occurs. To compute the point of intersection, <see cref="At"/>.</param>
         /// <returns>Whether the two lines intersect. An intersection may occur even if the two lines don't touch, at which point the parameter will be outside the [0, 1] range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryIntersectWith(ref Vector2 otherStart, ref Vector2 otherEnd, out float distance)
+        public bool TryIntersectWith(
+            ref Vector2 otherStart,
+            ref Vector2 otherEnd,
+            out float distance
+        )
         {
             float otherYDist = otherEnd.Y - otherStart.Y;
             float otherXDist = otherEnd.X - otherStart.X;
 
-            float denom = (EndPoint.X - StartPoint.X) * otherYDist - (EndPoint.Y - StartPoint.Y) * otherXDist;
+            float denom =
+                (EndPoint.X - StartPoint.X) * otherYDist - (EndPoint.Y - StartPoint.Y) * otherXDist;
 
             if (Precision.AlmostEquals(denom, 0))
             {
@@ -116,14 +125,19 @@ namespace osu.Framework.Graphics.Primitives
                 return false;
             }
 
-            distance = ((otherStart.X - StartPoint.X) * otherYDist - (otherStart.Y - StartPoint.Y) * otherXDist) / denom;
+            distance =
+                (
+                    (otherStart.X - StartPoint.X) * otherYDist
+                    - (otherStart.Y - StartPoint.Y) * otherXDist
+                ) / denom;
             return true;
         }
 
         /// <summary>
         /// Distance squared from an arbitrary point p to this line.
         /// </summary>
-        public float DistanceSquaredToPoint(Vector2 p) => Vector2Extensions.DistanceSquared(p, ClosestPointTo(p));
+        public float DistanceSquaredToPoint(Vector2 p) =>
+            Vector2Extensions.DistanceSquared(p, ClosestPointTo(p));
 
         /// <summary>
         /// Distance from an arbitrary point to this line.
@@ -158,12 +172,15 @@ namespace osu.Framework.Graphics.Primitives
             return pB;
         }
 
-        public Matrix4 WorldMatrix() => Matrix4.CreateRotationZ(Theta) * Matrix4.CreateTranslation(StartPoint.X, StartPoint.Y, 0);
+        public Matrix4 WorldMatrix() =>
+            Matrix4.CreateRotationZ(Theta)
+            * Matrix4.CreateTranslation(StartPoint.X, StartPoint.Y, 0);
 
         /// <summary>
         /// It's the end of the world as we know it
         /// </summary>
-        public Matrix4 EndWorldMatrix() => Matrix4.CreateRotationZ(Theta) * Matrix4.CreateTranslation(EndPoint.X, EndPoint.Y, 0);
+        public Matrix4 EndWorldMatrix() =>
+            Matrix4.CreateRotationZ(Theta) * Matrix4.CreateTranslation(EndPoint.X, EndPoint.Y, 0);
 
         public override string ToString() => $"{StartPoint} -> {EndPoint}";
     }

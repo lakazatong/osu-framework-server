@@ -11,9 +11,7 @@ using osuTK.Input;
 
 namespace osu.Framework.Graphics.Containers
 {
-    public partial class TabbableContainer : TabbableContainer<Drawable>
-    {
-    }
+    public partial class TabbableContainer : TabbableContainer<Drawable> { }
 
     /// <summary>
     /// This interface is used for recognizing <see cref="TabbableContainer{T}"/> of any type without reflection.
@@ -64,7 +62,11 @@ namespace osu.Framework.Graphics.Containers
 
                 if (!started)
                     started = ReferenceEquals(drawable, this);
-                else if (drawable is ITabbableContainer tabbable && tabbable.CanBeTabbedTo && focusManager.ChangeFocus(drawable))
+                else if (
+                    drawable is ITabbableContainer tabbable
+                    && tabbable.CanBeTabbedTo
+                    && focusManager.ChangeFocus(drawable)
+                )
                     return;
 
                 if (drawable is CompositeDrawable composite)

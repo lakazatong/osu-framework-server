@@ -14,26 +14,46 @@ namespace osu.Framework.Tests.Visual.Containers
             Remove(TestContainer, false);
 
             BufferedContainer buffer;
-            Add(buffer = new BufferedContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Children = new[] { TestContainer }
-            });
+            Add(
+                buffer = new BufferedContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new[] { TestContainer },
+                }
+            );
 
-            AddSliderStep("blur", 0f, 20f, 0f, blur =>
-            {
-                buffer.BlurTo(new Vector2(blur));
-            });
+            AddSliderStep(
+                "blur",
+                0f,
+                20f,
+                0f,
+                blur =>
+                {
+                    buffer.BlurTo(new Vector2(blur));
+                }
+            );
 
-            AddSliderStep("fbo scale (x)", 0.01f, 4f, 1f, scale =>
-            {
-                buffer.FrameBufferScale = new Vector2(scale, buffer.FrameBufferScale.Y);
-            });
+            AddSliderStep(
+                "fbo scale (x)",
+                0.01f,
+                4f,
+                1f,
+                scale =>
+                {
+                    buffer.FrameBufferScale = new Vector2(scale, buffer.FrameBufferScale.Y);
+                }
+            );
 
-            AddSliderStep("fbo scale (y)", 0.01f, 4f, 1f, scale =>
-            {
-                buffer.FrameBufferScale = new Vector2(buffer.FrameBufferScale.X, scale);
-            });
+            AddSliderStep(
+                "fbo scale (y)",
+                0.01f,
+                4f,
+                1f,
+                scale =>
+                {
+                    buffer.FrameBufferScale = new Vector2(buffer.FrameBufferScale.X, scale);
+                }
+            );
         }
     }
 }

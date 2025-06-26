@@ -29,7 +29,11 @@ namespace osu.Framework.Audio
         /// Whether an audio thread specific action can be performed inline.
         /// </summary>
         protected bool CanPerformInline =>
-            ThreadSafety.IsAudioThread || (ThreadSafety.ExecutionMode == ExecutionMode.SingleThread && ThreadSafety.IsUpdateThread);
+            ThreadSafety.IsAudioThread
+            || (
+                ThreadSafety.ExecutionMode == ExecutionMode.SingleThread
+                && ThreadSafety.IsUpdateThread
+            );
 
         /// <summary>
         /// Enqueues an action to be performed on the audio thread.
@@ -56,16 +60,12 @@ namespace osu.Framework.Audio
         /// <summary>
         /// Run each loop of the audio thread's execution after queued actions are completed to allow components to perform any additional operations.
         /// </summary>
-        protected virtual void UpdateState()
-        {
-        }
+        protected virtual void UpdateState() { }
 
         /// <summary>
         /// Run each loop of the audio thread's execution, after <see cref="UpdateState"/> as a way to update any child components.
         /// </summary>
-        protected virtual void UpdateChildren()
-        {
-        }
+        protected virtual void UpdateChildren() { }
 
         /// <summary>
         /// Updates this audio component. Always runs on the audio thread.

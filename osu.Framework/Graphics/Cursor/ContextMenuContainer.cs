@@ -6,12 +6,12 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using osuTK;
-using osuTK.Input;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
+using osuTK;
+using osuTK.Input;
 
 namespace osu.Framework.Graphics.Cursor
 {
@@ -20,7 +20,8 @@ namespace osu.Framework.Graphics.Cursor
     /// If a right-click happens on a <see cref="Drawable"/> that implements <see cref="IHasContextMenu"/> and exists as a child of the same <see cref="InputManager"/> as this container,
     /// a <see cref="Menu"/> will be displayed with bottom-right origin at the right-clicked position.
     /// </summary>
-    public abstract partial class ContextMenuContainer : CursorEffectContainer<ContextMenuContainer, IHasContextMenu>
+    public abstract partial class ContextMenuContainer
+        : CursorEffectContainer<ContextMenuContainer, IHasContextMenu>
     {
         private readonly Menu menu;
 
@@ -41,10 +42,7 @@ namespace osu.Framework.Graphics.Cursor
         /// </summary>
         protected ContextMenuContainer()
         {
-            AddInternal(content = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(content = new Container { RelativeSizeAxes = Axes.Both });
 
             AddInternal(menu = CreateMenu());
         }
@@ -71,8 +69,8 @@ namespace osu.Framework.Graphics.Cursor
             {
                 case MouseButton.Right:
                     var (target, items) = FindTargets()
-                                          .Select(t => (target: t, items: t.ContextMenuItems))
-                                          .FirstOrDefault(result => result.items != null);
+                        .Select(t => (target: t, items: t.ContextMenuItems))
+                        .FirstOrDefault(result => result.items != null);
 
                     menuTarget = target;
 
@@ -108,9 +106,13 @@ namespace osu.Framework.Graphics.Cursor
         {
             base.UpdateAfterChildren();
 
-            if (menu.State != MenuState.Open || menuTarget == null) return;
+            if (menu.State != MenuState.Open || menuTarget == null)
+                return;
 
-            if ((menuTarget as Drawable)?.FindClosestParent<ContextMenuContainer>() != this || !menuTarget.IsPresent)
+            if (
+                (menuTarget as Drawable)?.FindClosestParent<ContextMenuContainer>() != this
+                || !menuTarget.IsPresent
+            )
             {
                 cancelDisplay();
                 return;

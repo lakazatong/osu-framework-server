@@ -19,15 +19,18 @@ namespace osu.Framework.Graphics.Containers
     /// This is a bare-minimal implementation of a container, so it may be required to be nested inside a <see cref="Container"/> for some use cases.
     /// </remarks>
     /// <typeparam name="T">The type of <see cref="Drawable"/>.</typeparam>
-    public partial class AudioContainer<T> : DrawableAudioWrapper, IContainerEnumerable<T>, IContainerCollection<T>, ICollection<T>, IReadOnlyList<T>
+    public partial class AudioContainer<T>
+        : DrawableAudioWrapper,
+            IContainerEnumerable<T>,
+            IContainerCollection<T>,
+            ICollection<T>,
+            IReadOnlyList<T>
         where T : Drawable
     {
         private readonly Container<T> container;
 
         public AudioContainer()
-            : this(new Container<T>())
-        {
-        }
+            : this(new Container<T>()) { }
 
         private AudioContainer(Container<T> container)
             : base(container)
@@ -42,7 +45,8 @@ namespace osu.Framework.Graphics.Containers
             {
                 base.Size = new Vector2(
                     RelativeSizeAxes.HasFlagFast(Axes.X) ? 1 : value.X,
-                    RelativeSizeAxes.HasFlagFast(Axes.Y) ? 1 : value.Y);
+                    RelativeSizeAxes.HasFlagFast(Axes.Y) ? 1 : value.Y
+                );
 
                 container.Size = value;
             }
@@ -134,7 +138,8 @@ namespace osu.Framework.Graphics.Containers
             container.AddRange(collection);
         }
 
-        public bool Remove(T drawable, bool disposeImmediately) => container.Remove(drawable, disposeImmediately);
+        public bool Remove(T drawable, bool disposeImmediately) =>
+            container.Remove(drawable, disposeImmediately);
 
         bool ICollection<T>.Remove(T item) => container.Remove(item, true);
 
@@ -158,7 +163,5 @@ namespace osu.Framework.Graphics.Containers
     /// <remarks>
     /// This is a bare-minimal implementation of a container, so it may be required to be nested inside a <see cref="Container"/> for some use cases.
     /// </remarks>
-    public partial class AudioContainer : AudioContainer<Drawable>
-    {
-    }
+    public partial class AudioContainer : AudioContainer<Drawable> { }
 }

@@ -37,9 +37,9 @@ namespace TemplateGame.Game
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Texture = textures.Get("logo")
+                        Texture = textures.Get("logo"),
                     },
-                }
+                },
             };
         }
 

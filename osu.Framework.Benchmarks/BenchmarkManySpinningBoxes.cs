@@ -57,11 +57,7 @@ namespace osu.Framework.Benchmarks
 
                 for (int i = 0; i < 1000; i++)
                 {
-                    var box = new Box
-                    {
-                        Size = new Vector2(100),
-                        Colour = Color4.Black
-                    };
+                    var box = new Box { Size = new Vector2(100), Colour = Color4.Black };
 
                     MainContent.Add(box);
 

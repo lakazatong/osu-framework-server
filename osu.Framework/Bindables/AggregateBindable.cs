@@ -117,6 +117,9 @@ namespace osu.Framework.Bindables
             }
         }
 
-        private readonly record struct WeakRefPair(WeakReference<Bindable<T>> WeakReference, IBindable<T> BoundCopy);
+        private readonly record struct WeakRefPair(
+            WeakReference<Bindable<T>> WeakReference,
+            IBindable<T> BoundCopy
+        );
     }
 }

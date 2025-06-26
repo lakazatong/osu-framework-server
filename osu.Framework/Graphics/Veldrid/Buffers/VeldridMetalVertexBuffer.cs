@@ -25,7 +25,9 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
 
         public int Size { get; }
 
-        public DeviceBuffer Buffer => sharedBuffer ?? throw new InvalidOperationException("The buffer is not initialised yet.");
+        public DeviceBuffer Buffer =>
+            sharedBuffer
+            ?? throw new InvalidOperationException("The buffer is not initialised yet.");
 
         public VeldridMetalVertexBuffer(VeldridRenderer renderer, int amountVertices)
         {
@@ -48,14 +50,22 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
 
         private unsafe void initialiseBuffer()
         {
-            sharedBuffer = renderer.Factory.CreateBuffer(new BufferDescription((uint)(VeldridVertexUtils<T>.STRIDE * Size), BufferUsage.VertexBuffer | BufferUsage.Dynamic));
+            sharedBuffer = renderer.Factory.CreateBuffer(
+                new BufferDescription(
+                    (uint)(VeldridVertexUtils<T>.STRIDE * Size),
+                    BufferUsage.VertexBuffer | BufferUsage.Dynamic
+                )
+            );
             sharedBufferMemory = (T*)renderer.Device.Map(sharedBuffer, MapMode.Write).Data;
             memoryLease = NativeMemoryTracker.AddMemory(this, sharedBuffer.SizeInBytes);
 
             LastUseFrameIndex = renderer.FrameIndex;
         }
 
-        void IVeldridVertexBuffer<T>.UpdateRange(int from, int to) => throw new NotSupportedException("This implementation shares buffer storage with the GPU, no explicit synchronisation is required prior to drawing. See https://developer.apple.com/documentation/metal/mtlstoragemode/mtlstoragemodeshared?language=objc for more information.");
+        void IVeldridVertexBuffer<T>.UpdateRange(int from, int to) =>
+            throw new NotSupportedException(
+                "This implementation shares buffer storage with the GPU, no explicit synchronisation is required prior to drawing. See https://developer.apple.com/documentation/metal/mtlstoragemode/mtlstoragemodeshared?language=objc for more information."
+            );
 
         ~VeldridMetalVertexBuffer()
         {

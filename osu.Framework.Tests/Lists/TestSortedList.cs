@@ -5,8 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using osu.Framework.Lists;
 using NUnit.Framework;
+using osu.Framework.Lists;
 
 namespace osu.Framework.Tests.Lists
 {
@@ -21,7 +21,7 @@ namespace osu.Framework.Tests.Lists
                 10,
                 8,
                 13,
-                -10
+                -10,
             };
             Assert.AreEqual(-10, list[0]);
             Assert.AreEqual(8, list[1]);
@@ -37,7 +37,7 @@ namespace osu.Framework.Tests.Lists
                 10,
                 8,
                 13,
-                -10
+                -10,
             };
             list.Remove(8);
             Assert.That(list, Does.Not.Contain(8));
@@ -52,7 +52,7 @@ namespace osu.Framework.Tests.Lists
                 10,
                 8,
                 13,
-                -10
+                -10,
             };
             list.RemoveAt(0);
             Assert.That(list, Does.Not.Contain(-10));
@@ -67,7 +67,7 @@ namespace osu.Framework.Tests.Lists
                 10,
                 8,
                 13,
-                -10
+                -10,
             };
             list.Clear();
             Assert.That(list, Is.Empty);
@@ -77,12 +77,7 @@ namespace osu.Framework.Tests.Lists
         [Test]
         public void TestIndexOf()
         {
-            var list = new SortedList<int>(Comparer<int>.Default)
-            {
-                10,
-                10,
-                10,
-            };
+            var list = new SortedList<int>(Comparer<int>.Default) { 10, 10, 10 };
 
             Assert.IsTrue(list.IndexOf(10) >= 0);
         }
@@ -90,12 +85,7 @@ namespace osu.Framework.Tests.Lists
         [Test]
         public void TestCollectionModifiedException()
         {
-            var list = new SortedList<int>(Comparer<int>.Default)
-            {
-                10,
-                10,
-                10,
-            };
+            var list = new SortedList<int>(Comparer<int>.Default) { 10, 10, 10 };
 
             Assert.Throws<InvalidOperationException>(() =>
             {
@@ -128,7 +118,8 @@ namespace osu.Framework.Tests.Lists
             Assert.That(list[^1], Is.EqualTo(first));
         }
 
-        private class TestObjectWithAdjustableComparer : IComparable<TestObjectWithAdjustableComparer>
+        private class TestObjectWithAdjustableComparer
+            : IComparable<TestObjectWithAdjustableComparer>
         {
             public int Id;
 

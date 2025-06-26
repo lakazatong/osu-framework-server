@@ -26,15 +26,16 @@ namespace osu.Framework.Tests.Visual.Input
         private SpriteText text;
 
         [Test]
-        public void Setup() => Schedule(() =>
-        {
-            Children = new Drawable[]
+        public void Setup() =>
+            Schedule(() =>
             {
-                path = new HoverablePath(),
-                testPoint = new TestPoint(),
-                text = new SpriteText { Anchor = Anchor.TopCentre, Origin = Anchor.TopCentre }
-            };
-        });
+                Children = new Drawable[]
+                {
+                    path = new HoverablePath(),
+                    testPoint = new TestPoint(),
+                    text = new SpriteText { Anchor = Anchor.TopCentre, Origin = Anchor.TopCentre },
+                };
+            });
 
         [Test]
         public void TestHorizontalPath()
@@ -93,7 +94,13 @@ namespace osu.Framework.Tests.Visual.Input
         [Test]
         public void TestOverlapping()
         {
-            addPath("Overlapping", new Vector2(100), new Vector2(600), new Vector2(800, 300), new Vector2(100, 400));
+            addPath(
+                "Overlapping",
+                new Vector2(100),
+                new Vector2(600),
+                new Vector2(800, 300),
+                new Vector2(100, 400)
+            );
             // Left intersection out
             test(new Vector2(250, 325), false);
             // Left intersection in
@@ -124,19 +131,27 @@ namespace osu.Framework.Tests.Visual.Input
             return base.OnMouseMove(e);
         }
 
-        private void addPath(string name, params Vector2[] vertices) => AddStep(name, () =>
-        {
-            path.PathRadius = path_width;
-            path.Vertices = vertices.ToList();
-        });
+        private void addPath(string name, params Vector2[] vertices) =>
+            AddStep(
+                name,
+                () =>
+                {
+                    path.PathRadius = path_width;
+                    path.Vertices = vertices.ToList();
+                }
+            );
 
         private void test(Vector2 position, bool shouldReceivePositionalInput)
         {
-            AddAssert($"Test @ {position} = {shouldReceivePositionalInput}", () =>
-            {
-                testPoint.Position = position;
-                return path.ReceivePositionalInputAt(path.ToScreenSpace(position)) == shouldReceivePositionalInput;
-            });
+            AddAssert(
+                $"Test @ {position} = {shouldReceivePositionalInput}",
+                () =>
+                {
+                    testPoint.Position = position;
+                    return path.ReceivePositionalInputAt(path.ToScreenSpace(position))
+                        == shouldReceivePositionalInput;
+                }
+            );
         }
 
         private partial class TestPoint : CircularContainer

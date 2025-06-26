@@ -4,13 +4,13 @@
 using System;
 using Android.Content;
 using Android.Runtime;
-using Org.Libsdl.App;
-using osu.Framework.Graphics;
-using osu.Framework.Platform;
-using osu.Framework.Bindables;
 using Android.Views;
 using AndroidX.Core.View;
 using AndroidX.Window.Layout;
+using Org.Libsdl.App;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Android
 {
@@ -69,7 +69,9 @@ namespace osu.Framework.Android
         /// </summary>
         private void updateSafeArea(WindowInsets? windowInsets)
         {
-            var metrics = WindowMetricsCalculator.Companion.OrCreate.ComputeCurrentWindowMetrics(activity);
+            var metrics = WindowMetricsCalculator.Companion.OrCreate.ComputeCurrentWindowMetrics(
+                activity
+            );
             var windowArea = metrics.Bounds.ToRectangleI();
             var usableWindowArea = windowArea;
 
@@ -78,35 +80,69 @@ namespace osu.Framework.Android
                 var cutout = windowInsets?.DisplayCutout;
 
                 if (cutout != null)
-                    usableWindowArea = usableWindowArea.Shrink(cutout.SafeInsetLeft, cutout.SafeInsetRight, cutout.SafeInsetTop, cutout.SafeInsetBottom);
+                    usableWindowArea = usableWindowArea.Shrink(
+                        cutout.SafeInsetLeft,
+                        cutout.SafeInsetRight,
+                        cutout.SafeInsetTop,
+                        cutout.SafeInsetBottom
+                    );
             }
 
             if (OperatingSystem.IsAndroidVersionAtLeast(31) && windowInsets != null)
             {
-                var topLeftCorner = windowInsets.GetRoundedCorner((int)RoundedCornerPosition.TopLeft);
-                var topRightCorner = windowInsets.GetRoundedCorner((int)RoundedCornerPosition.TopRight);
-                var bottomLeftCorner = windowInsets.GetRoundedCorner((int)RoundedCornerPosition.BottomLeft);
-                var bottomRightCorner = windowInsets.GetRoundedCorner((int)RoundedCornerPosition.BottomRight);
+                var topLeftCorner = windowInsets.GetRoundedCorner(
+                    (int)RoundedCornerPosition.TopLeft
+                );
+                var topRightCorner = windowInsets.GetRoundedCorner(
+                    (int)RoundedCornerPosition.TopRight
+                );
+                var bottomLeftCorner = windowInsets.GetRoundedCorner(
+                    (int)RoundedCornerPosition.BottomLeft
+                );
+                var bottomRightCorner = windowInsets.GetRoundedCorner(
+                    (int)RoundedCornerPosition.BottomRight
+                );
 
-                int cornerInsetLeft = Math.Max(topLeftCorner?.Radius ?? 0, bottomLeftCorner?.Radius ?? 0);
-                int cornerInsetRight = Math.Max(topRightCorner?.Radius ?? 0, bottomRightCorner?.Radius ?? 0);
-                int cornerInsetTop = Math.Max(topLeftCorner?.Radius ?? 0, topRightCorner?.Radius ?? 0);
-                int cornerInsetBottom = Math.Max(bottomLeftCorner?.Radius ?? 0, bottomRightCorner?.Radius ?? 0);
+                int cornerInsetLeft = Math.Max(
+                    topLeftCorner?.Radius ?? 0,
+                    bottomLeftCorner?.Radius ?? 0
+                );
+                int cornerInsetRight = Math.Max(
+                    topRightCorner?.Radius ?? 0,
+                    bottomRightCorner?.Radius ?? 0
+                );
+                int cornerInsetTop = Math.Max(
+                    topLeftCorner?.Radius ?? 0,
+                    topRightCorner?.Radius ?? 0
+                );
+                int cornerInsetBottom = Math.Max(
+                    bottomLeftCorner?.Radius ?? 0,
+                    bottomRightCorner?.Radius ?? 0
+                );
 
-                var radiusInsetArea = windowArea.Width >= windowArea.Height
-                    ? windowArea.Shrink(cornerInsetLeft, cornerInsetRight, 0, 0)
-                    : windowArea.Shrink(0, 0, cornerInsetTop, cornerInsetBottom);
+                var radiusInsetArea =
+                    windowArea.Width >= windowArea.Height
+                        ? windowArea.Shrink(cornerInsetLeft, cornerInsetRight, 0, 0)
+                        : windowArea.Shrink(0, 0, cornerInsetTop, cornerInsetBottom);
 
                 usableWindowArea = usableWindowArea.Intersect(radiusInsetArea);
             }
 
-            if (OperatingSystem.IsAndroidVersionAtLeast(24) && activity.IsInMultiWindowMode && windowInsets != null)
+            if (
+                OperatingSystem.IsAndroidVersionAtLeast(24)
+                && activity.IsInMultiWindowMode
+                && windowInsets != null
+            )
             {
                 // if we are in multi-window mode, the status bar is always visible (even if we request to hide it) and could be obstructing our view.
                 // if multi-window mode is not active, we can assume the status bar is hidden so we shouldn't consider it for safe area calculations.
                 var insetsCompat = WindowInsetsCompat.ToWindowInsetsCompat(windowInsets, this);
-                int statusBarHeight = insetsCompat.GetInsets(WindowInsetsCompat.Type.StatusBars()).Top;
-                usableWindowArea = usableWindowArea.Intersect(windowArea.Shrink(0, 0, statusBarHeight, 0));
+                int statusBarHeight = insetsCompat
+                    .GetInsets(WindowInsetsCompat.Type.StatusBars())
+                    .Top;
+                usableWindowArea = usableWindowArea.Intersect(
+                    windowArea.Shrink(0, 0, statusBarHeight, 0)
+                );
             }
 
             SafeAreaPadding.Value = new MarginPadding

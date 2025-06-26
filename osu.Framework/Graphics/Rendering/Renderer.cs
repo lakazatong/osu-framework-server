@@ -95,7 +95,8 @@ namespace osu.Framework.Graphics.Rendering
         /// </summary>
         protected IShader? Shader { get; private set; }
 
-        private readonly ShaderCompilationStore shaderCompilationStore = new ShaderCompilationStore();
+        private readonly ShaderCompilationStore shaderCompilationStore =
+            new ShaderCompilationStore();
 
         private readonly GlobalStatistic<int> statExpensiveOperationsQueued;
         private readonly GlobalStatistic<int> statTextureUploadsQueued;
@@ -103,16 +104,23 @@ namespace osu.Framework.Graphics.Rendering
         private readonly GlobalStatistic<int> statTextureUploadsPerformed;
         private readonly GlobalStatistic<int> vboInUse;
 
-        private readonly ConcurrentQueue<ScheduledDelegate> expensiveOperationQueue = new ConcurrentQueue<ScheduledDelegate>();
-        private readonly ConcurrentQueue<INativeTexture> textureUploadQueue = new ConcurrentQueue<INativeTexture>();
+        private readonly ConcurrentQueue<ScheduledDelegate> expensiveOperationQueue =
+            new ConcurrentQueue<ScheduledDelegate>();
+        private readonly ConcurrentQueue<INativeTexture> textureUploadQueue =
+            new ConcurrentQueue<INativeTexture>();
         private readonly RendererDisposalQueue disposalQueue = new RendererDisposalQueue();
 
-        private readonly Scheduler resetScheduler = new Scheduler(() => ThreadSafety.IsDrawThread, new StopwatchClock(true)); // force no thread set until we are actually on the draw thread.
+        private readonly Scheduler resetScheduler = new Scheduler(
+            () => ThreadSafety.IsDrawThread,
+            new StopwatchClock(true)
+        ); // force no thread set until we are actually on the draw thread.
 
         private readonly DepthValue backBufferDepth = new DepthValue();
 
-        private readonly Dictionary<string, IUniformBuffer> boundUniformBuffers = new Dictionary<string, IUniformBuffer>();
-        private readonly Stack<IVertexBatch<TexturedVertex2D>> quadBatches = new Stack<IVertexBatch<TexturedVertex2D>>();
+        private readonly Dictionary<string, IUniformBuffer> boundUniformBuffers =
+            new Dictionary<string, IUniformBuffer>();
+        private readonly Stack<IVertexBatch<TexturedVertex2D>> quadBatches =
+            new Stack<IVertexBatch<TexturedVertex2D>>();
         private readonly List<IVertexBuffer> vertexBuffersInUse = new List<IVertexBuffer>();
         private readonly List<IVertexBatch> batchResetList = new List<IVertexBatch>();
         private readonly Stack<RectangleI> viewportStack = new Stack<RectangleI>();
@@ -148,19 +156,40 @@ namespace osu.Framework.Graphics.Rendering
 
             flush_source_statistics = new GlobalStatistic<int>[sources.Length];
             foreach (FlushBatchSource source in sources)
-                flush_source_statistics[(int)source] = GlobalStatistics.Get<int>(nameof(FlushBatchSource), source.ToString());
+                flush_source_statistics[(int)source] = GlobalStatistics.Get<int>(
+                    nameof(FlushBatchSource),
+                    source.ToString()
+                );
         }
 
         protected Renderer()
         {
-            statTextureUploadsPerformed = GlobalStatistics.Get<int>(GetType().Name, "Texture uploads performed");
-            statTextureUploadsDequeued = GlobalStatistics.Get<int>(GetType().Name, "Texture uploads dequeued");
-            statTextureUploadsQueued = GlobalStatistics.Get<int>(GetType().Name, "Texture upload queue length");
-            statExpensiveOperationsQueued = GlobalStatistics.Get<int>(GetType().Name, "Expensive operation queue length");
+            statTextureUploadsPerformed = GlobalStatistics.Get<int>(
+                GetType().Name,
+                "Texture uploads performed"
+            );
+            statTextureUploadsDequeued = GlobalStatistics.Get<int>(
+                GetType().Name,
+                "Texture uploads dequeued"
+            );
+            statTextureUploadsQueued = GlobalStatistics.Get<int>(
+                GetType().Name,
+                "Texture upload queue length"
+            );
+            statExpensiveOperationsQueued = GlobalStatistics.Get<int>(
+                GetType().Name,
+                "Expensive operation queue length"
+            );
             vboInUse = GlobalStatistics.Get<int>(GetType().Name, "VBOs in use");
 
             whitePixel = new Lazy<TextureWhitePixel>(() =>
-                new TextureAtlas(this, TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING, TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING, true).WhitePixel);
+                new TextureAtlas(
+                    this,
+                    TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING,
+                    TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING,
+                    true
+                ).WhitePixel
+            );
         }
 
         void IRenderer.Initialise(IGraphicsSurface graphicsSurface)
@@ -168,11 +197,17 @@ namespace osu.Framework.Graphics.Rendering
             switch (graphicsSurface.Type)
             {
                 case GraphicsSurfaceType.OpenGL:
-                    Trace.Assert(graphicsSurface is IOpenGLGraphicsSurface, $"Window must implement {nameof(IOpenGLGraphicsSurface)}.");
+                    Trace.Assert(
+                        graphicsSurface is IOpenGLGraphicsSurface,
+                        $"Window must implement {nameof(IOpenGLGraphicsSurface)}."
+                    );
                     break;
 
                 case GraphicsSurfaceType.Metal:
-                    Trace.Assert(graphicsSurface is IMetalGraphicsSurface, $"Window graphics API must implement {nameof(IMetalGraphicsSurface)}.");
+                    Trace.Assert(
+                        graphicsSurface is IMetalGraphicsSurface,
+                        $"Window graphics API must implement {nameof(IMetalGraphicsSurface)}."
+                    );
                     break;
             }
 
@@ -252,15 +287,18 @@ namespace osu.Framework.Graphics.Rendering
             PushViewport(new RectangleI(0, 0, (int)windowSize.X, (int)windowSize.Y));
             PushScissor(new RectangleI(0, 0, (int)windowSize.X, (int)windowSize.Y));
             PushScissorOffset(Vector2I.Zero);
-            PushMaskingInfo(new MaskingInfo
-            {
-                ScreenSpaceAABB = new RectangleI(0, 0, (int)windowSize.X, (int)windowSize.Y),
-                MaskingRect = new RectangleF(0, 0, windowSize.X, windowSize.Y),
-                ToMaskingSpace = Matrix3.Identity,
-                BlendRange = 1,
-                AlphaExponent = 1,
-                CornerExponent = 2.5f,
-            }, true);
+            PushMaskingInfo(
+                new MaskingInfo
+                {
+                    ScreenSpaceAABB = new RectangleI(0, 0, (int)windowSize.X, (int)windowSize.Y),
+                    MaskingRect = new RectangleF(0, 0, windowSize.X, windowSize.Y),
+                    ToMaskingSpace = Matrix3.Identity,
+                    BlendRange = 1,
+                    AlphaExponent = 1,
+                    CornerExponent = 2.5f,
+                },
+                true
+            );
 
             PushDepthInfo(DepthInfo.Default);
             PushStencilInfo(StencilInfo.Default);
@@ -275,7 +313,11 @@ namespace osu.Framework.Graphics.Rendering
             statTextureUploadsPerformed.Value = 0;
 
             // increase the number of items processed with the queue length to ensure it doesn't get out of hand.
-            int targetUploads = Math.Clamp(textureUploadQueue.Count / 2, 1, MaxTexturesUploadedPerFrame);
+            int targetUploads = Math.Clamp(
+                textureUploadQueue.Count / 2,
+                1,
+                MaxTexturesUploadedPerFrame
+            );
             int uploads = 0;
             int uploadedPixels = 0;
 
@@ -330,7 +372,9 @@ namespace osu.Framework.Graphics.Rendering
         /// <summary>
         /// Returns an image containing the content of a framebuffer.
         /// </summary>
-        protected internal virtual Image<Rgba32>? ExtractFrameBufferData(IFrameBuffer frameBuffer) => null;
+        protected internal virtual Image<Rgba32>? ExtractFrameBufferData(
+            IFrameBuffer frameBuffer
+        ) => null;
 
         /// <summary>
         /// Performs a once-off initialisation of this <see cref="Renderer"/>.
@@ -614,7 +658,10 @@ namespace osu.Framework.Graphics.Rendering
 
         #region Masking
 
-        public void PushMaskingInfo(in MaskingInfo maskingInfo, bool overwritePreviousScissor = false)
+        public void PushMaskingInfo(
+            in MaskingInfo maskingInfo,
+            bool overwritePreviousScissor = false
+        )
         {
             maskingStack.Push(maskingInfo);
             setMaskingInfo(maskingInfo, true, overwritePreviousScissor);
@@ -628,7 +675,11 @@ namespace osu.Framework.Graphics.Rendering
             setMaskingInfo(maskingStack.Peek(), false, true);
         }
 
-        private void setMaskingInfo(MaskingInfo maskingInfo, bool isPushing, bool overwritePreviousScissor)
+        private void setMaskingInfo(
+            MaskingInfo maskingInfo,
+            bool isPushing,
+            bool overwritePreviousScissor
+        )
         {
             if (CurrentMaskingInfo == maskingInfo)
                 return;
@@ -638,19 +689,28 @@ namespace osu.Framework.Graphics.Rendering
             if (isPushing)
             {
                 // When drawing to a viewport that doesn't match the projection size (e.g. via framebuffers), the resultant image will be scaled
-                Vector2 projectionScale = new Vector2(ProjectionMatrix.Row0.X / 2, -ProjectionMatrix.Row1.Y / 2);
+                Vector2 projectionScale = new Vector2(
+                    ProjectionMatrix.Row0.X / 2,
+                    -ProjectionMatrix.Row1.Y / 2
+                );
                 Vector2 viewportScale = Vector2.Multiply(Viewport.Size, projectionScale);
 
-                Vector2 location = (maskingInfo.ScreenSpaceAABB.Location - ScissorOffset) * viewportScale;
+                Vector2 location =
+                    (maskingInfo.ScreenSpaceAABB.Location - ScissorOffset) * viewportScale;
                 Vector2 size = maskingInfo.ScreenSpaceAABB.Size * viewportScale;
 
                 RectangleI actualRect = new RectangleI(
                     (int)Math.Floor(location.X),
                     (int)Math.Floor(location.Y),
                     (int)Math.Ceiling(size.X),
-                    (int)Math.Ceiling(size.Y));
+                    (int)Math.Ceiling(size.Y)
+                );
 
-                PushScissor(overwritePreviousScissor ? actualRect : RectangleI.Intersect(scissorRectStack.Peek(), actualRect));
+                PushScissor(
+                    overwritePreviousScissor
+                        ? actualRect
+                        : RectangleI.Intersect(scissorRectStack.Peek(), actualRect)
+                );
             }
             else
                 PopScissor();
@@ -734,7 +794,8 @@ namespace osu.Framework.Graphics.Rendering
 
         internal IVertexBatch<TexturedVertex2D> DefaultQuadBatch => quadBatches.Peek();
 
-        internal void PushQuadBatch(IVertexBatch<TexturedVertex2D> quadBatch) => quadBatches.Push(quadBatch);
+        internal void PushQuadBatch(IVertexBatch<TexturedVertex2D> quadBatch) =>
+            quadBatches.Push(quadBatch);
 
         internal void PopQuadBatch() => quadBatches.Pop();
 
@@ -742,7 +803,8 @@ namespace osu.Framework.Graphics.Rendering
         /// Notifies that a <see cref="IVertexBuffer"/> has begun being used.
         /// </summary>
         /// <param name="buffer">The <see cref="IVertexBuffer"/> in use.</param>
-        internal void RegisterVertexBufferUse(IVertexBuffer buffer) => vertexBuffersInUse.Add(buffer);
+        internal void RegisterVertexBufferUse(IVertexBuffer buffer) =>
+            vertexBuffersInUse.Add(buffer);
 
         /// <summary>
         /// Sets the last vertex batch used for drawing.
@@ -806,7 +868,12 @@ namespace osu.Framework.Graphics.Rendering
 
             texture.NativeTexture.Upload();
 
-            bool didBind = BindTexture(texture.NativeTexture, unit, wrapModeS ?? texture.WrapModeS, wrapModeT ?? texture.WrapModeT);
+            bool didBind = BindTexture(
+                texture.NativeTexture,
+                unit,
+                wrapModeS ?? texture.WrapModeS,
+                wrapModeT ?? texture.WrapModeT
+            );
             lastBoundTextureIsAtlas[unit] = texture.IsAtlasTexture;
 
             return didBind;
@@ -820,7 +887,12 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="wrapModeS">The texture's horizontal wrap mode.</param>
         /// <param name="wrapModeT">The texture's vertex wrap mode.</param>
         /// <returns>Whether the texture was successfully bound.</returns>
-        public bool BindTexture(INativeTexture texture, int unit = 0, WrapMode wrapModeS = WrapMode.None, WrapMode wrapModeT = WrapMode.None)
+        public bool BindTexture(
+            INativeTexture texture,
+            int unit = 0,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None
+        )
         {
             if (lastActiveTextureUnit == unit && lastBoundTexture[unit] == texture)
             {
@@ -916,7 +988,9 @@ namespace osu.Framework.Graphics.Rendering
                 return;
 
             frameBufferStack.Pop();
-            setFrameBuffer(frameBufferStack.TryPeek(out var lastFramebuffer) ? lastFramebuffer : null);
+            setFrameBuffer(
+                frameBufferStack.TryPeek(out var lastFramebuffer) ? lastFramebuffer : null
+            );
         }
 
         private void setFrameBuffer(IFrameBuffer? frameBuffer, bool force = false)
@@ -977,31 +1051,35 @@ namespace osu.Framework.Graphics.Rendering
                         currentMaskingInfo.MaskingRect.Left,
                         currentMaskingInfo.MaskingRect.Top,
                         currentMaskingInfo.MaskingRect.Right,
-                        currentMaskingInfo.MaskingRect.Bottom),
-                    BorderThickness = currentMaskingInfo.BorderThickness / currentMaskingInfo.BlendRange,
-                    BorderColour = currentMaskingInfo.BorderThickness > 0
-                        ? new Matrix4(
-                            // TopLeft
-                            currentMaskingInfo.BorderColour.TopLeft.SRGB.R,
-                            currentMaskingInfo.BorderColour.TopLeft.SRGB.G,
-                            currentMaskingInfo.BorderColour.TopLeft.SRGB.B,
-                            currentMaskingInfo.BorderColour.TopLeft.SRGB.A,
-                            // BottomLeft
-                            currentMaskingInfo.BorderColour.BottomLeft.SRGB.R,
-                            currentMaskingInfo.BorderColour.BottomLeft.SRGB.G,
-                            currentMaskingInfo.BorderColour.BottomLeft.SRGB.B,
-                            currentMaskingInfo.BorderColour.BottomLeft.SRGB.A,
-                            // TopRight
-                            currentMaskingInfo.BorderColour.TopRight.SRGB.R,
-                            currentMaskingInfo.BorderColour.TopRight.SRGB.G,
-                            currentMaskingInfo.BorderColour.TopRight.SRGB.B,
-                            currentMaskingInfo.BorderColour.TopRight.SRGB.A,
-                            // BottomRight
-                            currentMaskingInfo.BorderColour.BottomRight.SRGB.R,
-                            currentMaskingInfo.BorderColour.BottomRight.SRGB.G,
-                            currentMaskingInfo.BorderColour.BottomRight.SRGB.B,
-                            currentMaskingInfo.BorderColour.BottomRight.SRGB.A)
-                        : globalUniformBuffer.Data.BorderColour,
+                        currentMaskingInfo.MaskingRect.Bottom
+                    ),
+                    BorderThickness =
+                        currentMaskingInfo.BorderThickness / currentMaskingInfo.BlendRange,
+                    BorderColour =
+                        currentMaskingInfo.BorderThickness > 0
+                            ? new Matrix4(
+                                // TopLeft
+                                currentMaskingInfo.BorderColour.TopLeft.SRGB.R,
+                                currentMaskingInfo.BorderColour.TopLeft.SRGB.G,
+                                currentMaskingInfo.BorderColour.TopLeft.SRGB.B,
+                                currentMaskingInfo.BorderColour.TopLeft.SRGB.A,
+                                // BottomLeft
+                                currentMaskingInfo.BorderColour.BottomLeft.SRGB.R,
+                                currentMaskingInfo.BorderColour.BottomLeft.SRGB.G,
+                                currentMaskingInfo.BorderColour.BottomLeft.SRGB.B,
+                                currentMaskingInfo.BorderColour.BottomLeft.SRGB.A,
+                                // TopRight
+                                currentMaskingInfo.BorderColour.TopRight.SRGB.R,
+                                currentMaskingInfo.BorderColour.TopRight.SRGB.G,
+                                currentMaskingInfo.BorderColour.TopRight.SRGB.B,
+                                currentMaskingInfo.BorderColour.TopRight.SRGB.A,
+                                // BottomRight
+                                currentMaskingInfo.BorderColour.BottomRight.SRGB.R,
+                                currentMaskingInfo.BorderColour.BottomRight.SRGB.G,
+                                currentMaskingInfo.BorderColour.BottomRight.SRGB.B,
+                                currentMaskingInfo.BorderColour.BottomRight.SRGB.A
+                            )
+                            : globalUniformBuffer.Data.BorderColour,
                     MaskingBlendRange = currentMaskingInfo.BlendRange,
                     AlphaExponent = currentMaskingInfo.AlphaExponent,
                     EdgeOffset = currentMaskingInfo.EdgeOffset,
@@ -1010,7 +1088,7 @@ namespace osu.Framework.Graphics.Rendering
                         ? currentMaskingInfo.HollowCornerRadius
                         : globalUniformBuffer.Data.InnerCornerRadius,
                     WrapModeS = (int)CurrentWrapModeS,
-                    WrapModeT = (int)CurrentWrapModeT
+                    WrapModeT = (int)CurrentWrapModeT,
                 };
 
                 globalUniformsChanged = false;
@@ -1024,7 +1102,11 @@ namespace osu.Framework.Graphics.Rendering
             FrameStatistics.Add(StatisticsCounterType.VerticesDraw, verticesCount);
         }
 
-        public abstract void DrawVerticesImplementation(PrimitiveTopology topology, int vertexStart, int verticesCount);
+        public abstract void DrawVerticesImplementation(
+            PrimitiveTopology topology,
+            int vertexStart,
+            int verticesCount
+        );
 
         #region Shaders
 
@@ -1041,7 +1123,9 @@ namespace osu.Framework.Graphics.Rendering
         public void UnbindShader(IShader shader)
         {
             if (shaderStack.Peek() != shader)
-                throw new InvalidOperationException("Attempting to unbind shader while isn't the latest bound shader.");
+                throw new InvalidOperationException(
+                    "Attempting to unbind shader while isn't the latest bound shader."
+                );
 
             shaderStack.Pop();
             setShader(shaderStack.TryPeek(out var lastShader) ? lastShader : null);
@@ -1086,11 +1170,15 @@ namespace osu.Framework.Graphics.Rendering
         /// Informs the graphics device to update the value of the given uniform.
         /// </summary>
         /// <param name="uniform">The uniform to update.</param>
-        protected abstract void SetUniformImplementation<T>(IUniformWithValue<T> uniform) where T : unmanaged, IEquatable<T>;
+        protected abstract void SetUniformImplementation<T>(IUniformWithValue<T> uniform)
+            where T : unmanaged, IEquatable<T>;
 
         public void BindUniformBuffer(string blockName, IUniformBuffer buffer)
         {
-            if (boundUniformBuffers.TryGetValue(blockName, out IUniformBuffer? current) && current == buffer)
+            if (
+                boundUniformBuffers.TryGetValue(blockName, out IUniformBuffer? current)
+                && current == buffer
+            )
                 return;
 
             FlushCurrentBatch(FlushBatchSource.BindBuffer);
@@ -1099,19 +1187,34 @@ namespace osu.Framework.Graphics.Rendering
             boundUniformBuffers[blockName] = buffer;
         }
 
-        protected abstract void SetUniformBufferImplementation(string blockName, IUniformBuffer buffer);
+        protected abstract void SetUniformBufferImplementation(
+            string blockName,
+            IUniformBuffer buffer
+        );
 
         #endregion
 
         #region Factory
 
-        public abstract IFrameBuffer CreateFrameBuffer(RenderBufferFormat[]? renderBufferFormats = null, TextureFilteringMode filteringMode = TextureFilteringMode.Linear);
+        public abstract IFrameBuffer CreateFrameBuffer(
+            RenderBufferFormat[]? renderBufferFormats = null,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear
+        );
 
         /// <inheritdoc cref="IRenderer.CreateShaderPart"/>
-        protected abstract IShaderPart CreateShaderPart(IShaderStore store, string name, byte[]? rawData, ShaderPartType partType);
+        protected abstract IShaderPart CreateShaderPart(
+            IShaderStore store,
+            string name,
+            byte[]? rawData,
+            ShaderPartType partType
+        );
 
         /// <inheritdoc cref="IRenderer.CreateShader"/>
-        protected abstract IShader CreateShader(string name, IShaderPart[] parts, ShaderCompilationStore compilationStore);
+        protected abstract IShader CreateShader(
+            string name,
+            IShaderPart[] parts,
+            ShaderCompilationStore compilationStore
+        );
 
         private IShader? mipmapShader;
 
@@ -1124,29 +1227,57 @@ namespace osu.Framework.Graphics.Rendering
                 new NamespacedResourceStore<byte[]>(
                     new NamespacedResourceStore<byte[]>(
                         new DllResourceStore(typeof(Game).Assembly),
-                        @"Resources"),
-                    "Shaders"));
+                        @"Resources"
+                    ),
+                    "Shaders"
+                )
+            );
 
-            mipmapShader = CreateShader("mipmap", new[]
-            {
-                CreateShaderPart(store, "mipmap.vs", store.GetRawData("sh_mipmap.vs"), ShaderPartType.Vertex),
-                CreateShaderPart(store, "mipmap.fs", store.GetRawData("sh_mipmap.fs"), ShaderPartType.Fragment),
-            }, shaderCompilationStore);
+            mipmapShader = CreateShader(
+                "mipmap",
+                new[]
+                {
+                    CreateShaderPart(
+                        store,
+                        "mipmap.vs",
+                        store.GetRawData("sh_mipmap.vs"),
+                        ShaderPartType.Vertex
+                    ),
+                    CreateShaderPart(
+                        store,
+                        "mipmap.fs",
+                        store.GetRawData("sh_mipmap.fs"),
+                        ShaderPartType.Fragment
+                    ),
+                },
+                shaderCompilationStore
+            );
 
             return mipmapShader;
         }
 
         /// <inheritdoc cref="IRenderer.CreateLinearBatch{TVertex}"/>
-        protected abstract IVertexBatch<TVertex> CreateLinearBatch<TVertex>(int size, int maxBuffers, PrimitiveTopology topology) where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
+        protected abstract IVertexBatch<TVertex> CreateLinearBatch<TVertex>(
+            int size,
+            int maxBuffers,
+            PrimitiveTopology topology
+        )
+            where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
 
         /// <inheritdoc cref="IRenderer.CreateQuadBatch{TVertex}"/>
-        protected abstract IVertexBatch<TVertex> CreateQuadBatch<TVertex>(int size, int maxBuffers) where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
+        protected abstract IVertexBatch<TVertex> CreateQuadBatch<TVertex>(int size, int maxBuffers)
+            where TVertex : unmanaged, IEquatable<TVertex>, IVertex;
 
         /// <inheritdoc cref="IRenderer.CreateUniformBuffer{TData}"/>
-        protected abstract IUniformBuffer<TData> CreateUniformBuffer<TData>() where TData : unmanaged, IEquatable<TData>;
+        protected abstract IUniformBuffer<TData> CreateUniformBuffer<TData>()
+            where TData : unmanaged, IEquatable<TData>;
 
         /// <inheritdoc cref="IRenderer.CreateShaderStorageBufferObject{TData}"/>
-        protected abstract IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(int uboSize, int ssboSize) where TData : unmanaged, IEquatable<TData>;
+        protected abstract IShaderStorageBufferObject<TData> CreateShaderStorageBufferObject<TData>(
+            int uboSize,
+            int ssboSize
+        )
+            where TData : unmanaged, IEquatable<TData>;
 
         /// <summary>
         /// Creates a new <see cref="INativeTexture"/>.
@@ -1157,8 +1288,13 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="filteringMode">The filtering mode.</param>
         /// <param name="initialisationColour">The colour to initialise texture levels with (in the case of sub region initial uploads). If null, no initialisation is provided out-of-the-box.</param>
         /// <returns>The <see cref="INativeTexture"/>.</returns>
-        protected abstract INativeTexture CreateNativeTexture(int width, int height, bool manualMipmaps = false, TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
-                                                              Color4? initialisationColour = null);
+        protected abstract INativeTexture CreateNativeTexture(
+            int width,
+            int height,
+            bool manualMipmaps = false,
+            TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+            Color4? initialisationColour = null
+        );
 
         /// <summary>
         /// Creates a new <see cref="INativeTexture"/> for video sprites.
@@ -1168,10 +1304,29 @@ namespace osu.Framework.Graphics.Rendering
         /// <returns>The video <see cref="INativeTexture"/>.</returns>
         protected abstract INativeTexture CreateNativeVideoTexture(int width, int height);
 
-        public Texture CreateTexture(int width, int height, bool manualMipmaps, TextureFilteringMode filteringMode, WrapMode wrapModeS, WrapMode wrapModeT, Color4? initialisationColour)
-            => CreateTexture(CreateNativeTexture(width, height, manualMipmaps, filteringMode, initialisationColour), wrapModeS, wrapModeT);
+        public Texture CreateTexture(
+            int width,
+            int height,
+            bool manualMipmaps,
+            TextureFilteringMode filteringMode,
+            WrapMode wrapModeS,
+            WrapMode wrapModeT,
+            Color4? initialisationColour
+        ) =>
+            CreateTexture(
+                CreateNativeTexture(
+                    width,
+                    height,
+                    manualMipmaps,
+                    filteringMode,
+                    initialisationColour
+                ),
+                wrapModeS,
+                wrapModeT
+            );
 
-        public Texture CreateVideoTexture(int width, int height) => CreateTexture(CreateNativeVideoTexture(width, height));
+        public Texture CreateVideoTexture(int width, int height) =>
+            CreateTexture(CreateNativeVideoTexture(width, height));
 
         /// <summary>
         /// Creates a new <see cref="Texture"/> based off an <see cref="INativeTexture"/>.
@@ -1180,8 +1335,11 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="wrapModeS">The horizontal wrap mode of the texture.</param>
         /// <param name="wrapModeT">The vertical wrap mode of the texture.</param>
         /// <returns>The <see cref="Texture"/>.</returns>
-        internal Texture CreateTexture(INativeTexture nativeTexture, WrapMode wrapModeS = WrapMode.None, WrapMode wrapModeT = WrapMode.None)
-            => registerTexture(new Texture(nativeTexture, wrapModeS, wrapModeT));
+        internal Texture CreateTexture(
+            INativeTexture nativeTexture,
+            WrapMode wrapModeS = WrapMode.None,
+            WrapMode wrapModeT = WrapMode.None
+        ) => registerTexture(new Texture(nativeTexture, wrapModeS, wrapModeT));
 
         private Texture registerTexture(Texture texture)
         {
@@ -1212,32 +1370,65 @@ namespace osu.Framework.Graphics.Rendering
         }
 
         IVertexBatch<TexturedVertex2D> IRenderer.DefaultQuadBatch => DefaultQuadBatch;
-        void IRenderer.BeginFrame(Vector2 windowSize) => BeginFrame(windowSize);
-        void IRenderer.FinishFrame() => FinishFrame();
-        void IRenderer.FlushCurrentBatch(FlushBatchSource? source) => FlushCurrentBatch(source);
-        void IRenderer.SwapBuffers() => SwapBuffers();
-        void IRenderer.WaitUntilIdle() => WaitUntilIdle();
-        void IRenderer.WaitUntilNextFrameReady() => WaitUntilNextFrameReady();
-        void IRenderer.MakeCurrent() => MakeCurrent();
-        void IRenderer.ClearCurrent() => ClearCurrent();
-        void IRenderer.SetUniform<T>(IUniformWithValue<T> uniform) => SetUniform(uniform);
-        void IRenderer.PushQuadBatch(IVertexBatch<TexturedVertex2D> quadBatch) => PushQuadBatch(quadBatch);
-        void IRenderer.PopQuadBatch() => PopQuadBatch();
-        Image<Rgba32> IRenderer.TakeScreenshot() => TakeScreenshot();
-        Image<Rgba32>? IRenderer.ExtractFrameBufferData(IFrameBuffer frameBuffer) => ExtractFrameBufferData(frameBuffer);
-        IShaderPart IRenderer.CreateShaderPart(IShaderStore store, string name, byte[]? rawData, ShaderPartType partType) => CreateShaderPart(store, name, rawData, partType);
-        IShader IRenderer.CreateShader(string name, IShaderPart[] parts) => CreateShader(name, parts, shaderCompilationStore);
 
-        IVertexBatch<TVertex> IRenderer.CreateLinearBatch<TVertex>(int size, int maxBuffers, PrimitiveTopology topology)
+        void IRenderer.BeginFrame(Vector2 windowSize) => BeginFrame(windowSize);
+
+        void IRenderer.FinishFrame() => FinishFrame();
+
+        void IRenderer.FlushCurrentBatch(FlushBatchSource? source) => FlushCurrentBatch(source);
+
+        void IRenderer.SwapBuffers() => SwapBuffers();
+
+        void IRenderer.WaitUntilIdle() => WaitUntilIdle();
+
+        void IRenderer.WaitUntilNextFrameReady() => WaitUntilNextFrameReady();
+
+        void IRenderer.MakeCurrent() => MakeCurrent();
+
+        void IRenderer.ClearCurrent() => ClearCurrent();
+
+        void IRenderer.SetUniform<T>(IUniformWithValue<T> uniform) => SetUniform(uniform);
+
+        void IRenderer.PushQuadBatch(IVertexBatch<TexturedVertex2D> quadBatch) =>
+            PushQuadBatch(quadBatch);
+
+        void IRenderer.PopQuadBatch() => PopQuadBatch();
+
+        Image<Rgba32> IRenderer.TakeScreenshot() => TakeScreenshot();
+
+        Image<Rgba32>? IRenderer.ExtractFrameBufferData(IFrameBuffer frameBuffer) =>
+            ExtractFrameBufferData(frameBuffer);
+
+        IShaderPart IRenderer.CreateShaderPart(
+            IShaderStore store,
+            string name,
+            byte[]? rawData,
+            ShaderPartType partType
+        ) => CreateShaderPart(store, name, rawData, partType);
+
+        IShader IRenderer.CreateShader(string name, IShaderPart[] parts) =>
+            CreateShader(name, parts, shaderCompilationStore);
+
+        IVertexBatch<TVertex> IRenderer.CreateLinearBatch<TVertex>(
+            int size,
+            int maxBuffers,
+            PrimitiveTopology topology
+        )
         {
             if (size <= 0)
                 throw new ArgumentException("Linear batch size must be > 0.", nameof(size));
 
             if (size > IRenderer.MAX_VERTICES)
-                throw new ArgumentException($"Linear batch may not have more than {IRenderer.MAX_VERTICES} vertices.", nameof(size));
+                throw new ArgumentException(
+                    $"Linear batch may not have more than {IRenderer.MAX_VERTICES} vertices.",
+                    nameof(size)
+                );
 
             if (maxBuffers <= 0)
-                throw new ArgumentException("Maximum number of buffers must be > 0.", nameof(maxBuffers));
+                throw new ArgumentException(
+                    "Maximum number of buffers must be > 0.",
+                    nameof(maxBuffers)
+                );
 
             return CreateLinearBatch<TVertex>(size, maxBuffers, topology);
         }
@@ -1248,10 +1439,16 @@ namespace osu.Framework.Graphics.Rendering
                 throw new ArgumentException("Quad batch size must be > 0.", nameof(size));
 
             if (size > IRenderer.MAX_QUADS)
-                throw new ArgumentException($"Quad batch may not have more than {IRenderer.MAX_QUADS} quads.", nameof(size));
+                throw new ArgumentException(
+                    $"Quad batch may not have more than {IRenderer.MAX_QUADS} quads.",
+                    nameof(size)
+                );
 
             if (maxBuffers <= 0)
-                throw new ArgumentException("Maximum number of buffers must be > 0.", nameof(maxBuffers));
+                throw new ArgumentException(
+                    "Maximum number of buffers must be > 0.",
+                    nameof(maxBuffers)
+                );
 
             return CreateQuadBatch<TVertex>(size, maxBuffers);
         }
@@ -1264,7 +1461,10 @@ namespace osu.Framework.Graphics.Rendering
             return CreateUniformBuffer<TData>();
         }
 
-        IShaderStorageBufferObject<TData> IRenderer.CreateShaderStorageBufferObject<TData>(int uboSize, int ssboSize)
+        IShaderStorageBufferObject<TData> IRenderer.CreateShaderStorageBufferObject<TData>(
+            int uboSize,
+            int ssboSize
+        )
         {
             validateUniformLayout<TData>();
             return CreateShaderStorageBufferObject<TData>(uboSize, ssboSize);
@@ -1276,18 +1476,26 @@ namespace osu.Framework.Graphics.Rendering
                 return;
 
             if (typeof(TData).StructLayoutAttribute?.Pack != 1)
-                throw new ArgumentException($"{typeof(TData).ReadableName()} requires a packing size of 1.");
+                throw new ArgumentException(
+                    $"{typeof(TData).ReadableName()} requires a packing size of 1."
+                );
 
             int offset = 0;
 
-            foreach (var field in typeof(TData).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            foreach (
+                var field in typeof(TData).GetFields(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                )
+            )
             {
                 checkValidType(field);
 
-                if (field.FieldType == typeof(UniformMatrix3)
+                if (
+                    field.FieldType == typeof(UniformMatrix3)
                     || field.FieldType == typeof(UniformMatrix4)
                     || field.FieldType == typeof(UniformVector3)
-                    || field.FieldType == typeof(UniformVector4))
+                    || field.FieldType == typeof(UniformVector4)
+                )
                 {
                     checkAlignment(field, offset, 16);
                 }
@@ -1300,14 +1508,17 @@ namespace osu.Framework.Graphics.Rendering
 
             Type? finalPadding = suggestPadding(offset, 16);
             if (finalPadding != null)
-                throw new ArgumentException($"{typeof(TData).ReadableName()} alignment requires a {finalPadding} to be added at the end.");
+                throw new ArgumentException(
+                    $"{typeof(TData).ReadableName()} alignment requires a {finalPadding} to be added at the end."
+                );
 
             validUboTypes.Add(typeof(TData));
             return;
 
             static void checkValidType(FieldInfo field)
             {
-                if (field.FieldType == typeof(UniformBool)
+                if (
+                    field.FieldType == typeof(UniformBool)
                     || field.FieldType == typeof(UniformFloat)
                     || field.FieldType == typeof(UniformInt)
                     || field.FieldType == typeof(UniformMatrix3)
@@ -1317,19 +1528,24 @@ namespace osu.Framework.Graphics.Rendering
                     || field.FieldType == typeof(UniformPadding12)
                     || field.FieldType == typeof(UniformVector2)
                     || field.FieldType == typeof(UniformVector4)
-                    || field.FieldType == typeof(UniformVector4))
+                    || field.FieldType == typeof(UniformVector4)
+                )
                 {
                     return;
                 }
 
-                throw new ArgumentException($"{typeof(TData).ReadableName()} has an unsupported type of {field.FieldType} for field \"{field.Name}\".");
+                throw new ArgumentException(
+                    $"{typeof(TData).ReadableName()} has an unsupported type of {field.FieldType} for field \"{field.Name}\"."
+                );
             }
 
             static void checkAlignment(FieldInfo field, int offset, int expectedAlignment)
             {
                 Type? suggestedPadding = suggestPadding(offset, expectedAlignment);
                 if (suggestedPadding != null)
-                    throw new ArgumentException($"{typeof(TData).ReadableName()} alignment requires a {suggestedPadding} to be inserted before \"{field.Name}\".");
+                    throw new ArgumentException(
+                        $"{typeof(TData).ReadableName()} alignment requires a {suggestedPadding} to be inserted before \"{field.Name}\"."
+                    );
             }
 
             static Type? suggestPadding(int offset, int expectedAlignment)
@@ -1345,7 +1561,7 @@ namespace osu.Framework.Graphics.Rendering
                     4 => typeof(UniformPadding4),
                     8 => typeof(UniformPadding8),
                     12 => typeof(UniformPadding12),
-                    _ => null
+                    _ => null,
                 };
             }
         }

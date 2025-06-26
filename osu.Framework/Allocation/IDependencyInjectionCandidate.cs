@@ -6,7 +6,5 @@ namespace osu.Framework.Allocation
     /// <summary>
     /// An interface that may be attached to objects to allow them to be used in <see cref="DependencyContainer.Inject{T}"/>.
     /// </summary>
-    public interface IDependencyInjectionCandidate
-    {
-    }
+    public interface IDependencyInjectionCandidate { }
 }

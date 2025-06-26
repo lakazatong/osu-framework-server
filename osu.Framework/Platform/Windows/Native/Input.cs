@@ -14,30 +14,40 @@ namespace osu.Framework.Platform.Windows.Native
         [DllImport("user32.dll")]
         public static extern bool RegisterRawInputDevices(
             [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
-            RawInputDevice[] pRawInputDevices,
+                RawInputDevice[] pRawInputDevices,
             int uiNumDevices,
-            int cbSize);
+            int cbSize
+        );
 
         [DllImport("user32.dll")]
-        public static extern int GetRawInputData(IntPtr hRawInput, RawInputCommand uiCommand, out RawInputData pData, ref int pcbSize, int cbSizeHeader);
+        public static extern int GetRawInputData(
+            IntPtr hRawInput,
+            RawInputCommand uiCommand,
+            out RawInputData pData,
+            ref int pcbSize,
+            int cbSizeHeader
+        );
 
-        internal static Rectangle VirtualScreenRect => new Rectangle(
-            GetSystemMetrics(SM_XVIRTUALSCREEN),
-            GetSystemMetrics(SM_YVIRTUALSCREEN),
-            GetSystemMetrics(SM_CXVIRTUALSCREEN),
-            GetSystemMetrics(SM_CYVIRTUALSCREEN));
+        internal static Rectangle VirtualScreenRect =>
+            new Rectangle(
+                GetSystemMetrics(SM_XVIRTUALSCREEN),
+                GetSystemMetrics(SM_YVIRTUALSCREEN),
+                GetSystemMetrics(SM_CXVIRTUALSCREEN),
+                GetSystemMetrics(SM_CYVIRTUALSCREEN)
+            );
 
         internal const int WM_INPUT = 0x00FF;
 
         [DllImport("user32.dll")]
         public static extern int GetSystemMetrics(int nIndex);
 
-        internal static Rectangle GetVirtualScreenRect() => new Rectangle(
-            GetSystemMetrics(SM_XVIRTUALSCREEN),
-            GetSystemMetrics(SM_YVIRTUALSCREEN),
-            GetSystemMetrics(SM_CXVIRTUALSCREEN),
-            GetSystemMetrics(SM_CYVIRTUALSCREEN)
-        );
+        internal static Rectangle GetVirtualScreenRect() =>
+            new Rectangle(
+                GetSystemMetrics(SM_XVIRTUALSCREEN),
+                GetSystemMetrics(SM_YVIRTUALSCREEN),
+                GetSystemMetrics(SM_CXVIRTUALSCREEN),
+                GetSystemMetrics(SM_CYVIRTUALSCREEN)
+            );
 
         public const int SM_XVIRTUALSCREEN = 76;
         public const int SM_YVIRTUALSCREEN = 77;
@@ -61,20 +71,32 @@ namespace osu.Framework.Platform.Windows.Native
         /// </summary>
         /// <param name="dw"><see cref="GetMessageExtraInfo"/> for the current <see cref="WM_INPUT"/> event.</param>
         /// <returns><c>true</c> if this <see cref="WM_INPUT"/> event is from a finger touch, <c>false</c> if it's from mouse or pen input.</returns>
-        public static bool IsTouchEvent(long dw) => (dw & MI_WP_SIGNATURE_MASK) == MI_WP_SIGNATURE && HasTouchFlag(dw);
+        public static bool IsTouchEvent(long dw) =>
+            (dw & MI_WP_SIGNATURE_MASK) == MI_WP_SIGNATURE && HasTouchFlag(dw);
 
         /// <param name="extraInformation"><see cref="RawMouse.ExtraInformation"/> or <see cref="GetMessageExtraInfo"/></param>
         /// <returns>Whether <paramref name="extraInformation"/> has the <see cref="touch_flag"/> set.</returns>
-        public static bool HasTouchFlag(long extraInformation) => (extraInformation & touch_flag) == touch_flag;
+        public static bool HasTouchFlag(long extraInformation) =>
+            (extraInformation & touch_flag) == touch_flag;
 
         [DllImport("user32.dll", SetLastError = false)]
         public static extern long GetMessageExtraInfo();
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern unsafe bool SetWindowFeedbackSetting(IntPtr hwnd, FeedbackType feedback, ulong flags, uint size, int* configuration);
+        private static extern unsafe bool SetWindowFeedbackSetting(
+            IntPtr hwnd,
+            FeedbackType feedback,
+            ulong flags,
+            uint size,
+            int* configuration
+        );
 
-        public static unsafe void SetWindowFeedbackSetting(IntPtr hwnd, FeedbackType feedback, bool configuration)
+        public static unsafe void SetWindowFeedbackSetting(
+            IntPtr hwnd,
+            FeedbackType feedback,
+            bool configuration
+        )
         {
             try
             {
@@ -207,7 +229,7 @@ namespace osu.Framework.Platform.Windows.Native
         Button5Up = 0x0200,
 
         /// <summary>Mouse wheel moved.</summary>
-        MouseWheel = 0x0400
+        MouseWheel = 0x0400,
     }
 
     /// <summary>
@@ -223,7 +245,7 @@ namespace osu.Framework.Platform.Windows.Native
         /// <summary>
         /// Get header data.
         /// </summary>
-        Header = 0x10000005
+        Header = 0x10000005,
     }
 
     /// <summary>
@@ -244,7 +266,7 @@ namespace osu.Framework.Platform.Windows.Native
         /// <summary>
         /// Another device that is not the keyboard or the mouse.
         /// </summary>
-        HID = 2
+        HID = 2,
     }
 
 #pragma warning disable IDE1006 // Naming style
@@ -314,7 +336,7 @@ namespace osu.Framework.Platform.Windows.Native
         NoHotKeys = 0x00000200,
 
         /// <summary>If set, application keys are handled.  NoLegacy must be specified.  Keyboard only.</summary>
-        AppKeys = 0x00000400
+        AppKeys = 0x00000400,
     }
 
     public enum HIDUsage : ushort
@@ -357,7 +379,7 @@ namespace osu.Framework.Platform.Windows.Native
         PowerPage3 = 0x87,
         BarCode = 0x8C,
         Scale = 0x8D,
-        MSR = 0x8E
+        MSR = 0x8E,
     }
 
     public enum FeedbackType

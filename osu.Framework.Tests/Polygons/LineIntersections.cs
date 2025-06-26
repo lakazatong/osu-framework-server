@@ -26,14 +26,32 @@ namespace osu.Framework.Tests.Polygons
             new object[] { new Line(origin, up_1), new Line(right_1, right_1 + up_1), false, 0f },
             new object[] { new Line(up_1, origin), new Line(right_1 + up_1, right_1), false, 0f },
             // Parallel diagonal
-            new object[] { new Line(origin, right_1 + up_1), new Line(down_1, right_1), false, 0f },
+            new object[]
+            {
+                new Line(origin, right_1 + up_1),
+                new Line(down_1, right_1),
+                false,
+                0f,
+            },
             new object[] { new Line(right_1 + up_1, origin), new Line(down_1, right_1), false, 0f },
             // Touching at endpoints of l2
             new object[] { new Line(origin, up_2), new Line(up_1, up_1 + right_1), true, 0.5f },
             new object[] { new Line(up_2, origin), new Line(up_1 + right_1, up_1), true, 0.5f },
             // Touching at endpoints of l1
-            new object[] { new Line(origin, up_1), new Line(left_1 + up_1, up_1 + right_1), true, 1f },
-            new object[] { new Line(up_1, origin), new Line(up_1 + right_1, left_1 + up_1), true, 0f },
+            new object[]
+            {
+                new Line(origin, up_1),
+                new Line(left_1 + up_1, up_1 + right_1),
+                true,
+                1f,
+            },
+            new object[]
+            {
+                new Line(up_1, origin),
+                new Line(up_1 + right_1, left_1 + up_1),
+                true,
+                0f,
+            },
             // Touching at both endpoints
             new object[] { new Line(origin, up_1), new Line(up_1, up_1 + right_1), true, 1f },
             new object[] { new Line(up_1, origin), new Line(up_1, up_1 + right_1), true, 0f },
@@ -43,15 +61,63 @@ namespace osu.Framework.Tests.Polygons
             new object[] { new Line(down_1, up_1), new Line(left_1, right_1), true, 0.5f },
             new object[] { new Line(up_1, down_1), new Line(right_1, left_1), true, 0.5f },
             // External to l1
-            new object[] { new Line(origin, up_2), new Line(up_1 + right_1, up_1 + right_2), true, 0.5f },
-            new object[] { new Line(up_2, origin), new Line(up_1 + right_1, up_1 + right_2), true, 0.5f },
-            new object[] { new Line(origin, up_2), new Line(up_1 + left_2, up_1 + left_1), true, 0.5f },
-            new object[] { new Line(up_2, origin), new Line(up_1 + left_2, up_1 + left_1), true, 0.5f },
+            new object[]
+            {
+                new Line(origin, up_2),
+                new Line(up_1 + right_1, up_1 + right_2),
+                true,
+                0.5f,
+            },
+            new object[]
+            {
+                new Line(up_2, origin),
+                new Line(up_1 + right_1, up_1 + right_2),
+                true,
+                0.5f,
+            },
+            new object[]
+            {
+                new Line(origin, up_2),
+                new Line(up_1 + left_2, up_1 + left_1),
+                true,
+                0.5f,
+            },
+            new object[]
+            {
+                new Line(up_2, origin),
+                new Line(up_1 + left_2, up_1 + left_1),
+                true,
+                0.5f,
+            },
             // External to l1, out of bounds
-            new object[] { new Line(origin, up_1), new Line(up_2 + right_1, up_2 + right_2), true, 2f },
-            new object[] { new Line(origin, up_1), new Line(up_2 + left_2, up_2 + left_1), true, 2f },
-            new object[] { new Line(up_1, origin), new Line(up_2 + right_1, up_2 + right_2), true, -1f },
-            new object[] { new Line(up_1, origin), new Line(up_2 + left_2, up_2 + left_1), true, -1f },
+            new object[]
+            {
+                new Line(origin, up_1),
+                new Line(up_2 + right_1, up_2 + right_2),
+                true,
+                2f,
+            },
+            new object[]
+            {
+                new Line(origin, up_1),
+                new Line(up_2 + left_2, up_2 + left_1),
+                true,
+                2f,
+            },
+            new object[]
+            {
+                new Line(up_1, origin),
+                new Line(up_2 + right_1, up_2 + right_2),
+                true,
+                -1f,
+            },
+            new object[]
+            {
+                new Line(up_1, origin),
+                new Line(up_2 + left_2, up_2 + left_1),
+                true,
+                -1f,
+            },
             // Overlapping lines
             new object[] { new Line(origin, up_1), new Line(origin, up_1), false, 0f },
             new object[] { new Line(up_1, origin), new Line(origin, up_1), false, 0f },

@@ -27,8 +27,16 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="vertexAction">An action that adds vertices to a <see cref="IVertexBatch{T}"/>.</param>
         /// <param name="inflationPercentage">The percentage amount that <paramref name="textureRect"/> should be inflated.</param>
         /// <param name="textureCoords">The texture coordinates of the triangle's vertices (translated from the corresponding quad's rectangle).</param>
-        public static void DrawTriangle(this IRenderer renderer, Texture texture, Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null,
-                                        Action<TexturedVertex2D>? vertexAction = null, Vector2? inflationPercentage = null, RectangleF? textureCoords = null)
+        public static void DrawTriangle(
+            this IRenderer renderer,
+            Texture texture,
+            Triangle vertexTriangle,
+            ColourInfo drawColour,
+            RectangleF? textureRect = null,
+            Action<TexturedVertex2D>? vertexAction = null,
+            Vector2? inflationPercentage = null,
+            RectangleF? textureCoords = null
+        )
         {
             ObjectDisposedException.ThrowIf(!texture.Available, texture);
 
@@ -36,10 +44,18 @@ namespace osu.Framework.Graphics.Rendering
                 return;
 
             RectangleF texRect = texture.GetTextureRect(textureRect);
-            Vector2 inflationAmount = inflationPercentage.HasValue ? new Vector2(inflationPercentage.Value.X * texRect.Width, inflationPercentage.Value.Y * texRect.Height) : Vector2.Zero;
+            Vector2 inflationAmount = inflationPercentage.HasValue
+                ? new Vector2(
+                    inflationPercentage.Value.X * texRect.Width,
+                    inflationPercentage.Value.Y * texRect.Height
+                )
+                : Vector2.Zero;
 
             // If clamp to edge is active, allow the texture coordinates to penetrate by half the repeated atlas margin width
-            if (renderer.CurrentWrapModeS == WrapMode.ClampToEdge || renderer.CurrentWrapModeT == WrapMode.ClampToEdge)
+            if (
+                renderer.CurrentWrapModeS == WrapMode.ClampToEdge
+                || renderer.CurrentWrapModeT == WrapMode.ClampToEdge
+            )
             {
                 Vector2 inflationVector = Vector2.Zero;
 
@@ -64,38 +80,75 @@ namespace osu.Framework.Graphics.Rendering
             SRGBColour topColour = (drawColour.TopLeft + drawColour.TopRight) / 2;
             SRGBColour bottomColour = (drawColour.BottomLeft + drawColour.BottomRight) / 2;
 
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexTriangle.P0,
-                TexturePosition = new Vector2((inflatedCoordRect.Left + inflatedCoordRect.Right) / 2, inflatedCoordRect.Top),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = inflationAmount,
-                Colour = topColour.SRGB,
-            });
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexTriangle.P1,
-                TexturePosition = new Vector2(inflatedCoordRect.Left, inflatedCoordRect.Bottom),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = inflationAmount,
-                Colour = drawColour.BottomLeft.SRGB,
-            });
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = (vertexTriangle.P1 + vertexTriangle.P2) / 2,
-                TexturePosition = new Vector2((inflatedCoordRect.Left + inflatedCoordRect.Right) / 2, inflatedCoordRect.Bottom),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = inflationAmount,
-                Colour = bottomColour.SRGB,
-            });
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexTriangle.P2,
-                TexturePosition = new Vector2(inflatedCoordRect.Right, inflatedCoordRect.Bottom),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = inflationAmount,
-                Colour = drawColour.BottomRight.SRGB,
-            });
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexTriangle.P0,
+                    TexturePosition = new Vector2(
+                        (inflatedCoordRect.Left + inflatedCoordRect.Right) / 2,
+                        inflatedCoordRect.Top
+                    ),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = inflationAmount,
+                    Colour = topColour.SRGB,
+                }
+            );
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexTriangle.P1,
+                    TexturePosition = new Vector2(inflatedCoordRect.Left, inflatedCoordRect.Bottom),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = inflationAmount,
+                    Colour = drawColour.BottomLeft.SRGB,
+                }
+            );
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = (vertexTriangle.P1 + vertexTriangle.P2) / 2,
+                    TexturePosition = new Vector2(
+                        (inflatedCoordRect.Left + inflatedCoordRect.Right) / 2,
+                        inflatedCoordRect.Bottom
+                    ),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = inflationAmount,
+                    Colour = bottomColour.SRGB,
+                }
+            );
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexTriangle.P2,
+                    TexturePosition = new Vector2(
+                        inflatedCoordRect.Right,
+                        inflatedCoordRect.Bottom
+                    ),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = inflationAmount,
+                    Colour = drawColour.BottomRight.SRGB,
+                }
+            );
 
             long area = (long)vertexTriangle.Area;
 
@@ -117,8 +170,17 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="inflationPercentage">The percentage amount that <paramref name="textureRect"/> should be inflated.</param>
         /// <param name="blendRangeOverride">The range over which the edges of the <paramref name="textureRect"/> should be blended.</param>
         /// <param name="textureCoords">The texture coordinates of the quad's vertices.</param>
-        public static void DrawQuad(this IRenderer renderer, Texture texture, Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D>? vertexAction = null,
-                                    Vector2? inflationPercentage = null, Vector2? blendRangeOverride = null, RectangleF? textureCoords = null)
+        public static void DrawQuad(
+            this IRenderer renderer,
+            Texture texture,
+            Quad vertexQuad,
+            ColourInfo drawColour,
+            RectangleF? textureRect = null,
+            Action<TexturedVertex2D>? vertexAction = null,
+            Vector2? inflationPercentage = null,
+            Vector2? blendRangeOverride = null,
+            RectangleF? textureCoords = null
+        )
         {
             ObjectDisposedException.ThrowIf(!texture.Available, texture);
 
@@ -126,10 +188,18 @@ namespace osu.Framework.Graphics.Rendering
                 return;
 
             RectangleF texRect = texture.GetTextureRect(textureRect);
-            Vector2 inflationAmount = inflationPercentage.HasValue ? new Vector2(inflationPercentage.Value.X * texRect.Width, inflationPercentage.Value.Y * texRect.Height) : Vector2.Zero;
+            Vector2 inflationAmount = inflationPercentage.HasValue
+                ? new Vector2(
+                    inflationPercentage.Value.X * texRect.Width,
+                    inflationPercentage.Value.Y * texRect.Height
+                )
+                : Vector2.Zero;
 
             // If clamp to edge is active, allow the texture coordinates to penetrate by half the repeated atlas margin width
-            if (renderer.CurrentWrapModeS == WrapMode.ClampToEdge || renderer.CurrentWrapModeT == WrapMode.ClampToEdge)
+            if (
+                renderer.CurrentWrapModeS == WrapMode.ClampToEdge
+                || renderer.CurrentWrapModeT == WrapMode.ClampToEdge
+            )
             {
                 Vector2 inflationVector = Vector2.Zero;
 
@@ -148,38 +218,69 @@ namespace osu.Framework.Graphics.Rendering
 
             vertexAction ??= renderer.DefaultQuadBatch.AddAction;
 
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexQuad.BottomLeft,
-                TexturePosition = new Vector2(inflatedCoordRect.Left, inflatedCoordRect.Bottom),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = blendRange,
-                Colour = drawColour.BottomLeft.SRGB,
-            });
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexQuad.BottomRight,
-                TexturePosition = new Vector2(inflatedCoordRect.Right, inflatedCoordRect.Bottom),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = blendRange,
-                Colour = drawColour.BottomRight.SRGB,
-            });
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexQuad.TopRight,
-                TexturePosition = new Vector2(inflatedCoordRect.Right, inflatedCoordRect.Top),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = blendRange,
-                Colour = drawColour.TopRight.SRGB,
-            });
-            vertexAction(new TexturedVertex2D(renderer)
-            {
-                Position = vertexQuad.TopLeft,
-                TexturePosition = new Vector2(inflatedCoordRect.Left, inflatedCoordRect.Top),
-                TextureRect = new Vector4(texRect.Left, texRect.Top, texRect.Right, texRect.Bottom),
-                BlendRange = blendRange,
-                Colour = drawColour.TopLeft.SRGB,
-            });
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexQuad.BottomLeft,
+                    TexturePosition = new Vector2(inflatedCoordRect.Left, inflatedCoordRect.Bottom),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = blendRange,
+                    Colour = drawColour.BottomLeft.SRGB,
+                }
+            );
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexQuad.BottomRight,
+                    TexturePosition = new Vector2(
+                        inflatedCoordRect.Right,
+                        inflatedCoordRect.Bottom
+                    ),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = blendRange,
+                    Colour = drawColour.BottomRight.SRGB,
+                }
+            );
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexQuad.TopRight,
+                    TexturePosition = new Vector2(inflatedCoordRect.Right, inflatedCoordRect.Top),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = blendRange,
+                    Colour = drawColour.TopRight.SRGB,
+                }
+            );
+            vertexAction(
+                new TexturedVertex2D(renderer)
+                {
+                    Position = vertexQuad.TopLeft,
+                    TexturePosition = new Vector2(inflatedCoordRect.Left, inflatedCoordRect.Top),
+                    TextureRect = new Vector4(
+                        texRect.Left,
+                        texRect.Top,
+                        texRect.Right,
+                        texRect.Bottom
+                    ),
+                    BlendRange = blendRange,
+                    Colour = drawColour.TopLeft.SRGB,
+                }
+            );
 
             long area = (long)vertexQuad.Area;
 
@@ -201,8 +302,16 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="inflationPercentage">The percentage amount that <paramref name="textureRect"/> should be inflated.</param>
         /// <param name="textureCoords">The texture coordinates of the polygon's vertices (translated from the corresponding quad's rectangle).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DrawClipped<T>(this IRenderer renderer, ref T polygon, Texture texture, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D>? vertexAction = null,
-                                          Vector2? inflationPercentage = null, RectangleF? textureCoords = null)
+        public static void DrawClipped<T>(
+            this IRenderer renderer,
+            ref T polygon,
+            Texture texture,
+            ColourInfo drawColour,
+            RectangleF? textureRect = null,
+            Action<TexturedVertex2D>? vertexAction = null,
+            Vector2? inflationPercentage = null,
+            RectangleF? textureCoords = null
+        )
             where T : IConvexPolygon
         {
             var maskingQuad = renderer.CurrentMaskingInfo.ConservativeScreenSpaceQuad;
@@ -212,7 +321,15 @@ namespace osu.Framework.Graphics.Rendering
             Span<Vector2> clippedRegion = clipper.Clip(buffer);
 
             for (int i = 2; i < clippedRegion.Length; i++)
-                renderer.DrawTriangle(texture, new Triangle(clippedRegion[0], clippedRegion[i - 1], clippedRegion[i]), drawColour, textureRect, vertexAction, inflationPercentage, textureCoords);
+                renderer.DrawTriangle(
+                    texture,
+                    new Triangle(clippedRegion[0], clippedRegion[i - 1], clippedRegion[i]),
+                    drawColour,
+                    textureRect,
+                    vertexAction,
+                    inflationPercentage,
+                    textureCoords
+                );
         }
 
         /// <summary>
@@ -225,10 +342,25 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="vertexAction">An action that adds vertices to a <see cref="IVertexBatch{T}"/>.</param>
         /// <param name="inflationPercentage">The percentage amount that the frame buffer area  should be inflated.</param>
         /// <param name="blendRangeOverride">The range over which the edges of the frame buffer should be blended.</param>
-        public static void DrawFrameBuffer(this IRenderer renderer, IFrameBuffer frameBuffer, Quad vertexQuad, ColourInfo drawColour, Action<TexturedVertex2D>? vertexAction = null,
-                                           Vector2? inflationPercentage = null, Vector2? blendRangeOverride = null)
+        public static void DrawFrameBuffer(
+            this IRenderer renderer,
+            IFrameBuffer frameBuffer,
+            Quad vertexQuad,
+            ColourInfo drawColour,
+            Action<TexturedVertex2D>? vertexAction = null,
+            Vector2? inflationPercentage = null,
+            Vector2? blendRangeOverride = null
+        )
         {
-            renderer.DrawQuad(frameBuffer.Texture, vertexQuad, drawColour, null, vertexAction, inflationPercentage, blendRangeOverride);
+            renderer.DrawQuad(
+                frameBuffer.Texture,
+                vertexQuad,
+                drawColour,
+                null,
+                vertexAction,
+                inflationPercentage,
+                blendRangeOverride
+            );
         }
 
         /// <summary>
@@ -241,7 +373,16 @@ namespace osu.Framework.Graphics.Rendering
         /// <param name="ortho">The rectangle to create the orthographic projection from.</param>
         public static void PushOrtho(this IRenderer renderer, RectangleF ortho)
         {
-            renderer.PushProjectionMatrix(Matrix4.CreateOrthographicOffCenter(ortho.Left, ortho.Right, ortho.Bottom, ortho.Top, -1, 1));
+            renderer.PushProjectionMatrix(
+                Matrix4.CreateOrthographicOffCenter(
+                    ortho.Left,
+                    ortho.Right,
+                    ortho.Bottom,
+                    ortho.Top,
+                    -1,
+                    1
+                )
+            );
         }
 
         /// <summary>

@@ -14,9 +14,7 @@ namespace osu.Framework.Platform.MacOS
     internal class MacOSTextureLoaderStore : AppleTextureLoaderStore
     {
         public MacOSTextureLoaderStore(IResourceStore<byte[]> store)
-            : base(store)
-        {
-        }
+            : base(store) { }
 
         protected override unsafe Image<TPixel> ImageFromStream<TPixel>(Stream stream)
         {
@@ -30,7 +28,9 @@ namespace osu.Framework.Platform.MacOS
 
                 using var nsImage = NSImage.InitWithData(nativeData);
                 if (nsImage.Handle == IntPtr.Zero)
-                    throw new ArgumentException($"{nameof(Image)} could not be created from {nameof(stream)}.");
+                    throw new ArgumentException(
+                        $"{nameof(Image)} could not be created from {nameof(stream)}."
+                    );
 
                 var cgImage = nsImage.CGImage;
                 return ImageFromCGImage<TPixel>(cgImage);

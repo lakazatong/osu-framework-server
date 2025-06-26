@@ -26,9 +26,7 @@ namespace osu.Framework.Tests.Platform
             public Drawable CurrentRoot => Root;
 
             public TestHeadlessGameHost(string gameName)
-                : base(gameName, new HostOptions { IPCPipeName = gameName })
-            {
-            }
+                : base(gameName, new HostOptions { IPCPipeName = gameName }) { }
         }
 
         private partial class TestTestGame : TestGame

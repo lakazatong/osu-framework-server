@@ -27,10 +27,14 @@ namespace osu.Framework.Tests.Visual.Sprites
         private BlockingStoreProvidingContainer spriteContainer;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = spriteContainer = new BlockingStoreProvidingContainer { RelativeSizeAxes = Axes.Both };
-        });
+        public void Setup() =>
+            Schedule(() =>
+            {
+                Child = spriteContainer = new BlockingStoreProvidingContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                };
+            });
 
         [TearDownSteps]
         public void TearDownSteps()
@@ -51,20 +55,36 @@ namespace osu.Framework.Tests.Visual.Sprites
             AddStep("add disposable sprite", () => avatar1 = addSprite("1"));
             AddStep("add disposable sprite", () => avatar2 = addSprite("1"));
 
-            AddUntilStep("wait for texture load", () => avatar1.Texture != null && avatar2.Texture != null);
-            AddAssert("both textures are RefCount", () => avatar1.Texture is TextureWithRefCount && avatar2.Texture is TextureWithRefCount);
+            AddUntilStep(
+                "wait for texture load",
+                () => avatar1.Texture != null && avatar2.Texture != null
+            );
+            AddAssert(
+                "both textures are RefCount",
+                () =>
+                    avatar1.Texture is TextureWithRefCount && avatar2.Texture is TextureWithRefCount
+            );
 
-            AddAssert("textures share gl texture", () => avatar1.Texture.HasSameNativeTexture(avatar2.Texture));
-            AddAssert("textures have different refcount textures", () => avatar1.Texture != avatar2.Texture);
+            AddAssert(
+                "textures share gl texture",
+                () => avatar1.Texture.HasSameNativeTexture(avatar2.Texture)
+            );
+            AddAssert(
+                "textures have different refcount textures",
+                () => avatar1.Texture != avatar2.Texture
+            );
 
-            AddStep("dispose children", () =>
-            {
-                texture = avatar1.Texture;
+            AddStep(
+                "dispose children",
+                () =>
+                {
+                    texture = avatar1.Texture;
 
-                Clear();
-                avatar1.Dispose();
-                avatar2.Dispose();
-            });
+                    Clear();
+                    avatar1.Dispose();
+                    avatar2.Dispose();
+                }
+            );
 
             assertAvailability(() => texture, false);
         }
@@ -78,21 +98,33 @@ namespace osu.Framework.Tests.Visual.Sprites
             Avatar avatar1 = null;
             Avatar avatar2 = null;
 
-            AddStep("begin blocking load", () => spriteContainer.BlockingOnlineStore.StartBlocking("1"));
+            AddStep(
+                "begin blocking load",
+                () => spriteContainer.BlockingOnlineStore.StartBlocking("1")
+            );
 
             AddStep("get first", () => avatar1 = addSprite("1"));
-            AddUntilStep("wait for first to begin loading", () => spriteContainer.BlockingOnlineStore.TotalInitiatedLookups == 1);
+            AddUntilStep(
+                "wait for first to begin loading",
+                () => spriteContainer.BlockingOnlineStore.TotalInitiatedLookups == 1
+            );
 
             AddStep("get second", () => avatar2 = addSprite("2"));
             AddUntilStep("wait for avatar2 load", () => avatar2.Texture != null);
 
             AddAssert("avatar1 not loaded", () => avatar1.Texture == null);
-            AddAssert("only one lookup occurred", () => spriteContainer.BlockingOnlineStore.TotalCompletedLookups == 1);
+            AddAssert(
+                "only one lookup occurred",
+                () => spriteContainer.BlockingOnlineStore.TotalCompletedLookups == 1
+            );
 
             AddStep("unblock load", () => spriteContainer.BlockingOnlineStore.AllowLoad());
 
             AddUntilStep("wait for texture load", () => avatar1.Texture != null);
-            AddAssert("two lookups occurred", () => spriteContainer.BlockingOnlineStore.TotalCompletedLookups == 2);
+            AddAssert(
+                "two lookups occurred",
+                () => spriteContainer.BlockingOnlineStore.TotalCompletedLookups == 2
+            );
         }
 
         /// <summary>
@@ -104,16 +136,28 @@ namespace osu.Framework.Tests.Visual.Sprites
             Avatar avatar1 = null;
             Avatar avatar2 = null;
 
-            AddStep("begin blocking load", () => spriteContainer.BlockingOnlineStore.StartBlocking());
+            AddStep(
+                "begin blocking load",
+                () => spriteContainer.BlockingOnlineStore.StartBlocking()
+            );
             AddStep("get first", () => avatar1 = addSprite("1"));
             AddStep("get second", () => avatar2 = addSprite("1"));
 
-            AddAssert("neither are loaded", () => avatar1.Texture == null && avatar2.Texture == null);
+            AddAssert(
+                "neither are loaded",
+                () => avatar1.Texture == null && avatar2.Texture == null
+            );
 
             AddStep("unblock load", () => spriteContainer.BlockingOnlineStore.AllowLoad());
-            AddUntilStep("wait for texture load", () => avatar1.Texture != null && avatar2.Texture != null);
+            AddUntilStep(
+                "wait for texture load",
+                () => avatar1.Texture != null && avatar2.Texture != null
+            );
 
-            AddAssert("only one lookup occurred", () => spriteContainer.BlockingOnlineStore.TotalInitiatedLookups == 1);
+            AddAssert(
+                "only one lookup occurred",
+                () => spriteContainer.BlockingOnlineStore.TotalInitiatedLookups == 1
+            );
         }
 
         /// <summary>
@@ -144,8 +188,11 @@ namespace osu.Framework.Tests.Visual.Sprites
             AddAssert("texture is still available", () => texture.Available);
         }
 
-        private void assertAvailability(Func<Texture> textureFunc, bool available)
-            => AddAssert($"texture available = {available}", () => ((TextureWithRefCount)textureFunc()).IsDisposed == !available);
+        private void assertAvailability(Func<Texture> textureFunc, bool available) =>
+            AddAssert(
+                $"texture available = {available}",
+                () => ((TextureWithRefCount)textureFunc()).IsDisposed == !available
+            );
 
         private Avatar addSprite(string url)
         {
@@ -214,8 +261,10 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             public byte[] Get(string name) => getWithBlocking(name, baseStore.Get);
 
-            public Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default) =>
-                getWithBlocking(name, name1 => baseStore.GetAsync(name1, cancellationToken));
+            public Task<byte[]> GetAsync(
+                string name,
+                CancellationToken cancellationToken = default
+            ) => getWithBlocking(name, name1 => baseStore.GetAsync(name1, cancellationToken));
 
             public Stream GetStream(string name) => getWithBlocking(name, baseStore.GetStream);
 
@@ -242,9 +291,7 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             public IEnumerable<string> GetAvailableResources() => Enumerable.Empty<string>();
 
-            public void Dispose()
-            {
-            }
+            public void Dispose() { }
         }
 
         private partial class BlockingStoreProvidingContainer : Container
@@ -257,15 +304,25 @@ namespace osu.Framework.Tests.Visual.Sprites
 
             public BlockingResourceStore BlockingOnlineStore { get; private set; }
 
-            protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            protected override IReadOnlyDependencyContainer CreateChildDependencies(
+                IReadOnlyDependencyContainer parent
+            )
             {
                 var game = parent.Get<Game>();
                 var host = parent.Get<GameHost>();
                 var renderer = parent.Get<IRenderer>();
 
-                BlockingOnlineStore = new BlockingResourceStore(new NamespacedResourceStore<byte[]>(game.Resources, "Textures"));
-                NormalStore = new TextureStore(renderer, host.CreateTextureLoaderStore(BlockingOnlineStore));
-                LargeStore = new LargeTextureStore(renderer, host.CreateTextureLoaderStore(BlockingOnlineStore));
+                BlockingOnlineStore = new BlockingResourceStore(
+                    new NamespacedResourceStore<byte[]>(game.Resources, "Textures")
+                );
+                NormalStore = new TextureStore(
+                    renderer,
+                    host.CreateTextureLoaderStore(BlockingOnlineStore)
+                );
+                LargeStore = new LargeTextureStore(
+                    renderer,
+                    host.CreateTextureLoaderStore(BlockingOnlineStore)
+                );
 
                 return base.CreateChildDependencies(parent);
             }

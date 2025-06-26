@@ -8,7 +8,9 @@ using osu.Framework.Timing;
 
 namespace osu.Framework.Graphics.Animations
 {
-    public abstract partial class AnimationClockComposite : CustomisableSizeCompositeDrawable, IAnimation
+    public abstract partial class AnimationClockComposite
+        : CustomisableSizeCompositeDrawable,
+            IAnimation
     {
         private readonly bool startAtCurrentTime;
 
@@ -28,12 +30,14 @@ namespace osu.Framework.Graphics.Animations
         [BackgroundDependencyLoader]
         private void load()
         {
-            base.AddInternal(new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Clock = new FramedClock(manualClock),
-                Child = CreateContent()
-            });
+            base.AddInternal(
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Clock = new FramedClock(manualClock),
+                    Child = CreateContent(),
+                }
+            );
         }
 
         public override IFrameBasedClock Clock
@@ -57,7 +61,8 @@ namespace osu.Framework.Graphics.Animations
                 manualClock.CurrentTime += elapsed;
         }
 
-        protected override void AddInternal(Drawable drawable) => throw new InvalidOperationException($"Use {nameof(CreateContent)} instead.");
+        protected override void AddInternal(Drawable drawable) =>
+            throw new InvalidOperationException($"Use {nameof(CreateContent)} instead.");
 
         /// <summary>
         /// Create the content container for animation display.
@@ -85,7 +90,8 @@ namespace osu.Framework.Graphics.Animations
             {
                 double current = manualClock.CurrentTime;
 
-                if (Loop) current %= Duration;
+                if (Loop)
+                    current %= Duration;
 
                 return Math.Clamp(current, 0, Duration);
             }

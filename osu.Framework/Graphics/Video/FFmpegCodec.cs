@@ -37,7 +37,8 @@ namespace osu.Framework.Graphics.Video
                 while (true)
                 {
                     var hwCfg = ffmpeg.avcodec_get_hw_config(codec, i);
-                    if (hwCfg == null) break;
+                    if (hwCfg == null)
+                        break;
 
                     list.Add(hwCfg->device_type);
 

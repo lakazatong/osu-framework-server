@@ -27,7 +27,8 @@ namespace osu.Framework.Threading
 
         private int runningTaskCount;
 
-        public string GetStatusString() => $"{name} concurrency:{MaximumConcurrencyLevel} running:{runningTaskCount} pending:{pendingTaskCount}";
+        public string GetStatusString() =>
+            $"{name} concurrency:{MaximumConcurrencyLevel} running:{runningTaskCount} pending:{pendingTaskCount}";
 
         /// <summary>
         /// Initializes a new instance of the StaTaskScheduler class with the specified concurrency level.
@@ -41,18 +42,21 @@ namespace osu.Framework.Threading
             this.name = name;
             tasks = new BlockingCollection<Task>();
 
-            threads = Enumerable.Range(0, numberOfThreads).Select(_ =>
-            {
-                var thread = new Thread(processTasks)
+            threads = Enumerable
+                .Range(0, numberOfThreads)
+                .Select(_ =>
                 {
-                    Name = $"{nameof(ThreadedTaskScheduler)} ({name})",
-                    IsBackground = true
-                };
+                    var thread = new Thread(processTasks)
+                    {
+                        Name = $"{nameof(ThreadedTaskScheduler)} ({name})",
+                        IsBackground = true,
+                    };
 
-                thread.Start();
+                    thread.Start();
 
-                return thread;
-            }).ToImmutableArray();
+                    return thread;
+                })
+                .ToImmutableArray();
         }
 
         /// <summary>
@@ -89,7 +93,9 @@ namespace osu.Framework.Threading
             catch (Exception ex) when (ex is InvalidOperationException or ObjectDisposedException)
             {
                 // tasks may have been disposed. there's no easy way to check on this other than catch for it.
-                Logger.Log($"Task was queued for execution on a {nameof(ThreadedTaskScheduler)} ({name}) after it was disposed. The task will be executed inline.");
+                Logger.Log(
+                    $"Task was queued for execution on a {nameof(ThreadedTaskScheduler)} ({name}) after it was disposed. The task will be executed inline."
+                );
                 TryExecuteTask(task);
             }
         }
@@ -106,7 +112,8 @@ namespace osu.Framework.Threading
         /// <param name="task">The task to be executed.</param>
         /// <param name="taskWasPreviouslyQueued">Whether the task was previously queued.</param>
         /// <returns>true if the task was successfully inlined; otherwise, false.</returns>
-        protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued) => threads.Contains(Thread.CurrentThread) && TryExecuteTask(task);
+        protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued) =>
+            threads.Contains(Thread.CurrentThread) && TryExecuteTask(task);
 
         /// <summary>Gets the maximum concurrency level supported by this scheduler.</summary>
         public override int MaximumConcurrencyLevel => threads.Length;

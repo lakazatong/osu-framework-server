@@ -9,9 +9,7 @@ namespace osu.Framework.Input.Events
     public abstract class TabletEvent : UIEvent
     {
         protected TabletEvent(InputState state)
-            : base(state)
-        {
-        }
+            : base(state) { }
 
         /// <summary>
         /// List of currently pressed tablet pen buttons.
@@ -22,6 +20,7 @@ namespace osu.Framework.Input.Events
         /// List of currently pressed auxiliary buttons.
         /// </summary>
         /// <value></value>
-        public IEnumerable<TabletAuxiliaryButton> PressedAuxiliaryButtons => CurrentState.Tablet.AuxiliaryButtons;
+        public IEnumerable<TabletAuxiliaryButton> PressedAuxiliaryButtons =>
+            CurrentState.Tablet.AuxiliaryButtons;
     }
 }

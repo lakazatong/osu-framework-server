@@ -9,9 +9,9 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
 using osu.Framework.Tests.Visual;
+using osu.Framework.Utils;
 using osuTK.Graphics;
 
 namespace osu.Framework.Tests.Sprites
@@ -28,28 +28,31 @@ namespace osu.Framework.Tests.Sprites
             Container container = null;
             SpriteText text = null;
 
-            AddStep("reset", () =>
-            {
-                Child = container = new Container
+            AddStep(
+                "reset",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = container = new Container
                     {
-                        new Box
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Red.Opacity(0.3f)
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Red.Opacity(0.3f),
+                            },
+                            text = new SpriteText
+                            {
+                                Text = "Hello world!",
+                                Font = new FontUsage(size: 12),
+                            },
                         },
-                        text = new SpriteText
-                        {
-                            Text = "Hello world!",
-                            Font = new FontUsage(size: 12),
-                        }
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             AddAssert("is present", () => text.IsPresent);
             AddAssert("height == 12", () => Precision.AlmostEquals(12, container.Height));
@@ -67,28 +70,31 @@ namespace osu.Framework.Tests.Sprites
             Container container = null;
             SpriteText text = null;
 
-            AddStep("reset", () =>
-            {
-                Child = container = new Container
+            AddStep(
+                "reset",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    AutoSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                    Child = container = new Container
                     {
-                        new Box
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Red.Opacity(0.3f)
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Red.Opacity(0.3f),
+                            },
+                            text = new AlwaysPresentSpriteText
+                            {
+                                Text = "Hello world!",
+                                Font = new FontUsage(size: 12),
+                            },
                         },
-                        text = new AlwaysPresentSpriteText
-                        {
-                            Text = "Hello world!",
-                            Font = new FontUsage(size: 12),
-                        }
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             AddAssert("is present", () => text.IsPresent);
             AddAssert("height == 12", () => Precision.AlmostEquals(12, container.Height));
@@ -103,13 +109,13 @@ namespace osu.Framework.Tests.Sprites
         [Test]
         public void TestPresenceRemainsTheSameDuringFlow()
         {
-            AddStep("reset", () =>
-            {
-                Child = new FillFlowContainer
+            AddStep(
+                "reset",
+                () =>
                 {
-                    Child = new SpriteText()
-                };
-            });
+                    Child = new FillFlowContainer { Child = new SpriteText() };
+                }
+            );
 
             AddWaitStep("wait for some update frames", 2);
         }

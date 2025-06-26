@@ -3,9 +3,9 @@
 
 using System;
 using osu.Framework.Extensions.MatrixExtensions;
-using osuTK;
 using osu.Framework.Extensions.TypeExtensions;
 using osu.Framework.Utils;
+using osuTK;
 
 namespace osu.Framework.Graphics
 {
@@ -28,7 +28,13 @@ namespace osu.Framework.Graphics
         /// <param name="rotation">The amount by which to rotate.</param>
         /// <param name="shear">The shear amounts for both directions.</param>
         /// <param name="origin">The center of rotation and scale.</param>
-        public void ApplyTransform(Vector2 translation, Vector2 scale, float rotation, Vector2 shear, Vector2 origin)
+        public void ApplyTransform(
+            Vector2 translation,
+            Vector2 scale,
+            float rotation,
+            Vector2 shear,
+            Vector2 origin
+        )
         {
             if (translation != Vector2.Zero)
             {
@@ -52,11 +58,16 @@ namespace osu.Framework.Graphics
             if (scale != Vector2.One)
             {
                 // Zero scale leads to unexpected input and autosize calculations, so it's clamped to a sane value.
-                if (scale.X == 0) scale.X = Precision.FLOAT_EPSILON;
-                if (scale.Y == 0) scale.Y = Precision.FLOAT_EPSILON;
+                if (scale.X == 0)
+                    scale.X = Precision.FLOAT_EPSILON;
+                if (scale.Y == 0)
+                    scale.Y = Precision.FLOAT_EPSILON;
 
                 MatrixExtensions.ScaleFromLeft(ref Matrix, scale);
-                MatrixExtensions.ScaleFromRight(ref MatrixInverse, Vector2.Divide(Vector2.One, scale));
+                MatrixExtensions.ScaleFromRight(
+                    ref MatrixInverse,
+                    Vector2.Divide(Vector2.One, scale)
+                );
             }
 
             if (origin != Vector2.Zero)
@@ -74,6 +85,7 @@ namespace osu.Framework.Graphics
 
         public readonly bool Equals(DrawInfo other) => Matrix.Equals(other.Matrix);
 
-        public override string ToString() => $@"{GetType().ReadableName().Replace(@"DrawInfo", string.Empty)} DrawInfo";
+        public override string ToString() =>
+            $@"{GetType().ReadableName().Replace(@"DrawInfo", string.Empty)} DrawInfo";
     }
 }

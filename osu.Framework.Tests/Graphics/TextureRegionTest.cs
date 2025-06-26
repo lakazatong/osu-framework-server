@@ -47,7 +47,10 @@ namespace osu.Framework.Tests.Graphics
             Assert.That(subTex.Height, Is.EqualTo(50));
             Assert.That(subTex.DisplayWidth, Is.EqualTo(50));
             Assert.That(subTex.DisplayHeight, Is.EqualTo(50));
-            Assert.That(subTex.GetTextureRect(), Is.EqualTo(new RectangleF(0.25f, 0.25f, 0.5f, 0.5f)));
+            Assert.That(
+                subTex.GetTextureRect(),
+                Is.EqualTo(new RectangleF(0.25f, 0.25f, 0.5f, 0.5f))
+            );
         }
 
         [Test]
@@ -77,7 +80,10 @@ namespace osu.Framework.Tests.Graphics
             Assert.That(subTexWithScaleAdjust.Height, Is.EqualTo(50));
             Assert.That(subTexWithScaleAdjust.DisplayWidth, Is.EqualTo(25));
             Assert.That(subTexWithScaleAdjust.DisplayHeight, Is.EqualTo(25));
-            Assert.That(subTexWithScaleAdjust.GetTextureRect(), Is.EqualTo(new RectangleF(0, 0, 0.5f, 0.5f)));
+            Assert.That(
+                subTexWithScaleAdjust.GetTextureRect(),
+                Is.EqualTo(new RectangleF(0, 0, 0.5f, 0.5f))
+            );
         }
     }
 }

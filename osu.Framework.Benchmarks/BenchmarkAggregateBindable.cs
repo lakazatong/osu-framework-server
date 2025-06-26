@@ -11,8 +11,12 @@ namespace osu.Framework.Benchmarks
     {
         private readonly BindableInt source1 = new BindableInt();
         private readonly BindableInt source2 = new BindableInt();
-        private readonly AggregateBindable<int> boundAggregate = new AggregateBindable<int>(((i, j) => i + j));
-        private readonly AggregateBindable<int> aggregate = new AggregateBindable<int>(((i, j) => i + j));
+        private readonly AggregateBindable<int> boundAggregate = new AggregateBindable<int>(
+            ((i, j) => i + j)
+        );
+        private readonly AggregateBindable<int> aggregate = new AggregateBindable<int>(
+            ((i, j) => i + j)
+        );
 
         [GlobalSetup]
         public void GlobalSetup()

@@ -16,7 +16,8 @@ namespace osu.Framework.Logging
 
         public static void Add(Drawable component)
         {
-            if (!DebugUtils.IsDebugBuild) return;
+            if (!DebugUtils.IsDebugBuild)
+                return;
 
             lock (loading_components)
                 loading_components.Add(component);
@@ -24,7 +25,8 @@ namespace osu.Framework.Logging
 
         public static void Remove(Drawable component)
         {
-            if (!DebugUtils.IsDebugBuild) return;
+            if (!DebugUtils.IsDebugBuild)
+                return;
 
             lock (loading_components)
                 loading_components.Remove(component);
@@ -32,13 +34,18 @@ namespace osu.Framework.Logging
 
         public static void LogAndFlush()
         {
-            if (!DebugUtils.IsDebugBuild) return;
+            if (!DebugUtils.IsDebugBuild)
+                return;
 
             lock (loading_components)
             {
                 Logger.Log($"⏳ Currently loading components ({loading_components.Count()})");
 
-                foreach (var c in loading_components.OrderBy(c => c.LoadThread?.Name).ThenBy(c => c.LoadState))
+                foreach (
+                    var c in loading_components
+                        .OrderBy(c => c.LoadThread?.Name)
+                        .ThenBy(c => c.LoadState)
+                )
                 {
                     Logger.Log(c.ToString());
                     Logger.Log($"- thread: {c.LoadThread?.Name ?? "none"}");
@@ -61,8 +68,12 @@ namespace osu.Framework.Logging
             Logger.Log($"threads:         {ThreadPool.ThreadCount:#,0}");
             Logger.Log($"work pending:    {ThreadPool.PendingWorkItemCount:#,0}");
             Logger.Log($"work completed:  {ThreadPool.CompletedWorkItemCount:#,0}");
-            Logger.Log($"worker:          min {workerMin,-6:#,0} max {workerMax,-6:#,0} available {workerAvailable,-6:#,0}");
-            Logger.Log($"completion:      min {completionMin,-6:#,0} max {completionMax,-6:#,0} available {completionAvailable,-6:#,0}");
+            Logger.Log(
+                $"worker:          min {workerMin, -6:#,0} max {workerMax, -6:#,0} available {workerAvailable, -6:#,0}"
+            );
+            Logger.Log(
+                $"completion:      min {completionMin, -6:#,0} max {completionMax, -6:#,0} available {completionAvailable, -6:#,0}"
+            );
         }
     }
 }

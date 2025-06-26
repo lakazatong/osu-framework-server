@@ -18,18 +18,23 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
     /// </summary>
     internal class GraphicsPipeline : BasicPipeline
     {
-        private static readonly GlobalStatistic<int> stat_graphics_pipeline_created = GlobalStatistics.Get<int>(nameof(VeldridRenderer), "Total pipelines created");
+        private static readonly GlobalStatistic<int> stat_graphics_pipeline_created =
+            GlobalStatistics.Get<int>(nameof(VeldridRenderer), "Total pipelines created");
 
-        private readonly Dictionary<GraphicsPipelineDescription, Pipeline> pipelineCache = new Dictionary<GraphicsPipelineDescription, Pipeline>();
-        private readonly Dictionary<int, VeldridTextureResources> attachedTextures = new Dictionary<int, VeldridTextureResources>();
-        private readonly Dictionary<string, IVeldridUniformBuffer> attachedUniformBuffers = new Dictionary<string, IVeldridUniformBuffer>();
-        private readonly Dictionary<IVeldridUniformBuffer, uint> uniformBufferOffsets = new Dictionary<IVeldridUniformBuffer, uint>();
+        private readonly Dictionary<GraphicsPipelineDescription, Pipeline> pipelineCache =
+            new Dictionary<GraphicsPipelineDescription, Pipeline>();
+        private readonly Dictionary<int, VeldridTextureResources> attachedTextures =
+            new Dictionary<int, VeldridTextureResources>();
+        private readonly Dictionary<string, IVeldridUniformBuffer> attachedUniformBuffers =
+            new Dictionary<string, IVeldridUniformBuffer>();
+        private readonly Dictionary<IVeldridUniformBuffer, uint> uniformBufferOffsets =
+            new Dictionary<IVeldridUniformBuffer, uint>();
 
         private GraphicsPipelineDescription pipelineDesc = new GraphicsPipelineDescription
         {
             RasterizerState = RasterizerStateDescription.CULL_NONE,
             BlendState = BlendStateDescription.SINGLE_OVERRIDE_BLEND,
-            ShaderSet = { VertexLayouts = new VertexLayoutDescription[1] }
+            ShaderSet = { VertexLayouts = new VertexLayoutDescription[1] },
         };
 
         private IVeldridFrameBuffer? currentFrameBuffer;
@@ -74,8 +79,8 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// Sets the active scissor state.
         /// </summary>
         /// <param name="enabled">Whether the scissor test is enabled.</param>
-        public void SetScissorState(bool enabled)
-            => pipelineDesc.RasterizerState.ScissorTestEnabled = enabled;
+        public void SetScissorState(bool enabled) =>
+            pipelineDesc.RasterizerState.ScissorTestEnabled = enabled;
 
         /// <summary>
         /// Sets the active shader.
@@ -95,35 +100,52 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// <param name="blendingParameters">The blending parameters.</param>
         public void SetBlend(BlendingParameters blendingParameters)
         {
-            pipelineDesc.BlendState.AttachmentStates[0].BlendEnabled = !blendingParameters.IsDisabled;
-            pipelineDesc.BlendState.AttachmentStates[0].SourceColorFactor = blendingParameters.Source.ToBlendFactor();
-            pipelineDesc.BlendState.AttachmentStates[0].SourceAlphaFactor = blendingParameters.SourceAlpha.ToBlendFactor();
-            pipelineDesc.BlendState.AttachmentStates[0].DestinationColorFactor = blendingParameters.Destination.ToBlendFactor();
-            pipelineDesc.BlendState.AttachmentStates[0].DestinationAlphaFactor = blendingParameters.DestinationAlpha.ToBlendFactor();
-            pipelineDesc.BlendState.AttachmentStates[0].ColorFunction = blendingParameters.RGBEquation.ToBlendFunction();
-            pipelineDesc.BlendState.AttachmentStates[0].AlphaFunction = blendingParameters.AlphaEquation.ToBlendFunction();
+            pipelineDesc.BlendState.AttachmentStates[0].BlendEnabled =
+                !blendingParameters.IsDisabled;
+            pipelineDesc.BlendState.AttachmentStates[0].SourceColorFactor =
+                blendingParameters.Source.ToBlendFactor();
+            pipelineDesc.BlendState.AttachmentStates[0].SourceAlphaFactor =
+                blendingParameters.SourceAlpha.ToBlendFactor();
+            pipelineDesc.BlendState.AttachmentStates[0].DestinationColorFactor =
+                blendingParameters.Destination.ToBlendFactor();
+            pipelineDesc.BlendState.AttachmentStates[0].DestinationAlphaFactor =
+                blendingParameters.DestinationAlpha.ToBlendFactor();
+            pipelineDesc.BlendState.AttachmentStates[0].ColorFunction =
+                blendingParameters.RGBEquation.ToBlendFunction();
+            pipelineDesc.BlendState.AttachmentStates[0].AlphaFunction =
+                blendingParameters.AlphaEquation.ToBlendFunction();
         }
 
         /// <summary>
         /// Sets a mask deciding which colour components are affected during blending.
         /// </summary>
         /// <param name="blendingMask">The blending mask.</param>
-        public void SetBlendMask(BlendingMask blendingMask)
-            => pipelineDesc.BlendState.AttachmentStates[0].ColorWriteMask = blendingMask.ToColorWriteMask();
+        public void SetBlendMask(BlendingMask blendingMask) =>
+            pipelineDesc.BlendState.AttachmentStates[0].ColorWriteMask =
+                blendingMask.ToColorWriteMask();
 
         /// <summary>
         /// Sets the active viewport rectangle.
         /// </summary>
         /// <param name="viewport">The viewport rectangle.</param>
-        public void SetViewport(RectangleI viewport)
-            => Commands.SetViewport(0, new Viewport(viewport.Left, viewport.Top, viewport.Width, viewport.Height, 0, 1));
+        public void SetViewport(RectangleI viewport) =>
+            Commands.SetViewport(
+                0,
+                new Viewport(viewport.Left, viewport.Top, viewport.Width, viewport.Height, 0, 1)
+            );
 
         /// <summary>
         /// Sets the active scissor rectangle.
         /// </summary>
         /// <param name="scissor">The scissor rectangle.</param>
-        public void SetScissor(RectangleI scissor)
-            => Commands.SetScissorRect(0, (uint)scissor.X, (uint)scissor.Y, (uint)scissor.Width, (uint)scissor.Height);
+        public void SetScissor(RectangleI scissor) =>
+            Commands.SetScissorRect(
+                0,
+                (uint)scissor.X,
+                (uint)scissor.Y,
+                (uint)scissor.Width,
+                (uint)scissor.Height
+            );
 
         /// <summary>
         /// Sets the active depth parameters.
@@ -144,11 +166,25 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         {
             pipelineDesc.DepthStencilState.StencilTestEnabled = stencilInfo.StencilTest;
             pipelineDesc.DepthStencilState.StencilReference = (uint)stencilInfo.TestValue;
-            pipelineDesc.DepthStencilState.StencilReadMask = pipelineDesc.DepthStencilState.StencilWriteMask = (byte)stencilInfo.Mask;
-            pipelineDesc.DepthStencilState.StencilBack.Pass = pipelineDesc.DepthStencilState.StencilFront.Pass = stencilInfo.TestPassedOperation.ToStencilOperation();
-            pipelineDesc.DepthStencilState.StencilBack.Fail = pipelineDesc.DepthStencilState.StencilFront.Fail = stencilInfo.StencilTestFailOperation.ToStencilOperation();
-            pipelineDesc.DepthStencilState.StencilBack.DepthFail = pipelineDesc.DepthStencilState.StencilFront.DepthFail = stencilInfo.DepthTestFailOperation.ToStencilOperation();
-            pipelineDesc.DepthStencilState.StencilBack.Comparison = pipelineDesc.DepthStencilState.StencilFront.Comparison = stencilInfo.TestFunction.ToComparisonKind();
+            pipelineDesc.DepthStencilState.StencilReadMask = pipelineDesc
+                .DepthStencilState
+                .StencilWriteMask = (byte)stencilInfo.Mask;
+            pipelineDesc.DepthStencilState.StencilBack.Pass = pipelineDesc
+                .DepthStencilState
+                .StencilFront
+                .Pass = stencilInfo.TestPassedOperation.ToStencilOperation();
+            pipelineDesc.DepthStencilState.StencilBack.Fail = pipelineDesc
+                .DepthStencilState
+                .StencilFront
+                .Fail = stencilInfo.StencilTestFailOperation.ToStencilOperation();
+            pipelineDesc.DepthStencilState.StencilBack.DepthFail = pipelineDesc
+                .DepthStencilState
+                .StencilFront
+                .DepthFail = stencilInfo.DepthTestFailOperation.ToStencilOperation();
+            pipelineDesc.DepthStencilState.StencilBack.Comparison = pipelineDesc
+                .DepthStencilState
+                .StencilFront
+                .Comparison = stencilInfo.TestFunction.ToComparisonKind();
         }
 
         /// <summary>
@@ -215,16 +251,18 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// </summary>
         /// <param name="name">The uniform block name.</param>
         /// <param name="buffer">The uniform buffer.</param>
-        public void AttachUniformBuffer(string name, IVeldridUniformBuffer buffer)
-            => attachedUniformBuffers[name] = buffer;
+        public void AttachUniformBuffer(string name, IVeldridUniformBuffer buffer) =>
+            attachedUniformBuffers[name] = buffer;
 
         /// <summary>
         /// Sets the offset of a uniform buffer.
         /// </summary>
         /// <param name="buffer">The uniform buffer.</param>
         /// <param name="bufferOffsetInBytes">The offset in the uniform buffer.</param>
-        public void SetUniformBufferOffset(IVeldridUniformBuffer buffer, uint bufferOffsetInBytes)
-            => uniformBufferOffsets[buffer] = bufferOffsetInBytes;
+        public void SetUniformBufferOffset(
+            IVeldridUniformBuffer buffer,
+            uint bufferOffsetInBytes
+        ) => uniformBufferOffsets[buffer] = bufferOffsetInBytes;
 
         /// <summary>
         /// Draws vertices from the active vertex buffer.
@@ -241,7 +279,12 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         /// </list>
         /// </remarks>
         /// <exception cref="InvalidOperationException">If no shader or index buffer is active.</exception>
-        public void DrawVertices(global::Veldrid.PrimitiveTopology topology, int vertexStart, int verticesCount, int vertexIndexOffset = 0)
+        public void DrawVertices(
+            global::Veldrid.PrimitiveTopology topology,
+            int vertexStart,
+            int verticesCount,
+            int vertexIndexOffset = 0
+        )
         {
             if (currentShader == null)
                 throw new InvalidOperationException("No shader bound.");
@@ -282,7 +325,10 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
                 if (layout == null)
                     continue;
 
-                Commands.SetGraphicsResourceSet((uint)layout.Set, texture.GetResourceSet(Factory, layout.Layout));
+                Commands.SetGraphicsResourceSet(
+                    (uint)layout.Set,
+                    texture.GetResourceSet(Factory, layout.Layout)
+                );
             }
 
             // Activate uniform buffer resources.
@@ -293,7 +339,12 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
                     continue;
 
                 uint bufferOffset = uniformBufferOffsets.GetValueOrDefault(buffer);
-                Commands.SetGraphicsResourceSet((uint)layout.Set, buffer.GetResourceSet(layout.Layout), 1, ref bufferOffset);
+                Commands.SetGraphicsResourceSet(
+                    (uint)layout.Set,
+                    buffer.GetResourceSet(layout.Layout),
+                    1,
+                    ref bufferOffset
+                );
             }
 
             int indexStart = currentIndexBuffer.TranslateToIndex(vertexStart);
@@ -305,7 +356,9 @@ namespace osu.Framework.Graphics.Veldrid.Pipelines
         {
             if (!pipelineCache.TryGetValue(pipelineDesc, out var instance))
             {
-                pipelineCache[pipelineDesc.Clone()] = instance = Factory.CreateGraphicsPipeline(ref pipelineDesc);
+                pipelineCache[pipelineDesc.Clone()] = instance = Factory.CreateGraphicsPipeline(
+                    ref pipelineDesc
+                );
                 stat_graphics_pipeline_created.Value++;
             }
 

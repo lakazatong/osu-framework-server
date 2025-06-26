@@ -33,25 +33,37 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TestSceneTextBoxEvents.ManualTextInputContainer textInputContainer = null;
 
-            AddStep("add manual text input container", () =>
-            {
-                Child = textInputContainer = new TestSceneTextBoxEvents.ManualTextInputContainer();
-                textInput = textInputContainer.TextInput;
-            });
+            AddStep(
+                "add manual text input container",
+                () =>
+                {
+                    Child = textInputContainer =
+                        new TestSceneTextBoxEvents.ManualTextInputContainer();
+                    textInput = textInputContainer.TextInput;
+                }
+            );
 
-            AddStep("add textbox", () => textInputContainer.Child = textBox = new KeyEventQueuesTextBox
-            {
-                CommitOnFocusLost = true,
-                ReleaseFocusOnCommit = false,
-                Size = new Vector2(200, 40),
-                Text = default_text,
-            });
+            AddStep(
+                "add textbox",
+                () =>
+                    textInputContainer.Child = textBox =
+                        new KeyEventQueuesTextBox
+                        {
+                            CommitOnFocusLost = true,
+                            ReleaseFocusOnCommit = false,
+                            Size = new Vector2(200, 40),
+                            Text = default_text,
+                        }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("move caret to end", () => InputManager.Keys(PlatformAction.MoveForwardLine));
             assertKeyEventsNotConsumedForAction(PlatformAction.MoveForwardLine);
@@ -62,36 +74,68 @@ namespace osu.Framework.Tests.Visual.UserInterface
         public void TestTextInputWithoutKeyPress()
         {
             AddStep("insert text", () => textInput.Text("W"));
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "W"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
         }
 
         [Test]
         public void TestTextInputConsumesKeyDown()
         {
-            AddStep("press key to insert text", () =>
-            {
-                textInput.Text("W");
-                InputManager.Key(Key.W);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press key to insert text",
+                () =>
+                {
+                    textInput.Text("W");
+                    InputManager.Key(Key.W);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "W"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
         }
 
         [Test]
         public void TestKeyRepeat()
         {
-            AddStep("press and hold key to insert text", () =>
-            {
-                textInput.Text("W");
-                InputManager.PressKey(Key.W);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press and hold key to insert text",
+                () =>
+                {
+                    textInput.Text("W");
+                    InputManager.PressKey(Key.W);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "W"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
             for (int i = 0; i < 3; i++)
             {
                 AddStep("text input from repeat", () => textInput.Text("W"));
-                AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+                AddAssert(
+                    "user text consumed event",
+                    () =>
+                        textBox.UserConsumedTextQueue.Dequeue() == "W"
+                        && textBox.UserConsumedTextQueue.Count == 0
+                );
             }
 
             AddStep("release key", () => InputManager.ReleaseKey(Key.W));
@@ -102,24 +146,49 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestTwoKeys()
         {
-            AddStep("press and hold first key to insert text", () =>
-            {
-                textInput.Text("F");
-                InputManager.PressKey(Key.F);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "F" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press and hold first key to insert text",
+                () =>
+                {
+                    textInput.Text("F");
+                    InputManager.PressKey(Key.F);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "F"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
-            AddStep("press second key to insert text", () =>
-            {
-                textInput.Text("S");
-                InputManager.Key(Key.S);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "S" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press second key to insert text",
+                () =>
+                {
+                    textInput.Text("S");
+                    InputManager.Key(Key.S);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "S"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
             AddStep("press a key (no text input)", () => InputManager.Key(Key.F1));
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
 
             AddStep("release the first key", () => InputManager.ReleaseKey(Key.F));
             AddAssert("key repeated", () => textBox.KeyDownRepeatQueue.Count != 0);
@@ -130,17 +199,36 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestDeleteWorksDuringTextInput()
         {
-            AddStep("press and hold key to insert text", () =>
-            {
-                textInput.Text("W");
-                InputManager.PressKey(Key.W);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press and hold key to insert text",
+                () =>
+                {
+                    textInput.Text("W");
+                    InputManager.PressKey(Key.W);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "W"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
-            AddStep("invoke delete action to remove text", () => InputManager.Keys(PlatformAction.DeleteBackwardChar));
+            AddStep(
+                "invoke delete action to remove text",
+                () => InputManager.Keys(PlatformAction.DeleteBackwardChar)
+            );
             assertKeyEventsNotConsumedForAction(PlatformAction.DeleteBackwardChar);
-            AddAssert("user text removed event", () => textBox.UserRemovedTextQueue.Dequeue() == "W" && textBox.UserRemovedTextQueue.Count == 0);
+            AddAssert(
+                "user text removed event",
+                () =>
+                    textBox.UserRemovedTextQueue.Dequeue() == "W"
+                    && textBox.UserRemovedTextQueue.Count == 0
+            );
 
             AddStep("release key", () => InputManager.ReleaseKey(Key.W));
             AddAssert("key repeated", () => textBox.KeyDownRepeatQueue.Count != 0);
@@ -150,60 +238,116 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [Test]
         public void TestEscapeWorksDuringTextInput()
         {
-            AddStep("press and hold key to insert text", () =>
-            {
-                textInput.Text("W");
-                InputManager.PressKey(Key.W);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press and hold key to insert text",
+                () =>
+                {
+                    textInput.Text("W");
+                    InputManager.PressKey(Key.W);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "W"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
             AddStep("press escape to kill focus", () => InputManager.Key(Key.Escape));
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("text committed event", () => textBox.CommittedTextQueue.Dequeue() && textBox.CommittedTextQueue.Count == 0);
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "text committed event",
+                () => textBox.CommittedTextQueue.Dequeue() && textBox.CommittedTextQueue.Count == 0
+            );
             AddAssert("text box not focused", () => !textBox.HasFocus);
 
-            AddStep("focus textbox again", () =>
-            {
-                InputManager.MoveMouseTo(textBox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox again",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textBox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddStep("press a key (no text input)", () => InputManager.Key(Key.F1));
-            AddAssert("KeyDown event not consumed", () => !textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
+            AddAssert(
+                "KeyDown event not consumed",
+                () => !textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
 
             AddStep("release key", () => InputManager.ReleaseKey(Key.W));
             AddAssert("key repeated", () => textBox.KeyDownRepeatQueue.Count != 0);
             assertAllRepeatKeyDownEventsConsumed();
 
-            AddStep("press key to insert text", () =>
-            {
-                textInput.Text("W");
-                InputManager.Key(Key.W);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "W" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press key to insert text",
+                () =>
+                {
+                    textInput.Text("W");
+                    InputManager.Key(Key.W);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "W"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
         }
 
         [Test]
         public void TestReleaseAndPressKeysInSameFrame()
         {
-            AddStep("press and hold first key to insert text", () =>
-            {
-                textInput.Text("F");
-                InputManager.PressKey(Key.F);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "F" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "press and hold first key to insert text",
+                () =>
+                {
+                    textInput.Text("F");
+                    InputManager.PressKey(Key.F);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "F"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
-            AddStep("release first key, press second key, and send text", () =>
-            {
-                InputManager.ReleaseKey(Key.F);
-                textInput.Text("S");
-                InputManager.PressKey(Key.S);
-            });
-            AddAssert("KeyDown event consumed", () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
-            AddAssert("user text consumed event", () => textBox.UserConsumedTextQueue.Dequeue() == "S" && textBox.UserConsumedTextQueue.Count == 0);
+            AddStep(
+                "release first key, press second key, and send text",
+                () =>
+                {
+                    InputManager.ReleaseKey(Key.F);
+                    textInput.Text("S");
+                    InputManager.PressKey(Key.S);
+                }
+            );
+            AddAssert(
+                "KeyDown event consumed",
+                () => textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
+            AddAssert(
+                "user text consumed event",
+                () =>
+                    textBox.UserConsumedTextQueue.Dequeue() == "S"
+                    && textBox.UserConsumedTextQueue.Count == 0
+            );
 
             AddStep("release key", () => InputManager.ReleaseKey(Key.S));
             AddAssert("keys repeated", () => textBox.KeyDownRepeatQueue.Count != 0);
@@ -214,54 +358,73 @@ namespace osu.Framework.Tests.Visual.UserInterface
         public void TearDownSteps()
         {
             AddStep("press a key", () => InputManager.Key(Key.F1));
-            AddAssert("KeyDown event not consumed", () => !textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0);
+            AddAssert(
+                "KeyDown event not consumed",
+                () => !textBox.KeyDownQueue.Dequeue() && textBox.KeyDownQueue.Count == 0
+            );
 
-            AddAssert("all event queues emptied", () => textBox.InputErrorQueue.Count == 0 &&
-                                                        textBox.UserConsumedTextQueue.Count == 0 &&
-                                                        textBox.UserRemovedTextQueue.Count == 0 &&
-                                                        textBox.CommittedTextQueue.Count == 0 &&
-                                                        textBox.CaretMovedQueue.Count == 0 &&
-                                                        textBox.ImeCompositionQueue.Count == 0 &&
-                                                        textBox.ImeResultQueue.Count == 0 &&
-                                                        textBox.KeyDownQueue.Count == 0 &&
-                                                        textBox.PlatformActionQueue.Count == 0 &&
-                                                        textBox.KeyDownRepeatQueue.Count == 0);
+            AddAssert(
+                "all event queues emptied",
+                () =>
+                    textBox.InputErrorQueue.Count == 0
+                    && textBox.UserConsumedTextQueue.Count == 0
+                    && textBox.UserRemovedTextQueue.Count == 0
+                    && textBox.CommittedTextQueue.Count == 0
+                    && textBox.CaretMovedQueue.Count == 0
+                    && textBox.ImeCompositionQueue.Count == 0
+                    && textBox.ImeResultQueue.Count == 0
+                    && textBox.KeyDownQueue.Count == 0
+                    && textBox.PlatformActionQueue.Count == 0
+                    && textBox.KeyDownRepeatQueue.Count == 0
+            );
         }
 
         private void assertKeyEventsNotConsumedForAction(PlatformAction action)
         {
-            AddAssert("KeyDown events not consumed", () =>
-            {
-                // mirrored from ManualInputManager.Keys(PlatformAction)
-                var binding = host.PlatformKeyBindings.First(b => (PlatformAction)b.Action == action);
-
-                for (int i = 0; i < binding.KeyCombination.Keys.Length; i++)
+            AddAssert(
+                "KeyDown events not consumed",
+                () =>
                 {
-                    // fail if consumed
-                    if (textBox.KeyDownQueue.Dequeue())
-                        return false;
+                    // mirrored from ManualInputManager.Keys(PlatformAction)
+                    var binding = host.PlatformKeyBindings.First(b =>
+                        (PlatformAction)b.Action == action
+                    );
+
+                    for (int i = 0; i < binding.KeyCombination.Keys.Length; i++)
+                    {
+                        // fail if consumed
+                        if (textBox.KeyDownQueue.Dequeue())
+                            return false;
+                    }
+
+                    return textBox.KeyDownQueue.Count == 0;
                 }
+            );
 
-                return textBox.KeyDownQueue.Count == 0;
-            });
-
-            AddAssert("PlatformAction event consumed", () => textBox.PlatformActionQueue.Dequeue() && textBox.PlatformActionQueue.Count == 0);
+            AddAssert(
+                "PlatformAction event consumed",
+                () =>
+                    textBox.PlatformActionQueue.Dequeue() && textBox.PlatformActionQueue.Count == 0
+            );
         }
 
         private void assertAllRepeatKeyDownEventsConsumed()
         {
-            AddAssert("all repeat KeyDown events consumed", () =>
-            {
-                int n = textBox.KeyDownRepeatQueue.Count;
-
-                for (int i = 0; i < n; i++)
+            AddAssert(
+                "all repeat KeyDown events consumed",
+                () =>
                 {
-                    if (!textBox.KeyDownRepeatQueue.Dequeue())
-                        return false;
-                }
+                    int n = textBox.KeyDownRepeatQueue.Count;
 
-                return textBox.KeyDownRepeatQueue.Count == 0;
-            });
+                    for (int i = 0; i < n; i++)
+                    {
+                        if (!textBox.KeyDownRepeatQueue.Dequeue())
+                            return false;
+                    }
+
+                    return textBox.KeyDownRepeatQueue.Count == 0;
+                }
+            );
         }
 
         private partial class KeyEventQueuesTextBox : TestSceneTextBoxEvents.EventQueuesTextBox

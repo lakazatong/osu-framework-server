@@ -42,12 +42,17 @@ namespace osu.Framework.Graphics.UserInterface
         /// </remarks>
         protected virtual Drawable CreateHiddenToggleButton() => Empty();
 
-        protected abstract DirectorySelectorDirectory CreateDirectoryItem(DirectoryInfo directory, string displayName = null);
+        protected abstract DirectorySelectorDirectory CreateDirectoryItem(
+            DirectoryInfo directory,
+            string displayName = null
+        );
 
         /// <summary>
         /// Create the directory item that resolves the parent directory.
         /// </summary>
-        protected abstract DirectorySelectorDirectory CreateParentDirectoryItem(DirectoryInfo directory);
+        protected abstract DirectorySelectorDirectory CreateParentDirectoryItem(
+            DirectoryInfo directory
+        );
 
         [Cached]
         public readonly Bindable<DirectoryInfo> CurrentPath = new Bindable<DirectoryInfo>();
@@ -76,58 +81,63 @@ namespace osu.Framework.Graphics.UserInterface
             InternalChild = TopLevelContent = new Container
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = Content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new GridContainer
+                Child = Content =
+                    new Container
                     {
                         RelativeSizeAxes = Axes.Both,
-                        RowDimensions = new[]
+                        Child = new GridContainer
                         {
-                            new Dimension(GridSizeMode.AutoSize),
-                            new Dimension(),
-                        },
-                        Content = new[]
-                        {
-                            new Drawable[]
+                            RelativeSizeAxes = Axes.Both,
+                            RowDimensions = new[]
                             {
-                                new GridContainer
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    ColumnDimensions = new[]
-                                    {
-                                        new Dimension(),
-                                        new Dimension(GridSizeMode.AutoSize),
-                                    },
-                                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                                    Content = new[]
-                                    {
-                                        new[]
-                                        {
-                                            CreateBreadcrumb(),
-                                            CreateHiddenToggleButton()
-                                        }
-                                    }
-                                }
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension(),
                             },
-                            new Drawable[]
+                            Content = new[]
                             {
-                                CreateScrollContainer().With(d =>
+                                new Drawable[]
                                 {
-                                    d.RelativeSizeAxes = Axes.Both;
-                                    d.Child = directoryFlow = new FillFlowContainer
+                                    new GridContainer
                                     {
-                                        AutoSizeAxes = Axes.Y,
                                         RelativeSizeAxes = Axes.X,
-                                        Direction = FillDirection.Vertical,
-                                        Spacing = new Vector2(2),
-                                    };
-                                })
-                            }
-                        }
-                    }
-                }
+                                        AutoSizeAxes = Axes.Y,
+                                        ColumnDimensions = new[]
+                                        {
+                                            new Dimension(),
+                                            new Dimension(GridSizeMode.AutoSize),
+                                        },
+                                        RowDimensions = new[]
+                                        {
+                                            new Dimension(GridSizeMode.AutoSize),
+                                        },
+                                        Content = new[]
+                                        {
+                                            new[]
+                                            {
+                                                CreateBreadcrumb(),
+                                                CreateHiddenToggleButton(),
+                                            },
+                                        },
+                                    },
+                                },
+                                new Drawable[]
+                                {
+                                    CreateScrollContainer()
+                                        .With(d =>
+                                        {
+                                            d.RelativeSizeAxes = Axes.Both;
+                                            d.Child = directoryFlow = new FillFlowContainer
+                                            {
+                                                AutoSizeAxes = Axes.Y,
+                                                RelativeSizeAxes = Axes.X,
+                                                Direction = FillDirection.Vertical,
+                                                Spacing = new Vector2(2),
+                                            };
+                                        }),
+                                },
+                            },
+                        },
+                    },
             };
 
             ShowHiddenItems.ValueChanged += _ => updateDisplay();
@@ -210,7 +220,10 @@ namespace osu.Framework.Graphics.UserInterface
         /// The created <see cref="DirectorySelectorItem"/>s, provided that the <paramref name="path"/> could be entered.
         /// Not valid for reading if the return value of the method is <see langword="false"/>.
         /// </param>
-        protected virtual bool TryGetEntriesForPath(DirectoryInfo path, out ICollection<DirectorySelectorItem> items)
+        protected virtual bool TryGetEntriesForPath(
+            DirectoryInfo path,
+            out ICollection<DirectorySelectorItem> items
+        )
         {
             items = new List<DirectorySelectorItem>();
 
@@ -233,8 +246,6 @@ namespace osu.Framework.Graphics.UserInterface
         /// <summary>
         /// Called when an error has occured. Usually happens when trying to access protected directories.
         /// </summary>
-        protected virtual void NotifySelectionError()
-        {
-        }
+        protected virtual void NotifySelectionError() { }
     }
 }

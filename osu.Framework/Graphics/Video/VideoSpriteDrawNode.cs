@@ -4,10 +4,10 @@
 #nullable disable
 
 using System.Runtime.InteropServices;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shaders.Types;
+using osu.Framework.Graphics.Sprites;
 
 namespace osu.Framework.Graphics.Video
 {

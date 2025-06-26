@@ -11,6 +11,6 @@ namespace osu.Framework.Platform
         SingleThread,
 
         [Description("Multithreaded")]
-        MultiThreaded
+        MultiThreaded,
     }
 }

@@ -20,7 +20,10 @@ namespace osu.Framework.SourceGeneration.Generators
 
         public readonly List<string> TypeHierarchy = new List<string>();
 
-        protected IncrementalSemanticTarget(ClassDeclarationSyntax classSyntax, SemanticModel semanticModel)
+        protected IncrementalSemanticTarget(
+            ClassDeclarationSyntax classSyntax,
+            SemanticModel semanticModel
+        )
         {
             ClassSyntax = classSyntax;
 
@@ -34,7 +37,9 @@ namespace osu.Framework.SourceGeneration.Generators
             FullyQualifiedTypeName = SyntaxHelpers.GetFullyQualifiedTypeName(symbol);
             GlobalPrefixedTypeName = SyntaxHelpers.GetGlobalPrefixedTypeName(symbol)!;
             NeedsOverride = symbol.BaseType != null && CheckNeedsOverride(symbol);
-            ContainingNamespace = symbol.ContainingNamespace.IsGlobalNamespace ? null : symbol.ContainingNamespace.ToDisplayString();
+            ContainingNamespace = symbol.ContainingNamespace.IsGlobalNamespace
+                ? null
+                : symbol.ContainingNamespace.ToDisplayString();
 
             ITypeSymbol? containingType = symbol;
 

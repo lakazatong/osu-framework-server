@@ -43,6 +43,6 @@ namespace osu.Framework.Graphics.Rendering
         /// <summary>
         /// Decrease the stencil buffer by 1 and wrap to maximum value if the result is below 0.
         /// </summary>
-        DecreaseWrap
+        DecreaseWrap,
     }
 }

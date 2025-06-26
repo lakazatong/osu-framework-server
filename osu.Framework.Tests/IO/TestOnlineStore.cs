@@ -23,7 +23,8 @@ namespace osu.Framework.Tests.IO
 
         static TestOnlineStore()
         {
-            bool localHttpBin = Environment.GetEnvironmentVariable("OSU_TESTS_LOCAL_HTTPBIN") == "1";
+            bool localHttpBin =
+                Environment.GetEnvironmentVariable("OSU_TESTS_LOCAL_HTTPBIN") == "1";
 
             if (localHttpBin)
             {
@@ -60,7 +61,10 @@ namespace osu.Framework.Tests.IO
         }
 
         [Test, Retry(5)]
-        public void TestValidUrlReturnsData([ValueSource(nameof(protocols))] string protocol, [Values(true, false)] bool async)
+        public void TestValidUrlReturnsData(
+            [ValueSource(nameof(protocols))] string protocol,
+            [Values(true, false)] bool async
+        )
         {
             byte[]? result = async
                 ? store.GetAsync($"{protocol}://{host}/image/png").GetResultSafely()
@@ -101,15 +105,16 @@ namespace osu.Framework.Tests.IO
             // Known, guaranteed file path.
             string path = new Uri(AppContext.BaseDirectory).AbsoluteUri;
 
-            byte[]? result = async
-                ? store.GetAsync(path).GetResultSafely()
-                : store.Get(path);
+            byte[]? result = async ? store.GetAsync(path).GetResultSafely() : store.Get(path);
 
             Assert.That(result, Is.Null);
         }
 
         [Test]
-        public void TestBadWebRequest([ValueSource(nameof(protocols))] string protocol, [Values(true, false)] bool async)
+        public void TestBadWebRequest(
+            [ValueSource(nameof(protocols))] string protocol,
+            [Values(true, false)] bool async
+        )
         {
             byte[]? result = async
                 ? store.GetAsync($"{protocol}://{host}/status/500").GetResultSafely()

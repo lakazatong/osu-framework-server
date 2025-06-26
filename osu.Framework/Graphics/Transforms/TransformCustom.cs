@@ -3,14 +3,14 @@
 
 #nullable disable
 
-using osu.Framework.Utils;
 using System;
 using System.Collections.Concurrent;
-using System.Reflection.Emit;
-using osu.Framework.Extensions.TypeExtensions;
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using osu.Framework.Extensions.TypeExtensions;
+using osu.Framework.Utils;
 
 namespace osu.Framework.Graphics.Transforms
 {
@@ -38,14 +38,21 @@ namespace osu.Framework.Graphics.Transforms
             public WriteFunc Write;
         }
 
-        private static readonly ConcurrentDictionary<string, Accessor> accessors = new ConcurrentDictionary<string, Accessor>();
+        private static readonly ConcurrentDictionary<string, Accessor> accessors =
+            new ConcurrentDictionary<string, Accessor>();
 
         private static ReadFunc createFieldGetter(FieldInfo field)
         {
-            if (!RuntimeFeature.IsDynamicCodeCompiled) return transformable => (TValue)field.GetValue(transformable);
+            if (!RuntimeFeature.IsDynamicCodeCompiled)
+                return transformable => (TValue)field.GetValue(transformable);
 
             string methodName = $"{typeof(T).ReadableName()}.{field.Name}.get_{Guid.NewGuid():N}";
-            DynamicMethod setterMethod = new DynamicMethod(methodName, typeof(TValue), new[] { typeof(T) }, true);
+            DynamicMethod setterMethod = new DynamicMethod(
+                methodName,
+                typeof(TValue),
+                new[] { typeof(T) },
+                true
+            );
             ILGenerator gen = setterMethod.GetILGenerator();
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Ldfld, field);
@@ -55,10 +62,16 @@ namespace osu.Framework.Graphics.Transforms
 
         private static WriteFunc createFieldSetter(FieldInfo field)
         {
-            if (!RuntimeFeature.IsDynamicCodeCompiled) return (transformable, value) => field.SetValue(transformable, value);
+            if (!RuntimeFeature.IsDynamicCodeCompiled)
+                return (transformable, value) => field.SetValue(transformable, value);
 
             string methodName = $"{typeof(T).ReadableName()}.{field.Name}.set_{Guid.NewGuid():N}";
-            DynamicMethod setterMethod = new DynamicMethod(methodName, null, new[] { typeof(T), typeof(TValue) }, true);
+            DynamicMethod setterMethod = new DynamicMethod(
+                methodName,
+                null,
+                new[] { typeof(T), typeof(TValue) },
+                true
+            );
             ILGenerator gen = setterMethod.GetILGenerator();
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Ldarg_1);
@@ -69,29 +82,36 @@ namespace osu.Framework.Graphics.Transforms
 
         private static ReadFunc createPropertyGetter(MethodInfo getter)
         {
-            if (!RuntimeFeature.IsDynamicCodeCompiled) return transformable => (TValue)getter.Invoke(transformable, Array.Empty<object>());
+            if (!RuntimeFeature.IsDynamicCodeCompiled)
+                return transformable => (TValue)getter.Invoke(transformable, Array.Empty<object>());
 
             return getter.CreateDelegate<ReadFunc>();
         }
 
         private static WriteFunc createPropertySetter(MethodInfo setter)
         {
-            if (!RuntimeFeature.IsDynamicCodeCompiled) return (transformable, value) => setter.Invoke(transformable, new object[] { value });
+            if (!RuntimeFeature.IsDynamicCodeCompiled)
+                return (transformable, value) =>
+                    setter.Invoke(transformable, new object[] { value });
 
             return setter.CreateDelegate<WriteFunc>();
         }
 
         private static Accessor findAccessor(Type type, string propertyOrFieldName)
         {
-            PropertyInfo property = type.GetProperty(propertyOrFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            PropertyInfo property = type.GetProperty(
+                propertyOrFieldName,
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+            );
 
             if (property != null)
             {
                 if (property.PropertyType != typeof(TValue))
                 {
                     throw new InvalidOperationException(
-                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for property {type.ReadableName()}.{propertyOrFieldName} " +
-                        $"since its type should be {typeof(TValue).ReadableName()}, but is {property.PropertyType.ReadableName()}.");
+                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for property {type.ReadableName()}.{propertyOrFieldName} "
+                            + $"since its type should be {typeof(TValue).ReadableName()}, but is {property.PropertyType.ReadableName()}."
+                    );
                 }
 
                 var getter = property.GetGetMethod(true);
@@ -100,14 +120,16 @@ namespace osu.Framework.Graphics.Transforms
                 if (getter == null || setter == null)
                 {
                     throw new InvalidOperationException(
-                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for property {type.ReadableName()}.{propertyOrFieldName} " +
-                        "since it needs to have both a getter and a setter.");
+                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for property {type.ReadableName()}.{propertyOrFieldName} "
+                            + "since it needs to have both a getter and a setter."
+                    );
                 }
 
                 if (getter.IsStatic || setter.IsStatic)
                 {
                     throw new NotSupportedException(
-                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for property {type.ReadableName()}.{propertyOrFieldName} because static fields are not supported.");
+                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for property {type.ReadableName()}.{propertyOrFieldName} because static fields are not supported."
+                    );
                 }
 
                 return new Accessor
@@ -117,21 +139,29 @@ namespace osu.Framework.Graphics.Transforms
                 };
             }
 
-            FieldInfo field = type.GetField(propertyOrFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            FieldInfo field = type.GetField(
+                propertyOrFieldName,
+                BindingFlags.Public
+                    | BindingFlags.NonPublic
+                    | BindingFlags.Instance
+                    | BindingFlags.Static
+            );
 
             if (field != null)
             {
                 if (field.FieldType != typeof(TValue))
                 {
                     throw new InvalidOperationException(
-                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for field {type.ReadableName()}.{propertyOrFieldName} " +
-                        $"since its type should be {typeof(TValue).ReadableName()}, but is {field.FieldType.ReadableName()}.");
+                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for field {type.ReadableName()}.{propertyOrFieldName} "
+                            + $"since its type should be {typeof(TValue).ReadableName()}, but is {field.FieldType.ReadableName()}."
+                    );
                 }
 
                 if (field.IsStatic)
                 {
                     throw new NotSupportedException(
-                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for field {type.ReadableName()}.{propertyOrFieldName} because static fields are not supported.");
+                        $"Cannot create {nameof(TransformCustom<TValue, T>)} for field {type.ReadableName()}.{propertyOrFieldName} because static fields are not supported."
+                    );
                 }
 
                 return new Accessor
@@ -142,13 +172,16 @@ namespace osu.Framework.Graphics.Transforms
             }
 
             if (type.BaseType == null)
-                throw new InvalidOperationException($"Cannot create {nameof(TransformCustom<TValue, T>)} for non-existent property or field {typeof(T).ReadableName()}.{propertyOrFieldName}.");
+                throw new InvalidOperationException(
+                    $"Cannot create {nameof(TransformCustom<TValue, T>)} for non-existent property or field {typeof(T).ReadableName()}.{propertyOrFieldName}."
+                );
 
             // Private members aren't visible unless we check the base type explicitly, so let's try our luck.
             return findAccessor(type.BaseType, propertyOrFieldName);
         }
 
-        private static Accessor getAccessor(string propertyOrFieldName) => accessors.GetOrAdd(propertyOrFieldName, key => findAccessor(typeof(T), key));
+        private static Accessor getAccessor(string propertyOrFieldName) =>
+            accessors.GetOrAdd(propertyOrFieldName, key => findAccessor(typeof(T), key));
 
         private readonly Accessor accessor;
 
@@ -168,13 +201,18 @@ namespace osu.Framework.Graphics.Transforms
             targetGrouping = grouping;
 
             accessor = getAccessor(propertyOrFieldName);
-            Trace.Assert(accessor.Read != null && accessor.Write != null, $"Failed to populate {nameof(accessor)}.");
+            Trace.Assert(
+                accessor.Read != null && accessor.Write != null,
+                $"Failed to populate {nameof(accessor)}."
+            );
         }
 
         private TValue valueAt(double time)
         {
-            if (time < StartTime) return StartValue;
-            if (time >= EndTime) return EndValue;
+            if (time < StartTime)
+                return StartValue;
+            if (time >= EndTime)
+                return EndValue;
 
             return Interpolation.ValueAt(time, StartValue, EndValue, StartTime, EndTime, Easing);
         }
@@ -190,8 +228,6 @@ namespace osu.Framework.Graphics.Transforms
         where T : class, ITransformable
     {
         public TransformCustom(string propertyOrFieldName)
-            : base(propertyOrFieldName)
-        {
-        }
+            : base(propertyOrFieldName) { }
     }
 }

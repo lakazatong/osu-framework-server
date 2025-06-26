@@ -40,14 +40,10 @@ namespace osu.Framework.Graphics.Containers.Markdown
         }
 
         public MarkdownLinkText(string text, LinkInline linkInline)
-            : this(text, linkInline.Url ?? string.Empty)
-        {
-        }
+            : this(text, linkInline.Url ?? string.Empty) { }
 
         public MarkdownLinkText(AutolinkInline autolinkInline)
-            : this(autolinkInline.Url, autolinkInline.Url)
-        {
-        }
+            : this(autolinkInline.Url, autolinkInline.Url) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -60,7 +56,7 @@ namespace osu.Framework.Graphics.Containers.Markdown
                     AutoSizeAxes = Axes.Both,
                     Child = spriteText = CreateSpriteText(),
                     Action = OnLinkPressed,
-                }
+                },
             };
 
             spriteText.Text = text;

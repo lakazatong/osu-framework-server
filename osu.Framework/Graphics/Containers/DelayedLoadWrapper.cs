@@ -34,7 +34,12 @@ namespace osu.Framework.Graphics.Containers
         public DelayedLoadWrapper(Drawable content, double timeBeforeLoad = 500)
             : this(timeBeforeLoad)
         {
-            Content = content ?? throw new ArgumentNullException(nameof(content), $@"{nameof(DelayedLoadWrapper)} required non-null {nameof(content)}.");
+            Content =
+                content
+                ?? throw new ArgumentNullException(
+                    nameof(content),
+                    $@"{nameof(DelayedLoadWrapper)} required non-null {nameof(content)}."
+                );
         }
 
         /// <summary>
@@ -98,7 +103,8 @@ namespace osu.Framework.Graphics.Containers
             base.Update();
 
             // This code can be expensive, so only run if we haven't yet loaded.
-            if (DelayedLoadCompleted || DelayedLoadTriggered) return;
+            if (DelayedLoadCompleted || DelayedLoadTriggered)
+                return;
 
             if (!IsIntersecting)
                 timeVisible = 0;
@@ -122,7 +128,12 @@ namespace osu.Framework.Graphics.Containers
             cancellationTokenSource = new CancellationTokenSource();
 
             // The callback is run on the game's scheduler since DelayedLoadUnloadWrapper needs to unload when no updates are being received.
-            LoadComponentAsync(Content, EndDelayedLoad, scheduler: Game.Scheduler, cancellation: cancellationTokenSource.Token);
+            LoadComponentAsync(
+                Content,
+                EndDelayedLoad,
+                scheduler: Game.Scheduler,
+                cancellation: cancellationTokenSource.Token
+            );
         }
 
         protected virtual void EndDelayedLoad(Drawable content)
@@ -183,7 +194,9 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         public bool DelayedLoadCompleted { get; protected set; }
 
-        private readonly LayoutValue optimisingContainerCache = new LayoutValue(Invalidation.Parent);
+        private readonly LayoutValue optimisingContainerCache = new LayoutValue(
+            Invalidation.Parent
+        );
         private readonly LayoutValue isIntersectingCache = new LayoutValue(Invalidation.All);
         private ScheduledDelegate isIntersectingResetDelegate;
 
@@ -193,7 +206,8 @@ namespace osu.Framework.Graphics.Containers
         internal IOnScreenOptimisingContainer OptimisingContainer { get; private set; }
 
         [CanBeNull]
-        internal IOnScreenOptimisingContainer FindParentOptimisingContainer() => this.FindClosestParent<IOnScreenOptimisingContainer>();
+        internal IOnScreenOptimisingContainer FindParentOptimisingContainer() =>
+            this.FindClosestParent<IOnScreenOptimisingContainer>();
 
         protected override bool OnInvalidate(Invalidation invalidation, InvalidationSource source)
         {
@@ -206,7 +220,11 @@ namespace osu.Framework.Graphics.Containers
             // The scheduled delegate will be cancelled if this wrapper has its UpdateSubTreeMasking() invoked, as more accurate intersections can be computed there instead.
             if (isIntersectingResetDelegate == null)
             {
-                isIntersectingResetDelegate = Game?.Scheduler.AddDelayed(wrapper => wrapper.IsIntersecting = false, this, 0);
+                isIntersectingResetDelegate = Game?.Scheduler.AddDelayed(
+                    wrapper => wrapper.IsIntersecting = false,
+                    this,
+                    0
+                );
                 result = true;
             }
 
@@ -232,8 +250,10 @@ namespace osu.Framework.Graphics.Containers
                 // The first condition is an intersection against the hierarchy, including any parents that may be masking this wrapper.
                 // It is the same calculation as Drawable.IsMaskedAway, however IsMaskedAway is optimised out for some CompositeDrawables (which this wrapper is).
                 // The second condition is an exact intersection against the optimising container, which further optimises rotated AABBs where the wrapper content is not visible.
-                IsIntersecting = ComputeMaskingBounds().IntersectsWith(ScreenSpaceDrawQuad.AABBFloat)
-                                 && OptimisingContainer?.ScreenSpaceDrawQuad.Intersects(ScreenSpaceDrawQuad) != false;
+                IsIntersecting =
+                    ComputeMaskingBounds().IntersectsWith(ScreenSpaceDrawQuad.AABBFloat)
+                    && OptimisingContainer?.ScreenSpaceDrawQuad.Intersects(ScreenSpaceDrawQuad)
+                        != false;
 
                 isIntersectingCache.Validate();
             }
@@ -244,8 +264,6 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// A container which acts as a masking parent for on-screen delayed load optimisations.
         /// </summary>
-        internal interface IOnScreenOptimisingContainer : IDrawable
-        {
-        }
+        internal interface IOnScreenOptimisingContainer : IDrawable { }
     }
 }

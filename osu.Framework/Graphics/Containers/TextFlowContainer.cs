@@ -3,8 +3,6 @@
 
 #nullable disable
 
-using osu.Framework.Caching;
-using osu.Framework.Graphics.Sprites;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -12,8 +10,10 @@ using System.Linq;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Caching;
 using osu.Framework.Extensions.EnumExtensions;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Framework.Utils;
 using osuTK;
@@ -177,7 +177,8 @@ namespace osu.Framework.Graphics.Containers
         internal LocalisationManager Localisation { get; private set; }
 
         protected readonly InnerFlow Flow;
-        private readonly Bindable<LocalisationParameters> localisationParameters = new Bindable<LocalisationParameters>();
+        private readonly Bindable<LocalisationParameters> localisationParameters =
+            new Bindable<LocalisationParameters>();
 
         public TextFlowContainer(Action<SpriteText> defaultCreationParameters = null)
         {
@@ -202,7 +203,9 @@ namespace osu.Framework.Graphics.Containers
             base.LoadComplete();
 
             localisationParameters.BindValueChanged(_ => partsCache.Invalidate());
-            ((IBindable<LocalisationParameters>)localisationParameters).BindTo(Localisation.CurrentParameters);
+            ((IBindable<LocalisationParameters>)localisationParameters).BindTo(
+                Localisation.CurrentParameters
+            );
         }
 
         protected override void Update()
@@ -230,13 +233,18 @@ namespace osu.Framework.Graphics.Containers
         /// <returns>A collection of <see cref="Drawable" /> objects for each <see cref="SpriteText"/> word and <see cref="NewLineContainer"/> created from the given text.</returns>
         /// <param name="text">The text to add.</param>
         /// <param name="creationParameters">A callback providing any <see cref="SpriteText" /> instances created for this new text.</param>
-        public ITextPart AddText<TSpriteText>(LocalisableString text, Action<TSpriteText> creationParameters = null)
-            where TSpriteText : SpriteText, new()
-            => AddPart(CreateChunkFor(text, true, () => new TSpriteText(), creationParameters));
+        public ITextPart AddText<TSpriteText>(
+            LocalisableString text,
+            Action<TSpriteText> creationParameters = null
+        )
+            where TSpriteText : SpriteText, new() =>
+            AddPart(CreateChunkFor(text, true, () => new TSpriteText(), creationParameters));
 
         /// <inheritdoc cref="AddText{TSpriteText}(LocalisableString,Action{TSpriteText})"/>
-        public ITextPart AddText(LocalisableString text, Action<SpriteText> creationParameters = null)
-            => AddPart(CreateChunkFor(text, true, CreateSpriteText, creationParameters));
+        public ITextPart AddText(
+            LocalisableString text,
+            Action<SpriteText> creationParameters = null
+        ) => AddPart(CreateChunkFor(text, true, CreateSpriteText, creationParameters));
 
         /// <summary>
         /// Add an arbitrary <see cref="SpriteText"/> to this <see cref="TextFlowContainer"/>.
@@ -245,7 +253,10 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         /// <param name="text">The text to add.</param>
         /// <param name="creationParameters">A callback providing any <see cref="SpriteText" /> instances created for this new text.</param>
-        public void AddText<TSpriteText>(TSpriteText text, Action<TSpriteText> creationParameters = null)
+        public void AddText<TSpriteText>(
+            TSpriteText text,
+            Action<TSpriteText> creationParameters = null
+        )
             where TSpriteText : SpriteText
         {
             defaultCreationParameters?.Invoke(text);
@@ -260,20 +271,30 @@ namespace osu.Framework.Graphics.Containers
         /// <returns>A collection of <see cref="Drawable" /> objects for each <see cref="SpriteText"/> word and <see cref="NewLineContainer"/> created from the given text.</returns>
         /// <param name="paragraph">The paragraph to add.</param>
         /// <param name="creationParameters">A callback providing any <see cref="SpriteText" /> instances created for this new paragraph.</param>
-        public ITextPart AddParagraph<TSpriteText>(LocalisableString paragraph, Action<TSpriteText> creationParameters = null)
-            where TSpriteText : SpriteText, new()
-            => AddPart(CreateChunkFor(paragraph, false, () => new TSpriteText(), creationParameters));
+        public ITextPart AddParagraph<TSpriteText>(
+            LocalisableString paragraph,
+            Action<TSpriteText> creationParameters = null
+        )
+            where TSpriteText : SpriteText, new() =>
+            AddPart(CreateChunkFor(paragraph, false, () => new TSpriteText(), creationParameters));
 
         /// <inheritdoc cref="AddParagraph{TSpriteText}(LocalisableString,Action{TSpriteText})"/>
-        public ITextPart AddParagraph(LocalisableString paragraph, Action<SpriteText> creationParameters = null)
-            => AddPart(CreateChunkFor(paragraph, false, CreateSpriteText, creationParameters));
+        public ITextPart AddParagraph(
+            LocalisableString paragraph,
+            Action<SpriteText> creationParameters = null
+        ) => AddPart(CreateChunkFor(paragraph, false, CreateSpriteText, creationParameters));
 
         /// <summary>
         /// Creates an appropriate implementation of <see cref="TextChunk{TSpriteText}"/> for this text flow container type.
         /// </summary>
-        protected internal virtual TextChunk<TSpriteText> CreateChunkFor<TSpriteText>(LocalisableString text, bool newLineIsParagraph, Func<TSpriteText> creationFunc, Action<TSpriteText> creationParameters = null)
-            where TSpriteText : SpriteText, new()
-            => new TextChunk<TSpriteText>(text, newLineIsParagraph, creationFunc, creationParameters);
+        protected internal virtual TextChunk<TSpriteText> CreateChunkFor<TSpriteText>(
+            LocalisableString text,
+            bool newLineIsParagraph,
+            Func<TSpriteText> creationFunc,
+            Action<TSpriteText> creationParameters = null
+        )
+            where TSpriteText : SpriteText, new() =>
+            new TextChunk<TSpriteText>(text, newLineIsParagraph, creationFunc, creationParameters);
 
         /// <summary>
         /// End current line and start a new one.
@@ -287,7 +308,8 @@ namespace osu.Framework.Graphics.Containers
 
         protected internal virtual SpriteText CreateSpriteText() => new SpriteText();
 
-        internal void ApplyDefaultCreationParameters(SpriteText spriteText) => defaultCreationParameters?.Invoke(spriteText);
+        internal void ApplyDefaultCreationParameters(SpriteText spriteText) =>
+            defaultCreationParameters?.Invoke(spriteText);
 
         public void Clear(bool disposeChildren = true)
         {
@@ -357,7 +379,8 @@ namespace osu.Framework.Graphics.Containers
                 get => firstLineIndent;
                 set
                 {
-                    if (value == firstLineIndent) return;
+                    if (value == firstLineIndent)
+                        return;
 
                     firstLineIndent = value;
 
@@ -375,7 +398,8 @@ namespace osu.Framework.Graphics.Containers
                 get => contentIndent;
                 set
                 {
-                    if (value == contentIndent) return;
+                    if (value == contentIndent)
+                        return;
 
                     contentIndent = value;
 
@@ -394,7 +418,8 @@ namespace osu.Framework.Graphics.Containers
                 get => paragraphSpacing;
                 set
                 {
-                    if (value == paragraphSpacing) return;
+                    if (value == paragraphSpacing)
+                        return;
 
                     paragraphSpacing = value;
 
@@ -413,7 +438,8 @@ namespace osu.Framework.Graphics.Containers
                 get => lineSpacing;
                 set
                 {
-                    if (value == lineSpacing) return;
+                    if (value == lineSpacing)
+                        return;
 
                     lineSpacing = value;
 
@@ -512,7 +538,9 @@ namespace osu.Framework.Graphics.Containers
                                     return Axes.Y;
 
                                 default:
-                                    throw new ArgumentException($"{direction.ToString()} is not defined");
+                                    throw new ArgumentException(
+                                        $"{direction.ToString()} is not defined"
+                                    );
                             }
                         }
 
@@ -522,22 +550,34 @@ namespace osu.Framework.Graphics.Containers
                         // in the vertical direction. Now, we can add relatively sized children with FillMode.Fit to make sure their
                         // aspect ratio is preserved while still allowing them to fill vertically. This special case can not result
                         // in an autosize-related feedback loop, and we can thus simply allow it.
-                        if ((c.RelativeSizeAxes & AutoSizeAxes & toAxes(Direction)) != 0
-                            && (c.FillMode != FillMode.Fit || c.RelativeSizeAxes != Axes.Both || c.Size.X > RelativeChildSize.X
-                                || c.Size.Y > RelativeChildSize.Y || AutoSizeAxes == Axes.Both))
+                        if (
+                            (c.RelativeSizeAxes & AutoSizeAxes & toAxes(Direction)) != 0
+                            && (
+                                c.FillMode != FillMode.Fit
+                                || c.RelativeSizeAxes != Axes.Both
+                                || c.Size.X > RelativeChildSize.X
+                                || c.Size.Y > RelativeChildSize.Y
+                                || AutoSizeAxes == Axes.Both
+                            )
+                        )
                         {
                             throw new InvalidOperationException(
-                                "Drawables inside a fill flow container may not have a relative size axis that the fill flow container is filling in and auto sizing for. " +
-                                $"The fill flow container is set to flow in the {Direction} direction and autosize in {AutoSizeAxes} axes and the child is set to relative size in {c.RelativeSizeAxes} axes.");
+                                "Drawables inside a fill flow container may not have a relative size axis that the fill flow container is filling in and auto sizing for. "
+                                    + $"The fill flow container is set to flow in the {Direction} direction and autosize in {AutoSizeAxes} axes and the child is set to relative size in {c.RelativeSizeAxes} axes."
+                            );
                         }
 
                         // DIFFERENCE: Disallow custom anchor/origin positions other than top left.
                         // Things will be accounted for accurately later.
                         // All calls to `spacingFactor()` in the original code thus reduce to returning (0,0).
                         if (c.RelativeAnchorPosition != Vector2.Zero)
-                            throw new InvalidOperationException($"All drawables in a {nameof(TextFlowContainer)} must not specify custom {RelativeAnchorPosition}s. Only (0,0) is supported.");
+                            throw new InvalidOperationException(
+                                $"All drawables in a {nameof(TextFlowContainer)} must not specify custom {RelativeAnchorPosition}s. Only (0,0) is supported."
+                            );
                         if (c.RelativeOriginPosition != Vector2.Zero)
-                            throw new InvalidOperationException($"All drawables in a {nameof(TextFlowContainer)} must not specify custom {RelativeOriginPosition}s. Only (0,0) is supported.");
+                            throw new InvalidOperationException(
+                                $"All drawables in a {nameof(TextFlowContainer)} must not specify custom {RelativeOriginPosition}s. Only (0,0) is supported."
+                            );
 
                         // Populate running variables with sane initial values.
                         if (i == 0)
@@ -554,7 +594,14 @@ namespace osu.Framework.Graphics.Containers
 
                         // We've exceeded our allowed width, move to a new row
                         // DIFFERENCE: `NewLineContainer`s also force a new row.
-                        if (Direction != FillDirection.Horizontal && (Precision.DefinitelyBigger(rowWidth, max.X) || Direction == FillDirection.Vertical || c is NewLineContainer))
+                        if (
+                            Direction != FillDirection.Horizontal
+                            && (
+                                Precision.DefinitelyBigger(rowWidth, max.X)
+                                || Direction == FillDirection.Vertical
+                                || c is NewLineContainer
+                            )
+                        )
                         {
                             // DIFFERENCE: Handle `ContentIndent`. Only kinda correct for left text anchor.
                             current.X = ContentIndent;
@@ -563,7 +610,9 @@ namespace osu.Framework.Graphics.Containers
 
                             // DIFFERENCE: A new line also has an implicit height if it starts a new paragraph.
                             if (c is NewLineContainer nlc)
-                                current.Y += nlc.IndicatesNewParagraph ? rowHeight * ParagraphSpacing : 0;
+                                current.Y += nlc.IndicatesNewParagraph
+                                    ? rowHeight * ParagraphSpacing
+                                    : 0;
 
                             layoutPositions[i] = current;
 
@@ -582,7 +631,10 @@ namespace osu.Framework.Graphics.Containers
                             // in a second pass.
                             rowWidths[^1] = rowWidth;
                             // DIFFERENCE: `IHasLineBaseHeight` tracking.
-                            lineBaseHeights[^1] = Math.Max(lineBaseHeights[^1], (c as IHasLineBaseHeight)?.LineBaseHeight ?? 0);
+                            lineBaseHeights[^1] = Math.Max(
+                                lineBaseHeights[^1],
+                                (c as IHasLineBaseHeight)?.LineBaseHeight ?? 0
+                            );
                         }
 
                         rowIndices[i] = rowWidths.Count - 1;
@@ -634,7 +686,8 @@ namespace osu.Framework.Graphics.Containers
                             layoutPosition.X += rowOffsetToEnd;
 
                         if (c is IHasLineBaseHeight hasLineBaseHeight)
-                            layoutPosition.Y += lineBaseHeights[rowIndices[i]] - hasLineBaseHeight.LineBaseHeight;
+                            layoutPosition.Y +=
+                                lineBaseHeights[rowIndices[i]] - hasLineBaseHeight.LineBaseHeight;
 
                         yield return layoutPosition;
                     }

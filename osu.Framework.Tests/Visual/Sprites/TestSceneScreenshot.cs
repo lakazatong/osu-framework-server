@@ -48,10 +48,10 @@ namespace osu.Framework.Tests.Visual.Sprites
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.Red,
-                        Alpha = 0
+                        Alpha = 0,
                     },
-                    display = new Sprite { RelativeSizeAxes = Axes.Both }
-                }
+                    display = new Sprite { RelativeSizeAxes = Axes.Both },
+                },
             };
 
             AddStep("take screenshot", takeScreenshot);
@@ -73,16 +73,19 @@ namespace osu.Framework.Tests.Visual.Sprites
             if (host.Window == null)
                 return;
 
-            host.TakeScreenshotAsync().ContinueWith(t => Schedule(() =>
-            {
-                var image = t.GetResultSafely();
+            host.TakeScreenshotAsync()
+                .ContinueWith(t =>
+                    Schedule(() =>
+                    {
+                        var image = t.GetResultSafely();
 
-                var tex = renderer.CreateTexture(image.Width, image.Height);
-                tex.SetData(new TextureUpload(image));
+                        var tex = renderer.CreateTexture(image.Width, image.Height);
+                        tex.SetData(new TextureUpload(image));
 
-                display.Texture = tex;
-                background.Show();
-            }));
+                        display.Texture = tex;
+                        background.Show();
+                    })
+                );
         }
     }
 }

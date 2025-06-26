@@ -16,12 +16,21 @@ namespace osu.Framework.Tests.MathUtils
     public class TestInterpolation
     {
         [TestCaseSource(nameof(getEasings))]
-        public void TestEasingStartsAtZero(Easing easing) => Assert.That(Interpolation.ApplyEasing(easing, 0), Is.EqualTo(0).Within(Precision.DOUBLE_EPSILON));
+        public void TestEasingStartsAtZero(Easing easing) =>
+            Assert.That(
+                Interpolation.ApplyEasing(easing, 0),
+                Is.EqualTo(0).Within(Precision.DOUBLE_EPSILON)
+            );
 
         [TestCaseSource(nameof(getEasings))]
-        public void TestEasingEndsAtOne(Easing easing) => Assert.That(Interpolation.ApplyEasing(easing, 1), Is.EqualTo(1).Within(Precision.DOUBLE_EPSILON));
+        public void TestEasingEndsAtOne(Easing easing) =>
+            Assert.That(
+                Interpolation.ApplyEasing(easing, 1),
+                Is.EqualTo(1).Within(Precision.DOUBLE_EPSILON)
+            );
 
-        private static IEnumerable<Easing> getEasings() => Enum.GetValues(typeof(Easing)).OfType<Easing>();
+        private static IEnumerable<Easing> getEasings() =>
+            Enum.GetValues(typeof(Easing)).OfType<Easing>();
 
         [Test]
         public void TestLerp()
@@ -45,16 +54,13 @@ namespace osu.Framework.Tests.MathUtils
             Assert.AreEqual(middle, damp(start, half_time));
 
             // The final value shouldn't depend on the frame rate
-            Assert.AreEqual(
-                damp(start, 300 + 700),
-                damp(damp(start, 300), 700));
+            Assert.AreEqual(damp(start, 300 + 700), damp(damp(start, 300), 700));
 
             // The elapsed time can be negative.
-            Assert.AreEqual(
-                damp(start, 500 - 200),
-                damp(damp(start, 500), -200));
+            Assert.AreEqual(damp(start, 500 - 200), damp(damp(start, 500), -200));
 
-            static double damp(double current, double elapsed) => Interpolation.DampContinuously(current, target, half_time, elapsed);
+            static double damp(double current, double elapsed) =>
+                Interpolation.DampContinuously(current, target, half_time, elapsed);
         }
 
         [Test]
@@ -91,19 +97,39 @@ namespace osu.Framework.Tests.MathUtils
         {
             // Implementations from Interpolation
             Assert.AreEqual(10, Interpolation.ValueAt<int>(0.1, 0, 100, 0, 1));
-            Assert.IsTrue(Precision.AlmostEquals(0.01, Interpolation.ValueAt<double>(0.1, 0, 0.1, 0, 1)));
+            Assert.IsTrue(
+                Precision.AlmostEquals(0.01, Interpolation.ValueAt<double>(0.1, 0, 0.1, 0, 1))
+            );
 
             // Implementations inside struct
-            Assert.AreEqual(new MarginPadding(10), Interpolation.ValueAt(0.1, new MarginPadding(0), new MarginPadding(100), 0, 1));
-            Assert.AreEqual(new TestClassWithValueAt(50), Interpolation.ValueAt(10, new TestClassWithValueAt(0), new TestClassWithValueAt(100), 0, 20));
+            Assert.AreEqual(
+                new MarginPadding(10),
+                Interpolation.ValueAt(0.1, new MarginPadding(0), new MarginPadding(100), 0, 1)
+            );
+            Assert.AreEqual(
+                new TestClassWithValueAt(50),
+                Interpolation.ValueAt(
+                    10,
+                    new TestClassWithValueAt(0),
+                    new TestClassWithValueAt(100),
+                    0,
+                    20
+                )
+            );
 
             // Without implementations
-            Assert.Throws<TypeInitializationException>(() => Interpolation.ValueAt(0, new TestClassWithoutValueAt(), new TestClassWithoutValueAt(), 0, 0));
+            Assert.Throws<TypeInitializationException>(() =>
+                Interpolation.ValueAt(
+                    0,
+                    new TestClassWithoutValueAt(),
+                    new TestClassWithoutValueAt(),
+                    0,
+                    0
+                )
+            );
         }
 
-        private struct TestClassWithoutValueAt
-        {
-        }
+        private struct TestClassWithoutValueAt { }
 
         private readonly struct TestClassWithValueAt : IInterpolable<TestClassWithValueAt>
         {
@@ -116,9 +142,25 @@ namespace osu.Framework.Tests.MathUtils
 
             public bool Equals(TestClassWithValueAt other) => i == other.i;
 
-            public TestClassWithValueAt ValueAt<TEasing>(double time, TestClassWithValueAt startValue, TestClassWithValueAt endValue, double startTime, double endTime, in TEasing easing)
-                where TEasing : IEasingFunction
-                => new TestClassWithValueAt(Interpolation.ValueAt(time, startValue.i, endValue.i, startTime, endTime, easing));
+            public TestClassWithValueAt ValueAt<TEasing>(
+                double time,
+                TestClassWithValueAt startValue,
+                TestClassWithValueAt endValue,
+                double startTime,
+                double endTime,
+                in TEasing easing
+            )
+                where TEasing : IEasingFunction =>
+                new TestClassWithValueAt(
+                    Interpolation.ValueAt(
+                        time,
+                        startValue.i,
+                        endValue.i,
+                        startTime,
+                        endTime,
+                        easing
+                    )
+                );
 
             public override string ToString() => $"{nameof(i)}: {i}";
         }

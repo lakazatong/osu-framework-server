@@ -20,9 +20,12 @@ namespace osu.Framework.Graphics.Containers.Markdown
     /// <summary>
     /// Markdown text flow container.
     /// </summary>
-    public partial class MarkdownTextFlowContainer : CustomizableTextContainer, IMarkdownTextComponent
+    public partial class MarkdownTextFlowContainer
+        : CustomizableTextContainer,
+            IMarkdownTextComponent
     {
-        public float TotalTextWidth => Padding.TotalHorizontal + Flow.FlowingChildren.Sum(x => x.BoundingBox.Size.X);
+        public float TotalTextWidth =>
+            Padding.TotalHorizontal + Flow.FlowingChildren.Sum(x => x.BoundingBox.Size.X);
 
         [Resolved]
         private IMarkdownTextComponent parentTextComponent { get; set; }
@@ -33,14 +36,14 @@ namespace osu.Framework.Graphics.Containers.Markdown
             AutoSizeAxes = Axes.Y;
         }
 
-        protected void AddDrawable(Drawable drawable)
-            => base.AddText("[" + AddPlaceholder(drawable) + "]");
+        protected void AddDrawable(Drawable drawable) =>
+            base.AddText("[" + AddPlaceholder(drawable) + "]");
 
-        public void AddText(string text, Action<SpriteText> creationParameters = null)
-            => base.AddText(Escape(text), creationParameters);
+        public void AddText(string text, Action<SpriteText> creationParameters = null) =>
+            base.AddText(Escape(text), creationParameters);
 
-        public ITextPart AddParagraph(string text, Action<SpriteText> creationParameters = null)
-            => base.AddParagraph(Escape(text), creationParameters);
+        public ITextPart AddParagraph(string text, Action<SpriteText> creationParameters = null) =>
+            base.AddParagraph(Escape(text), creationParameters);
 
         public void AddInlineText(ContainerInline container)
         {
@@ -51,7 +54,10 @@ namespace osu.Framework.Graphics.Containers.Markdown
                     case LiteralInline literal:
                         string text = literal.Content.ToString();
 
-                        if (container.GetPrevious(literal) is HtmlInline && container.GetNext(literal) is HtmlInline)
+                        if (
+                            container.GetPrevious(literal) is HtmlInline
+                            && container.GetNext(literal) is HtmlInline
+                        )
                             AddHtmlInLineText(text, literal);
                         else if (container.GetNext(literal) is HtmlEntityInline entityInLine)
                             AddHtmlEntityInlineText(text, entityInLine);
@@ -70,7 +76,11 @@ namespace osu.Framework.Graphics.Containers.Markdown
 
                                     while (parent is EmphasisInline e)
                                     {
-                                        emphases.Add(e.DelimiterCount == 2 ? new string(e.DelimiterChar, 2) : e.DelimiterChar.ToString());
+                                        emphases.Add(
+                                            e.DelimiterCount == 2
+                                                ? new string(e.DelimiterChar, 2)
+                                                : e.DelimiterChar.ToString()
+                                        );
                                         parent = parent.Parent;
                                     }
 
@@ -135,35 +145,43 @@ namespace osu.Framework.Graphics.Containers.Markdown
             }
         }
 
-        protected virtual void AddHtmlInLineText(string text, LiteralInline literalInline)
-            => AddText(text, t => t.Colour = Color4.MediumPurple);
+        protected virtual void AddHtmlInLineText(string text, LiteralInline literalInline) =>
+            AddText(text, t => t.Colour = Color4.MediumPurple);
 
-        protected virtual void AddHtmlEntityInlineText(string text, HtmlEntityInline entityInLine)
-            => AddText(text, t => t.Colour = Color4.GreenYellow);
+        protected virtual void AddHtmlEntityInlineText(
+            string text,
+            HtmlEntityInline entityInLine
+        ) => AddText(text, t => t.Colour = Color4.GreenYellow);
 
-        protected virtual void AddLinkText(string text, LinkInline linkInline)
-            => AddDrawable(new MarkdownLinkText(text, linkInline));
+        protected virtual void AddLinkText(string text, LinkInline linkInline) =>
+            AddDrawable(new MarkdownLinkText(text, linkInline));
 
-        protected virtual void AddAutoLink(AutolinkInline autolinkInline)
-            => AddDrawable(new MarkdownLinkText(autolinkInline));
+        protected virtual void AddAutoLink(AutolinkInline autolinkInline) =>
+            AddDrawable(new MarkdownLinkText(autolinkInline));
 
-        protected virtual void AddCodeInLine(CodeInline codeInline)
-            => AddText(codeInline.Content, t => { t.Colour = Color4.Orange; });
+        protected virtual void AddCodeInLine(CodeInline codeInline) =>
+            AddText(
+                codeInline.Content,
+                t =>
+                {
+                    t.Colour = Color4.Orange;
+                }
+            );
 
-        protected virtual void AddImage(LinkInline linkInline)
-            => AddDrawable(new MarkdownImage(linkInline.Url));
+        protected virtual void AddImage(LinkInline linkInline) =>
+            AddDrawable(new MarkdownImage(linkInline.Url));
 
-        protected virtual void AddFootnoteLink(FootnoteLink footnoteLink)
-            => AddDrawable(new MarkdownFootnoteLink(footnoteLink));
+        protected virtual void AddFootnoteLink(FootnoteLink footnoteLink) =>
+            AddDrawable(new MarkdownFootnoteLink(footnoteLink));
 
-        protected virtual void AddFootnoteBacklink(FootnoteLink footnoteBacklink)
-            => AddDrawable(new MarkdownFootnoteBacklink());
+        protected virtual void AddFootnoteBacklink(FootnoteLink footnoteBacklink) =>
+            AddDrawable(new MarkdownFootnoteBacklink());
 
-        protected virtual void AddCustomComponent(CustomContainerInline customContainerInline)
-            => AddNotImplementedInlineText(customContainerInline);
+        protected virtual void AddCustomComponent(CustomContainerInline customContainerInline) =>
+            AddNotImplementedInlineText(customContainerInline);
 
-        protected virtual void AddNotImplementedInlineText(Inline inline)
-            => AddText(inline.GetType() + " not implemented.", t => t.Colour = Color4.Red);
+        protected virtual void AddNotImplementedInlineText(Inline inline) =>
+            AddText(inline.GetType() + " not implemented.", t => t.Colour = Color4.Red);
 
         private void addEmphasis(string text, List<string> emphases)
         {
@@ -189,7 +207,8 @@ namespace osu.Framework.Graphics.Containers.Markdown
             AddText(text, t => ApplyEmphasisedCreationParameters(t, hasBold, hasItalic));
         }
 
-        protected internal override SpriteText CreateSpriteText() => parentTextComponent.CreateSpriteText();
+        protected internal override SpriteText CreateSpriteText() =>
+            parentTextComponent.CreateSpriteText();
 
         /// <summary>
         /// Applies emphasised creation parameters to <see cref="SpriteText"/>.
@@ -197,8 +216,11 @@ namespace osu.Framework.Graphics.Containers.Markdown
         /// <param name="spriteText">The <see cref="SpriteText"/> to be emphasised.</param>
         /// <param name="bold">Whether the text should be emboldened.</param>
         /// <param name="italic">Whether the text should be italicised.</param>
-        protected virtual void ApplyEmphasisedCreationParameters(SpriteText spriteText, bool bold, bool italic)
-            => spriteText.Font = spriteText.Font.With(weight: bold ? "Bold" : null, italics: italic);
+        protected virtual void ApplyEmphasisedCreationParameters(
+            SpriteText spriteText,
+            bool bold,
+            bool italic
+        ) => spriteText.Font = spriteText.Font.With(weight: bold ? "Bold" : null, italics: italic);
 
         SpriteText IMarkdownTextComponent.CreateSpriteText() => CreateSpriteText();
     }

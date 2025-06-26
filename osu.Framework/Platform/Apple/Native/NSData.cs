@@ -36,7 +36,12 @@ namespace osu.Framework.Platform.Apple.Native
         {
             fixed (byte* ptr = bytes)
             {
-                IntPtr handle = Interop.SendIntPtr(class_pointer, sel_data_with_bytes, (IntPtr)ptr, (ulong)bytes.Length);
+                IntPtr handle = Interop.SendIntPtr(
+                    class_pointer,
+                    sel_data_with_bytes,
+                    (IntPtr)ptr,
+                    (ulong)bytes.Length
+                );
                 return new NSData(handle);
             }
         }

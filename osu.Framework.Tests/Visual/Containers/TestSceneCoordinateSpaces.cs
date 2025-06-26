@@ -28,11 +28,7 @@ namespace osu.Framework.Tests.Visual.Containers
             Clear();
 
             HorizontalVisualiser h;
-            Add(h = new HorizontalVisualiser
-            {
-                Size = new Vector2(200, 50),
-                X = 150
-            });
+            Add(h = new HorizontalVisualiser { Size = new Vector2(200, 50), X = 150 });
 
             switch (i)
             {
@@ -111,7 +107,8 @@ namespace osu.Framework.Tests.Visual.Containers
                 base.Update();
 
                 Left.Text = $"X = {RelativeChildOffset.X.ToString(CultureInfo.InvariantCulture)}";
-                Right.Text = $"X = {(RelativeChildOffset.X + RelativeChildSize.X).ToString(CultureInfo.InvariantCulture)}";
+                Right.Text =
+                    $"X = {(RelativeChildOffset.X + RelativeChildSize.X).ToString(CultureInfo.InvariantCulture)}";
             }
         }
 
@@ -150,7 +147,7 @@ namespace osu.Framework.Tests.Visual.Containers
                     {
                         Anchor = Anchor.BottomLeft,
                         Origin = Anchor.TopCentre,
-                        Y = 6
+                        Y = 6,
                     },
                     new Box
                     {
@@ -158,65 +155,64 @@ namespace osu.Framework.Tests.Visual.Containers
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Colour = Color4.Gray,
-                        RelativeSizeAxes = Axes.X
+                        RelativeSizeAxes = Axes.X,
                     },
-                    innerContainer = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    innerContainer = new Container { RelativeSizeAxes = Axes.Both },
                     new Box
                     {
                         Name = "Right marker",
                         Anchor = Anchor.TopRight,
                         Origin = Anchor.TopRight,
                         Colour = Color4.Gray,
-                        RelativeSizeAxes = Axes.Y
+                        RelativeSizeAxes = Axes.Y,
                     },
                     Right = new SpriteText
                     {
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.TopCentre,
-                        Y = 6
+                        Y = 6,
                     },
                 };
             }
 
             public void CreateMarkerAt(float x)
             {
-                innerContainer.Add(new Container
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
-                    AutoSizeAxes = Axes.Both,
-                    X = x,
-                    Colour = Color4.Yellow,
-                    Children = new Drawable[]
+                innerContainer.Add(
+                    new Container
                     {
-                        new Box
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.Centre,
+                        RelativePositionAxes = Axes.Both,
+                        AutoSizeAxes = Axes.Both,
+                        X = x,
+                        Colour = Color4.Yellow,
+                        Children = new Drawable[]
                         {
-                            Name = "Centre marker horizontal",
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(8, 1)
+                            new Box
+                            {
+                                Name = "Centre marker horizontal",
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(8, 1),
+                            },
+                            new Box
+                            {
+                                Name = "Centre marker vertical",
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(1, 8),
+                            },
+                            new SpriteText
+                            {
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.TopCentre,
+                                Y = 6,
+                                BypassAutoSizeAxes = Axes.Both,
+                                Text = x.ToString(CultureInfo.InvariantCulture),
+                            },
                         },
-                        new Box
-                        {
-                            Name = "Centre marker vertical",
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(1, 8)
-                        },
-                        new SpriteText
-                        {
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.TopCentre,
-                            Y = 6,
-                            BypassAutoSizeAxes = Axes.Both,
-                            Text = x.ToString(CultureInfo.InvariantCulture)
-                        }
                     }
-                });
+                );
             }
         }
     }

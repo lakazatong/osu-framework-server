@@ -31,11 +31,14 @@ namespace osu.Framework.Tests.Visual.Clocks
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("clear all", () =>
-            {
-                fill.Clear();
-                lastClock = null;
-            });
+            AddStep(
+                "clear all",
+                () =>
+                {
+                    fill.Clear();
+                    lastClock = null;
+                }
+            );
         }
 
         private IClock? lastClock;
@@ -85,7 +88,9 @@ namespace osu.Framework.Tests.Visual.Clocks
                     },
                     new SpriteText
                     {
-                        Text = trackingClock.GetType().Name + (!string.IsNullOrEmpty(name) ? $" ({name})" : string.Empty),
+                        Text =
+                            trackingClock.GetType().Name
+                            + (!string.IsNullOrEmpty(name) ? $" ({name})" : string.Empty),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Y = -25,
@@ -115,7 +120,7 @@ namespace osu.Framework.Tests.Visual.Clocks
                         Colour = Color4.White,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.BottomCentre,
-                        Size = new Vector2(2, width / 2)
+                        Size = new Vector2(2, width / 2),
                     },
                 };
             }
@@ -154,11 +159,13 @@ namespace osu.Framework.Tests.Visual.Clocks
                 }
 
                 var timespan = TimeSpan.FromMilliseconds(TrackingClock.CurrentTime);
-                time.Text = $"{timespan.Minutes:00}:{timespan.Seconds:00}:{timespan.Milliseconds:00}";
+                time.Text =
+                    $"{timespan.Minutes:00}:{timespan.Seconds:00}:{timespan.Milliseconds:00}";
                 rate.Text = $"{TrackingClock.Rate:N2}x";
 
                 if (TrackingClock.CurrentTime != lastTime)
-                    BorderColour = TrackingClock.CurrentTime >= lastTime ? Color4.White : Color4.Red;
+                    BorderColour =
+                        TrackingClock.CurrentTime >= lastTime ? Color4.White : Color4.Red;
 
                 Colour = TrackingClock.IsRunning ? Color4.White : Color4.Gray;
 

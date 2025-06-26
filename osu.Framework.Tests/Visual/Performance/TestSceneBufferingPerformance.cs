@@ -22,23 +22,30 @@ namespace osu.Framework.Tests.Visual.Performance
             base.LoadComplete();
 
             AddLabel("Frame Buffers");
-            AddToggleStep("cache frame buffer", v =>
-            {
-                cachedFrameBuffer = v;
-                Recreate();
-            });
-            AddToggleStep("pixel snapping", v =>
-            {
-                pixelSnapping = v;
-                Recreate();
-            });
+            AddToggleStep(
+                "cache frame buffer",
+                v =>
+                {
+                    cachedFrameBuffer = v;
+                    Recreate();
+                }
+            );
+            AddToggleStep(
+                "pixel snapping",
+                v =>
+                {
+                    pixelSnapping = v;
+                    Recreate();
+                }
+            );
             AddSliderStep("blur sigma", 0f, 100f, 0f, v => blurSigma.Value = v);
         }
 
-        protected override Drawable CreateDrawable() => new TestBufferedContainer(cachedFrameBuffer, pixelSnapping)
-        {
-            BlurSigmaBindable = { BindTarget = blurSigma },
-        };
+        protected override Drawable CreateDrawable() =>
+            new TestBufferedContainer(cachedFrameBuffer, pixelSnapping)
+            {
+                BlurSigmaBindable = { BindTarget = blurSigma },
+            };
 
         private partial class TestBufferedContainer : BufferedContainer
         {

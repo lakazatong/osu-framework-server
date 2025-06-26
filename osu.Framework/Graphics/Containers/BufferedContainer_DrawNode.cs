@@ -3,17 +3,17 @@
 
 #nullable disable
 
-using System.Collections.Generic;
-using osuTK;
-using osuTK.Graphics;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Shaders;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shaders.Types;
 using osu.Framework.Utils;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.Containers
 {
@@ -38,10 +38,11 @@ namespace osu.Framework.Graphics.Containers
 
             private IShader blurShader;
 
-            public BufferedContainerDrawNode(BufferedContainer<T> source, BufferedContainerDrawNodeSharedData sharedData)
-                : base(source, new CompositeDrawableDrawNode(source), sharedData)
-            {
-            }
+            public BufferedContainerDrawNode(
+                BufferedContainer<T> source,
+                BufferedContainerDrawNodeSharedData sharedData
+            )
+                : base(source, new CompositeDrawableDrawNode(source), sharedData) { }
 
             public override void ApplyState()
             {
@@ -55,7 +56,10 @@ namespace osu.Framework.Graphics.Containers
 
                 drawOriginal = Source.DrawOriginal;
                 blurSigma = Source.BlurSigma;
-                blurRadius = new Vector2I(Blur.KernelSize(blurSigma.X), Blur.KernelSize(blurSigma.Y));
+                blurRadius = new Vector2I(
+                    Blur.KernelSize(blurSigma.X),
+                    Blur.KernelSize(blurSigma.Y)
+                );
                 blurRotation = Source.BlurRotation;
 
                 blurShader = Source.blurShader;
@@ -71,8 +75,15 @@ namespace osu.Framework.Graphics.Containers
                 {
                     renderer.PushScissorState(false);
 
-                    if (blurRadius.X > 0) drawBlurredFrameBuffer(renderer, blurRadius.X, blurSigma.X, blurRotation);
-                    if (blurRadius.Y > 0) drawBlurredFrameBuffer(renderer, blurRadius.Y, blurSigma.Y, blurRotation + 90);
+                    if (blurRadius.X > 0)
+                        drawBlurredFrameBuffer(renderer, blurRadius.X, blurSigma.X, blurRotation);
+                    if (blurRadius.Y > 0)
+                        drawBlurredFrameBuffer(
+                            renderer,
+                            blurRadius.Y,
+                            blurSigma.Y,
+                            blurRotation + 90
+                        );
 
                     renderer.PopScissorState();
                 }
@@ -88,7 +99,11 @@ namespace osu.Framework.Graphics.Containers
                 ColourInfo finalEffectColour = DrawColourInfo.Colour;
                 finalEffectColour.ApplyChild(effectColour);
 
-                renderer.DrawFrameBuffer(SharedData.CurrentEffectBuffer, DrawRectangle, finalEffectColour);
+                renderer.DrawFrameBuffer(
+                    SharedData.CurrentEffectBuffer,
+                    DrawRectangle,
+                    finalEffectColour
+                );
 
                 if (drawOriginal && effectPlacement == EffectPlacement.Behind)
                     base.DrawContents(renderer);
@@ -96,7 +111,12 @@ namespace osu.Framework.Graphics.Containers
 
             private IUniformBuffer<BlurParameters> blurParametersBuffer;
 
-            private void drawBlurredFrameBuffer(IRenderer renderer, int kernelRadius, float sigma, float blurRotation)
+            private void drawBlurredFrameBuffer(
+                IRenderer renderer,
+                int kernelRadius,
+                float sigma,
+                float blurRotation
+            )
             {
                 blurParametersBuffer ??= renderer.CreateUniformBuffer<BlurParameters>();
 
@@ -114,12 +134,16 @@ namespace osu.Framework.Graphics.Containers
                         Radius = kernelRadius,
                         Sigma = sigma,
                         TexSize = current.Size,
-                        Direction = new Vector2(MathF.Cos(radians), MathF.Sin(radians))
+                        Direction = new Vector2(MathF.Cos(radians), MathF.Sin(radians)),
                     };
 
                     blurShader.BindUniformBlock("m_BlurParameters", blurParametersBuffer);
                     blurShader.Bind();
-                    renderer.DrawFrameBuffer(current, new RectangleF(0, 0, current.Texture.Width, current.Texture.Height), ColourInfo.SingleColour(Color4.White));
+                    renderer.DrawFrameBuffer(
+                        current,
+                        new RectangleF(0, 0, current.Texture.Width, current.Texture.Height),
+                        ColourInfo.SingleColour(Color4.White)
+                    );
                     blurShader.Unbind();
                 }
             }
@@ -151,10 +175,12 @@ namespace osu.Framework.Graphics.Containers
 
         private class BufferedContainerDrawNodeSharedData : BufferedDrawNodeSharedData
         {
-            public BufferedContainerDrawNodeSharedData(RenderBufferFormat[] mainBufferFormats, bool pixelSnapping, bool clipToRootNode)
-                : base(2, mainBufferFormats, pixelSnapping, clipToRootNode)
-            {
-            }
+            public BufferedContainerDrawNodeSharedData(
+                RenderBufferFormat[] mainBufferFormats,
+                bool pixelSnapping,
+                bool clipToRootNode
+            )
+                : base(2, mainBufferFormats, pixelSnapping, clipToRootNode) { }
         }
     }
 }

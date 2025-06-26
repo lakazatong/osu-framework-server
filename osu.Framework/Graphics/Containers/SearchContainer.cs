@@ -14,9 +14,7 @@ using osu.Framework.Localisation;
 
 namespace osu.Framework.Graphics.Containers
 {
-    public partial class SearchContainer : SearchContainer<Drawable>
-    {
-    }
+    public partial class SearchContainer : SearchContainer<Drawable> { }
 
     /// <summary>
     /// A container which automatically filters <see cref="IFilterable"/> children based on a search term.
@@ -31,7 +29,8 @@ namespace osu.Framework.Graphics.Containers
     /// </list>
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    public partial class SearchContainer<T> : FillFlowContainer<T> where T : Drawable
+    public partial class SearchContainer<T> : FillFlowContainer<T>
+        where T : Drawable
     {
         /// <summary>
         /// Fired whenever a filter operation completes.
@@ -79,7 +78,8 @@ namespace osu.Framework.Graphics.Containers
         private LocalisationManager localisation { get; set; }
 
         private readonly Cached filterValid = new Cached();
-        private readonly ICollection<IBindable<bool>> canBeShownBindables = new List<IBindable<bool>>();
+        private readonly ICollection<IBindable<bool>> canBeShownBindables =
+            new List<IBindable<bool>>();
 
         protected override void AddInternal(Drawable drawable)
         {
@@ -120,13 +120,26 @@ namespace osu.Framework.Graphics.Containers
 
         private void performFilter()
         {
-            string[] terms = (searchTerm ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string[] terms = (searchTerm ?? string.Empty).Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries
+            );
             matchSubTree(this, terms, terms.Length > 0, allowNonContiguousMatching);
         }
 
-        private bool matchSubTree(Drawable drawable, IReadOnlyList<string> searchTerms, bool searchActive, bool nonContiguousMatching)
+        private bool matchSubTree(
+            Drawable drawable,
+            IReadOnlyList<string> searchTerms,
+            bool searchActive,
+            bool nonContiguousMatching
+        )
         {
-            bool matching = match(drawable, searchTerms, nonContiguousMatching, out var nonMatchingTerms);
+            bool matching = match(
+                drawable,
+                searchTerms,
+                nonContiguousMatching,
+                out var nonMatchingTerms
+            );
 
             if (drawable is IConditionalFilterable conditionalFilterable)
             {
@@ -144,7 +157,12 @@ namespace osu.Framework.Graphics.Containers
             if (drawable is IContainerEnumerable<Drawable> container)
             {
                 foreach (var child in container.Children)
-                    matching |= matchSubTree(child, nonMatchingTerms, searchActive, nonContiguousMatching);
+                    matching |= matchSubTree(
+                        child,
+                        nonMatchingTerms,
+                        searchActive,
+                        nonContiguousMatching
+                    );
             }
 
             if (drawable is IFilterable filterable)
@@ -156,19 +174,29 @@ namespace osu.Framework.Graphics.Containers
             return matching;
         }
 
-        private bool match(Drawable drawable, IReadOnlyList<string> searchTerms, bool nonContiguousMatching, out IReadOnlyList<string> nonMatchingTerms)
+        private bool match(
+            Drawable drawable,
+            IReadOnlyList<string> searchTerms,
+            bool nonContiguousMatching,
+            out IReadOnlyList<string> nonMatchingTerms
+        )
         {
             nonMatchingTerms = searchTerms;
 
             if (drawable is IFilterable filterable)
             {
                 IEnumerable<string> filterTerms = filterable.FilterTerms.SelectMany(localisedStr =>
-                    new[] { localisedStr.ToString(), localisation.GetLocalisedString(localisedStr) });
+                    new[] { localisedStr.ToString(), localisation.GetLocalisedString(localisedStr) }
+                );
 
                 //Words matched by parent is not needed to match children
-                nonMatchingTerms = searchTerms.Where(term =>
-                    !filterTerms.Any(filterTerm =>
-                        checkTerm(filterTerm, term, nonContiguousMatching))).ToArray();
+                nonMatchingTerms = searchTerms
+                    .Where(term =>
+                        !filterTerms.Any(filterTerm =>
+                            checkTerm(filterTerm, term, nonContiguousMatching)
+                        )
+                    )
+                    .ToArray();
             }
 
             return nonMatchingTerms.Count == 0;
@@ -187,7 +215,12 @@ namespace osu.Framework.Graphics.Containers
             for (int i = 0; i < needle.Length; i++)
             {
                 // string.IndexOf doesn't have an overload which takes both a `startIndex` and `StringComparison` mode.
-                int found = CultureInfo.InvariantCulture.CompareInfo.IndexOf(haystack, needle[i], index, CompareOptions.OrdinalIgnoreCase);
+                int found = CultureInfo.InvariantCulture.CompareInfo.IndexOf(
+                    haystack,
+                    needle[i],
+                    index,
+                    CompareOptions.OrdinalIgnoreCase
+                );
                 if (found < 0)
                     return false;
 

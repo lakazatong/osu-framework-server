@@ -6,8 +6,6 @@ namespace osu.Framework.Platform
     public class DesktopStorage : NativeStorage
     {
         public DesktopStorage(string path, DesktopGameHost? host)
-            : base(path, host)
-        {
-        }
+            : base(path, host) { }
     }
 }

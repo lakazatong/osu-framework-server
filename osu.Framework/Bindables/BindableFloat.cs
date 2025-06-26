@@ -8,11 +8,10 @@ namespace osu.Framework.Bindables
     public class BindableFloat : BindableNumber<float>
     {
         public BindableFloat(float defaultValue = 0)
-            : base(defaultValue)
-        {
-        }
+            : base(defaultValue) { }
 
-        public override string ToString(string? format, IFormatProvider? formatProvider) => base.ToString(format ?? "0.0###", formatProvider);
+        public override string ToString(string? format, IFormatProvider? formatProvider) =>
+            base.ToString(format ?? "0.0###", formatProvider);
 
         protected override Bindable<float> CreateInstance() => new BindableFloat();
     }

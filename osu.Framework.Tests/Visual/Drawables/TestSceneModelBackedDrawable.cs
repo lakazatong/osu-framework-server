@@ -25,7 +25,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Origin = Anchor.Centre,
                 Size = new Vector2(200),
                 HasIntermediate = hasIntermediate,
-                ShowNullModel = showNullModel
+                ShowNullModel = showNullModel,
             };
 
         [Test]
@@ -33,7 +33,11 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             AddStep("setup", () => createModelBackedDrawable(false));
             AddUntilStep("wait for load", () => backedDrawable.DelayedLoadFinished);
-            AddAssert("nothing shown", () => backedDrawable.DisplayedDrawable, () => Is.Null.Or.InstanceOf(Empty().GetType()));
+            AddAssert(
+                "nothing shown",
+                () => backedDrawable.DisplayedDrawable,
+                () => Is.Null.Or.InstanceOf(Empty().GetType())
+            );
         }
 
         [Test]
@@ -41,11 +45,16 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestDrawableModel drawableModel = null!;
 
-            AddStep("setup", () =>
-            {
-                createModelBackedDrawable(false);
-                backedDrawable.Model = new TestModel(drawableModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set()));
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    createModelBackedDrawable(false);
+                    backedDrawable.Model = new TestModel(
+                        drawableModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set())
+                    );
+                }
+            );
 
             assertDrawableVisibility(1, () => drawableModel);
         }
@@ -57,15 +66,23 @@ namespace osu.Framework.Tests.Visual.Drawables
             TestDrawableModel firstModel = null!;
             TestDrawableModel secondModel = null!;
 
-            AddStep("setup", () =>
-            {
-                createModelBackedDrawable(hasIntermediate);
-                backedDrawable.Model = new TestModel(firstModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set()));
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    createModelBackedDrawable(hasIntermediate);
+                    backedDrawable.Model = new TestModel(
+                        firstModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set())
+                    );
+                }
+            );
 
             assertDrawableVisibility(1, () => firstModel);
 
-            AddStep("set second model", () => backedDrawable.Model = new TestModel(secondModel = new TestDrawableModel(2)));
+            AddStep(
+                "set second model",
+                () => backedDrawable.Model = new TestModel(secondModel = new TestDrawableModel(2))
+            );
             assertIntermediateVisibility(hasIntermediate, () => firstModel);
 
             AddStep("allow second model to load", () => secondModel.AllowLoad.Set());
@@ -80,18 +97,29 @@ namespace osu.Framework.Tests.Visual.Drawables
             TestDrawableModel secondModel = null!;
             TestDrawableModel thirdModel = null!;
 
-            AddStep("setup", () =>
-            {
-                createModelBackedDrawable(hasIntermediate);
-                backedDrawable.Model = new TestModel(firstModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set()));
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    createModelBackedDrawable(hasIntermediate);
+                    backedDrawable.Model = new TestModel(
+                        firstModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set())
+                    );
+                }
+            );
 
             assertDrawableVisibility(1, () => firstModel);
 
-            AddStep("set second model", () => backedDrawable.Model = new TestModel(secondModel = new TestDrawableModel(2)));
+            AddStep(
+                "set second model",
+                () => backedDrawable.Model = new TestModel(secondModel = new TestDrawableModel(2))
+            );
             assertIntermediateVisibility(hasIntermediate, () => firstModel);
 
-            AddStep("set third model", () => backedDrawable.Model = new TestModel(thirdModel = new TestDrawableModel(3)));
+            AddStep(
+                "set third model",
+                () => backedDrawable.Model = new TestModel(thirdModel = new TestDrawableModel(3))
+            );
             assertIntermediateVisibility(hasIntermediate, () => firstModel);
 
             AddStep("allow second model to load", () => secondModel.AllowLoad.Set());
@@ -108,15 +136,23 @@ namespace osu.Framework.Tests.Visual.Drawables
             TestDrawableModel firstModel = null!;
             TestDrawableModel secondModel = null!;
 
-            AddStep("setup", () =>
-            {
-                createModelBackedDrawable(hasIntermediate);
-                backedDrawable.Model = new TestModel(firstModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set()));
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    createModelBackedDrawable(hasIntermediate);
+                    backedDrawable.Model = new TestModel(
+                        firstModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set())
+                    );
+                }
+            );
 
             assertDrawableVisibility(1, () => firstModel);
 
-            AddStep("set second model", () => backedDrawable.Model = new TestModel(secondModel = new TestDrawableModel(2)));
+            AddStep(
+                "set second model",
+                () => backedDrawable.Model = new TestModel(secondModel = new TestDrawableModel(2))
+            );
             assertIntermediateVisibility(hasIntermediate, () => firstModel);
 
             AddStep("allow second model to load", () => secondModel.AllowLoad.Set());
@@ -131,16 +167,24 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestDrawableModel drawableModel = null!;
 
-            AddStep("setup", () =>
-            {
-                createModelBackedDrawable(false, true);
-                backedDrawable.Model = new TestModel(drawableModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set()));
-            });
+            AddStep(
+                "setup",
+                () =>
+                {
+                    createModelBackedDrawable(false, true);
+                    backedDrawable.Model = new TestModel(
+                        drawableModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set())
+                    );
+                }
+            );
 
             assertDrawableVisibility(1, () => drawableModel);
 
             AddStep("set null model", () => backedDrawable.Model = null);
-            AddUntilStep("null model shown", () => backedDrawable.DisplayedDrawable is TestNullDrawableModel);
+            AddUntilStep(
+                "null model shown",
+                () => backedDrawable.DisplayedDrawable is TestNullDrawableModel
+            );
         }
 
         [Test]
@@ -148,22 +192,30 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestDrawableModel drawableModel = null!;
 
-            AddStep("setup", () =>
-            {
-                Child = new BufferedContainer
+            AddStep(
+                "setup",
+                () =>
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(200),
-                    Child = backedDrawable = new TestModelBackedDrawable
+                    Child = new BufferedContainer
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        HasIntermediate = false,
-                        ShowNullModel = false,
-                        Model = new TestModel(drawableModel = new TestDrawableModel(1).With(d => d.AllowLoad.Set()))
-                    }
-                };
-            });
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(200),
+                        Child = backedDrawable =
+                            new TestModelBackedDrawable
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                HasIntermediate = false,
+                                ShowNullModel = false,
+                                Model = new TestModel(
+                                    drawableModel = new TestDrawableModel(1).With(d =>
+                                        d.AllowLoad.Set()
+                                    )
+                                ),
+                            },
+                    };
+                }
+            );
 
             assertDrawableVisibility(1, () => drawableModel);
         }
@@ -173,12 +225,18 @@ namespace osu.Framework.Tests.Visual.Drawables
             if (hasIntermediate)
                 AddAssert("no drawable visible", () => backedDrawable.DisplayedDrawable == null);
             else
-                AddUntilStep("last drawable visible", () => backedDrawable.DisplayedDrawable == getLastFunc());
+                AddUntilStep(
+                    "last drawable visible",
+                    () => backedDrawable.DisplayedDrawable == getLastFunc()
+                );
         }
 
         private void assertDrawableVisibility(int id, Func<Drawable> getFunc)
         {
-            AddUntilStep($"model {id} visible", () => backedDrawable.DisplayedDrawable == getFunc());
+            AddUntilStep(
+                $"model {id} visible",
+                () => backedDrawable.DisplayedDrawable == getFunc()
+            );
         }
 
         private class TestModel
@@ -229,26 +287,20 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = BackgroundColour
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = BackgroundColour },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = id > 0 ? $"model {id}" : "null"
-                    }
+                        Text = id > 0 ? $"model {id}" : "null",
+                    },
                 };
             }
 
             [BackgroundDependencyLoader]
             private void load()
             {
-                if (!AllowLoad.Wait(TimeSpan.FromSeconds(10)))
-                {
-                }
+                if (!AllowLoad.Wait(TimeSpan.FromSeconds(10))) { }
             }
         }
 

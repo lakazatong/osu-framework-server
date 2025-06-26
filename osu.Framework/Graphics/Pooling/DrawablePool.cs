@@ -23,7 +23,8 @@ namespace osu.Framework.Graphics.Pooling
     /// Drawables exceeding the pool's available size will not be asynchronously loaded as it is assumed they are immediately required for consumption.
     /// </remarks>
     /// <typeparam name="T">The type of drawable to be pooled.</typeparam>
-    public partial class DrawablePool<T> : CompositeDrawable, IDrawablePool where T : PoolableDrawable, new()
+    public partial class DrawablePool<T> : CompositeDrawable, IDrawablePool
+        where T : PoolableDrawable, new()
     {
         private GlobalStatistic<DrawablePoolUsageStatistic> statistic;
 
@@ -43,14 +44,20 @@ namespace osu.Framework.Graphics.Pooling
         public DrawablePool(int initialSize, int? maximumSize = null)
         {
             if (initialSize > maximumSize)
-                throw new ArgumentOutOfRangeException(nameof(initialSize), "Initial size must be less than or equal to maximum size.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(initialSize),
+                    "Initial size must be less than or equal to maximum size."
+                );
 
             this.maximumSize = maximumSize;
             this.initialSize = initialSize;
 
             int id = Interlocked.Increment(ref poolInstanceID);
 
-            statistic = GlobalStatistics.Get<DrawablePoolUsageStatistic>(nameof(DrawablePool<T>), typeof(T).ReadableName() + $"`{id}");
+            statistic = GlobalStatistics.Get<DrawablePoolUsageStatistic>(
+                nameof(DrawablePool<T>),
+                typeof(T).ReadableName() + $"`{id}"
+            );
             statistic.Value = new DrawablePoolUsageStatistic();
         }
 
@@ -74,7 +81,9 @@ namespace osu.Framework.Graphics.Pooling
                 throw new ArgumentException("Invalid type", nameof(pooledDrawable));
 
             if (pooledDrawable.Parent != null)
-                throw new InvalidOperationException("Drawable was attempted to be returned to pool while still in a hierarchy");
+                throw new InvalidOperationException(
+                    "Drawable was attempted to be returned to pool while still in a hierarchy"
+                );
 
             if (pooledDrawable.IsInUse)
             {
@@ -102,7 +111,8 @@ namespace osu.Framework.Graphics.Pooling
             CountInUse--;
         }
 
-        PoolableDrawable IDrawablePool.Get(Action<PoolableDrawable> setupAction) => Get(setupAction);
+        PoolableDrawable IDrawablePool.Get(Action<PoolableDrawable> setupAction) =>
+            Get(setupAction);
 
         /// <summary>
         /// Get a drawable from this pool.
@@ -112,7 +122,9 @@ namespace osu.Framework.Graphics.Pooling
         public T Get(Action<T> setupAction = null)
         {
             if (LoadState <= LoadState.Loading)
-                throw new InvalidOperationException($"A {nameof(DrawablePool<T>)} must be in a loaded state before retrieving pooled drawables.");
+                throw new InvalidOperationException(
+                    $"A {nameof(DrawablePool<T>)} must be in a loaded state before retrieving pooled drawables."
+                );
 
             if (!pool.TryPop(out var drawable))
             {
@@ -242,7 +254,8 @@ namespace osu.Framework.Graphics.Pooling
             /// </summary>
             public int CountExcessConstructed;
 
-            public override string ToString() => $"{CountInUse}/{CurrentPoolSize} ({CountExcessConstructed} excess)";
+            public override string ToString() =>
+                $"{CountInUse}/{CurrentPoolSize} ({CountExcessConstructed} excess)";
         }
     }
 }

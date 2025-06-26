@@ -26,35 +26,30 @@ namespace osu.Framework.Benchmarks
         }
 
         [Benchmark]
-        public bool QueryNonLongRunningViaReflection() => nonLongRunningReflectionDrawable.IsLongRunning;
+        public bool QueryNonLongRunningViaReflection() =>
+            nonLongRunningReflectionDrawable.IsLongRunning;
 
         [Benchmark]
         public bool QueryLongRunningViaReflection() => longRunningReflectionDrawable.IsLongRunning;
 
         [Benchmark]
-        public bool QueryNonLongRunningViaSourceGeneration() => nonLongRunningSourceGenerationDrawable.IsLongRunning;
+        public bool QueryNonLongRunningViaSourceGeneration() =>
+            nonLongRunningSourceGenerationDrawable.IsLongRunning;
 
         [Benchmark]
-        public bool QueryLongRunningViaSourceGeneration() => longRunningSourceGenerationDrawable.IsLongRunning;
+        public bool QueryLongRunningViaSourceGeneration() =>
+            longRunningSourceGenerationDrawable.IsLongRunning;
 
 #pragma warning disable OFSG001
-        private class NonLongRunningReflectionDrawable : Drawable
-        {
-        }
+        private class NonLongRunningReflectionDrawable : Drawable { }
 
         [LongRunningLoad]
-        private class LongRunningReflectionDrawable : Drawable
-        {
-        }
+        private class LongRunningReflectionDrawable : Drawable { }
 #pragma warning restore OFSG001
 
-        private partial class NonLongRunningSourceGenerationDrawable : Drawable
-        {
-        }
+        private partial class NonLongRunningSourceGenerationDrawable : Drawable { }
 
         [LongRunningLoad]
-        private partial class LongRunningSourceGenerationDrawable : Drawable
-        {
-        }
+        private partial class LongRunningSourceGenerationDrawable : Drawable { }
     }
 }

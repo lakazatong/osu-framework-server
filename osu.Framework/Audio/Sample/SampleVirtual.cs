@@ -14,8 +14,6 @@ namespace osu.Framework.Audio.Sample
         public override double Length => 0;
 
         public SampleVirtual(string name = "virtual")
-            : base(name)
-        {
-        }
+            : base(name) { }
     }
 }

@@ -25,7 +25,8 @@ namespace osu.Framework.Configuration
 
         private readonly IDictionary<TLookup, object> defaultOverrides;
 
-        protected readonly Dictionary<TLookup, IBindable> ConfigStore = new Dictionary<TLookup, IBindable>();
+        protected readonly Dictionary<TLookup, IBindable> ConfigStore =
+            new Dictionary<TLookup, IBindable>();
 
         /// <summary>
         /// Initialise a new <see cref="ConfigManager{TLookup}"/>
@@ -42,9 +43,10 @@ namespace osu.Framework.Configuration
         /// <remarks>
         /// Excludes any potentially sensitive information via <see cref="CheckLookupContainsPrivateInformation"/>.</remarks>
         /// <returns></returns>
-        public virtual IDictionary<TLookup, string> GetCurrentConfigurationForLogging() => ConfigStore
-                                                                                           .Where(kvp => !CheckLookupContainsPrivateInformation(kvp.Key))
-                                                                                           .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+        public virtual IDictionary<TLookup, string> GetCurrentConfigurationForLogging() =>
+            ConfigStore
+                .Where(kvp => !CheckLookupContainsPrivateInformation(kvp.Key))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
 
         /// <summary>
         /// Check whether a specific lookup may contain private user information.
@@ -57,9 +59,7 @@ namespace osu.Framework.Configuration
         /// Set all required default values via Set() calls.
         /// Note that defaults set here may be overridden by <see cref="defaultOverrides"/> provided in the constructor.
         /// </summary>
-        protected virtual void InitialiseDefaults()
-        {
-        }
+        protected virtual void InitialiseDefaults() { }
 
         /// <summary>
         /// Sets a configuration's value.
@@ -86,7 +86,13 @@ namespace osu.Framework.Configuration
         /// <param name="max">The maximum value.</param>
         /// <param name="precision">The value precision.</param>
         /// <returns>The original bindable (not a bound copy).</returns>
-        protected BindableDouble SetDefault(TLookup lookup, double value, double? min = null, double? max = null, double? precision = null)
+        protected BindableDouble SetDefault(
+            TLookup lookup,
+            double value,
+            double? min = null,
+            double? max = null,
+            double? precision = null
+        )
         {
             value = getDefault(lookup, value);
 
@@ -101,9 +107,12 @@ namespace osu.Framework.Configuration
             }
 
             bindable.Default = value;
-            if (min.HasValue) bindable.MinValue = min.Value;
-            if (max.HasValue) bindable.MaxValue = max.Value;
-            if (precision.HasValue) bindable.Precision = precision.Value;
+            if (min.HasValue)
+                bindable.MinValue = min.Value;
+            if (max.HasValue)
+                bindable.MaxValue = max.Value;
+            if (precision.HasValue)
+                bindable.Precision = precision.Value;
 
             return bindable;
         }
@@ -117,7 +126,13 @@ namespace osu.Framework.Configuration
         /// <param name="max">The maximum value.</param>
         /// <param name="precision">The value precision.</param>
         /// <returns>The original bindable (not a bound copy).</returns>
-        protected BindableFloat SetDefault(TLookup lookup, float value, float? min = null, float? max = null, float? precision = null)
+        protected BindableFloat SetDefault(
+            TLookup lookup,
+            float value,
+            float? min = null,
+            float? max = null,
+            float? precision = null
+        )
         {
             value = getDefault(lookup, value);
 
@@ -132,9 +147,12 @@ namespace osu.Framework.Configuration
             }
 
             bindable.Default = value;
-            if (min.HasValue) bindable.MinValue = min.Value;
-            if (max.HasValue) bindable.MaxValue = max.Value;
-            if (precision.HasValue) bindable.Precision = precision.Value;
+            if (min.HasValue)
+                bindable.MinValue = min.Value;
+            if (max.HasValue)
+                bindable.MaxValue = max.Value;
+            if (precision.HasValue)
+                bindable.Precision = precision.Value;
 
             return bindable;
         }
@@ -147,7 +165,12 @@ namespace osu.Framework.Configuration
         /// <param name="min">The minimum value.</param>
         /// <param name="max">The maximum value.</param>
         /// <returns>The original bindable (not a bound copy).</returns>
-        protected BindableInt SetDefault(TLookup lookup, int value, int? min = null, int? max = null)
+        protected BindableInt SetDefault(
+            TLookup lookup,
+            int value,
+            int? min = null,
+            int? max = null
+        )
         {
             value = getDefault(lookup, value);
 
@@ -162,8 +185,10 @@ namespace osu.Framework.Configuration
             }
 
             bindable.Default = value;
-            if (min.HasValue) bindable.MinValue = min.Value;
-            if (max.HasValue) bindable.MaxValue = max.Value;
+            if (min.HasValue)
+                bindable.MinValue = min.Value;
+            if (max.HasValue)
+                bindable.MaxValue = max.Value;
 
             return bindable;
         }
@@ -201,7 +226,12 @@ namespace osu.Framework.Configuration
         /// <param name="min">The minimum value.</param>
         /// <param name="max">The maximum value.</param>
         /// <returns>The original bindable (not a bound copy).</returns>
-        protected BindableSize SetDefault(TLookup lookup, Size value, Size? min = null, Size? max = null)
+        protected BindableSize SetDefault(
+            TLookup lookup,
+            Size value,
+            Size? min = null,
+            Size? max = null
+        )
         {
             value = getDefault(lookup, value);
 
@@ -216,8 +246,10 @@ namespace osu.Framework.Configuration
             }
 
             bindable.Default = value;
-            if (min.HasValue) bindable.MinValue = min.Value;
-            if (max.HasValue) bindable.MaxValue = max.Value;
+            if (min.HasValue)
+                bindable.MinValue = min.Value;
+            if (max.HasValue)
+                bindable.MaxValue = max.Value;
 
             return bindable;
         }
@@ -297,7 +329,9 @@ namespace osu.Framework.Configuration
             if (ConfigStore.TryGetValue(lookup, out IBindable obj))
             {
                 if (!(obj is Bindable<TValue>))
-                    throw new InvalidCastException($"Cannot convert bindable of type {obj.GetType()} retrieved from {nameof(ConfigManager<TLookup>)} to {typeof(Bindable<TValue>)}.");
+                    throw new InvalidCastException(
+                        $"Cannot convert bindable of type {obj.GetType()} retrieved from {nameof(ConfigManager<TLookup>)} to {typeof(Bindable<TValue>)}."
+                    );
 
                 return (Bindable<TValue>)obj;
             }
@@ -311,12 +345,14 @@ namespace osu.Framework.Configuration
         /// a local reference.
         /// </summary>
         /// <returns>A weakly bound copy of the specified bindable.</returns>
-        public Bindable<TValue> GetBindable<TValue>(TLookup lookup) => GetOriginalBindable<TValue>(lookup)?.GetBoundCopy();
+        public Bindable<TValue> GetBindable<TValue>(TLookup lookup) =>
+            GetOriginalBindable<TValue>(lookup)?.GetBoundCopy();
 
         /// <summary>
         /// Binds a local bindable with a configuration-backed bindable.
         /// </summary>
-        public void BindWith<TValue>(TLookup lookup, Bindable<TValue> bindable) => bindable.BindTo(GetOriginalBindable<TValue>(lookup));
+        public void BindWith<TValue>(TLookup lookup, Bindable<TValue> bindable) =>
+            bindable.BindTo(GetOriginalBindable<TValue>(lookup));
 
         public virtual TrackedSettings CreateTrackedSettings() => null;
 
@@ -329,10 +365,11 @@ namespace osu.Framework.Configuration
             /// </summary>
             /// <param name="setting">The config setting to be tracked.</param>
             /// <param name="generateDescription">A function that generates the description for the setting, invoked every time the value changes.</param>
-            public TrackedSetting(TLookup setting, Func<TValue, SettingDescription> generateDescription)
-                : base(setting, generateDescription)
-            {
-            }
+            public TrackedSetting(
+                TLookup setting,
+                Func<TValue, SettingDescription> generateDescription
+            )
+                : base(setting, generateDescription) { }
         }
     }
 
@@ -355,17 +392,20 @@ namespace osu.Framework.Configuration
         {
             int current = Interlocked.Increment(ref lastSave);
 
-            Task.Delay(100).ContinueWith(_ =>
-            {
-                if (current == lastSave) Save();
-            });
+            Task.Delay(100)
+                .ContinueWith(_ =>
+                {
+                    if (current == lastSave)
+                        Save();
+                });
         }
 
         private readonly object saveLock = new object();
 
         public bool Save()
         {
-            if (!hasLoaded) return false;
+            if (!hasLoaded)
+                return false;
 
             lock (saveLock)
             {

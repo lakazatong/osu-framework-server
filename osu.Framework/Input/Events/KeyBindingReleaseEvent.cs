@@ -9,11 +9,10 @@ namespace osu.Framework.Input.Events
     /// An event representing a release of a key binding combination.
     /// </summary>
     /// <typeparam name="T">The action type.</typeparam>
-    public class KeyBindingReleaseEvent<T> : KeyBindingEvent<T> where T : struct
+    public class KeyBindingReleaseEvent<T> : KeyBindingEvent<T>
+        where T : struct
     {
         public KeyBindingReleaseEvent(InputState state, T action)
-            : base(state, action)
-        {
-        }
+            : base(state, action) { }
     }
 }

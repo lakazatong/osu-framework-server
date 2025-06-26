@@ -1,10 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
 using System;
 using System.Collections.Generic;
 using osu.Framework.Extensions.EnumExtensions;
+using osuTK;
 
 namespace osu.Framework.Graphics.Containers
 {
@@ -23,12 +23,17 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="container">The <paramref name="container"/> that should wrap the given <paramref name="drawable"/>.</param>
         /// <param name="drawable">The <paramref name="drawable"/> that should be wrapped by the given <paramref name="container"/>.</param>
         /// <returns>The given <paramref name="container"/>.</returns>
-        public static TContainer Wrap<TContainer, TChild>(this TContainer container, TChild drawable)
+        public static TContainer Wrap<TContainer, TChild>(
+            this TContainer container,
+            TChild drawable
+        )
             where TContainer : Container<TChild>
             where TChild : Drawable
         {
             if (container.Children.Count != 0)
-                throw new InvalidOperationException($"You may not wrap a {nameof(Container<TChild>)} that has children.");
+                throw new InvalidOperationException(
+                    $"You may not wrap a {nameof(Container<TChild>)} that has children."
+                );
 
             container.RelativeSizeAxes = drawable.RelativeSizeAxes;
             container.AutoSizeAxes = Axes.Both & ~drawable.RelativeSizeAxes;
@@ -67,7 +72,10 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="container">The <paramref name="container"/> that will have a child set.</param>
         /// <param name="child">The <paramref name="child"/> that should be set to the <paramref name="container"/>.</param>
         /// <returns>The given <paramref name="container"/>.</returns>
-        public static TContainer WithChild<TContainer, TChild>(this TContainer container, TChild child)
+        public static TContainer WithChild<TContainer, TChild>(
+            this TContainer container,
+            TChild child
+        )
             where TContainer : IContainerCollection<TChild>
             where TChild : Drawable
         {
@@ -84,7 +92,10 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="container">The <paramref name="container"/> that will have children set.</param>
         /// <param name="children">The <paramref name="children"/> that should be set to the <paramref name="container"/>.</param>
         /// <returns>The given <paramref name="container"/>.</returns>
-        public static TContainer WithChildren<TContainer, TChild>(this TContainer container, IEnumerable<TChild> children)
+        public static TContainer WithChildren<TContainer, TChild>(
+            this TContainer container,
+            IEnumerable<TChild> children
+        )
             where TContainer : IContainerCollection<TChild>
             where TChild : Drawable
         {

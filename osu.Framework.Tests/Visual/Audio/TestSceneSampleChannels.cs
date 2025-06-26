@@ -44,18 +44,25 @@ namespace osu.Framework.Tests.Visual.Audio
             AddStep("play channel 1 again", () => channel.Play());
 
             int audioFrames = 0;
-            AddStep("begin tracking audio frames", () =>
-            {
-                audioFrames = 0;
-
-                ScheduledDelegate del = null;
-                del = host.AudioThread.Scheduler.AddDelayed(() =>
+            AddStep(
+                "begin tracking audio frames",
+                () =>
                 {
-                    // ReSharper disable once AccessToModifiedClosure
-                    if (++audioFrames >= 2)
-                        del?.Cancel();
-                }, 0, true);
-            });
+                    audioFrames = 0;
+
+                    ScheduledDelegate del = null;
+                    del = host.AudioThread.Scheduler.AddDelayed(
+                        () =>
+                        {
+                            // ReSharper disable once AccessToModifiedClosure
+                            if (++audioFrames >= 2)
+                                del?.Cancel();
+                        },
+                        0,
+                        true
+                    );
+                }
+            );
 
             AddUntilStep("wait for two audio frames", () => audioFrames >= 2);
             AddAssert("channel 1 not playing", () => !channel.Playing);
@@ -65,12 +72,15 @@ namespace osu.Framework.Tests.Visual.Audio
         public void TestPlayLoopingSample()
         {
             SampleChannel channel = null;
-            AddStep("play sample", () =>
-            {
-                channel = sample.GetChannel();
-                channel.Looping = true;
-                channel.Play();
-            });
+            AddStep(
+                "play sample",
+                () =>
+                {
+                    channel = sample.GetChannel();
+                    channel.Looping = true;
+                    channel.Play();
+                }
+            );
 
             AddWaitStep("wait for loop", 20);
             AddAssert("still playing", () => channel.Playing);
@@ -92,12 +102,15 @@ namespace osu.Framework.Tests.Visual.Audio
         {
             var channelRef = new WeakReference<SampleChannel>(null);
             AddStep("play sample", () => channelRef.SetTarget(sample.Play()));
-            AddUntilStep("reference lost", () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                return !channelRef.TryGetTarget(out _);
-            });
+            AddUntilStep(
+                "reference lost",
+                () =>
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    return !channelRef.TryGetTarget(out _);
+                }
+            );
         }
 
         [Test]
@@ -105,20 +118,26 @@ namespace osu.Framework.Tests.Visual.Audio
         {
             var sampleRef = new WeakReference<Sample>(null);
 
-            AddStep("play sample", () =>
-            {
-                var sample2 = sampleStore.Get("long.mp3");
+            AddStep(
+                "play sample",
+                () =>
+                {
+                    var sample2 = sampleStore.Get("long.mp3");
 
-                sampleRef.SetTarget(sample2);
-                sample2.Play();
-            });
+                    sampleRef.SetTarget(sample2);
+                    sample2.Play();
+                }
+            );
 
-            AddUntilStep("reference lost", () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                return !sampleRef.TryGetTarget(out _);
-            });
+            AddUntilStep(
+                "reference lost",
+                () =>
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    return !sampleRef.TryGetTarget(out _);
+                }
+            );
         }
     }
 }

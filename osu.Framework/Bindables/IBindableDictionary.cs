@@ -5,7 +5,12 @@ using System.Collections.Generic;
 
 namespace osu.Framework.Bindables
 {
-    public interface IBindableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, ICanBeDisabled, IHasDefaultValue, IUnbindable, IHasDescription
+    public interface IBindableDictionary<TKey, TValue>
+        : IReadOnlyDictionary<TKey, TValue>,
+            ICanBeDisabled,
+            IHasDefaultValue,
+            IUnbindable,
+            IHasDescription
         where TKey : notnull
     {
         /// <summary>
@@ -25,7 +30,10 @@ namespace osu.Framework.Bindables
         /// </summary>
         /// <param name="onChange">The action to perform when this <see cref="BindableDictionary{TKey, TValue}"/> changes.</param>
         /// <param name="runOnceImmediately">Whether the action provided in <paramref name="onChange"/> should be run once immediately.</param>
-        void BindCollectionChanged(NotifyDictionaryChangedEventHandler<TKey, TValue> onChange, bool runOnceImmediately = false);
+        void BindCollectionChanged(
+            NotifyDictionaryChangedEventHandler<TKey, TValue> onChange,
+            bool runOnceImmediately = false
+        );
 
         /// <summary>
         /// An alias of <see cref="BindTo"/> provided for use in object initializer scenarios.

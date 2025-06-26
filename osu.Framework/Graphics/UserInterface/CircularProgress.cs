@@ -24,7 +24,9 @@ namespace osu.Framework.Graphics.UserInterface
             set
             {
                 if (!double.IsFinite(value))
-                    throw new ArgumentException($"{nameof(Progress)} must be finite, but is {value}.");
+                    throw new ArgumentException(
+                        $"{nameof(Progress)} must be finite, but is {value}."
+                    );
 
                 if (progress == value)
                     return;
@@ -45,12 +47,19 @@ namespace osu.Framework.Graphics.UserInterface
 
         protected override DrawNode CreateDrawNode() => new CircularProgressDrawNode(this);
 
-        public TransformSequence<CircularProgress> ProgressTo(double newValue, double duration = 0, Easing easing = Easing.None)
-            => ProgressTo(newValue, duration, new DefaultEasingFunction(easing));
+        public TransformSequence<CircularProgress> ProgressTo(
+            double newValue,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) => ProgressTo(newValue, duration, new DefaultEasingFunction(easing));
 
-        public TransformSequence<CircularProgress> ProgressTo<TEasing>(double newValue, double duration, in TEasing easing)
-            where TEasing : IEasingFunction
-            => this.TransformTo(nameof(Progress), newValue, duration, easing);
+        public TransformSequence<CircularProgress> ProgressTo<TEasing>(
+            double newValue,
+            double duration,
+            in TEasing easing
+        )
+            where TEasing : IEasingFunction =>
+            this.TransformTo(nameof(Progress), newValue, duration, easing);
 
         private float innerRadius = 1;
 
@@ -65,7 +74,9 @@ namespace osu.Framework.Graphics.UserInterface
             set
             {
                 if (!float.IsFinite(value))
-                    throw new ArgumentException($"{nameof(InnerRadius)} must be finite, but is {value}.");
+                    throw new ArgumentException(
+                        $"{nameof(InnerRadius)} must be finite, but is {value}."
+                    );
 
                 innerRadius = Math.Clamp(value, 0, 1);
                 Invalidate(Invalidation.DrawNode);
@@ -92,9 +103,7 @@ namespace osu.Framework.Graphics.UserInterface
             public new CircularProgress Source => (CircularProgress)base.Source;
 
             public CircularProgressDrawNode(CircularProgress source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             protected float InnerRadius { get; private set; }
             protected float Progress { get; private set; }
@@ -160,11 +169,20 @@ namespace osu.Framework.Graphics.UserInterface
 
     public static class CircularProgressTransformSequenceExtensions
     {
-        public static TransformSequence<CircularProgress> ProgressTo(this TransformSequence<CircularProgress> t, double newValue, double duration = 0, Easing easing = Easing.None)
-            => t.ProgressTo(newValue, duration, new DefaultEasingFunction(easing));
+        public static TransformSequence<CircularProgress> ProgressTo(
+            this TransformSequence<CircularProgress> t,
+            double newValue,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) => t.ProgressTo(newValue, duration, new DefaultEasingFunction(easing));
 
-        public static TransformSequence<CircularProgress> ProgressTo<TEasing>(this TransformSequence<CircularProgress> t, double newValue, double duration, TEasing easing)
-            where TEasing : IEasingFunction
-            => t.Append(cp => cp.ProgressTo(newValue, duration, easing));
+        public static TransformSequence<CircularProgress> ProgressTo<TEasing>(
+            this TransformSequence<CircularProgress> t,
+            double newValue,
+            double duration,
+            TEasing easing
+        )
+            where TEasing : IEasingFunction =>
+            t.Append(cp => cp.ProgressTo(newValue, duration, easing));
     }
 }

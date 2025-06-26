@@ -45,6 +45,6 @@ namespace osu.Framework.Configuration
         Deferred_Direct3D11,
 
         [Description("OpenGL (Experimental)")]
-        Deferred_OpenGL
+        Deferred_OpenGL,
     }
 }

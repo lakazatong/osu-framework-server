@@ -1,9 +1,9 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using NUnit.Framework;
 using System.Drawing;
 using System.Globalization;
+using NUnit.Framework;
 using osu.Framework.Bindables;
 
 namespace osu.Framework.Tests.Bindables
@@ -43,10 +43,14 @@ namespace osu.Framework.Tests.Bindables
         [TestCase("0x-100", 0, -10, 0, 10, 0, -10)]
         [TestCase("120x0", -10, -10, 10, 10, 10, 0)]
         [TestCase("-100x400", -25, 200, 25, 300, -25, 300)]
-        public void TestParsingStringWithRange(string value,
-                                               int minValueWidth, int minValueHeight,
-                                               int maxValueWidth, int maxValueHeight,
-                                               int expectedWidth, int expectedHeight
+        public void TestParsingStringWithRange(
+            string value,
+            int minValueWidth,
+            int minValueHeight,
+            int maxValueWidth,
+            int maxValueHeight,
+            int expectedWidth,
+            int expectedHeight
         )
         {
             var minValue = new Size(minValueWidth, minValueHeight);

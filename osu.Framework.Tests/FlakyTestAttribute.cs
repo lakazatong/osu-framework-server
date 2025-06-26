@@ -19,9 +19,7 @@ namespace osu.Framework.Tests
         private readonly int tryCount;
 
         public FlakyTestAttribute()
-            : this(10)
-        {
-        }
+            : this(10) { }
 
         public FlakyTestAttribute(int tryCount)
         {

@@ -68,13 +68,12 @@ namespace osu.Framework.Graphics.Textures
         /// </summary>
         /// <param name="stream">The image content.</param>
         public TextureUpload(Stream stream)
-            : this(LoadFromStream<Rgba32>(stream))
-        {
-        }
+            : this(LoadFromStream<Rgba32>(stream)) { }
 
         private static bool stbiNotFound;
 
-        internal static Image<TPixel> LoadFromStream<TPixel>(Stream stream) where TPixel : unmanaged, IPixel<TPixel>
+        internal static Image<TPixel> LoadFromStream<TPixel>(Stream stream)
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             if (stbiNotFound)
                 return Image.Load<TPixel>(stream);
@@ -83,12 +82,21 @@ namespace osu.Framework.Graphics.Textures
 
             try
             {
-                using (var buffer = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<byte>((int)stream.Length))
+                using (
+                    var buffer =
+                        SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<byte>(
+                            (int)stream.Length
+                        )
+                )
                 {
                     stream.ReadExactly(buffer.Memory.Span);
 
                     using (var stbiImage = Stbi.LoadFromMemory(buffer.Memory.Span, 4))
-                        return Image.LoadPixelData(MemoryMarshal.Cast<byte, TPixel>(stbiImage.Data), stbiImage.Width, stbiImage.Height);
+                        return Image.LoadPixelData(
+                            MemoryMarshal.Cast<byte, TPixel>(stbiImage.Data),
+                            stbiImage.Width,
+                            stbiImage.Height
+                        );
                 }
             }
             catch (Exception e)
@@ -96,7 +104,9 @@ namespace osu.Framework.Graphics.Textures
                 if (e is DllNotFoundException)
                     stbiNotFound = true;
 
-                Logger.Log($"Texture could not be loaded via STB; falling back to ImageSharp: {e.Message}");
+                Logger.Log(
+                    $"Texture could not be loaded via STB; falling back to ImageSharp: {e.Message}"
+                );
                 stream.Position = initialPos;
                 return Image.Load<TPixel>(stream);
             }
@@ -105,9 +115,7 @@ namespace osu.Framework.Graphics.Textures
         /// <summary>
         /// Create an empty upload. Used by <see cref="IFrameBuffer"/> for initialisation.
         /// </summary>
-        internal TextureUpload()
-        {
-        }
+        internal TextureUpload() { }
 
         #region IDisposable Support
 

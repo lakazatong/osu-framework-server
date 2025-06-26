@@ -27,11 +27,12 @@ namespace osu.Framework.Graphics.Containers.Markdown
             InternalChild = CreateSeparator();
         }
 
-        protected virtual Drawable CreateSeparator() => new Box
-        {
-            RelativeSizeAxes = Axes.X,
-            Height = 1,
-            Colour = Color4.Gray,
-        };
+        protected virtual Drawable CreateSeparator() =>
+            new Box
+            {
+                RelativeSizeAxes = Axes.X,
+                Height = 1,
+                Colour = Color4.Gray,
+            };
     }
 }

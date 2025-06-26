@@ -8,7 +8,10 @@ namespace osu.Framework.Localisation
     /// </summary>
     public class LocalisationParameters
     {
-        public static readonly LocalisationParameters DEFAULT = new LocalisationParameters(null, false);
+        public static readonly LocalisationParameters DEFAULT = new LocalisationParameters(
+            null,
+            false
+        );
 
         /// <summary>
         /// The <see cref="ILocalisationStore"/> to be used for string lookups and culture-specific formatting.
@@ -25,9 +28,7 @@ namespace osu.Framework.Localisation
         /// </summary>
         /// <param name="parameters">The <see cref="LocalisationParameters"/> to copy values from.</param>
         protected LocalisationParameters(LocalisationParameters parameters)
-            : this(parameters.Store, parameters.PreferOriginalScript)
-        {
-        }
+            : this(parameters.Store, parameters.PreferOriginalScript) { }
 
         /// <summary>
         /// Creates a new instance of <see cref="LocalisationParameters"/>.
@@ -44,8 +45,11 @@ namespace osu.Framework.Localisation
         /// Creates new <see cref="LocalisationParameters"/> from this <see cref="LocalisationParameters"/> with the provided fields changed.
         /// </summary>
         /// <returns>New <see cref="LocalisationParameters"/> based on this <see cref="LocalisationParameters"/>.</returns>
-        public LocalisationParameters With(ILocalisationStore? store = null, bool? preferOriginalScript = null)
-            => new LocalisationParameters(
+        public LocalisationParameters With(
+            ILocalisationStore? store = null,
+            bool? preferOriginalScript = null
+        ) =>
+            new LocalisationParameters(
                 store ?? Store,
                 preferOriginalScript ?? PreferOriginalScript
             );

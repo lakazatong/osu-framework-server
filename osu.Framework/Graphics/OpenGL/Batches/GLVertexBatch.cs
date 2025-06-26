@@ -76,7 +76,10 @@ namespace osu.Framework.Graphics.OpenGL.Batches
         {
             renderer.SetActiveBatch(this);
 
-            if (currentBufferIndex < VertexBuffers.Count && currentVertexIndex >= currentVertexBuffer.Size)
+            if (
+                currentBufferIndex < VertexBuffers.Count
+                && currentVertexIndex >= currentVertexBuffer.Size
+            )
             {
                 Draw();
                 FrameStatistics.Increment(StatisticsCounterType.VBufOverflow);

@@ -25,7 +25,8 @@ namespace osu.Framework.Platform.SDL3
         /// </summary>
         // It's possible for a format to not have a registered decoder, but all default formats will have one:
         // https://github.com/SixLabors/ImageSharp/discussions/1353#discussioncomment-9142056
-        private static IEnumerable<string> supportedImageMimeTypes => SixLabors.ImageSharp.Configuration.Default.ImageFormats.SelectMany(f => f.MimeTypes);
+        private static IEnumerable<string> supportedImageMimeTypes =>
+            SixLabors.ImageSharp.Configuration.Default.ImageFormats.SelectMany(f => f.MimeTypes);
 
         /// <summary>
         /// Format used for encoding (saving) images to the clipboard.
@@ -83,7 +84,11 @@ namespace osu.Framework.Platform.SDL3
         /// <typeparam name="T">Type of decoded data.</typeparam>
         private delegate T? SpanDecoder<out T>(ReadOnlySpan<byte> span);
 
-        private static unsafe bool tryGetData<T>(string mimeType, SpanDecoder<T> decoder, out T? data)
+        private static unsafe bool tryGetData<T>(
+            string mimeType,
+            SpanDecoder<T> decoder,
+            out T? data
+        )
         {
             if (!SDL_HasClipboardData(mimeType))
             {
@@ -96,7 +101,9 @@ namespace osu.Framework.Platform.SDL3
 
             if (pointer == IntPtr.Zero)
             {
-                Logger.Log($"Failed to get SDL clipboard data for {mimeType}. SDL error: {SDL_GetError()}");
+                Logger.Log(
+                    $"Failed to get SDL clipboard data for {mimeType}. SDL error: {SDL_GetError()}"
+                );
                 data = default;
                 return false;
             }
@@ -119,18 +126,34 @@ namespace osu.Framework.Platform.SDL3
             }
         }
 
-        private static unsafe bool trySetData(string mimeType, Func<ReadOnlyMemory<byte>> dataProvider)
+        private static unsafe bool trySetData(
+            string mimeType,
+            Func<ReadOnlyMemory<byte>> dataProvider
+        )
         {
             var callbackContext = new ClipboardCallbackContext(mimeType, dataProvider);
-            var objectHandle = new ObjectHandle<ClipboardCallbackContext>(callbackContext, GCHandleType.Normal);
+            var objectHandle = new ObjectHandle<ClipboardCallbackContext>(
+                callbackContext,
+                GCHandleType.Normal
+            );
 
             // TODO: support multiple mime types in a single callback
             fixed (byte* ptr = Encoding.UTF8.GetBytes(mimeType + '\0'))
             {
-                if (!SDL_SetClipboardData(&dataCallback, &cleanupCallback, objectHandle.Handle, &ptr, 1))
+                if (
+                    !SDL_SetClipboardData(
+                        &dataCallback,
+                        &cleanupCallback,
+                        objectHandle.Handle,
+                        &ptr,
+                        1
+                    )
+                )
                 {
                     objectHandle.Dispose();
-                    Logger.Log($"Failed to set clipboard data callback. SDL error: {SDL_GetError()}");
+                    Logger.Log(
+                        $"Failed to set clipboard data callback. SDL error: {SDL_GetError()}"
+                    );
                     return false;
                 }
 
@@ -143,7 +166,10 @@ namespace osu.Framework.Platform.SDL3
         {
             using var objectHandle = new ObjectHandle<ClipboardCallbackContext>(userdata);
 
-            if (!objectHandle.GetTarget(out var context) || context.MimeType != PtrToStringUTF8(mimeType))
+            if (
+                !objectHandle.GetTarget(out var context)
+                || context.MimeType != PtrToStringUTF8(mimeType)
+            )
             {
                 *length = 0;
                 return IntPtr.Zero;
@@ -188,7 +214,10 @@ namespace osu.Framework.Platform.SDL3
             /// </summary>
             public UIntPtr DataLength { get; private set; }
 
-            public ClipboardCallbackContext(string mimeType, Func<ReadOnlyMemory<byte>> dataProvider)
+            public ClipboardCallbackContext(
+                string mimeType,
+                Func<ReadOnlyMemory<byte>> dataProvider
+            )
             {
                 MimeType = mimeType;
                 this.dataProvider = dataProvider;

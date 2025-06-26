@@ -10,20 +10,15 @@ namespace osu.Framework.Input.StateChanges
     public class KeyboardKeyInput : ButtonInput<Key>
     {
         public KeyboardKeyInput(IEnumerable<ButtonInputEntry<Key>> entries)
-            : base(entries)
-        {
-        }
+            : base(entries) { }
 
         public KeyboardKeyInput(Key button, bool isPressed)
-            : base(button, isPressed)
-        {
-        }
+            : base(button, isPressed) { }
 
         public KeyboardKeyInput(ButtonStates<Key>? current, ButtonStates<Key>? previous)
-            : base(current, previous)
-        {
-        }
+            : base(current, previous) { }
 
-        protected override ButtonStates<Key> GetButtonStates(InputState state) => state.Keyboard.Keys;
+        protected override ButtonStates<Key> GetButtonStates(InputState state) =>
+            state.Keyboard.Keys;
     }
 }

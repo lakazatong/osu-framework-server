@@ -49,9 +49,7 @@ namespace osu.Framework.Benchmarks
 
         private struct NullStateChangeHandler : IInputStateChangeHandler
         {
-            public void HandleInputStateChange(InputStateChangeEvent inputStateChange)
-            {
-            }
+            public void HandleInputStateChange(InputStateChangeEvent inputStateChange) { }
         }
     }
 }

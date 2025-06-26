@@ -6,6 +6,6 @@ namespace osu.Framework.Graphics.Visualisation
     internal enum TreeContainerStatus
     {
         Onscreen,
-        Offscreen
+        Offscreen,
     }
 }

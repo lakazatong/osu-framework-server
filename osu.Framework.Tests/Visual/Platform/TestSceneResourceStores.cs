@@ -32,19 +32,25 @@ namespace osu.Framework.Tests.Visual.Platform
         private AudioManager audioManager;
 
         [BackgroundDependencyLoader]
-        private void load(FontStore fontStore, Storage storage, TextureStore textureStore, AudioManager audioManager)
+        private void load(
+            FontStore fontStore,
+            Storage storage,
+            TextureStore textureStore,
+            AudioManager audioManager
+        )
         {
             Child = new BasicScrollContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = flow = new FillFlowContainer<ResourceDisplay>
-                {
-                    Margin = new MarginPadding(10),
-                    Spacing = new Vector2(3),
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Direction = FillDirection.Vertical,
-                },
+                Child = flow =
+                    new FillFlowContainer<ResourceDisplay>
+                    {
+                        Margin = new MarginPadding(10),
+                        Spacing = new Vector2(3),
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Vertical,
+                    },
             };
 
             this.fontStore = fontStore;
@@ -54,42 +60,54 @@ namespace osu.Framework.Tests.Visual.Platform
         }
 
         [Test]
-        public void TestFontStore() => showResources(() => fontStore.GetAvailableResources(), l => fontStore.Get(l));
+        public void TestFontStore() =>
+            showResources(() => fontStore.GetAvailableResources(), l => fontStore.Get(l));
 
         [Test]
-        public void TestStorageBackedResourceStore() => showResources(() => new StorageBackedResourceStore(storage));
+        public void TestStorageBackedResourceStore() =>
+            showResources(() => new StorageBackedResourceStore(storage));
 
         [Test]
-        public void TestGetTextureStore() => showResources(() => textureStore.GetAvailableResources(), l => textureStore.Get(l));
+        public void TestGetTextureStore() =>
+            showResources(() => textureStore.GetAvailableResources(), l => textureStore.Get(l));
 
         [Test]
         public void TestGetTrackManager() => showResources(() => audioManager.Tracks);
 
         private void showResources<T>(Func<IResourceStore<T>> store)
-            where T : class
-            => showResources(() => store().GetAvailableResources(), l =>
-            {
-                try
+            where T : class =>
+            showResources(
+                () => store().GetAvailableResources(),
+                l =>
                 {
-                    return store().Get(l);
+                    try
+                    {
+                        return store().Get(l);
+                    }
+                    catch
+                    {
+                        // This is iterating over all files in the game storage, which may include files that are actively being written to (ie. log files).
+                        // On windows, this can lead to file access errors, but we don't really care about that.
+                        return null;
+                    }
                 }
-                catch
-                {
-                    // This is iterating over all files in the game storage, which may include files that are actively being written to (ie. log files).
-                    // On windows, this can lead to file access errors, but we don't really care about that.
-                    return null;
-                }
-            });
+            );
 
-        private void showResources<T>(Func<IEnumerable<string>> getResourceNames, Func<string, T> getResource)
+        private void showResources<T>(
+            Func<IEnumerable<string>> getResourceNames,
+            Func<string, T> getResource
+        )
         {
-            AddStep("list resources", () =>
-            {
-                flow.Clear();
+            AddStep(
+                "list resources",
+                () =>
+                {
+                    flow.Clear();
 
-                foreach (string resourceName in getResourceNames())
-                    flow.Add(new ResourceDisplay(resourceName, getResource(resourceName)));
-            });
+                    foreach (string resourceName in getResourceNames())
+                        flow.Add(new ResourceDisplay(resourceName, getResource(resourceName)));
+                }
+            );
 
             AddAssert("ensure some loaded", () => flow.Children.Any());
         }
@@ -114,16 +132,12 @@ namespace osu.Framework.Tests.Visual.Platform
                             RelativeSizeAxes = Axes.Y,
                             Children = new[]
                             {
-                                new Box
-                                {
-                                    Colour = Color4.Navy,
-                                    RelativeSizeAxes = Axes.Both,
-                                },
+                                new Box { Colour = Color4.Navy, RelativeSizeAxes = Axes.Both },
                                 createDisplay(resource),
-                            }
+                            },
                         },
                         new SpriteText { Text = name },
-                    }
+                    },
                 };
             }
 
@@ -132,11 +146,7 @@ namespace osu.Framework.Tests.Visual.Platform
                 switch (resource)
                 {
                     case Texture tex:
-                        return new Sprite
-                        {
-                            Size = new Vector2(20),
-                            Texture = tex
-                        };
+                        return new Sprite { Size = new Vector2(20), Texture = tex };
 
                     default:
                         return new SpriteText { Text = resource?.ToString() ?? "null" };

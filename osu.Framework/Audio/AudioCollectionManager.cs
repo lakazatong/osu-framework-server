@@ -16,16 +16,19 @@ namespace osu.Framework.Audio
 
         public void AddItem(T item)
         {
-            EnqueueAction(delegate
-            {
-                if (Items.Contains(item)) return;
+            EnqueueAction(
+                delegate
+                {
+                    if (Items.Contains(item))
+                        return;
 
-                if (item is IAdjustableAudioComponent adjustable)
-                    adjustable.BindAdjustments(this);
+                    if (item is IAdjustableAudioComponent adjustable)
+                        adjustable.BindAdjustments(this);
 
-                Items.Add(item);
-                ItemAdded(item);
-            });
+                    Items.Add(item);
+                    ItemAdded(item);
+                }
+            );
         }
 
         void IBassAudio.UpdateDevice(int deviceIndex) => UpdateDevice(deviceIndex);
@@ -55,13 +58,9 @@ namespace osu.Framework.Audio
             }
         }
 
-        protected virtual void ItemAdded(T item)
-        {
-        }
+        protected virtual void ItemAdded(T item) { }
 
-        protected virtual void ItemRemoved(T item)
-        {
-        }
+        protected virtual void ItemRemoved(T item) { }
 
         protected override void Dispose(bool disposing)
         {

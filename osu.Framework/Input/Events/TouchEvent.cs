@@ -20,7 +20,8 @@ namespace osu.Framework.Input.Events
         /// <summary>
         /// The touch of this event with local space position.
         /// </summary>
-        public Touch Touch => new Touch(ScreenSpaceTouch.Source, ToLocalSpace(ScreenSpaceTouch.Position));
+        public Touch Touch =>
+            new Touch(ScreenSpaceTouch.Source, ToLocalSpace(ScreenSpaceTouch.Position));
 
         /// <summary>
         /// The touch position at the <see cref="TouchDownEvent"/> for this touch source in the screen space.
@@ -38,13 +39,19 @@ namespace osu.Framework.Input.Events
         /// <param name="touch">The touch to check for.</param>
         public bool IsActive(Touch touch) => CurrentState.Touch.IsActive(touch.Source);
 
-        public TouchEvent(InputState state, Touch touch, Vector2? screenSpaceTouchDownPosition = null)
+        public TouchEvent(
+            InputState state,
+            Touch touch,
+            Vector2? screenSpaceTouchDownPosition = null
+        )
             : base(state)
         {
             ScreenSpaceTouch = touch;
-            ScreenSpaceTouchDownPosition = screenSpaceTouchDownPosition ?? ScreenSpaceTouch.Position;
+            ScreenSpaceTouchDownPosition =
+                screenSpaceTouchDownPosition ?? ScreenSpaceTouch.Position;
         }
 
-        public override string ToString() => $"{GetType().ReadableName()}({ScreenSpaceTouch.Source})";
+        public override string ToString() =>
+            $"{GetType().ReadableName()}({ScreenSpaceTouch.Source})";
     }
 }

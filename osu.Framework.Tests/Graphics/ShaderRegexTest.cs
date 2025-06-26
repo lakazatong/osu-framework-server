@@ -12,7 +12,8 @@ namespace osu.Framework.Tests.Graphics
         [Test]
         public void TestComment()
         {
-            const string test_string = "// The following implementation using mix and step may be faster, but stackoverflow indicates it is in fact a lot slower on some GPUs.";
+            const string test_string =
+                "// The following implementation using mix and step may be faster, but stackoverflow indicates it is in fact a lot slower on some GPUs.";
             performInvalidAttributeTest(test_string);
         }
 

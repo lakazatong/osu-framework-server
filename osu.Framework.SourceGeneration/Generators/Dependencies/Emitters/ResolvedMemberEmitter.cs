@@ -16,7 +16,10 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
         private readonly DependenciesFileEmitter fileEmitter;
         private readonly ResolvedAttributeData data;
 
-        public ResolvedMemberEmitter(DependenciesFileEmitter fileEmitter, ResolvedAttributeData data)
+        public ResolvedMemberEmitter(
+            DependenciesFileEmitter fileEmitter,
+            ResolvedAttributeData data
+        )
         {
             this.fileEmitter = fileEmitter;
             this.data = data;
@@ -34,7 +37,10 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                         data.CachedName,
                         data.GlobalPrefixedParentTypeName,
                         data.CanBeNull,
-                        true)));
+                        true
+                    )
+                )
+            );
         }
 
         private ExpressionSyntax createMemberAccessor()
@@ -44,8 +50,11 @@ namespace osu.Framework.SourceGeneration.Generators.Dependencies.Emitters
                 SyntaxFactory.ParenthesizedExpression(
                     SyntaxFactory.CastExpression(
                         SyntaxFactory.ParseTypeName(fileEmitter.Target.GlobalPrefixedTypeName),
-                        SyntaxFactory.IdentifierName(DependenciesFileEmitter.TARGET_PARAMETER_NAME))),
-                SyntaxFactory.IdentifierName(data.PropertyName));
+                        SyntaxFactory.IdentifierName(DependenciesFileEmitter.TARGET_PARAMETER_NAME)
+                    )
+                ),
+                SyntaxFactory.IdentifierName(data.PropertyName)
+            );
         }
     }
 }

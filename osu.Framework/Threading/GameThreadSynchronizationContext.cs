@@ -51,7 +51,8 @@ namespace osu.Framework.Threading
             }
         }
 
-        public override void Post(SendOrPostCallback callback, object? state) => scheduler?.Add(() => callback(state));
+        public override void Post(SendOrPostCallback callback, object? state) =>
+            scheduler?.Add(() => callback(state));
 
         /// <summary>
         /// Run any pending work queued against this synchronization context.

@@ -14,7 +14,10 @@ namespace osu.Framework.Tests.Localisation
         [TestCase(EnumA.Item1, "Item1")]
         [TestCase(EnumA.Item2, "B")]
         [TestCase((EnumA)3, "3")]
-        public void TestNonLocalisableDescriptionReturnsDescriptionOrToString(EnumA value, string expected)
+        public void TestNonLocalisableDescriptionReturnsDescriptionOrToString(
+            EnumA value,
+            string expected
+        )
         {
             Assert.That(value.GetLocalisableDescription().ToString(), Is.EqualTo(expected));
         }
@@ -29,13 +32,19 @@ namespace osu.Framework.Tests.Localisation
         [Test]
         public void TestClassInstanceLocalisableDescription()
         {
-            Assert.That(new ClassA().GetLocalisableDescription().ToString(), Is.EqualTo("Localised A"));
+            Assert.That(
+                new ClassA().GetLocalisableDescription().ToString(),
+                Is.EqualTo("Localised A")
+            );
         }
 
         [Test]
         public void TestClassTypeLocalisableDescription()
         {
-            Assert.That(typeof(ClassA).GetLocalisableDescription().ToString(), Is.EqualTo("Localised A"));
+            Assert.That(
+                typeof(ClassA).GetLocalisableDescription().ToString(),
+                Is.EqualTo("Localised A")
+            );
         }
 
         [Test]
@@ -62,7 +71,7 @@ namespace osu.Framework.Tests.Localisation
             Item1,
 
             [System.ComponentModel.Description("B")]
-            Item2
+            Item2,
         }
 
         public enum EnumB
@@ -76,7 +85,10 @@ namespace osu.Framework.Tests.Localisation
 
         public enum EnumC
         {
-            [LocalisableDescription(typeof(LocalisableDescriptionAttributeTest), nameof(TestStrings.A))]
+            [LocalisableDescription(
+                typeof(LocalisableDescriptionAttributeTest),
+                nameof(TestStrings.A)
+            )]
             Item1,
         }
 
@@ -87,9 +99,7 @@ namespace osu.Framework.Tests.Localisation
         }
 
         [LocalisableDescription(typeof(TestStrings), nameof(TestStrings.A))]
-        public class ClassA
-        {
-        }
+        public class ClassA { }
 
         private class TestStrings
         {
@@ -97,7 +107,8 @@ namespace osu.Framework.Tests.Localisation
 
             public static readonly LocalisableString B = "Localised B";
 
-            public static LocalisableString Romanisable => new RomanisableString("Original", "Romanised");
+            public static LocalisableString Romanisable =>
+                new RomanisableString("Original", "Romanised");
 
             public LocalisableString Instance => string.Empty;
         }

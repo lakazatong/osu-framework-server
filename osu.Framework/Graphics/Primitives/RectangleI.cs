@@ -105,7 +105,11 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="right">The <see cref="RectangleI"/> structure that is to the right of the equality operator. </param>
         /// <param name="left">The <see cref="RectangleI"/> structure that is to the left of the equality operator. </param>
         /// <filterpriority>3</filterpriority>
-        public static bool operator ==(RectangleI left, RectangleI right) => left.X == right.X && left.Y == right.Y && left.Width == right.Width && left.Height == right.Height;
+        public static bool operator ==(RectangleI left, RectangleI right) =>
+            left.X == right.X
+            && left.Y == right.Y
+            && left.Width == right.Width
+            && left.Height == right.Height;
 
         /// <summary>Tests whether two <see cref="RectangleI"/> structures differ in location or size.</summary>
         /// <returns>This operator returns true if any of the <see cref="X"/> , <see cref="Y"/>, <see cref="Width"/>, or <see cref="Height"/> properties of the two <see cref="RectangleI"/> structures are unequal; otherwise false.</returns>
@@ -119,7 +123,8 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="y">The y-coordinate of the point to test. </param>
         /// <param name="x">The x-coordinate of the point to test. </param>
         /// <filterpriority>1</filterpriority>
-        public bool Contains(float x, float y) => X <= x && x < X + Width && Y <= y && y < Y + Height;
+        public bool Contains(float x, float y) =>
+            X <= x && x < X + Width && Y <= y && y < Y + Height;
 
         public bool Contains(Vector2 pt) => Contains(pt.X, pt.Y);
 
@@ -132,14 +137,22 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="rect">The <see cref="RectangleI"/> to test. </param>
         /// <filterpriority>1</filterpriority>
         public bool Contains(RectangleI rect) =>
-            X <= rect.X && rect.X + rect.Width <= X + Width && Y <= rect.Y &&
-            rect.Y + rect.Height <= Y + Height;
+            X <= rect.X
+            && rect.X + rect.Width <= X + Width
+            && Y <= rect.Y
+            && rect.Y + rect.Height <= Y + Height;
 
         /// <summary>Gets the hash code for this <see cref="RectangleI"/> structure. For information about the use of hash codes, see Object.GetHashCode.</summary>
         /// <returns>The hash code for this <see cref="RectangleI"/>.</returns>
         /// <filterpriority>1</filterpriority>
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        public override int GetHashCode() => (int)(((uint)X ^ ((uint)Y << 13)) | (((uint)Y >> 0x13) ^ ((uint)Width << 0x1a)) | (((uint)Width >> 6) ^ ((uint)Height << 7)) | ((uint)Height >> 0x19));
+        public override int GetHashCode() =>
+            (int)(
+                ((uint)X ^ ((uint)Y << 13))
+                | (((uint)Y >> 0x13) ^ ((uint)Width << 0x1a))
+                | (((uint)Width >> 6) ^ ((uint)Height << 7))
+                | ((uint)Height >> 0x19)
+            );
 
         public int Area => Width * Height;
 
@@ -167,19 +180,18 @@ namespace osu.Framework.Graphics.Primitives
 
         public RectangleI Inflate(int amount) => Inflate(new Vector2I(amount));
 
-        public RectangleI Inflate(Vector2I amount) => Inflate(amount.X, amount.X, amount.Y, amount.Y);
+        public RectangleI Inflate(Vector2I amount) =>
+            Inflate(amount.X, amount.X, amount.Y, amount.Y);
 
-        public RectangleI Inflate(int left, int right, int top, int bottom) => new RectangleI(
-            X - left,
-            Y - top,
-            Width + left + right,
-            Height + top + bottom);
+        public RectangleI Inflate(int left, int right, int top, int bottom) =>
+            new RectangleI(X - left, Y - top, Width + left + right, Height + top + bottom);
 
         public RectangleI Shrink(int amount) => Shrink(new Vector2I(amount));
 
         public RectangleI Shrink(Vector2I amount) => Shrink(amount.X, amount.X, amount.Y, amount.Y);
 
-        public RectangleI Shrink(int left, int right, int top, int bottom) => Inflate(-left, -right, -top, -bottom);
+        public RectangleI Shrink(int left, int right, int top, int bottom) =>
+            Inflate(-left, -right, -top, -bottom);
 
         /// <summary>Intersects this <see cref="RectangleI"/> structure with the specified <see cref="RectangleI"/> structure.</summary>
         /// <returns>The intersected rectangle.</returns>
@@ -209,7 +221,10 @@ namespace osu.Framework.Graphics.Primitives
         /// <param name="rect">The rectangle to test. </param>
         /// <filterpriority>1</filterpriority>
         public bool IntersectsWith(RectangleI rect) =>
-            rect.X < X + Width && X < rect.X + rect.Width && rect.Y < Y + Height && Y < rect.Y + rect.Height;
+            rect.X < X + Width
+            && X < rect.X + rect.Width
+            && rect.Y < Y + Height
+            && Y < rect.Y + rect.Height;
 
         /// <summary>Creates the smallest possible third rectangle that can contain both of two rectangles that form a union.</summary>
         /// <returns>A third <see cref="RectangleI"/> structure that contains both of the two rectangles that form the union.</returns>
@@ -237,11 +252,13 @@ namespace osu.Framework.Graphics.Primitives
         /// <summary>Converts the Location and <see cref="Size"/> of this <see cref="RectangleI"/> to a human-readable string.</summary>
         /// <returns>A string that contains the position, width, and height of this <see cref="RectangleI"/> structure¾for example, "{X=20, Y=20, Width=100, Height=50}".</returns>
         /// <filterpriority>1</filterpriority>
-        public override string ToString() => $"X={X.ToString(CultureInfo.CurrentCulture)}, "
-                                             + $"Y={Y.ToString(CultureInfo.CurrentCulture)}, "
-                                             + $"Width={Width.ToString(CultureInfo.CurrentCulture)}, "
-                                             + $"Height={Height.ToString(CultureInfo.CurrentCulture)}";
+        public override string ToString() =>
+            $"X={X.ToString(CultureInfo.CurrentCulture)}, "
+            + $"Y={Y.ToString(CultureInfo.CurrentCulture)}, "
+            + $"Width={Width.ToString(CultureInfo.CurrentCulture)}, "
+            + $"Height={Height.ToString(CultureInfo.CurrentCulture)}";
 
-        public bool Equals(RectangleI other) => X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
+        public bool Equals(RectangleI other) =>
+            X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
     }
 }

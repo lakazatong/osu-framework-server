@@ -10,7 +10,8 @@ namespace osu.Framework.Input.Handlers.Keyboard
 {
     public class KeyboardHandler : InputHandler
     {
-        private static readonly GlobalStatistic<ulong> statistic_total_events = GlobalStatistics.Get<ulong>(StatisticGroupFor<KeyboardHandler>(), "Total events");
+        private static readonly GlobalStatistic<ulong> statistic_total_events =
+            GlobalStatistics.Get<ulong>(StatisticGroupFor<KeyboardHandler>(), "Total events");
 
         public override string Description => "Keyboard";
 
@@ -24,19 +25,22 @@ namespace osu.Framework.Input.Handlers.Keyboard
             if (!(host.Window is ISDLWindow window))
                 return false;
 
-            Enabled.BindValueChanged(e =>
-            {
-                if (e.NewValue)
+            Enabled.BindValueChanged(
+                e =>
                 {
-                    window.KeyDown += handleKeyDown;
-                    window.KeyUp += handleKeyUp;
-                }
-                else
-                {
-                    window.KeyDown -= handleKeyDown;
-                    window.KeyUp -= handleKeyUp;
-                }
-            }, true);
+                    if (e.NewValue)
+                    {
+                        window.KeyDown += handleKeyDown;
+                        window.KeyUp += handleKeyUp;
+                    }
+                    else
+                    {
+                        window.KeyDown -= handleKeyDown;
+                        window.KeyUp -= handleKeyUp;
+                    }
+                },
+                true
+            );
 
             return true;
         }

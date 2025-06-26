@@ -5,8 +5,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using osu.Framework.Bindables;
-using osuTK;
 using osu.Framework.Graphics;
+using osuTK;
 
 namespace osu.Framework.Utils
 {
@@ -18,7 +18,8 @@ namespace osu.Framework.Utils
         /// </summary>
         /// <param name="toCheck">The <see cref="Vector2"/> to check.</param>
         /// <returns>False if X or Y are Infinity or NaN, true otherwise. </returns>
-        public static bool IsFinite(Vector2 toCheck) => float.IsFinite(toCheck.X) && float.IsFinite(toCheck.Y);
+        public static bool IsFinite(Vector2 toCheck) =>
+            float.IsFinite(toCheck.X) && float.IsFinite(toCheck.Y);
 
         /// <summary>
         /// Returns whether the components of a <see cref="MarginPadding"/> are not infinite or NaN.
@@ -26,7 +27,11 @@ namespace osu.Framework.Utils
         /// </summary>
         /// <param name="toCheck">The <see cref="MarginPadding"/> to check.</param>
         /// <returns>False if either component of <paramref name="toCheck"/> are Infinity or NaN, true otherwise. </returns>
-        public static bool IsFinite(MarginPadding toCheck) => float.IsFinite(toCheck.Top) && float.IsFinite(toCheck.Bottom) && float.IsFinite(toCheck.Left) && float.IsFinite(toCheck.Right);
+        public static bool IsFinite(MarginPadding toCheck) =>
+            float.IsFinite(toCheck.Top)
+            && float.IsFinite(toCheck.Bottom)
+            && float.IsFinite(toCheck.Left)
+            && float.IsFinite(toCheck.Right);
 
         /// <summary>
         /// Attempts to parse <paramref name="uriString"/> as an absolute or relative <see cref="Uri"/> in a platform-agnostic manner.
@@ -44,7 +49,9 @@ namespace osu.Framework.Utils
         public static bool TryParseUri(string uriString, [NotNullWhen(true)] out Uri? result)
         {
 #pragma warning disable RS0030 // Bypassing banned API check, as it'll actually be used properly here
-            UriKind kind = uriString.StartsWith('/') ? UriKind.Relative : UriKind.RelativeOrAbsolute;
+            UriKind kind = uriString.StartsWith('/')
+                ? UriKind.Relative
+                : UriKind.RelativeOrAbsolute;
 #pragma warning restore RS0030
             return Uri.TryCreate(uriString, kind, out result);
         }

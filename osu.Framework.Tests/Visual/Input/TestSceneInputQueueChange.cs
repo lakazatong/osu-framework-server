@@ -35,16 +35,23 @@ namespace osu.Framework.Tests.Visual.Input
         }
 
         [SetUp]
-        public new void SetUp() => Schedule(() =>
-        {
-            foreach (var b in Children.OfType<HittableBox>())
-                b.Reset();
-        });
+        public new void SetUp() =>
+            Schedule(() =>
+            {
+                foreach (var b in Children.OfType<HittableBox>())
+                    b.Reset();
+            });
 
         [Test]
         public void SeparateClicks()
         {
-            AddStep("move", () => InputManager.MoveMouseTo(InputManager.Children.First().ScreenSpaceDrawQuad.Centre));
+            AddStep(
+                "move",
+                () =>
+                    InputManager.MoveMouseTo(
+                        InputManager.Children.First().ScreenSpaceDrawQuad.Centre
+                    )
+            );
             AddStep("press 1", () => InputManager.PressButton(MouseButton.Button1));
             AddStep("press 2", () => InputManager.PressButton(MouseButton.Button2));
             AddStep("release 1", () => InputManager.ReleaseButton(MouseButton.Button1));
@@ -57,17 +64,26 @@ namespace osu.Framework.Tests.Visual.Input
         [Test]
         public void CombinedClicks()
         {
-            AddStep("move", () => InputManager.MoveMouseTo(Children.First().ScreenSpaceDrawQuad.Centre));
-            AddStep("press 1+2", () =>
-            {
-                InputManager.PressButton(MouseButton.Button1);
-                InputManager.PressButton(MouseButton.Button2);
-            });
-            AddStep("release 1+2", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Button1);
-                InputManager.ReleaseButton(MouseButton.Button2);
-            });
+            AddStep(
+                "move",
+                () => InputManager.MoveMouseTo(Children.First().ScreenSpaceDrawQuad.Centre)
+            );
+            AddStep(
+                "press 1+2",
+                () =>
+                {
+                    InputManager.PressButton(MouseButton.Button1);
+                    InputManager.PressButton(MouseButton.Button2);
+                }
+            );
+            AddStep(
+                "release 1+2",
+                () =>
+                {
+                    InputManager.ReleaseButton(MouseButton.Button1);
+                    InputManager.ReleaseButton(MouseButton.Button2);
+                }
+            );
             AddAssert("box 1 was pressed", () => box1.HitCount == 1);
             AddAssert("box 2 was pressed", () => box2.HitCount == 1);
             AddAssert("box 3 not pressed", () => box3.HitCount == 0);
@@ -102,7 +118,7 @@ namespace osu.Framework.Tests.Visual.Input
                         Text = index.ToString(),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                    }
+                    },
                 };
             }
 

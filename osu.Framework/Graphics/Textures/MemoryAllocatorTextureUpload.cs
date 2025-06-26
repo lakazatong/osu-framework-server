@@ -32,9 +32,15 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="memoryAllocator">The source to retrieve memory from. Shared default is used if null.</param>
-        public MemoryAllocatorTextureUpload(int width, int height, MemoryAllocator memoryAllocator = null)
+        public MemoryAllocatorTextureUpload(
+            int width,
+            int height,
+            MemoryAllocator memoryAllocator = null
+        )
         {
-            memoryOwner = (memoryAllocator ?? SixLabors.ImageSharp.Configuration.Default.MemoryAllocator).Allocate<Rgba32>(width * height);
+            memoryOwner = (
+                memoryAllocator ?? SixLabors.ImageSharp.Configuration.Default.MemoryAllocator
+            ).Allocate<Rgba32>(width * height);
         }
 
         #region IDisposable Support

@@ -33,7 +33,8 @@ namespace osu.Framework.Logging
 
         internal bool RequestEntry()
         {
-            if (IsAtLimit) return false;
+            if (IsAtLimit)
+                return false;
 
             for (int i = 0; i < size - 1; i++)
                 time[i] = time[i + 1];

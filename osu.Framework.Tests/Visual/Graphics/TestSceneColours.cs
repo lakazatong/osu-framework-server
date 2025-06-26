@@ -23,20 +23,27 @@ namespace osu.Framework.Tests.Visual.Graphics
             Child = new TooltipContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = flow = new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Direction = FillDirection.Full,
-                    Padding = new MarginPadding(10),
-                    Spacing = new Vector2(5)
-                }
+                Child = flow =
+                    new FillFlowContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Full,
+                        Padding = new MarginPadding(10),
+                        Spacing = new Vector2(5),
+                    },
             };
 
-            var colours = typeof(Colour4).GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty)
-                                         .Where(property => property.PropertyType == typeof(Colour4))
-                                         .Select(property => (property.Name, (Colour4)property.GetMethod!.Invoke(null, null)!));
+            var colours = typeof(Colour4)
+                .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty)
+                .Where(property => property.PropertyType == typeof(Colour4))
+                .Select(property =>
+                    (property.Name, (Colour4)property.GetMethod!.Invoke(null, null)!)
+                );
 
-            flow.ChildrenEnumerable = colours.Select(colour => new ColourBox(colour.Name, colour.Item2));
+            flow.ChildrenEnumerable = colours.Select(colour => new ColourBox(
+                colour.Name,
+                colour.Item2
+            ));
         }
 
         private partial class ColourBox : Box, IHasTooltip

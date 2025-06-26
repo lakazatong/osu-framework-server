@@ -24,15 +24,14 @@ namespace osu.Framework.Bindables
             {
                 ArgumentNullException.ThrowIfNull(value);
 
-                if (currentBound != null) UnbindFrom(currentBound);
+                if (currentBound != null)
+                    UnbindFrom(currentBound);
                 BindTo(currentBound = (BindableNumber<T>)value);
             }
         }
 
         public BindableNumberWithCurrent(T defaultValue = default)
-            : base(defaultValue)
-        {
-        }
+            : base(defaultValue) { }
 
         protected override Bindable<T> CreateInstance() => new BindableNumberWithCurrent<T>();
     }

@@ -11,8 +11,6 @@ namespace osu.Framework.Input.Events
     public class JoystickPressEvent : JoystickButtonEvent
     {
         public JoystickPressEvent(InputState state, JoystickButton button)
-            : base(state, button)
-        {
-        }
+            : base(state, button) { }
     }
 }

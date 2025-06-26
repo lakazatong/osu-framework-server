@@ -12,7 +12,5 @@ namespace osu.Framework.Testing
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     [MeansImplicitUse]
-    public class HeadlessTestAttribute : Attribute
-    {
-    }
+    public class HeadlessTestAttribute : Attribute { }
 }

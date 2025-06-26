@@ -9,6 +9,6 @@ namespace osu.Framework.Input.StateChanges
     public enum ButtonStateChangeKind
     {
         Pressed,
-        Released
+        Released,
     }
 }

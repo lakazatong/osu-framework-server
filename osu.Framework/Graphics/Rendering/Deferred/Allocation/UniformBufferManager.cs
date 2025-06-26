@@ -48,8 +48,15 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
         {
             this.context = context;
 
-            bufferSize = context.Device.Features.BufferRangeBinding ? max_buffer_size : buffer_chunk_size;
-            uniformBufferPool = new DeviceBufferPool(context.Graphics, (uint)bufferSize, BufferUsage.UniformBuffer, nameof(UniformBufferManager));
+            bufferSize = context.Device.Features.BufferRangeBinding
+                ? max_buffer_size
+                : buffer_chunk_size;
+            uniformBufferPool = new DeviceBufferPool(
+                context.Graphics,
+                (uint)bufferSize,
+                BufferUsage.UniformBuffer,
+                nameof(UniformBufferManager)
+            );
         }
 
         /// <summary>
@@ -87,16 +94,20 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
                     new UniformBufferChunk(
                         context.Reference(inUseBuffers[currentBuffer].Buffer),
                         writeIndex / buffer_chunk_size * buffer_chunk_size,
-                        Math.Min(buffer_chunk_size, bufferSize - writeIndex)),
-                    writeIndex % buffer_chunk_size);
+                        Math.Min(buffer_chunk_size, bufferSize - writeIndex)
+                    ),
+                    writeIndex % buffer_chunk_size
+                );
             }
 
             return new UniformBufferReference(
                 new UniformBufferChunk(
                     context.Reference(inUseBuffers[currentBuffer].Buffer),
                     0,
-                    bufferSize),
-                writeIndex);
+                    bufferSize
+                ),
+                writeIndex
+            );
         }
 
         /// <summary>
@@ -123,7 +134,14 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
         }
     }
 
-    internal readonly record struct UniformBufferChunk(ResourceReference Buffer, int Offset, int Size);
+    internal readonly record struct UniformBufferChunk(
+        ResourceReference Buffer,
+        int Offset,
+        int Size
+    );
 
-    internal readonly record struct UniformBufferReference(UniformBufferChunk Chunk, int OffsetInChunk);
+    internal readonly record struct UniformBufferReference(
+        UniformBufferChunk Chunk,
+        int OffsetInChunk
+    );
 }

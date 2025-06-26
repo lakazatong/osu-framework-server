@@ -33,7 +33,8 @@ namespace osu.Framework.Graphics.Rendering
         /// </summary>
         private int currentBufferIndex => currentIndex == -1 ? 0 : currentIndex / bufferSize;
 
-        private readonly List<IShaderStorageBufferObject<TData>> buffers = new List<IShaderStorageBufferObject<TData>>();
+        private readonly List<IShaderStorageBufferObject<TData>> buffers =
+            new List<IShaderStorageBufferObject<TData>>();
         private readonly Stack<int> lastIndices = new Stack<int>();
 
         /// <summary>
@@ -126,7 +127,9 @@ namespace osu.Framework.Graphics.Rendering
                 }
 
                 // Copy the current item from the last buffer into the new buffer.
-                buffers[newBufferIndex][newBufferOffset] = buffers[currentBufferIndex][currentBufferOffset];
+                buffers[newBufferIndex][newBufferOffset] = buffers[currentBufferIndex][
+                    currentBufferOffset
+                ];
 
                 // Adjust the stack so the last index points to the index in the new buffer, instead of currentIndex (from the old buffer).
                 lastIndices.Pop();

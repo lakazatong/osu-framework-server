@@ -22,10 +22,15 @@ namespace osu.Framework.Graphics.Shaders
 
         public Storage? CacheStorage { private get; set; }
 
-        public VertexFragmentShaderCompilation CompileVertexFragment(string vertexText, string fragmentText, CrossCompileTarget target)
+        public VertexFragmentShaderCompilation CompileVertexFragment(
+            string vertexText,
+            string fragmentText,
+            CrossCompileTarget target
+        )
         {
             // vertexHash#fragmentHash#target
-            string filename = $"{vertexText.ComputeMD5Hash()}#{fragmentText.ComputeMD5Hash()}#{(int)target}#{cache_version}";
+            string filename =
+                $"{vertexText.ComputeMD5Hash()}#{fragmentText.ComputeMD5Hash()}#{(int)target}#{cache_version}";
 
             if (tryGetCached(filename, out VertexFragmentShaderCompilation? existing))
             {
@@ -34,17 +39,36 @@ namespace osu.Framework.Graphics.Shaders
             }
 
             // Debug preserves names for reflection.
-            byte[] vertexBytes = SpirvCompilation.CompileGlslToSpirv(vertexText, null, ShaderStages.Vertex, new GlslCompileOptions(true)).SpirvBytes;
-            byte[] fragmentBytes = SpirvCompilation.CompileGlslToSpirv(fragmentText, null, ShaderStages.Fragment, new GlslCompileOptions(true)).SpirvBytes;
+            byte[] vertexBytes = SpirvCompilation
+                .CompileGlslToSpirv(
+                    vertexText,
+                    null,
+                    ShaderStages.Vertex,
+                    new GlslCompileOptions(true)
+                )
+                .SpirvBytes;
+            byte[] fragmentBytes = SpirvCompilation
+                .CompileGlslToSpirv(
+                    fragmentText,
+                    null,
+                    ShaderStages.Fragment,
+                    new GlslCompileOptions(true)
+                )
+                .SpirvBytes;
 
-            VertexFragmentCompilationResult crossResult = SpirvCompilation.CompileVertexFragment(vertexBytes, fragmentBytes, target, new CrossCompileOptions());
+            VertexFragmentCompilationResult crossResult = SpirvCompilation.CompileVertexFragment(
+                vertexBytes,
+                fragmentBytes,
+                target,
+                new CrossCompileOptions()
+            );
             VertexFragmentShaderCompilation compilation = new VertexFragmentShaderCompilation
             {
                 VertexBytes = vertexBytes,
                 FragmentBytes = fragmentBytes,
                 VertexText = crossResult.VertexShader,
                 FragmentText = crossResult.FragmentShader,
-                Reflection = crossResult.Reflection
+                Reflection = crossResult.Reflection,
             };
 
             saveToCache(filename, compilation);
@@ -52,7 +76,10 @@ namespace osu.Framework.Graphics.Shaders
             return compilation;
         }
 
-        public ComputeProgramCompilation CompileCompute(string programText, CrossCompileTarget target)
+        public ComputeProgramCompilation CompileCompute(
+            string programText,
+            CrossCompileTarget target
+        )
         {
             // programHash#target
             string filename = $"{programText.ComputeMD5Hash()}#{(int)target}#{cache_version}";
@@ -64,14 +91,25 @@ namespace osu.Framework.Graphics.Shaders
             }
 
             // Debug preserves names for reflection.
-            byte[] programBytes = SpirvCompilation.CompileGlslToSpirv(programText, null, ShaderStages.Compute, new GlslCompileOptions(true)).SpirvBytes;
+            byte[] programBytes = SpirvCompilation
+                .CompileGlslToSpirv(
+                    programText,
+                    null,
+                    ShaderStages.Compute,
+                    new GlslCompileOptions(true)
+                )
+                .SpirvBytes;
 
-            ComputeCompilationResult crossResult = SpirvCompilation.CompileCompute(programBytes, target, new CrossCompileOptions());
+            ComputeCompilationResult crossResult = SpirvCompilation.CompileCompute(
+                programBytes,
+                target,
+                new CrossCompileOptions()
+            );
             ComputeProgramCompilation compilation = new ComputeProgramCompilation
             {
                 ProgramBytes = programBytes,
                 ProgramText = crossResult.ComputeShader,
-                Reflection = crossResult.Reflection
+                Reflection = crossResult.Reflection,
             };
 
             saveToCache(filename, compilation);

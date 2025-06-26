@@ -27,17 +27,23 @@ namespace osu.Framework.Testing.Drawables
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(boxContainer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Padding = new MarginPadding { Left = indentLevel * left_box_width, Right = left_box_width },
-                Alpha = 0,
-                Child = new Box
+            Add(
+                boxContainer = new Container
                 {
-                    Colour = FrameworkColour.YellowGreen,
                     RelativeSizeAxes = Axes.Both,
-                },
-            });
+                    Padding = new MarginPadding
+                    {
+                        Left = indentLevel * left_box_width,
+                        Right = left_box_width,
+                    },
+                    Alpha = 0,
+                    Child = new Box
+                    {
+                        Colour = FrameworkColour.YellowGreen,
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                }
+            );
         }
 
         public override bool Current

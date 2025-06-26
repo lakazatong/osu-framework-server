@@ -13,15 +13,16 @@ namespace osu.Framework.Android.Graphics.Textures
     internal class AndroidTextureLoaderStore : TextureLoaderStore
     {
         public AndroidTextureLoaderStore(IResourceStore<byte[]> store)
-            : base(store)
-        {
-        }
+            : base(store) { }
 
         protected override Image<TPixel> ImageFromStream<TPixel>(Stream stream)
         {
             using (var bitmap = BitmapFactory.DecodeStream(stream))
             {
-                if (bitmap == null) throw new ArgumentException($"{nameof(Image)} could not be created from {nameof(stream)}.");
+                if (bitmap == null)
+                    throw new ArgumentException(
+                        $"{nameof(Image)} could not be created from {nameof(stream)}."
+                    );
 
                 int[] pixels = new int[bitmap.Width * bitmap.Height];
                 bitmap.GetPixels(pixels, 0, bitmap.Width, 0, 0, bitmap.Width, bitmap.Height);

@@ -40,7 +40,7 @@ namespace osu.Framework.Tests.Bindables
                 new KeyValuePair<string, byte>("ok", 0),
                 new KeyValuePair<string, byte>("nope", 1),
                 new KeyValuePair<string, byte>("random", 2),
-                new KeyValuePair<string, byte>("", 4)
+                new KeyValuePair<string, byte>("", 4),
             };
 
             var dict = new BindableDictionary<string, byte>(array);
@@ -79,7 +79,8 @@ namespace osu.Framework.Tests.Bindables
         [Test]
         public void TestBindViaBindTarget()
         {
-            BindableDictionary<string, byte> parentBindable = new BindableDictionary<string, byte>();
+            BindableDictionary<string, byte> parentBindable =
+                new BindableDictionary<string, byte>();
 
             BindableDictionary<string, byte> bindable1 = new BindableDictionary<string, byte>();
             BindableDictionary<string, byte> bindable2 = new BindableDictionary<string, byte>();
@@ -128,7 +129,7 @@ namespace osu.Framework.Tests.Bindables
                 { "a", 1 },
                 { "b", 3 },
                 { "c", 5 },
-                { "d", 7 }
+                { "d", 7 },
             };
 
             var otherDict = new BindableDictionary<string, byte>
@@ -136,7 +137,7 @@ namespace osu.Framework.Tests.Bindables
                 { "a", 1 },
                 { "b", 3 },
                 { "c", 5 },
-                { "d", 7 }
+                { "d", 7 },
             };
 
             NotifyDictionaryChangedEventArgs<string, byte> triggeredArgs = null;
@@ -154,7 +155,7 @@ namespace osu.Framework.Tests.Bindables
                 { "a", 1 },
                 { "b", 3 },
                 { "c", 5 },
-                { "d", 7 }
+                { "d", 7 },
             };
 
             var enumerable = new[]
@@ -162,7 +163,7 @@ namespace osu.Framework.Tests.Bindables
                 new KeyValuePair<string, byte>("a", 1),
                 new KeyValuePair<string, byte>("b", 3),
                 new KeyValuePair<string, byte>("c", 5),
-                new KeyValuePair<string, byte>("d", 7)
+                new KeyValuePair<string, byte>("d", 7),
             };
 
             NotifyDictionaryChangedEventArgs<string, byte> triggeredArgs = null;
@@ -201,11 +202,15 @@ namespace osu.Framework.Tests.Bindables
 
             Assert.That(triggeredArgs, Has.Count.EqualTo(2));
 
-            var removeEvent = triggeredArgs.SingleOrDefault(ev => ev.Action == NotifyDictionaryChangedAction.Remove);
+            var removeEvent = triggeredArgs.SingleOrDefault(ev =>
+                ev.Action == NotifyDictionaryChangedAction.Remove
+            );
             Assert.That(removeEvent, Is.Not.Null);
             Assert.That(removeEvent.OldItems, Is.EquivalentTo(firstDictContents));
 
-            var addEvent = triggeredArgs.SingleOrDefault(ev => ev.Action == NotifyDictionaryChangedAction.Add);
+            var addEvent = triggeredArgs.SingleOrDefault(ev =>
+                ev.Action == NotifyDictionaryChangedAction.Add
+            );
             Assert.That(addEvent, Is.Not.Null);
             Assert.That(addEvent.NewItems, Is.EquivalentTo(otherDict));
         }
@@ -234,7 +239,10 @@ namespace osu.Framework.Tests.Bindables
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Add));
             Assert.That(triggeredArgs.OldItems, Is.Null);
-            Assert.That(triggeredArgs.NewItems, Is.EquivalentTo(new KeyValuePair<string, byte>("0", 0).Yield()));
+            Assert.That(
+                triggeredArgs.NewItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("0", 0).Yield())
+            );
         }
 
         [Test]
@@ -248,8 +256,14 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary["0"] = 1;
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Replace));
-            Assert.That(triggeredArgs.OldItems, Is.EquivalentTo(new KeyValuePair<string, byte>("0", 0).Yield()));
-            Assert.That(triggeredArgs.NewItems, Is.EquivalentTo(new KeyValuePair<string, byte>("0", 1).Yield()));
+            Assert.That(
+                triggeredArgs.OldItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("0", 0).Yield())
+            );
+            Assert.That(
+                triggeredArgs.NewItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("0", 1).Yield())
+            );
         }
 
         [Test]
@@ -294,8 +308,14 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary["0"] = 1;
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Replace));
-            Assert.That(triggeredArgs.OldItems, Is.EquivalentTo(new KeyValuePair<string, byte>("0", 0).Yield()));
-            Assert.That(triggeredArgs.NewItems, Is.EquivalentTo(new KeyValuePair<string, byte>("0", 1).Yield()));
+            Assert.That(
+                triggeredArgs.OldItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("0", 0).Yield())
+            );
+            Assert.That(
+                triggeredArgs.NewItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("0", 1).Yield())
+            );
         }
 
         #endregion
@@ -308,7 +328,10 @@ namespace osu.Framework.Tests.Bindables
         {
             bindableStringByteDictionary.Add(key, value);
 
-            Assert.Contains(new KeyValuePair<string, byte>(key, value), bindableStringByteDictionary);
+            Assert.Contains(
+                new KeyValuePair<string, byte>(key, value),
+                bindableStringByteDictionary
+            );
         }
 
         [TestCase("a random string", 0)]
@@ -321,7 +344,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Add(key, value);
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Add));
-            Assert.That(triggeredArgs.NewItems, Is.EquivalentTo(new KeyValuePair<string, byte>(key, value).Yield()));
+            Assert.That(
+                triggeredArgs.NewItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>(key, value).Yield())
+            );
         }
 
         [TestCase("a random string", 0)]
@@ -356,7 +382,10 @@ namespace osu.Framework.Tests.Bindables
 
         [TestCase("a random string", 0)]
         [TestCase("", 1, Description = "Empty string")]
-        public void TestAddWithStringNotifiesMultipleSubscribersOnlyAfterTheAdd(string key, byte value)
+        public void TestAddWithStringNotifiesMultipleSubscribersOnlyAfterTheAdd(
+            string key,
+            byte value
+        )
         {
             NotifyDictionaryChangedEventArgs<string, byte> triggeredArgsA = null;
             NotifyDictionaryChangedEventArgs<string, byte> triggeredArgsB = null;
@@ -404,11 +433,17 @@ namespace osu.Framework.Tests.Bindables
 
         [TestCase("a random string", 0)]
         [TestCase("", 1, Description = "Empty string")]
-        public void TestAddWithDisabledDictionaryThrowsInvalidOperationException(string key, byte value)
+        public void TestAddWithDisabledDictionaryThrowsInvalidOperationException(
+            string key,
+            byte value
+        )
         {
             bindableStringByteDictionary.Disabled = true;
 
-            Assert.Throws<InvalidOperationException>(() => { bindableStringByteDictionary.Add(key, value); });
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                bindableStringByteDictionary.Add(key, value);
+            });
         }
 
         [TestCase("a random string", 0)]
@@ -435,7 +470,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Add(item, 0);
             bindableStringByteDictionary.Disabled = true;
 
-            Assert.Throws(typeof(InvalidOperationException), () => bindableStringByteDictionary.Remove(item));
+            Assert.Throws(
+                typeof(InvalidOperationException),
+                () => bindableStringByteDictionary.Remove(item)
+            );
         }
 
         [Test]
@@ -453,7 +491,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Add(item, 0);
             bindableStringByteDictionary.Disabled = true;
 
-            Assert.Throws<InvalidOperationException>(() => { bindableStringByteDictionary.Remove(item); });
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                bindableStringByteDictionary.Remove(item);
+            });
         }
 
         [Test]
@@ -479,7 +520,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Remove(item);
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Remove));
-            Assert.That(triggeredArgs.OldItems, Is.EquivalentTo(new KeyValuePair<string, byte>("item", 0).Yield()));
+            Assert.That(
+                triggeredArgs.OldItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("item", 0).Yield())
+            );
         }
 
         [Test]
@@ -568,7 +612,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Remove(item);
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Remove));
-            Assert.That(triggeredArgs.OldItems, Is.EquivalentTo(new KeyValuePair<string, byte>(item, 0).Yield()));
+            Assert.That(
+                triggeredArgs.OldItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>(item, 0).Yield())
+            );
         }
 
         [Test]
@@ -634,7 +681,10 @@ namespace osu.Framework.Tests.Bindables
                 bindableStringByteDictionary.Add($"test{i}", i);
             bindableStringByteDictionary.Disabled = true;
 
-            Assert.Throws(typeof(InvalidOperationException), () => bindableStringByteDictionary.Clear());
+            Assert.Throws(
+                typeof(InvalidOperationException),
+                () => bindableStringByteDictionary.Clear()
+            );
         }
 
         [Test]
@@ -642,7 +692,10 @@ namespace osu.Framework.Tests.Bindables
         {
             bindableStringByteDictionary.Disabled = true;
 
-            Assert.Throws(typeof(InvalidOperationException), () => bindableStringByteDictionary.Clear());
+            Assert.Throws(
+                typeof(InvalidOperationException),
+                () => bindableStringByteDictionary.Clear()
+            );
         }
 
         [Test]
@@ -665,7 +718,7 @@ namespace osu.Framework.Tests.Bindables
                 new KeyValuePair<string, byte>("test1", 1),
                 new KeyValuePair<string, byte>("test2", 2),
                 new KeyValuePair<string, byte>("test3", 3),
-                new KeyValuePair<string, byte>("test4", 4)
+                new KeyValuePair<string, byte>("test4", 4),
             };
 
             foreach ((string key, byte value) in items)
@@ -930,13 +983,23 @@ namespace osu.Framework.Tests.Bindables
 
             Assert.Multiple(() =>
             {
-                Assert.Throws(typeof(InvalidOperationException), () => bindableStringByteDictionary.Parse(null, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(InvalidOperationException), () => bindableStringByteDictionary.Parse(new[]
-                {
-                    new KeyValuePair<string, byte>("test", 0),
-                    new KeyValuePair<string, byte>("testabc", 1),
-                    new KeyValuePair<string, byte>("asdasdasdasd", 1),
-                }, CultureInfo.InvariantCulture));
+                Assert.Throws(
+                    typeof(InvalidOperationException),
+                    () => bindableStringByteDictionary.Parse(null, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(InvalidOperationException),
+                    () =>
+                        bindableStringByteDictionary.Parse(
+                            new[]
+                            {
+                                new KeyValuePair<string, byte>("test", 0),
+                                new KeyValuePair<string, byte>("testabc", 1),
+                                new KeyValuePair<string, byte>("asdasdasdasd", 1),
+                            },
+                            CultureInfo.InvariantCulture
+                        )
+                );
             });
         }
 
@@ -945,13 +1008,39 @@ namespace osu.Framework.Tests.Bindables
         {
             Assert.Multiple(() =>
             {
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse(1, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse("", CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse(new object(), CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse(1.1, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse(1.1f, CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse("test123", CultureInfo.InvariantCulture));
-                Assert.Throws(typeof(ArgumentException), () => bindableStringByteDictionary.Parse(29387L, CultureInfo.InvariantCulture));
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringByteDictionary.Parse(1, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringByteDictionary.Parse("", CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () =>
+                        bindableStringByteDictionary.Parse(
+                            new object(),
+                            CultureInfo.InvariantCulture
+                        )
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringByteDictionary.Parse(1.1, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringByteDictionary.Parse(1.1f, CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () =>
+                        bindableStringByteDictionary.Parse("test123", CultureInfo.InvariantCulture)
+                );
+                Assert.Throws(
+                    typeof(ArgumentException),
+                    () => bindableStringByteDictionary.Parse(29387L, CultureInfo.InvariantCulture)
+                );
             });
         }
 
@@ -974,7 +1063,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Parse(null, CultureInfo.InvariantCulture);
 
             Assert.That(triggeredArgs, Has.Count.EqualTo(1));
-            Assert.That(triggeredArgs.First().Action, Is.EqualTo(NotifyDictionaryChangedAction.Remove));
+            Assert.That(
+                triggeredArgs.First().Action,
+                Is.EqualTo(NotifyDictionaryChangedAction.Remove)
+            );
             Assert.That(triggeredArgs.First().OldItems, Is.EquivalentTo(array));
         }
 
@@ -995,9 +1087,18 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Parse(array, CultureInfo.InvariantCulture);
 
             Assert.That(triggeredArgs, Has.Count.EqualTo(2));
-            Assert.That(triggeredArgs.First().Action, Is.EqualTo(NotifyDictionaryChangedAction.Remove));
-            Assert.That(triggeredArgs.First().OldItems, Is.EquivalentTo(new KeyValuePair<string, byte>("test123", 0).Yield()));
-            Assert.That(triggeredArgs.ElementAt(1).Action, Is.EqualTo(NotifyDictionaryChangedAction.Add));
+            Assert.That(
+                triggeredArgs.First().Action,
+                Is.EqualTo(NotifyDictionaryChangedAction.Remove)
+            );
+            Assert.That(
+                triggeredArgs.First().OldItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("test123", 0).Yield())
+            );
+            Assert.That(
+                triggeredArgs.ElementAt(1).Action,
+                Is.EqualTo(NotifyDictionaryChangedAction.Add)
+            );
             Assert.That(triggeredArgs.ElementAt(1).NewItems, Is.EquivalentTo(array));
         }
 
@@ -1016,7 +1117,10 @@ namespace osu.Framework.Tests.Bindables
             bindableStringByteDictionary.Add("test", 0);
 
             Assert.That(triggeredArgs.Action, Is.EqualTo(NotifyDictionaryChangedAction.Add));
-            Assert.That(triggeredArgs.NewItems, Is.EquivalentTo(new KeyValuePair<string, byte>("test", 0).Yield()));
+            Assert.That(
+                triggeredArgs.NewItems,
+                Is.EquivalentTo(new KeyValuePair<string, byte>("test", 0).Yield())
+            );
         }
 
         #endregion

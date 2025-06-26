@@ -16,7 +16,12 @@ namespace osu.Framework.Graphics.Video
     {
         #region Delegates
 
-        public delegate int AvDictSetDelegate(AVDictionary** pm, [MarshalAs(UnmanagedType.LPUTF8Str)] string key, [MarshalAs(UnmanagedType.LPUTF8Str)] string value, int flags);
+        public delegate int AvDictSetDelegate(
+            AVDictionary** pm,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string key,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string value,
+            int flags
+        );
 
         public delegate void AvDictFreeDelegate(AVDictionary** m);
 
@@ -46,9 +51,20 @@ namespace osu.Framework.Graphics.Video
 
         public delegate int AvReadFrameDelegate(AVFormatContext* s, AVPacket* pkt);
 
-        public delegate int AvSeekFrameDelegate(AVFormatContext* s, int stream_index, long timestamp, int flags);
+        public delegate int AvSeekFrameDelegate(
+            AVFormatContext* s,
+            int stream_index,
+            long timestamp,
+            int flags
+        );
 
-        public delegate int AvHwdeviceCtxCreateDelegate(AVBufferRef** device_ctx, AVHWDeviceType type, [MarshalAs(UnmanagedType.LPUTF8Str)] string device, AVDictionary* opts, int flags);
+        public delegate int AvHwdeviceCtxCreateDelegate(
+            AVBufferRef** device_ctx,
+            AVHWDeviceType type,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string device,
+            AVDictionary* opts,
+            int flags
+        );
 
         public delegate int AvHwframeTransferDataDelegate(AVFrame* dst, AVFrame* src, int flags);
 
@@ -62,9 +78,16 @@ namespace osu.Framework.Graphics.Video
 
         public delegate void AvcodecFreeContextDelegate(AVCodecContext** avctx);
 
-        public delegate int AvcodecParametersToContextDelegate(AVCodecContext* codec, AVCodecParameters* par);
+        public delegate int AvcodecParametersToContextDelegate(
+            AVCodecContext* codec,
+            AVCodecParameters* par
+        );
 
-        public delegate int AvcodecOpen2Delegate(AVCodecContext* avctx, AVCodec* codec, AVDictionary** options);
+        public delegate int AvcodecOpen2Delegate(
+            AVCodecContext* avctx,
+            AVCodec* codec,
+            AVDictionary** options
+        );
 
         public delegate int AvcodecReceiveFrameDelegate(AVCodecContext* avctx, AVFrame* frame);
 
@@ -76,21 +99,64 @@ namespace osu.Framework.Graphics.Video
 
         public delegate void AvformatCloseInputDelegate(AVFormatContext** s);
 
-        public delegate int AvformatFindStreamInfoDelegate(AVFormatContext* ic, AVDictionary** options);
+        public delegate int AvformatFindStreamInfoDelegate(
+            AVFormatContext* ic,
+            AVDictionary** options
+        );
 
-        public delegate int AvformatOpenInputDelegate(AVFormatContext** ps, [MarshalAs(UnmanagedType.LPUTF8Str)] string url, AVInputFormat* fmt, AVDictionary** options);
+        public delegate int AvformatOpenInputDelegate(
+            AVFormatContext** ps,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string url,
+            AVInputFormat* fmt,
+            AVDictionary** options
+        );
 
-        public delegate int AvFindBestStreamDelegate(AVFormatContext* ic, AVMediaType type, int wanted_stream_nb, int related_stream, AVCodec** decoder_ret, int flags);
+        public delegate int AvFindBestStreamDelegate(
+            AVFormatContext* ic,
+            AVMediaType type,
+            int wanted_stream_nb,
+            int related_stream,
+            AVCodec** decoder_ret,
+            int flags
+        );
 
-        public delegate AVIOContext* AvioAllocContextDelegate(byte* buffer, int buffer_size, int write_flag, void* opaque, avio_alloc_context_read_packet_func read_packet, avio_alloc_context_write_packet_func write_packet, avio_alloc_context_seek_func seek);
+        public delegate AVIOContext* AvioAllocContextDelegate(
+            byte* buffer,
+            int buffer_size,
+            int write_flag,
+            void* opaque,
+            avio_alloc_context_read_packet_func read_packet,
+            avio_alloc_context_write_packet_func write_packet,
+            avio_alloc_context_seek_func seek
+        );
 
         public delegate void AvioContextFreeDelegate(AVIOContext** s);
 
         public delegate void SwsFreeContextDelegate(SwsContext* swsContext);
 
-        public delegate SwsContext* SwsGetCachedContextDelegate(SwsContext* context, int srcW, int srcH, AVPixelFormat srcFormat, int dstW, int dstH, AVPixelFormat dstFormat, int flags, SwsFilter* srcFilter, SwsFilter* dstFilter, double* param);
+        public delegate SwsContext* SwsGetCachedContextDelegate(
+            SwsContext* context,
+            int srcW,
+            int srcH,
+            AVPixelFormat srcFormat,
+            int dstW,
+            int dstH,
+            AVPixelFormat dstFormat,
+            int flags,
+            SwsFilter* srcFilter,
+            SwsFilter* dstFilter,
+            double* param
+        );
 
-        public delegate int SwsScaleDelegate(SwsContext* c, byte*[] srcSlice, int[] srcStride, int srcSliceY, int srcSliceH, byte*[] dst, int[] dstStride);
+        public delegate int SwsScaleDelegate(
+            SwsContext* c,
+            byte*[] srcSlice,
+            int[] srcStride,
+            int srcSliceY,
+            int srcSliceH,
+            byte*[] dst,
+            int[] dstStride
+        );
 
         #endregion
 

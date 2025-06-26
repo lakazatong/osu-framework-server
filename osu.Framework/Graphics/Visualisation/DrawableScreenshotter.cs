@@ -38,7 +38,10 @@ namespace osu.Framework.Graphics.Visualisation
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            textureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            textureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
         }
 
         public override bool IsPresent => true;
@@ -52,7 +55,11 @@ namespace osu.Framework.Graphics.Visualisation
 
         public override DrawInfo DrawInfo => Target.DrawInfo;
 
-        private readonly BufferedDrawNodeSharedData sharedData = new BufferedDrawNodeSharedData(new[] { RenderBufferFormat.D16 }, pixelSnapping: true, clipToRootNode: true);
+        private readonly BufferedDrawNodeSharedData sharedData = new BufferedDrawNodeSharedData(
+            new[] { RenderBufferFormat.D16 },
+            pixelSnapping: true,
+            clipToRootNode: true
+        );
 
         [Resolved]
         private GameHost host { get; set; } = null!;
@@ -80,7 +87,11 @@ namespace osu.Framework.Graphics.Visualisation
             });
         }
 
-        internal override DrawNode? GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+        internal override DrawNode? GenerateDrawNodeSubtree(
+            ulong frame,
+            int treeIndex,
+            bool forceNewDrawNode
+        )
         {
             if (didRender)
                 return null;
@@ -99,7 +110,12 @@ namespace osu.Framework.Graphics.Visualisation
             // This call will force the target drawable to recreate its drawNode subtree so the one we got should be completely detached.
             Target.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode: true);
 
-            var drawNode = new DrawableScreenshotterDrawNode(this, targetDrawNode, sharedData, onRendered);
+            var drawNode = new DrawableScreenshotterDrawNode(
+                this,
+                targetDrawNode,
+                sharedData,
+                onRendered
+            );
 
             drawNode.ApplyState();
 
@@ -117,13 +133,19 @@ namespace osu.Framework.Graphics.Visualisation
         {
             private readonly Action<IFrameBuffer> onRendered;
 
-            public DrawableScreenshotterDrawNode(IBufferedDrawable source, DrawNode child, BufferedDrawNodeSharedData sharedData, Action<IFrameBuffer> onRendered)
+            public DrawableScreenshotterDrawNode(
+                IBufferedDrawable source,
+                DrawNode child,
+                BufferedDrawNodeSharedData sharedData,
+                Action<IFrameBuffer> onRendered
+            )
                 : base(source, child, sharedData)
             {
                 this.onRendered = onRendered;
             }
 
-            protected override void DrawContents(IRenderer renderer) => onRendered(SharedData.MainBuffer);
+            protected override void DrawContents(IRenderer renderer) =>
+                onRendered(SharedData.MainBuffer);
         }
     }
 }

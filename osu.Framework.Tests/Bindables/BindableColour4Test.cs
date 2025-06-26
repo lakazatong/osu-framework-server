@@ -28,14 +28,14 @@ namespace osu.Framework.Tests.Bindables
             new object[] { "#ff0000", Colour4.Red },
             new object[] { "ffff0080", Colour4.Yellow.Opacity(half_alpha) },
             new object[] { "00ff0080", Colour4.Lime.Opacity(half_alpha) },
-            new object[] { "123", new Colour4(17, 34, 51, 255), },
+            new object[] { "123", new Colour4(17, 34, 51, 255) },
             new object[] { "#123", new Colour4(17, 34, 51, 255) },
             new object[] { "1234", new Colour4(17, 34, 51, 68) },
             new object[] { "#1234", new Colour4(17, 34, 51, 68) },
             new object[] { "123456", new Colour4(18, 52, 86, 255) },
             new object[] { "#123456", new Colour4(18, 52, 86, 255) },
             new object[] { "12345678", new Colour4(18, 52, 86, 120) },
-            new object[] { "#12345678", new Colour4(18, 52, 86, 120) }
+            new object[] { "#12345678", new Colour4(18, 52, 86, 120) },
         };
 
         [TestCaseSource(nameof(hex_parsed_colours))]
@@ -52,7 +52,7 @@ namespace osu.Framework.Tests.Bindables
             new object[] { Colour4.Black, "#000000" },
             new object[] { Colour4.White, "#FFFFFF" },
             new object[] { Colour4.Tan, "#D2B48C" },
-            new object[] { Colour4.CornflowerBlue.Opacity(half_alpha), "#6495ED80" }
+            new object[] { Colour4.CornflowerBlue.Opacity(half_alpha), "#6495ED80" },
         };
 
         [TestCaseSource(nameof(hex_serialized_colours))]

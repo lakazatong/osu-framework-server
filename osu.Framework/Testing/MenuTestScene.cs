@@ -20,17 +20,21 @@ namespace osu.Framework.Testing
     {
         protected MenuStructure Menus;
 
-        protected void CreateMenu(Func<Menu> creationFunc) => AddStep("create menu", () =>
-        {
-            Menu menu;
-            Child = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = menu = creationFunc.Invoke(),
-            };
+        protected void CreateMenu(Func<Menu> creationFunc) =>
+            AddStep(
+                "create menu",
+                () =>
+                {
+                    Menu menu;
+                    Child = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = menu = creationFunc.Invoke(),
+                    };
 
-            Menus = new MenuStructure(menu);
-        });
+                    Menus = new MenuStructure(menu);
+                }
+            );
 
         /// <summary>
         /// Click an item in a menu.
@@ -58,7 +62,8 @@ namespace osu.Framework.Testing
             /// <summary>
             /// Retrieves the <see cref="Menu.DrawableMenuItem"/>s of the <see cref="Menu"/> represented by this <see cref="MenuStructure"/>.
             /// </summary>
-            public IReadOnlyList<Drawable> GetMenuItems() => menu.ChildrenOfType<FillFlowContainer<Menu.DrawableMenuItem>>().First().Children;
+            public IReadOnlyList<Drawable> GetMenuItems() =>
+                menu.ChildrenOfType<FillFlowContainer<Menu.DrawableMenuItem>>().First().Children;
 
             /// <summary>
             /// Finds the <see cref="Menu.DrawableMenuItem"/> index in the <see cref="Menu"/> represented by this <see cref="MenuStructure"/> that
@@ -70,7 +75,10 @@ namespace osu.Framework.Testing
 
                 for (int i = 0; i < items.Count; i++)
                 {
-                    var state = (MenuItemState)(items[i]?.GetType().GetProperty("State")?.GetValue(items[i]) ?? MenuItemState.NotSelected);
+                    var state = (MenuItemState)(
+                        items[i]?.GetType().GetProperty("State")?.GetValue(items[i])
+                        ?? MenuItemState.NotSelected
+                    );
                     if (state == MenuItemState.Selected)
                         return i;
                 }
@@ -106,7 +114,12 @@ namespace osu.Framework.Testing
 
                     // ReSharper disable once ArrangeRedundantParentheses
                     // Broken resharper inspection (https://youtrack.jetbrains.com/issue/RIDER-19843)
-                    currentMenu = (container.InternalChildren.Count > 0 ? container.InternalChildren[0] : null) as Menu;
+                    currentMenu =
+                        (
+                            container.InternalChildren.Count > 0
+                                ? container.InternalChildren[0]
+                                : null
+                        ) as Menu;
                 }
 
                 return currentMenu;

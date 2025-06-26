@@ -3,9 +3,9 @@
 
 #nullable disable
 
-using osuTK;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
+using osuTK;
 
 namespace osu.Framework.Graphics.Animations
 {
@@ -17,16 +17,15 @@ namespace osu.Framework.Graphics.Animations
         private Sprite textureHolder;
 
         public TextureAnimation(bool startAtCurrentTime = true)
-            : base(startAtCurrentTime)
-        {
-        }
+            : base(startAtCurrentTime) { }
 
-        public override Drawable CreateContent() => textureHolder = new Sprite
-        {
-            RelativeSizeAxes = Axes.Both,
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-        };
+        public override Drawable CreateContent() =>
+            textureHolder = new Sprite
+            {
+                RelativeSizeAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+            };
 
         protected override void DisplayFrame(Texture content) => textureHolder.Texture = content;
 
@@ -35,6 +34,9 @@ namespace osu.Framework.Graphics.Animations
         protected override float GetFillAspectRatio() => textureHolder.FillAspectRatio;
 
         protected override Vector2 GetCurrentDisplaySize() =>
-            new Vector2(textureHolder.Texture?.DisplayWidth ?? 0, textureHolder.Texture?.DisplayHeight ?? 0);
+            new Vector2(
+                textureHolder.Texture?.DisplayWidth ?? 0,
+                textureHolder.Texture?.DisplayHeight ?? 0
+            );
     }
 }

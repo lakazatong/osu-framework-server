@@ -39,7 +39,11 @@ namespace osu.Framework.Platform.Windows.Native
         /// </remarks>
         internal static void SetImeAllowed(IntPtr hWnd, bool allowed)
         {
-            ImmAssociateContextEx(hWnd, IntPtr.Zero, allowed ? AssociationFlags.IACE_DEFAULT : AssociationFlags.IACE_IGNORENOCONTEXT);
+            ImmAssociateContextEx(
+                hWnd,
+                IntPtr.Zero,
+                allowed ? AssociationFlags.IACE_DEFAULT : AssociationFlags.IACE_IGNORENOCONTEXT
+            );
         }
 
         /// <summary>
@@ -63,7 +67,11 @@ namespace osu.Framework.Platform.Windows.Native
             /// <summary>
             /// Gets the current composition text and selection.
             /// </summary>
-            public bool TryGetImeComposition([NotNullWhen(true)] out string? compositionText, out int start, out int length)
+            public bool TryGetImeComposition(
+                [NotNullWhen(true)] out string? compositionText,
+                out int start,
+                out int length
+            )
             {
                 if (handleInvalidOrClosed())
                 {
@@ -123,9 +131,15 @@ namespace osu.Framework.Platform.Windows.Native
             /// </remarks>
             public void CancelComposition()
             {
-                if (handleInvalidOrClosed()) return;
+                if (handleInvalidOrClosed())
+                    return;
 
-                ImmNotifyIME(handle, NotificationCode.NI_COMPOSITIONSTR, (uint)CompositionStringAction.CPS_CANCEL, 0);
+                ImmNotifyIME(
+                    handle,
+                    NotificationCode.NI_COMPOSITIONSTR,
+                    (uint)CompositionStringAction.CPS_CANCEL,
+                    0
+                );
             }
 
             /// <summary>
@@ -161,7 +175,11 @@ namespace osu.Framework.Platform.Windows.Native
             ///     <item>For <see cref="CompositionString.GCS_COMPATTR"/> .</item>
             ///   </list>
             /// </remarks>
-            private bool tryGetCompositionString(CompositionString compositionString, out int size, [NotNullWhen(true)] out byte[]? data)
+            private bool tryGetCompositionString(
+                CompositionString compositionString,
+                out int size,
+                [NotNullWhen(true)] out byte[]? data
+            )
             {
                 data = null;
 
@@ -178,7 +196,10 @@ namespace osu.Framework.Platform.Windows.Native
             /// <summary>
             /// Gets the text of the current composition (<see cref="CompositionString.GCS_COMPSTR"/>) or result (<see cref="CompositionString.GCS_RESULTSTR"/>).
             /// </summary>
-            private bool tryGetCompositionText(CompositionString compositionString, [NotNullWhen(true)] out string? text)
+            private bool tryGetCompositionText(
+                CompositionString compositionString,
+                [NotNullWhen(true)] out string? text
+            )
             {
                 if (tryGetCompositionString(compositionString, out _, out byte[]? buffer))
                 {
@@ -193,7 +214,9 @@ namespace osu.Framework.Platform.Windows.Native
             /// <summary>
             /// Determines whether or not the given attribute represents a target (a.k.a. a selection).
             /// </summary>
-            private bool isTargetAttribute(byte attribute) => attribute == (byte)Attribute.ATTR_TARGET_CONVERTED || attribute == (byte)Attribute.ATTR_TARGET_NOTCONVERTED;
+            private bool isTargetAttribute(byte attribute) =>
+                attribute == (byte)Attribute.ATTR_TARGET_CONVERTED
+                || attribute == (byte)Attribute.ATTR_TARGET_NOTCONVERTED;
 
             /// <summary>
             /// Gets the target range that's selected by the user in the current composition string.
@@ -203,7 +226,13 @@ namespace osu.Framework.Platform.Windows.Native
                 targetStart = 0;
                 targetEnd = 0;
 
-                if (!tryGetCompositionString(CompositionString.GCS_COMPATTR, out int size, out byte[]? attributeData))
+                if (
+                    !tryGetCompositionString(
+                        CompositionString.GCS_COMPATTR,
+                        out int size,
+                        out byte[]? attributeData
+                    )
+                )
                     return false;
 
                 int start;
@@ -286,15 +315,29 @@ namespace osu.Framework.Platform.Windows.Native
         // ReSharper disable IdentifierTypo
 
         [DllImport("imm32.dll", CharSet = CharSet.Unicode)]
-        private static extern int ImmGetCompositionString(InputContextHandle hImc, CompositionString dwIndex, byte[]? lpBuf, uint dwBufLen);
+        private static extern int ImmGetCompositionString(
+            InputContextHandle hImc,
+            CompositionString dwIndex,
+            byte[]? lpBuf,
+            uint dwBufLen
+        );
 
         [DllImport("imm32.dll", CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ImmNotifyIME(InputContextHandle hImc, NotificationCode dwAction, uint dwIndex, uint dwValue);
+        private static extern bool ImmNotifyIME(
+            InputContextHandle hImc,
+            NotificationCode dwAction,
+            uint dwIndex,
+            uint dwValue
+        );
 
         [DllImport("imm32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ImmAssociateContextEx(IntPtr hWnd, IntPtr hImc, AssociationFlags dwFlags);
+        private static extern bool ImmAssociateContextEx(
+            IntPtr hWnd,
+            IntPtr hImc,
+            AssociationFlags dwFlags
+        );
 
         // window messages
         internal const int WM_IME_STARTCOMPOSITION = 0x010D;

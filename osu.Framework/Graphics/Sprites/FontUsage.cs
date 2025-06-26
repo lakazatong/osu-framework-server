@@ -80,10 +80,19 @@ namespace osu.Framework.Graphics.Sprites
         /// <param name="weight">The font weight.</param>
         /// <param name="italics">Whether the font is italic.</param>
         /// <param name="fixedWidth">Whether all characters should be spaced the same distance apart.</param>
-        public FontUsage([CanBeNull] string family = null, float size = default_text_size, [CanBeNull] string weight = null, bool italics = false, bool fixedWidth = false)
+        public FontUsage(
+            [CanBeNull] string family = null,
+            float size = default_text_size,
+            [CanBeNull] string weight = null,
+            bool italics = false,
+            bool fixedWidth = false
+        )
         {
             Family = family;
-            Size = size >= 0 ? size : throw new ArgumentOutOfRangeException(nameof(size), "Must be non-negative.");
+            Size =
+                size >= 0
+                    ? size
+                    : throw new ArgumentOutOfRangeException(nameof(size), "Must be non-negative.");
             Weight = weight;
             Italics = italics;
             FixedWidth = fixedWidth;
@@ -98,7 +107,9 @@ namespace osu.Framework.Graphics.Sprites
 
             FontName = FontName.TrimEnd('-');
 
-            FontNameNoFamily = string.IsNullOrEmpty(Family) ? FontName : FontName.Substring(Family.Length);
+            FontNameNoFamily = string.IsNullOrEmpty(Family)
+                ? FontName
+                : FontName.Substring(Family.Length);
         }
 
         /// <summary>
@@ -110,16 +121,34 @@ namespace osu.Framework.Graphics.Sprites
         /// <param name="italics">Whether the font is italic. If null, the value is copied from this <see cref="FontUsage"/>.</param>
         /// <param name="fixedWidth">Whether all characters should be spaced apart the same distance. If null, the value is copied from this <see cref="FontUsage"/>.</param>
         /// <returns>The resulting <see cref="FontUsage"/>.</returns>
-        public FontUsage With([CanBeNull] string family = null, [CanBeNull] float? size = null, [CanBeNull] string weight = null, [CanBeNull] bool? italics = null,
-                              [CanBeNull] bool? fixedWidth = null)
-            => new FontUsage(family ?? Family, size ?? Size, weight ?? Weight, italics ?? Italics, fixedWidth ?? FixedWidth);
+        public FontUsage With(
+            [CanBeNull] string family = null,
+            [CanBeNull] float? size = null,
+            [CanBeNull] string weight = null,
+            [CanBeNull] bool? italics = null,
+            [CanBeNull] bool? fixedWidth = null
+        ) =>
+            new FontUsage(
+                family ?? Family,
+                size ?? Size,
+                weight ?? Weight,
+                italics ?? Italics,
+                fixedWidth ?? FixedWidth
+            );
 
-        public override string ToString() => $"Font={FontName}, Size={Size}, Italics={Italics}, FixedWidth={FixedWidth}";
+        public override string ToString() =>
+            $"Font={FontName}, Size={Size}, Italics={Italics}, FixedWidth={FixedWidth}";
 
-        public bool Equals(FontUsage other) => Family == other.Family && Weight == other.Weight && Italics == other.Italics && Size.Equals(other.Size) && FixedWidth == other.FixedWidth;
+        public bool Equals(FontUsage other) =>
+            Family == other.Family
+            && Weight == other.Weight
+            && Italics == other.Italics
+            && Size.Equals(other.Size)
+            && FixedWidth == other.FixedWidth;
 
         public override bool Equals(object obj) => obj is FontUsage other && Equals(other);
 
-        public override int GetHashCode() => HashCode.Combine(Family, Weight, Italics, Size, FixedWidth);
+        public override int GetHashCode() =>
+            HashCode.Combine(Family, Weight, Italics, Size, FixedWidth);
     }
 }

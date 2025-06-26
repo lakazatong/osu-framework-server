@@ -21,7 +21,5 @@ namespace osu.Framework.Bindables
     /// An interface that representes a leased bindable.
     /// </summary>
     /// <typeparam name="T">The value type of the bindable.</typeparam>
-    public interface ILeasedBindable<T> : ILeasedBindable, IBindable<T>
-    {
-    }
+    public interface ILeasedBindable<T> : ILeasedBindable, IBindable<T> { }
 }

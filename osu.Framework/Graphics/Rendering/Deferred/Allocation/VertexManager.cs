@@ -35,7 +35,12 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
         public VertexManager(DeferredContext context)
         {
             this.context = context;
-            vertexBufferPool = new DeviceBufferPool(context.Graphics, buffer_size, BufferUsage.VertexBuffer, nameof(VertexManager));
+            vertexBufferPool = new DeviceBufferPool(
+                context.Graphics,
+                buffer_size,
+                BufferUsage.VertexBuffer,
+                nameof(VertexManager)
+            );
         }
 
         /// <summary>
@@ -48,7 +53,8 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
         {
             // Make sure vertices are aligned to their strides.
             int vertexStride = VeldridVertexUtils<T>.STRIDE;
-            currentWriteIndex = MathUtils.DivideRoundUp(currentWriteIndex, vertexStride) * vertexStride;
+            currentWriteIndex =
+                MathUtils.DivideRoundUp(currentWriteIndex, vertexStride) * vertexStride;
 
             if (currentWriteIndex + primitive.Length >= buffer_size)
             {
@@ -90,7 +96,12 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
         /// <param name="primitiveSize">The number of vertices in a primitive.</param>
         /// <typeparam name="T">The vertex type.</typeparam>
         /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="indexLayout"/> is not supported.</exception>
-        public void Draw<T>(int vertexCount, PrimitiveTopology topology, VeldridIndexLayout indexLayout, int primitiveSize)
+        public void Draw<T>(
+            int vertexCount,
+            PrimitiveTopology topology,
+            VeldridIndexLayout indexLayout,
+            int primitiveSize
+        )
             where T : unmanaged, IEquatable<T>, IVertex
         {
             if (vertexCount == 0)
@@ -104,11 +115,19 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
             switch (indexLayout)
             {
                 case VeldridIndexLayout.Linear:
-                    indexBuffer ??= new VeldridIndexBuffer(context.Graphics, VeldridIndexLayout.Linear, IRenderer.MAX_VERTICES);
+                    indexBuffer ??= new VeldridIndexBuffer(
+                        context.Graphics,
+                        VeldridIndexLayout.Linear,
+                        IRenderer.MAX_VERTICES
+                    );
                     break;
 
                 case VeldridIndexLayout.Quad:
-                    indexBuffer ??= new VeldridIndexBuffer(context.Graphics, VeldridIndexLayout.Quad, IRenderer.MAX_QUADS * IRenderer.VERTICES_PER_QUAD);
+                    indexBuffer ??= new VeldridIndexBuffer(
+                        context.Graphics,
+                        VeldridIndexLayout.Quad,
+                        IRenderer.MAX_QUADS * IRenderer.VERTICES_PER_QUAD
+                    );
                     break;
 
                 default:
@@ -120,7 +139,8 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
             while (vertexCount > 0)
             {
                 // Make sure vertices are aligned to their strides.
-                currentDrawIndex = MathUtils.DivideRoundUp(currentDrawIndex, vertexStride) * vertexStride;
+                currentDrawIndex =
+                    MathUtils.DivideRoundUp(currentDrawIndex, vertexStride) * vertexStride;
 
                 // Jump to the next buffer index if the current draw call can't draw at least one primitive with the remaining data.
                 if (currentDrawIndex + primitiveByteSize >= buffer_size)
@@ -134,12 +154,23 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
                 // 2. The amount of vertices that can be drawn given the index buffer (generally a ushort, so capped to 65535 vertices).
                 // 3. The amount of primitives that can be drawn. Each draw call must form complete primitives.
                 int maxPrimitives = (buffer_size - currentDrawIndex) / primitiveByteSize;
-                int verticesToDraw = Math.Min(maxPrimitives * primitiveSize, Math.Min(vertexCount, indexBuffer.VertexCapacity));
+                int verticesToDraw = Math.Min(
+                    maxPrimitives * primitiveSize,
+                    Math.Min(vertexCount, indexBuffer.VertexCapacity)
+                );
                 int vertexOffset = currentDrawIndex / vertexStride;
 
                 // Bind the vertex buffer.
-                context.Graphics.SetVertexBuffer(inUseBuffers[currentDrawBuffer].Buffer, VeldridVertexUtils<T>.Layout);
-                context.Graphics.DrawVertices(topology.ToPrimitiveTopology(), 0, verticesToDraw, vertexOffset);
+                context.Graphics.SetVertexBuffer(
+                    inUseBuffers[currentDrawBuffer].Buffer,
+                    VeldridVertexUtils<T>.Layout
+                );
+                context.Graphics.DrawVertices(
+                    topology.ToPrimitiveTopology(),
+                    0,
+                    verticesToDraw,
+                    vertexOffset
+                );
 
                 currentDrawIndex += verticesToDraw * vertexStride;
                 vertexCount -= verticesToDraw;

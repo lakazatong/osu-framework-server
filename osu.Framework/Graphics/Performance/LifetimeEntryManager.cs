@@ -35,7 +35,11 @@ namespace osu.Framework.Graphics.Performance
         /// <summary>
         /// Invoked when a <see cref="LifetimeEntry"/> crosses a lifetime boundary.
         /// </summary>
-        public event Action<LifetimeEntry, LifetimeBoundaryKind, LifetimeBoundaryCrossingDirection> EntryCrossedBoundary;
+        public event Action<
+            LifetimeEntry,
+            LifetimeBoundaryKind,
+            LifetimeBoundaryCrossingDirection
+        > EntryCrossedBoundary;
 
         /// <summary>
         /// Contains all the newly-added (but not yet processed) entries.
@@ -50,14 +54,22 @@ namespace osu.Framework.Graphics.Performance
         /// <summary>
         /// Contains all entries that should come alive in the future.
         /// </summary>
-        private readonly SortedSet<LifetimeEntry> futureEntries = new SortedSet<LifetimeEntry>(new LifetimeStartComparator());
+        private readonly SortedSet<LifetimeEntry> futureEntries = new SortedSet<LifetimeEntry>(
+            new LifetimeStartComparator()
+        );
 
         /// <summary>
         /// Contains all entries that were alive in the past.
         /// </summary>
-        private readonly SortedSet<LifetimeEntry> pastEntries = new SortedSet<LifetimeEntry>(new LifetimeEndComparator());
+        private readonly SortedSet<LifetimeEntry> pastEntries = new SortedSet<LifetimeEntry>(
+            new LifetimeEndComparator()
+        );
 
-        private readonly Queue<(LifetimeEntry, LifetimeBoundaryKind, LifetimeBoundaryCrossingDirection)> eventQueue =
+        private readonly Queue<(
+            LifetimeEntry,
+            LifetimeBoundaryKind,
+            LifetimeBoundaryCrossingDirection
+        )> eventQueue =
             new Queue<(LifetimeEntry, LifetimeBoundaryKind, LifetimeBoundaryCrossingDirection)>();
 
         /// <summary>
@@ -284,7 +296,13 @@ namespace osu.Framework.Graphics.Performance
         /// <param name="mutateActiveEntries">Whether <see cref="activeEntries"/> should be mutated by this invocation.
         /// If <c>false</c>, the caller is expected to handle mutation of <see cref="activeEntries"/> based on any changes to the entry's state.</param>
         /// <returns>Whether the state of <paramref name="entry"/> has changed.</returns>
-        private bool updateChildEntry(LifetimeEntry entry, double startTime, double endTime, bool isNewEntry, bool mutateActiveEntries)
+        private bool updateChildEntry(
+            LifetimeEntry entry,
+            double startTime,
+            double endTime,
+            bool isNewEntry,
+            bool mutateActiveEntries
+        )
         {
             LifetimeEntryState oldState = entry.State;
 
@@ -367,28 +385,66 @@ namespace osu.Framework.Graphics.Performance
             return LifetimeEntryState.Current;
         }
 
-        private void enqueueEvents(LifetimeEntry entry, LifetimeEntryState oldState, LifetimeEntryState newState)
+        private void enqueueEvents(
+            LifetimeEntry entry,
+            LifetimeEntryState oldState,
+            LifetimeEntryState newState
+        )
         {
             Debug.Assert(oldState != newState);
 
             switch (oldState)
             {
                 case LifetimeEntryState.Future:
-                    eventQueue.Enqueue((entry, LifetimeBoundaryKind.Start, LifetimeBoundaryCrossingDirection.Forward));
+                    eventQueue.Enqueue(
+                        (
+                            entry,
+                            LifetimeBoundaryKind.Start,
+                            LifetimeBoundaryCrossingDirection.Forward
+                        )
+                    );
                     if (newState == LifetimeEntryState.Past)
-                        eventQueue.Enqueue((entry, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Forward));
+                        eventQueue.Enqueue(
+                            (
+                                entry,
+                                LifetimeBoundaryKind.End,
+                                LifetimeBoundaryCrossingDirection.Forward
+                            )
+                        );
                     break;
 
                 case LifetimeEntryState.Current:
-                    eventQueue.Enqueue(newState == LifetimeEntryState.Past
-                        ? (entry, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Forward)
-                        : (entry, LifetimeBoundaryKind.Start, LifetimeBoundaryCrossingDirection.Backward));
+                    eventQueue.Enqueue(
+                        newState == LifetimeEntryState.Past
+                            ? (
+                                entry,
+                                LifetimeBoundaryKind.End,
+                                LifetimeBoundaryCrossingDirection.Forward
+                            )
+                            : (
+                                entry,
+                                LifetimeBoundaryKind.Start,
+                                LifetimeBoundaryCrossingDirection.Backward
+                            )
+                    );
                     break;
 
                 case LifetimeEntryState.Past:
-                    eventQueue.Enqueue((entry, LifetimeBoundaryKind.End, LifetimeBoundaryCrossingDirection.Backward));
+                    eventQueue.Enqueue(
+                        (
+                            entry,
+                            LifetimeBoundaryKind.End,
+                            LifetimeBoundaryCrossingDirection.Backward
+                        )
+                    );
                     if (newState == LifetimeEntryState.Future)
-                        eventQueue.Enqueue((entry, LifetimeBoundaryKind.Start, LifetimeBoundaryCrossingDirection.Backward));
+                        eventQueue.Enqueue(
+                            (
+                                entry,
+                                LifetimeBoundaryKind.Start,
+                                LifetimeBoundaryCrossingDirection.Backward
+                            )
+                        );
                     break;
             }
         }

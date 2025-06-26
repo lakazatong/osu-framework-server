@@ -46,7 +46,7 @@ namespace osu.Framework.Platform.Linux.Native
             RTLD_DEEPBIND = 0x00008,
             RTLD_GLOBAL = 0x00100,
             RTLD_LOCAL = 0x00000,
-            RTLD_NODELETE = 0x01000
+            RTLD_NODELETE = 0x01000,
         }
     }
 }

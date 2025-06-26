@@ -46,7 +46,9 @@ namespace osu.Framework.Graphics.Pooling
         public void Return()
         {
             if (!IsInUse)
-                throw new InvalidOperationException($"This {nameof(PoolableDrawable)} was already returned");
+                throw new InvalidOperationException(
+                    $"This {nameof(PoolableDrawable)} was already returned"
+                );
 
             IsInUse = false;
 
@@ -62,17 +64,13 @@ namespace osu.Framework.Graphics.Pooling
         /// Perform any initialisation on new usage of this drawable.
         /// This is scheduled to the first update frame and may not be run if this is never reached.
         /// </summary>
-        protected virtual void PrepareForUse()
-        {
-        }
+        protected virtual void PrepareForUse() { }
 
         /// <summary>
         /// Perform any clean-up required before returning this drawable to a pool.
         /// This is called regardless of whether <see cref="PrepareForUse"/> was executed.
         /// </summary>
-        protected virtual void FreeAfterUse()
-        {
-        }
+        protected virtual void FreeAfterUse() { }
 
         /// <summary>
         /// Set the associated pool this drawable is currently associated with.
@@ -82,10 +80,14 @@ namespace osu.Framework.Graphics.Pooling
         internal void SetPool(IDrawablePool? pool)
         {
             if (IsInUse)
-                throw new InvalidOperationException($"This {nameof(PoolableDrawable)} is still in use");
+                throw new InvalidOperationException(
+                    $"This {nameof(PoolableDrawable)} is still in use"
+                );
 
             if (pool != null && this.pool != null)
-                throw new InvalidOperationException($"This {nameof(PoolableDrawable)} is already in a pool");
+                throw new InvalidOperationException(
+                    $"This {nameof(PoolableDrawable)} is already in a pool"
+                );
 
             this.pool = pool;
         }
@@ -97,7 +99,9 @@ namespace osu.Framework.Graphics.Pooling
         internal void Assign()
         {
             if (IsInUse)
-                throw new InvalidOperationException($"This {nameof(PoolableDrawable)} is already in use");
+                throw new InvalidOperationException(
+                    $"This {nameof(PoolableDrawable)} is already in use"
+                );
 
             IsInUse = true;
 

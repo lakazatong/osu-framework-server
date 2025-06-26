@@ -24,12 +24,14 @@ namespace osu.Framework.Tests.Visual.Drawables
     {
         public TestSceneCustomEasingCurve()
         {
-            Add(new CurveVisualiser
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(400),
-            });
+            Add(
+                new CurveVisualiser
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(400),
+                }
+            );
         }
 
         private partial class CurveVisualiser : CompositeDrawable
@@ -46,7 +48,10 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             public CurveVisualiser()
             {
-                easingFunction = new CustomEasingFunction { EasingVertices = { BindTarget = easingVertices } };
+                easingFunction = new CustomEasingFunction
+                {
+                    EasingVertices = { BindTarget = easingVertices },
+                };
 
                 Container gridContainer;
 
@@ -62,15 +67,15 @@ namespace osu.Framework.Tests.Visual.Drawables
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
-                            AlwaysPresent = true
-                        }
+                            AlwaysPresent = true,
+                        },
                     },
                     gridContainer = new Container { RelativeSizeAxes = Axes.Both },
-                    path = new SmoothPath
+                    path = new SmoothPath { PathRadius = 1 },
+                    controlPointContainer = new Container<ControlPointVisualiser>
                     {
-                        PathRadius = 1
+                        RelativeSizeAxes = Axes.Both,
                     },
-                    controlPointContainer = new Container<ControlPointVisualiser> { RelativeSizeAxes = Axes.Both },
                     sideTracker = new SpriteIcon
                     {
                         Anchor = Anchor.TopRight,
@@ -88,7 +93,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                         RelativeSizeAxes = Axes.X,
                         RelativePositionAxes = Axes.Y,
                         Height = 1,
-                        Colour = Color4.SkyBlue
+                        Colour = Color4.SkyBlue,
                     },
                     horizontalTracker = new Box
                     {
@@ -96,64 +101,72 @@ namespace osu.Framework.Tests.Visual.Drawables
                         RelativeSizeAxes = Axes.Y,
                         RelativePositionAxes = Axes.X,
                         Width = 1,
-                        Colour = Color4.SkyBlue
-                    }
+                        Colour = Color4.SkyBlue,
+                    },
                 };
 
                 for (int i = 0; i <= 10; i++)
                 {
-                    gridContainer.Add(new Box
-                    {
-                        Origin = Anchor.CentreLeft,
-                        RelativeSizeAxes = Axes.X,
-                        RelativePositionAxes = Axes.Y,
-                        Height = 2,
-                        Y = 0.1f * i,
-                        Colour = Color4.White.Opacity(0.1f)
-                    });
+                    gridContainer.Add(
+                        new Box
+                        {
+                            Origin = Anchor.CentreLeft,
+                            RelativeSizeAxes = Axes.X,
+                            RelativePositionAxes = Axes.Y,
+                            Height = 2,
+                            Y = 0.1f * i,
+                            Colour = Color4.White.Opacity(0.1f),
+                        }
+                    );
 
-                    gridContainer.Add(new Box
-                    {
-                        Origin = Anchor.TopCentre,
-                        RelativeSizeAxes = Axes.Y,
-                        RelativePositionAxes = Axes.X,
-                        Width = 2,
-                        X = 0.1f * i,
-                        Colour = Color4.White.Opacity(0.1f)
-                    });
+                    gridContainer.Add(
+                        new Box
+                        {
+                            Origin = Anchor.TopCentre,
+                            RelativeSizeAxes = Axes.Y,
+                            RelativePositionAxes = Axes.X,
+                            Width = 2,
+                            X = 0.1f * i,
+                            Colour = Color4.White.Opacity(0.1f),
+                        }
+                    );
                 }
 
-                controlPointContainer.Add(new ControlPointVisualiser
-                {
-                    PointPosition = { Value = new Vector2(100, 100) }
-                });
+                controlPointContainer.Add(
+                    new ControlPointVisualiser { PointPosition = { Value = new Vector2(100, 100) } }
+                );
             }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
 
-                sideTracker.MoveToY(1)
-                           .Then().MoveToY(0, 2000, easingFunction)
-                           .Then().Delay(200)
-                           .Loop();
+                sideTracker
+                    .MoveToY(1)
+                    .Then()
+                    .MoveToY(0, 2000, easingFunction)
+                    .Then()
+                    .Delay(200)
+                    .Loop();
 
-                verticalTracker.MoveToY(1)
-                               .Then().MoveToY(0, 2000, easingFunction)
-                               .Then().Delay(200)
-                               .Loop();
+                verticalTracker
+                    .MoveToY(1)
+                    .Then()
+                    .MoveToY(0, 2000, easingFunction)
+                    .Then()
+                    .Delay(200)
+                    .Loop();
 
-                horizontalTracker.MoveToX(0)
-                                 .Then().MoveToX(1, 2000)
-                                 .Then().Delay(200)
-                                 .Loop();
+                horizontalTracker.MoveToX(0).Then().MoveToX(1, 2000).Then().Delay(200).Loop();
             }
 
             protected override void Update()
             {
                 base.Update();
 
-                ControlPointVisualiser[] ordered = controlPointContainer.OrderBy(p => p.PointPosition.Value.X).ToArray();
+                ControlPointVisualiser[] ordered = controlPointContainer
+                    .OrderBy(p => p.PointPosition.Value.X)
+                    .ToArray();
 
                 for (int i = 0; i < ordered.Length; i++)
                 {
@@ -170,15 +183,21 @@ namespace osu.Framework.Tests.Visual.Drawables
                 path.Position = -path.PositionInBoundingBox(Vector2.Zero);
 
                 easingVertices.Clear();
-                easingVertices.AddRange(bezierPath.Select(p => Vector2.Divide(p, DrawSize)).Select(p => new Vector2(p.X, 1 - p.Y)));
+                easingVertices.AddRange(
+                    bezierPath
+                        .Select(p => Vector2.Divide(p, DrawSize))
+                        .Select(p => new Vector2(p.X, 1 - p.Y))
+                );
             }
 
             protected override bool OnMouseDown(MouseDownEvent e)
             {
-                controlPointContainer.Add(new ControlPointVisualiser
-                {
-                    PointPosition = { Value = ToLocalSpace(e.ScreenSpaceMousePosition) }
-                });
+                controlPointContainer.Add(
+                    new ControlPointVisualiser
+                    {
+                        PointPosition = { Value = ToLocalSpace(e.ScreenSpaceMousePosition) },
+                    }
+                );
 
                 return true;
             }
@@ -199,15 +218,8 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 InternalChildren = new Drawable[]
                 {
-                    path = new SmoothPath
-                    {
-                        PathRadius = 1,
-                        Colour = Color4.Yellow.Opacity(0.5f)
-                    },
-                    new PointHandle
-                    {
-                        PointPosition = { BindTarget = PointPosition }
-                    }
+                    path = new SmoothPath { PathRadius = 1, Colour = Color4.Yellow.Opacity(0.5f) },
+                    new PointHandle { PointPosition = { BindTarget = PointPosition } },
                 };
             }
 

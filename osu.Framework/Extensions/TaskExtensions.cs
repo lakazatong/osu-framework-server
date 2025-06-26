@@ -16,7 +16,9 @@ namespace osu.Framework.Extensions
         public static void WaitSafely(this Task task)
         {
             if (!isWaitingValid(task))
-                throw new InvalidOperationException($"Can't use {nameof(WaitSafely)} from inside an async operation.");
+                throw new InvalidOperationException(
+                    $"Can't use {nameof(WaitSafely)} from inside an async operation."
+                );
 
 #pragma warning disable RS0030
             task.Wait();
@@ -33,7 +35,9 @@ namespace osu.Framework.Extensions
             // This does mean that there could be edge cases where this safety is skipped (ie. if the majority of executions complete
             // immediately).
             if (!task.IsCompleted && !isWaitingValid(task))
-                throw new InvalidOperationException($"Can't use {nameof(GetResultSafely)} from inside an async operation.");
+                throw new InvalidOperationException(
+                    $"Can't use {nameof(GetResultSafely)} from inside an async operation."
+                );
 
 #pragma warning disable RS0030
             return task.Result;

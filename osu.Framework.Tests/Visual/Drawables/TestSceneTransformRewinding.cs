@@ -14,8 +14,8 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Transforms;
 using osu.Framework.Graphics.Visualisation;
-using osu.Framework.Utils;
 using osu.Framework.Timing;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -32,12 +32,13 @@ namespace osu.Framework.Tests.Visual.Drawables
         private FramedClock manualFramedClock;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Clear();
-            manualClock = new ManualClock();
-            manualFramedClock = new FramedClock(manualClock);
-        });
+        public void SetUp() =>
+            Schedule(() =>
+            {
+                Clear();
+                manualClock = new ManualClock();
+                manualFramedClock = new FramedClock(manualClock);
+            });
 
         [Test]
         public void BasicScale()
@@ -66,10 +67,13 @@ namespace osu.Framework.Tests.Visual.Drawables
             {
                 box.Scale = Vector2.One;
 
-                box.ScaleTo(0.75f, interval).Then()
-                   .ScaleTo(0.5f, interval).Then()
-                   .ScaleTo(0.25f, interval).Then()
-                   .ScaleTo(0, interval);
+                box.ScaleTo(0.75f, interval)
+                    .Then()
+                    .ScaleTo(0.5f, interval)
+                    .Then()
+                    .ScaleTo(0.25f, interval)
+                    .Then()
+                    .ScaleTo(0, interval);
             });
 
             int i = 0;
@@ -93,10 +97,13 @@ namespace osu.Framework.Tests.Visual.Drawables
                 box.Anchor = Anchor.TopLeft;
                 box.Origin = Anchor.TopLeft;
 
-                box.MoveTo(new Vector2(0.75f, 0), interval).Then()
-                   .MoveTo(new Vector2(0.75f, 0.75f), interval).Then()
-                   .MoveTo(new Vector2(0, 0.75f), interval).Then()
-                   .MoveTo(new Vector2(0), interval);
+                box.MoveTo(new Vector2(0.75f, 0), interval)
+                    .Then()
+                    .MoveTo(new Vector2(0.75f, 0.75f), interval)
+                    .Then()
+                    .MoveTo(new Vector2(0, 0.75f), interval)
+                    .Then()
+                    .MoveTo(new Vector2(0), interval);
             });
 
             int i = 0;
@@ -120,15 +127,30 @@ namespace osu.Framework.Tests.Visual.Drawables
                 box.Anchor = Anchor.TopLeft;
                 box.Origin = Anchor.TopLeft;
 
-                box.ScaleTo(0.5f, interval).MoveTo(new Vector2(0.5f), interval).Then()
-                   .ScaleTo(0.1f, interval).MoveTo(new Vector2(0, 0.75f), interval).Then()
-                   .ScaleTo(1f, interval).MoveTo(new Vector2(0, 0), interval).Then()
-                   .FadeTo(0, interval);
+                box.ScaleTo(0.5f, interval)
+                    .MoveTo(new Vector2(0.5f), interval)
+                    .Then()
+                    .ScaleTo(0.1f, interval)
+                    .MoveTo(new Vector2(0, 0.75f), interval)
+                    .Then()
+                    .ScaleTo(1f, interval)
+                    .MoveTo(new Vector2(0, 0), interval)
+                    .Then()
+                    .FadeTo(0, interval);
             });
 
             int i = 0;
-            checkAtTime(interval * ++i, box => Precision.AlmostEquals(box.X, 0.5f) && Precision.AlmostEquals(box.Scale.X, 0.5f));
-            checkAtTime(interval * ++i, box => Precision.AlmostEquals(box.Y, 0.75f) && Precision.AlmostEquals(box.Scale.X, 0.1f));
+            checkAtTime(
+                interval * ++i,
+                box =>
+                    Precision.AlmostEquals(box.X, 0.5f) && Precision.AlmostEquals(box.Scale.X, 0.5f)
+            );
+            checkAtTime(
+                interval * ++i,
+                box =>
+                    Precision.AlmostEquals(box.Y, 0.75f)
+                    && Precision.AlmostEquals(box.Scale.X, 0.1f)
+            );
             checkAtTime(interval * ++i, box => Precision.AlmostEquals(box.X, 0f));
             checkAtTime(interval * (i += 2), box => Precision.AlmostEquals(box.Alpha, 0f));
 
@@ -148,7 +170,13 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 box.ScaleTo(0.5f, interval).Then().ScaleTo(1, interval);
 
-                Scheduler.AddDelayed(() => { box.ScaleTo(new Vector2(0.1f), interval); }, interval / 2);
+                Scheduler.AddDelayed(
+                    () =>
+                    {
+                        box.ScaleTo(new Vector2(0.1f), interval);
+                    },
+                    interval / 2
+                );
             });
 
             int i = 0;
@@ -208,7 +236,10 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void FiniteLoopSequence()
         {
-            boxTest(box => { box.RotateTo(0).RotateTo(90, interval).Loop(0, 2); });
+            boxTest(box =>
+            {
+                box.RotateTo(0).RotateTo(90, interval).Loop(0, 2);
+            });
 
             checkAtTime(0, box => box.Rotation == 0);
             checkAtTime(interval - 1, box => Precision.AlmostEquals(box.Rotation, 90, 1));
@@ -226,16 +257,29 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void StartInMiddleOfSequence()
         {
-            boxTest(box =>
-            {
-                box.Alpha = 0;
-                box.Delay(interval * 2).FadeInFromZero(interval);
-                box.ScaleTo(0.9f, interval * 4);
-            }, 750);
+            boxTest(
+                box =>
+                {
+                    box.Alpha = 0;
+                    box.Delay(interval * 2).FadeInFromZero(interval);
+                    box.ScaleTo(0.9f, interval * 4);
+                },
+                750
+            );
 
             checkAtTime(interval * 3, box => Precision.AlmostEquals(box.Alpha, 1));
-            checkAtTime(interval * 4, box => Precision.AlmostEquals(box.Alpha, 1) && Precision.AlmostEquals(box.Scale.X, 0.9f));
-            checkAtTime(interval * 2, box => Precision.AlmostEquals(box.Alpha, 0) && Precision.AlmostEquals(box.Scale.X, 0.575f));
+            checkAtTime(
+                interval * 4,
+                box =>
+                    Precision.AlmostEquals(box.Alpha, 1)
+                    && Precision.AlmostEquals(box.Scale.X, 0.9f)
+            );
+            checkAtTime(
+                interval * 2,
+                box =>
+                    Precision.AlmostEquals(box.Alpha, 0)
+                    && Precision.AlmostEquals(box.Scale.X, 0.575f)
+            );
 
             AddAssert("check transform count", () => box.Transforms.Count() == 3);
         }
@@ -251,18 +295,21 @@ namespace osu.Framework.Tests.Visual.Drawables
             // move forward to future point in time before adding transforms.
             checkAtTime(interval * 4, _ => true);
 
-            AddStep("add transforms", () =>
-            {
-                using (box.BeginAbsoluteSequence(0))
+            AddStep(
+                "add transforms",
+                () =>
                 {
-                    box.FadeOutFromOne(interval);
-                    box.Delay(interval * 3).FadeOutFromOne(interval);
+                    using (box.BeginAbsoluteSequence(0))
+                    {
+                        box.FadeOutFromOne(interval);
+                        box.Delay(interval * 3).FadeOutFromOne(interval);
 
-                    // FadeOutFromOne adds extra transforms which disallow testing this scenario, so we remove them.
-                    box.RemoveTransform(box.Transforms.ElementAt(2));
-                    box.RemoveTransform(box.Transforms.ElementAt(0));
+                        // FadeOutFromOne adds extra transforms which disallow testing this scenario, so we remove them.
+                        box.RemoveTransform(box.Transforms.ElementAt(2));
+                        box.RemoveTransform(box.Transforms.ElementAt(0));
+                    }
                 }
-            });
+            );
 
             checkAtTime(0, box => Precision.AlmostEquals(box.Alpha, 1));
             checkAtTime(interval * 1, box => Precision.AlmostEquals(box.Alpha, 0));
@@ -279,27 +326,29 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             AddStep("seek clock to 1000", () => manualClock.CurrentTime = interval * 4);
 
-            AddStep("create box", () =>
-            {
-                box = createBox();
-                box.Clock = manualFramedClock;
-                box.RemoveCompletedTransforms = false;
+            AddStep(
+                "create box",
+                () =>
+                {
+                    box = createBox();
+                    box.Clock = manualFramedClock;
+                    box.RemoveCompletedTransforms = false;
 
-                manualFramedClock.ProcessFrame();
-                using (box.BeginAbsoluteSequence(0))
-                    box.Delay(interval * 2).FadeOut(interval);
-            });
+                    manualFramedClock.ProcessFrame();
+                    using (box.BeginAbsoluteSequence(0))
+                        box.Delay(interval * 2).FadeOut(interval);
+                }
+            );
 
             AddStep("seek clock to 0", () => manualClock.CurrentTime = 0);
 
-            AddStep("add box", () =>
-            {
-                Add(new AnimationContainer
+            AddStep(
+                "add box",
+                () =>
                 {
-                    Child = box,
-                    ExaminableDrawable = box,
-                });
-            });
+                    Add(new AnimationContainer { Child = box, ExaminableDrawable = box });
+                }
+            );
 
             checkAtTime(interval * 2, box => Precision.AlmostEquals(box.Alpha, 1));
             checkAtTime(interval * 3, box => Precision.AlmostEquals(box.Alpha, 0));
@@ -316,24 +365,30 @@ namespace osu.Framework.Tests.Visual.Drawables
             // move forward to future point in time before adding transforms.
             checkAtTime(interval * 4, _ => true);
 
-            AddStep("add transforms", () =>
-            {
-                using (box.BeginAbsoluteSequence(0))
+            AddStep(
+                "add transforms",
+                () =>
                 {
-                    box.FadeOutFromOne(interval);
-                    box.Delay(interval * 3).FadeInFromZero(interval);
+                    using (box.BeginAbsoluteSequence(0))
+                    {
+                        box.FadeOutFromOne(interval);
+                        box.Delay(interval * 3).FadeInFromZero(interval);
 
-                    // FadeOutFromOne adds extra transforms which disallow testing this scenario, so we remove them.
-                    box.RemoveTransform(box.Transforms.ElementAt(2));
-                    box.RemoveTransform(box.Transforms.ElementAt(0));
+                        // FadeOutFromOne adds extra transforms which disallow testing this scenario, so we remove them.
+                        box.RemoveTransform(box.Transforms.ElementAt(2));
+                        box.RemoveTransform(box.Transforms.ElementAt(0));
+                    }
                 }
-            });
+            );
 
-            AddStep("add one more transform in the middle", () =>
-            {
-                using (box.BeginAbsoluteSequence(interval * 2))
-                    box.FadeIn(interval * 0.5);
-            });
+            AddStep(
+                "add one more transform in the middle",
+                () =>
+                {
+                    using (box.BeginAbsoluteSequence(interval * 2))
+                        box.FadeIn(interval * 0.5);
+                }
+            );
 
             checkAtTime(interval * 2, box => Precision.AlmostEquals(box.Alpha, 0));
             checkAtTime(interval * 2.5, box => Precision.AlmostEquals(box.Alpha, 1));
@@ -342,13 +397,20 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void LoopSequence()
         {
-            boxTest(box => { box.RotateTo(0).RotateTo(90, interval).Loop(); });
+            boxTest(box =>
+            {
+                box.RotateTo(0).RotateTo(90, interval).Loop();
+            });
 
             const int count = 4;
 
             for (int i = 0; i <= count; i++)
             {
-                if (i > 0) checkAtTime(interval * i - 1, box => Precision.AlmostEquals(box.Rotation, 90f, 1));
+                if (i > 0)
+                    checkAtTime(
+                        interval * i - 1,
+                        box => Precision.AlmostEquals(box.Rotation, 90f, 1)
+                    );
                 checkAtTime(interval * i, box => Precision.AlmostEquals(box.Rotation, 0));
             }
 
@@ -356,7 +418,11 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             for (int i = count; i >= 0; i--)
             {
-                if (i > 0) checkAtTime(interval * i - 1, box => Precision.AlmostEquals(box.Rotation, 90f, 1));
+                if (i > 0)
+                    checkAtTime(
+                        interval * i - 1,
+                        box => Precision.AlmostEquals(box.Rotation, 90f, 1)
+                    );
                 checkAtTime(interval * i, box => Precision.AlmostEquals(box.Rotation, 0));
             }
         }
@@ -364,7 +430,13 @@ namespace osu.Framework.Tests.Visual.Drawables
         [Test]
         public void StartInMiddleOfLoopSequence()
         {
-            boxTest(box => { box.RotateTo(0).RotateTo(90, interval).Loop(); }, 750);
+            boxTest(
+                box =>
+                {
+                    box.RotateTo(0).RotateTo(90, interval).Loop();
+                },
+                750
+            );
 
             checkAtTime(750, box => Precision.AlmostEquals(box.Rotation, 0f));
 
@@ -374,7 +446,11 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             for (int i = 0; i <= count; i++)
             {
-                if (i > 0) checkAtTime(interval * i - 1, box => Precision.AlmostEquals(box.Rotation, 90f, 1));
+                if (i > 0)
+                    checkAtTime(
+                        interval * i - 1,
+                        box => Precision.AlmostEquals(box.Rotation, 90f, 1)
+                    );
                 checkAtTime(interval * i, box => Precision.AlmostEquals(box.Rotation, 0));
             }
 
@@ -382,7 +458,11 @@ namespace osu.Framework.Tests.Visual.Drawables
 
             for (int i = count; i >= 0; i--)
             {
-                if (i > 0) checkAtTime(interval * i - 1, box => Precision.AlmostEquals(box.Rotation, 90f, 1));
+                if (i > 0)
+                    checkAtTime(
+                        interval * i - 1,
+                        box => Precision.AlmostEquals(box.Rotation, 90f, 1)
+                    );
                 checkAtTime(interval * i, box => Precision.AlmostEquals(box.Rotation, 0));
             }
         }
@@ -400,13 +480,34 @@ namespace osu.Framework.Tests.Visual.Drawables
             });
 
             checkAtTime(0, box => Precision.AlmostEquals(box.Position, new Vector2(0)));
-            checkAtTime(interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.125f, 0)));
-            checkAtTime(2 * interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.25f, 0.25f)));
-            checkAtTime(3 * interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.375f, 0.5f)));
-            checkAtTime(4 * interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.5f)));
-            checkAtTime(3 * interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.375f, 0.5f)));
-            checkAtTime(2 * interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.25f, 0.25f)));
-            checkAtTime(interval, box => Precision.AlmostEquals(box.Position, new Vector2(0.125f, 0)));
+            checkAtTime(
+                interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.125f, 0))
+            );
+            checkAtTime(
+                2 * interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.25f, 0.25f))
+            );
+            checkAtTime(
+                3 * interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.375f, 0.5f))
+            );
+            checkAtTime(
+                4 * interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.5f))
+            );
+            checkAtTime(
+                3 * interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.375f, 0.5f))
+            );
+            checkAtTime(
+                2 * interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.25f, 0.25f))
+            );
+            checkAtTime(
+                interval,
+                box => Precision.AlmostEquals(box.Position, new Vector2(0.125f, 0))
+            );
             checkAtTime(0, box => Precision.AlmostEquals(box.Position, new Vector2(0)));
         }
 
@@ -463,29 +564,37 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private void checkAtTime(double time, Func<Box, bool> assert)
         {
-            AddAssert($"check at time {time}", () =>
-            {
-                manualClock.CurrentTime = time;
+            AddAssert(
+                $"check at time {time}",
+                () =>
+                {
+                    manualClock.CurrentTime = time;
 
-                box.Clock = manualFramedClock;
-                box.UpdateSubTree();
+                    box.Clock = manualFramedClock;
+                    box.UpdateSubTree();
 
-                return assert(box);
-            });
+                    return assert(box);
+                }
+            );
         }
 
         private void boxTest(Action<Box> action, int startTime = 0)
         {
-            AddStep("add box", () =>
-            {
-                Add(new AnimationContainer(startTime)
+            AddStep(
+                "add box",
+                () =>
                 {
-                    Child = box = createBox(),
-                    ExaminableDrawable = box,
-                });
+                    Add(
+                        new AnimationContainer(startTime)
+                        {
+                            Child = box = createBox(),
+                            ExaminableDrawable = box,
+                        }
+                    );
 
-                action(box);
-            });
+                    action(box);
+                }
+            );
         }
 
         private static Box createBox()
@@ -532,17 +641,13 @@ namespace osu.Framework.Tests.Visual.Drawables
                             Size = new Vector2(0.6f),
                             Children = new Drawable[]
                             {
-                                new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4.DarkGray,
-                                },
+                                new Box { RelativeSizeAxes = Axes.Both, Colour = Color4.DarkGray },
                                 content = new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Masking = true,
                                 },
-                            }
+                            },
                         },
                         transforms = new FillFlowContainer<DrawableTransform>
                         {
@@ -584,9 +689,9 @@ namespace osu.Framework.Tests.Visual.Drawables
                                 new Tick(2),
                                 new Tick(3),
                                 new Tick(4),
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 };
             }
 
@@ -598,12 +703,23 @@ namespace osu.Framework.Tests.Visual.Drawables
                 double time = wrapping.Time.Current;
                 minTimeText.Text = wrapping.MinTime.ToString("n0");
                 currentTimeText.Text = time.ToString("n0");
-                seekingTick.X = currentTimeText.X = (float)(time / (wrapping.MaxTime - wrapping.MinTime));
+                seekingTick.X = currentTimeText.X = (float)(
+                    time / (wrapping.MaxTime - wrapping.MinTime)
+                );
                 maxTimeText.Text = wrapping.MaxTime.ToString("n0");
-                maxTimeText.Colour = time > wrapping.MaxTime ? Color4.Gray : wrapping.Time.Elapsed > 0 ? Color4.Blue : Color4.Red;
-                minTimeText.Colour = time < wrapping.MinTime ? Color4.Gray : content.Time.Elapsed > 0 ? Color4.Blue : Color4.Red;
+                maxTimeText.Colour =
+                    time > wrapping.MaxTime ? Color4.Gray
+                    : wrapping.Time.Elapsed > 0 ? Color4.Blue
+                    : Color4.Red;
+                minTimeText.Colour =
+                    time < wrapping.MinTime ? Color4.Gray
+                    : content.Time.Elapsed > 0 ? Color4.Blue
+                    : Color4.Red;
 
-                if (displayedTransforms == null || !ExaminableDrawable.Transforms.SequenceEqual(displayedTransforms))
+                if (
+                    displayedTransforms == null
+                    || !ExaminableDrawable.Transforms.SequenceEqual(displayedTransforms)
+                )
                 {
                     transforms.Clear();
                     foreach (var t in ExaminableDrawable.Transforms)
@@ -684,13 +800,17 @@ namespace osu.Framework.Tests.Visual.Drawables
                 {
                     this.trackingClock = trackingClock;
 
-                    offsetClock = new OffsetClock(trackingClock) { Offset = -trackingClock.CurrentTime + startTime };
+                    offsetClock = new OffsetClock(trackingClock)
+                    {
+                        Offset = -trackingClock.CurrentTime + startTime,
+                    };
                 }
 
                 public double CurrentTime { get; private set; }
                 public double Rate => offsetClock.Rate;
                 public bool IsRunning => offsetClock.IsRunning;
-                public double ElapsedFrameTime => (reversed ? -1 : 1) * trackingClock.ElapsedFrameTime;
+                public double ElapsedFrameTime =>
+                    (reversed ? -1 : 1) * trackingClock.ElapsedFrameTime;
                 public double FramesPerSecond => trackingClock.FramesPerSecond;
 
                 public void ProcessFrame()

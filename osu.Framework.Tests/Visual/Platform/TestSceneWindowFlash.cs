@@ -39,9 +39,9 @@ namespace osu.Framework.Tests.Visual.Platform
                     {
                         Text = "This window will flash as soon as you un-focus it.",
                         Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre
+                        Origin = Anchor.Centre,
                     },
-                }
+                },
             };
         }
 
@@ -49,19 +49,26 @@ namespace osu.Framework.Tests.Visual.Platform
         {
             base.LoadComplete();
 
-            flashUntilFocused.BindValueChanged(e =>
-            {
-                window?.CancelFlash();
-                text.Text = "This window will flash "
-                            + (e.NewValue ? "continuously, until focused again, " : "briefly")
-                            + " as soon as it is unfocused.";
-            }, true);
+            flashUntilFocused.BindValueChanged(
+                e =>
+                {
+                    window?.CancelFlash();
+                    text.Text =
+                        "This window will flash "
+                        + (e.NewValue ? "continuously, until focused again, " : "briefly")
+                        + " as soon as it is unfocused.";
+                },
+                true
+            );
 
-            isActive.BindValueChanged(e =>
-            {
-                if (!e.NewValue)
-                    window?.Flash(flashUntilFocused.Value);
-            }, true);
+            isActive.BindValueChanged(
+                e =>
+                {
+                    if (!e.NewValue)
+                        window?.Flash(flashUntilFocused.Value);
+                },
+                true
+            );
         }
 
         [Test]

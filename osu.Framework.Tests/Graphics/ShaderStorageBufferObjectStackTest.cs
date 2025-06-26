@@ -19,16 +19,28 @@ namespace osu.Framework.Tests.Graphics
         [SetUp]
         public void Setup()
         {
-            stack = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 2, size);
+            stack = new ShaderStorageBufferObjectStack<TestUniformData>(
+                new DummyRenderer(),
+                2,
+                size
+            );
         }
 
         [Test]
         public void TestBufferMustBeAtLeast2Elements()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 1, 100));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 100, 1));
-            Assert.DoesNotThrow(() => _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 2, 100));
-            Assert.DoesNotThrow(() => _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 100, 2));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 1, 100)
+            );
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 100, 1)
+            );
+            Assert.DoesNotThrow(() =>
+                _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 2, 100)
+            );
+            Assert.DoesNotThrow(() =>
+                _ = new ShaderStorageBufferObjectStack<TestUniformData>(new DummyRenderer(), 100, 2)
+            );
         }
 
         [Test]
@@ -133,7 +145,10 @@ namespace osu.Framework.Tests.Graphics
             stack.Pop();
             Assert.That(stack.CurrentBuffer, Is.EqualTo(firstBuffer));
             Assert.That(stack.CurrentOffset, Is.EqualTo(copiedItem - 1));
-            Assert.That(stack.CurrentBuffer[stack.CurrentOffset].Int.Value, Is.EqualTo(copiedItem - 1));
+            Assert.That(
+                stack.CurrentBuffer[stack.CurrentOffset].Int.Value,
+                Is.EqualTo(copiedItem - 1)
+            );
 
             // Popping once again should move the index further backwards.
             stack.Pop();
@@ -170,7 +185,10 @@ namespace osu.Framework.Tests.Graphics
             // ... noting that this is the same as the above "normal" pop case, except that item arrived at is in the middle of the previous buffer.
             Assert.That(stack.CurrentBuffer, Is.EqualTo(firstBuffer));
             Assert.That(stack.CurrentOffset, Is.EqualTo(copiedItem - 1));
-            Assert.That(stack.CurrentBuffer[stack.CurrentOffset].Int.Value, Is.EqualTo(copiedItem - 1));
+            Assert.That(
+                stack.CurrentBuffer[stack.CurrentOffset].Int.Value,
+                Is.EqualTo(copiedItem - 1)
+            );
 
             // Popping once again from this state should move further backwards.
             stack.Pop();
@@ -247,7 +265,10 @@ namespace osu.Framework.Tests.Graphics
 
                 // On a buffer transition, test that the item at the 0-th index of the first buffer was correct copied to the new buffer.
                 if (stack.CurrentBuffer != lastBuffer)
-                    Assert.That(stack.CurrentBuffer[stack.CurrentOffset - 1].Int.Value, Is.EqualTo(0));
+                    Assert.That(
+                        stack.CurrentBuffer[stack.CurrentOffset - 1].Int.Value,
+                        Is.EqualTo(0)
+                    );
 
                 // Test that the item was correctly placed in the new buffer
                 Assert.That(stack.CurrentBuffer[stack.CurrentOffset].Int.Value, Is.EqualTo(i));

@@ -28,8 +28,10 @@ namespace osu.Framework.Graphics.Textures
             this.store.AddExtension(@"jpg");
         }
 
-        public Task<TextureUpload> GetAsync(string name, CancellationToken cancellationToken = default) =>
-            Task.Run(() => Get(name), cancellationToken);
+        public Task<TextureUpload> GetAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        ) => Task.Run(() => Get(name), cancellationToken);
 
         public TextureUpload Get(string name)
         {
@@ -41,17 +43,16 @@ namespace osu.Framework.Graphics.Textures
                         return new TextureUpload(ImageFromStream<Rgba32>(stream));
                 }
             }
-            catch
-            {
-            }
+            catch { }
 
             return null;
         }
 
         public Stream GetStream(string name) => store.GetStream(name);
 
-        protected virtual Image<TPixel> ImageFromStream<TPixel>(Stream stream) where TPixel : unmanaged, IPixel<TPixel>
-            => TextureUpload.LoadFromStream<TPixel>(stream);
+        protected virtual Image<TPixel> ImageFromStream<TPixel>(Stream stream)
+            where TPixel : unmanaged, IPixel<TPixel> =>
+            TextureUpload.LoadFromStream<TPixel>(stream);
 
         public IEnumerable<string> GetAvailableResources() => store.GetAvailableResources();
 

@@ -81,7 +81,10 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                 indent += Math.Max(0, indentChange);
             }
 
-            File.WriteAllText(FrameworkEnvironment.DeferredRendererEventsOutputPath, builder.ToString());
+            File.WriteAllText(
+                FrameworkEnvironment.DeferredRendererEventsOutputPath,
+                builder.ToString()
+            );
         }
 
         private void processUploads()
@@ -95,7 +98,9 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                     case RenderEventType.AddPrimitiveToBatch:
                     {
                         AddPrimitiveToBatchEvent e = (AddPrimitiveToBatchEvent)renderEvent;
-                        IDeferredVertexBatch batch = context.Dereference<IDeferredVertexBatch>(e.VertexBatch);
+                        IDeferredVertexBatch batch = context.Dereference<IDeferredVertexBatch>(
+                            e.VertexBatch
+                        );
                         batch.Write(e.Memory);
                         break;
                     }
@@ -103,16 +108,22 @@ namespace osu.Framework.Graphics.Rendering.Deferred
                     case RenderEventType.SetUniformBufferData:
                     {
                         SetUniformBufferDataEvent e = (SetUniformBufferDataEvent)renderEvent;
-                        IDeferredUniformBuffer buffer = context.Dereference<IDeferredUniformBuffer>(e.Buffer);
+                        IDeferredUniformBuffer buffer = context.Dereference<IDeferredUniformBuffer>(
+                            e.Buffer
+                        );
                         UniformBufferReference range = buffer.Write(e.Data);
-                        context.RenderEvents[i] = RenderEvent.Create(new SetUniformBufferDataRangeEvent(e.Buffer, range));
+                        context.RenderEvents[i] = RenderEvent.Create(
+                            new SetUniformBufferDataRangeEvent(e.Buffer, range)
+                        );
                         break;
                     }
 
                     case RenderEventType.SetShaderStorageBufferObjectData:
                     {
-                        SetShaderStorageBufferObjectDataEvent e = (SetShaderStorageBufferObjectDataEvent)renderEvent;
-                        IDeferredShaderStorageBufferObject buffer = context.Dereference<IDeferredShaderStorageBufferObject>(e.Buffer);
+                        SetShaderStorageBufferObjectDataEvent e =
+                            (SetShaderStorageBufferObjectDataEvent)renderEvent;
+                        IDeferredShaderStorageBufferObject buffer =
+                            context.Dereference<IDeferredShaderStorageBufferObject>(e.Buffer);
                         buffer.Write(e.Index, e.Memory);
                         break;
                     }
@@ -215,7 +226,9 @@ namespace osu.Framework.Graphics.Rendering.Deferred
 
                     case RenderEventType.SetUniformBufferData:
                     {
-                        Debug.Fail("Uniform buffers should be uploaded during the pre-draw upload process.");
+                        Debug.Fail(
+                            "Uniform buffers should be uploaded during the pre-draw upload process."
+                        );
                         break;
                     }
 
@@ -228,47 +241,42 @@ namespace osu.Framework.Graphics.Rendering.Deferred
             }
         }
 
-        private void processEvent(in SetFrameBufferEvent e)
-            => graphics.SetFrameBuffer(context.Dereference<DeferredFrameBuffer?>(e.FrameBuffer));
+        private void processEvent(in SetFrameBufferEvent e) =>
+            graphics.SetFrameBuffer(context.Dereference<DeferredFrameBuffer?>(e.FrameBuffer));
 
-        private void processEvent(in ResizeFrameBufferEvent e)
-            => context.Dereference<DeferredFrameBuffer>(e.FrameBuffer).Resize(e.Size);
+        private void processEvent(in ResizeFrameBufferEvent e) =>
+            context.Dereference<DeferredFrameBuffer>(e.FrameBuffer).Resize(e.Size);
 
-        private void processEvent(in SetShaderEvent e)
-            => graphics.SetShader(context.Dereference<DeferredShader>(e.Shader).Resource);
+        private void processEvent(in SetShaderEvent e) =>
+            graphics.SetShader(context.Dereference<DeferredShader>(e.Shader).Resource);
 
-        private void processEvent(in SetTextureEvent e)
-            => graphics.AttachTexture(e.Unit, context.Dereference<IVeldridTexture>(e.Texture));
+        private void processEvent(in SetTextureEvent e) =>
+            graphics.AttachTexture(e.Unit, context.Dereference<IVeldridTexture>(e.Texture));
 
-        private void processEvent(in SetUniformBufferEvent e)
-            => graphics.AttachUniformBuffer(context.Dereference<string>(e.Name), context.Dereference<IVeldridUniformBuffer>(e.Buffer));
+        private void processEvent(in SetUniformBufferEvent e) =>
+            graphics.AttachUniformBuffer(
+                context.Dereference<string>(e.Name),
+                context.Dereference<IVeldridUniformBuffer>(e.Buffer)
+            );
 
-        private void processEvent(in ClearEvent e)
-            => graphics.Clear(e.Info);
+        private void processEvent(in ClearEvent e) => graphics.Clear(e.Info);
 
-        private void processEvent(in SetDepthInfoEvent e)
-            => graphics.SetDepthInfo(e.Info);
+        private void processEvent(in SetDepthInfoEvent e) => graphics.SetDepthInfo(e.Info);
 
-        private void processEvent(in SetScissorEvent e)
-            => graphics.SetScissor(e.Scissor);
+        private void processEvent(in SetScissorEvent e) => graphics.SetScissor(e.Scissor);
 
-        private void processEvent(in SetScissorStateEvent e)
-            => graphics.SetScissorState(e.Enabled);
+        private void processEvent(in SetScissorStateEvent e) => graphics.SetScissorState(e.Enabled);
 
-        private void processEvent(in SetStencilInfoEvent e)
-            => graphics.SetStencilInfo(e.Info);
+        private void processEvent(in SetStencilInfoEvent e) => graphics.SetStencilInfo(e.Info);
 
-        private void processEvent(in SetViewportEvent e)
-            => graphics.SetViewport(e.Viewport);
+        private void processEvent(in SetViewportEvent e) => graphics.SetViewport(e.Viewport);
 
-        private void processEvent(in SetBlendEvent e)
-            => graphics.SetBlend(e.Parameters);
+        private void processEvent(in SetBlendEvent e) => graphics.SetBlend(e.Parameters);
 
-        private void processEvent(in SetBlendMaskEvent e)
-            => graphics.SetBlendMask(e.Mask);
+        private void processEvent(in SetBlendMaskEvent e) => graphics.SetBlendMask(e.Mask);
 
-        private void processEvent(in FlushEvent e)
-            => context.Dereference<IDeferredVertexBatch>(e.VertexBatch).Draw(e.VertexCount);
+        private void processEvent(in FlushEvent e) =>
+            context.Dereference<IDeferredVertexBatch>(e.VertexBatch).Draw(e.VertexCount);
 
         private void processEvent(in SetUniformBufferDataRangeEvent e)
         {

@@ -31,7 +31,7 @@ namespace osu.Framework.Tests.Containers
             {
                 _ = new Container
                 {
-                    Children = (IReadOnlyList<Drawable>)Activator.CreateInstance(containerType)!
+                    Children = (IReadOnlyList<Drawable>)Activator.CreateInstance(containerType)!,
                 };
             });
 
@@ -46,7 +46,7 @@ namespace osu.Framework.Tests.Containers
             {
                 _ = new AudioContainer
                 {
-                    Children = (IReadOnlyList<Drawable>)Activator.CreateInstance(containerType)!
+                    Children = (IReadOnlyList<Drawable>)Activator.CreateInstance(containerType)!,
                 };
             });
 

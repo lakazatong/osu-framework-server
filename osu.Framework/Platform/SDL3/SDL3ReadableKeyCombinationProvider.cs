@@ -16,7 +16,8 @@ namespace osu.Framework.Platform.SDL3
             if (FrameworkEnvironment.UseSDL3)
                 return SDL_GetKeyFromScancode(scancode, modstate, false); // third parameter is not useful unless SDL_HINT_KEYCODE_OPTIONS is set
 
-            return (SDL_Keycode)global::SDL2.SDL.SDL_GetKeyFromScancode((global::SDL2.SDL.SDL_Scancode)scancode);
+            return (SDL_Keycode)
+                global::SDL2.SDL.SDL_GetKeyFromScancode((global::SDL2.SDL.SDL_Scancode)scancode);
         }
 
         private static string? getKeyName(SDL_Keycode keycode)

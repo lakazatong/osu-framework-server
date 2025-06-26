@@ -1,10 +1,10 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using TKVector2 = osuTK.Vector2;
-using SNVector2 = System.Numerics.Vector2;
 using SDPoint = System.Drawing.Point;
 using SDSize = System.Drawing.Size;
+using SNVector2 = System.Numerics.Vector2;
+using TKVector2 = osuTK.Vector2;
 
 namespace osu.Framework.Extensions
 {
@@ -14,11 +14,9 @@ namespace osu.Framework.Extensions
     /// </summary>
     public static class BridgingExtensions
     {
-        public static TKVector2 ToOsuTK(this SNVector2 vec) =>
-            new TKVector2(vec.X, vec.Y);
+        public static TKVector2 ToOsuTK(this SNVector2 vec) => new TKVector2(vec.X, vec.Y);
 
-        public static SNVector2 ToSystemNumerics(this TKVector2 vec) =>
-            new SNVector2(vec.X, vec.Y);
+        public static SNVector2 ToSystemNumerics(this TKVector2 vec) => new SNVector2(vec.X, vec.Y);
 
         public static SNVector2 ToSystemNumerics(this SDSize size) =>
             new SNVector2(size.Width, size.Height);

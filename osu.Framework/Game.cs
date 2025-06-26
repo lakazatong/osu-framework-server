@@ -27,7 +27,11 @@ using osuTK;
 
 namespace osu.Framework
 {
-    public abstract partial class Game : Container, IKeyBindingHandler<FrameworkAction>, IKeyBindingHandler<PlatformAction>, IHandleGlobalKeyboardInput
+    public abstract partial class Game
+        : Container,
+            IKeyBindingHandler<FrameworkAction>,
+            IKeyBindingHandler<PlatformAction>,
+            IHandleGlobalKeyboardInput
     {
         public IWindow Window => Host?.Window;
 
@@ -38,7 +42,8 @@ namespace osu.Framework
         /// <summary>
         /// The filtering mode to use for all textures fetched from <see cref="Textures"/>.
         /// </summary>
-        protected virtual TextureFilteringMode DefaultTextureFilteringMode => TextureFilteringMode.Linear;
+        protected virtual TextureFilteringMode DefaultTextureFilteringMode =>
+            TextureFilteringMode.Linear;
 
         protected GameHost Host { get; private set; }
 
@@ -83,9 +88,12 @@ namespace osu.Framework
         /// Creates a new <see cref="LocalisationManager"/>.
         /// </summary>
         /// <param name="frameworkConfig">The framework config manager.</param>
-        protected virtual LocalisationManager CreateLocalisationManager(FrameworkConfigManager frameworkConfig) => new LocalisationManager(frameworkConfig);
+        protected virtual LocalisationManager CreateLocalisationManager(
+            FrameworkConfigManager frameworkConfig
+        ) => new LocalisationManager(frameworkConfig);
 
-        protected internal virtual UserInputManager CreateUserInputManager() => new UserInputManager();
+        protected internal virtual UserInputManager CreateUserInputManager() =>
+            new UserInputManager();
 
         /// <summary>
         /// Provide <see cref="FrameworkSetting"/> defaults which should override those provided by osu-framework.
@@ -93,7 +101,10 @@ namespace osu.Framework
         /// Please check https://github.com/ppy/osu-framework/blob/master/osu.Framework/Configuration/FrameworkConfigManager.cs for expected types.
         /// </remarks>
         /// </summary>
-        protected internal virtual IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults() => null;
+        protected internal virtual IDictionary<
+            FrameworkSetting,
+            object
+        > GetFrameworkConfigDefaults() => null;
 
         /// <summary>
         /// Creates the <see cref="Storage"/> where this <see cref="Game"/> will reside.
@@ -101,31 +112,38 @@ namespace osu.Framework
         /// <param name="host">The <see cref="GameHost"/>.</param>
         /// <param name="defaultStorage">The default <see cref="Storage"/> to be used if a custom <see cref="Storage"/> isn't desired.</param>
         /// <returns>The <see cref="Storage"/>.</returns>
-        protected internal virtual Storage CreateStorage(GameHost host, Storage defaultStorage) => defaultStorage;
+        protected internal virtual Storage CreateStorage(GameHost host, Storage defaultStorage) =>
+            defaultStorage;
 
         protected Game()
         {
             RelativeSizeAxes = Axes.Both;
 
-            base.AddInternal(content = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-            });
-
-            base.AddInternal(new SafeAreaContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = overlayContent = new DrawSizePreservingFillContainer
+            base.AddInternal(
+                content = new Container
                 {
-                    TargetDrawSize = new Vector2(1280, 960),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                 }
-            });
+            );
+
+            base.AddInternal(
+                new SafeAreaContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = overlayContent =
+                        new DrawSizePreservingFillContainer
+                        {
+                            TargetDrawSize = new Vector2(1280, 960),
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                }
+            );
         }
 
-        protected sealed override void AddInternal(Drawable drawable) => throw new InvalidOperationException($"Use {nameof(Add)} or {nameof(Content)} instead.");
+        protected sealed override void AddInternal(Drawable drawable) =>
+            throw new InvalidOperationException($"Use {nameof(Add)} or {nameof(Content)} instead.");
 
         /// <summary>
         /// The earliest point of entry during <see cref="GameHost.Run"/> starting execution of a game.
@@ -137,9 +155,7 @@ namespace osu.Framework
         /// </remarks>
         /// <param name="gameStorage">The default game storage.</param>
         /// <param name="cacheStorage">The default cache storage.</param>
-        public virtual void SetupLogging(Storage gameStorage, Storage cacheStorage)
-        {
-        }
+        public virtual void SetupLogging(Storage gameStorage, Storage cacheStorage) { }
 
         /// <summary>
         /// As Load is run post host creation, you can override this method to alter properties of the host before it makes itself visible to the user.
@@ -155,17 +171,28 @@ namespace osu.Framework
 
         private DependencyContainer dependencies;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
-            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        ) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
         [BackgroundDependencyLoader]
         private void load(FrameworkConfigManager config)
         {
             Resources = new ResourceStore<byte[]>();
-            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(Game).Assembly), @"Resources"));
+            Resources.AddStore(
+                new NamespacedResourceStore<byte[]>(
+                    new DllResourceStore(typeof(Game).Assembly),
+                    @"Resources"
+                )
+            );
 
-            Textures = new TextureStore(Host.Renderer, Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")),
-                filteringMode: DefaultTextureFilteringMode);
+            Textures = new TextureStore(
+                Host.Renderer,
+                Host.CreateTextureLoaderStore(
+                    new NamespacedResourceStore<byte[]>(Resources, @"Textures")
+                ),
+                filteringMode: DefaultTextureFilteringMode
+            );
 
             Textures.AddTextureSource(Host.CreateTextureLoaderStore(CreateOnlineStore()));
             dependencies.Cache(Textures);
@@ -178,7 +205,10 @@ namespace osu.Framework
             samples.AddStore(new NamespacedResourceStore<byte[]>(Resources, @"Samples"));
             samples.AddStore(CreateOnlineStore());
 
-            Audio = new AudioManager(Host.AudioThread, tracks, samples) { EventScheduler = Scheduler };
+            Audio = new AudioManager(Host.AudioThread, tracks, samples)
+            {
+                EventScheduler = Scheduler,
+            };
             dependencies.Cache(Audio);
 
             dependencies.CacheAs(Audio.Tracks);
@@ -190,7 +220,10 @@ namespace osu.Framework
             config.BindWith(FrameworkSetting.VolumeEffect, Audio.VolumeSample);
             config.BindWith(FrameworkSetting.VolumeMusic, Audio.VolumeTrack);
 
-            Shaders = new ShaderManager(Host.Renderer, new NamespacedResourceStore<byte[]>(Resources, @"Shaders"));
+            Shaders = new ShaderManager(
+                Host.Renderer,
+                new NamespacedResourceStore<byte[]>(Resources, @"Shaders")
+            );
             dependencies.Cache(Shaders);
 
             var cacheStorage = Host.CacheStorage.GetStorageForDirectory("fonts");
@@ -226,25 +259,28 @@ namespace osu.Framework
             executionMode = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode);
 
             logOverlayVisibility = config.GetBindable<bool>(FrameworkSetting.ShowLogOverlay);
-            logOverlayVisibility.BindValueChanged(visibility =>
-            {
-                if (visibility.NewValue)
+            logOverlayVisibility.BindValueChanged(
+                visibility =>
                 {
-                    if (logOverlay == null)
+                    if (visibility.NewValue)
                     {
-                        LoadComponentAsync(logOverlay = new LogOverlay
+                        if (logOverlay == null)
                         {
-                            Depth = float.MinValue / 2,
-                        }, overlayContent.Add);
-                    }
+                            LoadComponentAsync(
+                                logOverlay = new LogOverlay { Depth = float.MinValue / 2 },
+                                overlayContent.Add
+                            );
+                        }
 
-                    logOverlay.Show();
-                }
-                else
-                {
-                    logOverlay?.Hide();
-                }
-            }, true);
+                        logOverlay.Show();
+                    }
+                    else
+                    {
+                        logOverlay?.Hide();
+                    }
+                },
+                true
+            );
         }
 
         /// <summary>
@@ -258,11 +294,20 @@ namespace osu.Framework
         /// <param name="store">The backing store with font resources.</param>
         /// <param name="assetName">The base name of the font.</param>
         /// <param name="target">An optional target store to add the font to. If not specified, <see cref="Fonts"/> is used.</param>
-        public void AddFont(ResourceStore<byte[]> store, string assetName = null, FontStore target = null)
-            => addFont(target ?? Fonts, store, assetName);
+        public void AddFont(
+            ResourceStore<byte[]> store,
+            string assetName = null,
+            FontStore target = null
+        ) => addFont(target ?? Fonts, store, assetName);
 
-        private void addFont(FontStore target, ResourceStore<byte[]> store, string assetName = null)
-            => target.AddTextureSource(new RawCachingGlyphStore(store, assetName, Host.CreateTextureLoaderStore(store)));
+        private void addFont(
+            FontStore target,
+            ResourceStore<byte[]> store,
+            string assetName = null
+        ) =>
+            target.AddTextureSource(
+                new RawCachingGlyphStore(store, assetName, Host.CreateTextureLoaderStore(store))
+            );
 
         protected override void LoadComplete()
         {
@@ -270,34 +315,40 @@ namespace osu.Framework
 
             PerformanceOverlay performanceOverlay;
 
-            LoadComponentAsync(performanceOverlay = new PerformanceOverlay
-            {
-                Margin = new MarginPadding(5),
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(10, 10),
-                AutoSizeAxes = Axes.Both,
-                Alpha = 0,
-                Anchor = Anchor.BottomRight,
-                Origin = Anchor.BottomRight,
-                Depth = float.MinValue
-            }, overlayContent.Add);
+            LoadComponentAsync(
+                performanceOverlay = new PerformanceOverlay
+                {
+                    Margin = new MarginPadding(5),
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(10, 10),
+                    AutoSizeAxes = Axes.Both,
+                    Alpha = 0,
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Depth = float.MinValue,
+                },
+                overlayContent.Add
+            );
 
             FrameStatistics.BindValueChanged(e => performanceOverlay.State = e.NewValue, true);
 
             if (FrameworkEnvironment.FrameStatisticsViaTouch)
             {
-                base.AddInternal(new FrameStatisticsTouchReceptor(this)
-                {
-                    Depth = float.MaxValue,
-                    Anchor = Anchor.BottomRight,
-                    Origin = Anchor.BottomRight,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.2f),
-                });
+                base.AddInternal(
+                    new FrameStatisticsTouchReceptor(this)
+                    {
+                        Depth = float.MaxValue,
+                        Anchor = Anchor.BottomRight,
+                        Origin = Anchor.BottomRight,
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(0.2f),
+                    }
+                );
             }
         }
 
-        protected readonly Bindable<FrameStatisticsMode> FrameStatistics = new Bindable<FrameStatisticsMode>();
+        protected readonly Bindable<FrameStatisticsMode> FrameStatistics =
+            new Bindable<FrameStatisticsMode>();
 
         private GlobalStatisticsDisplay globalStatistics;
 
@@ -324,12 +375,15 @@ namespace osu.Framework
 
                     if (drawVisualiser == null)
                     {
-                        LoadComponentAsync(drawVisualiser = new DrawVisualiser
-                        {
-                            State = { Value = Visibility.Visible },
-                            Depth = getNextFrontMostOverlayDepth(),
-                            ToolPosition = getCascadeLocation(0),
-                        }, overlayContent.Add);
+                        LoadComponentAsync(
+                            drawVisualiser = new DrawVisualiser
+                            {
+                                State = { Value = Visibility.Visible },
+                                Depth = getNextFrontMostOverlayDepth(),
+                                ToolPosition = getCascadeLocation(0),
+                            },
+                            overlayContent.Add
+                        );
                     }
                     else
                         toggleOverlay(drawVisualiser);
@@ -340,12 +394,15 @@ namespace osu.Framework
 
                     if (globalStatistics == null)
                     {
-                        LoadComponentAsync(globalStatistics = new GlobalStatisticsDisplay
-                        {
-                            State = { Value = Visibility.Visible },
-                            Position = getCascadeLocation(1),
-                            Depth = getNextFrontMostOverlayDepth(),
-                        }, overlayContent.Add);
+                        LoadComponentAsync(
+                            globalStatistics = new GlobalStatisticsDisplay
+                            {
+                                State = { Value = Visibility.Visible },
+                                Position = getCascadeLocation(1),
+                                Depth = getNextFrontMostOverlayDepth(),
+                            },
+                            overlayContent.Add
+                        );
                     }
                     else
                         toggleOverlay(globalStatistics);
@@ -356,12 +413,15 @@ namespace osu.Framework
 
                     if (textureVisualiser == null)
                     {
-                        LoadComponentAsync(textureVisualiser = new TextureVisualiser
-                        {
-                            State = { Value = Visibility.Visible },
-                            Position = getCascadeLocation(2),
-                            Depth = getNextFrontMostOverlayDepth(),
-                        }, overlayContent.Add);
+                        LoadComponentAsync(
+                            textureVisualiser = new TextureVisualiser
+                            {
+                                State = { Value = Visibility.Visible },
+                                Position = getCascadeLocation(2),
+                                Depth = getNextFrontMostOverlayDepth(),
+                            },
+                            overlayContent.Add
+                        );
                     }
                     else
                         toggleOverlay(textureVisualiser);
@@ -371,12 +431,15 @@ namespace osu.Framework
                 case FrameworkAction.ToggleAudioMixerVisualiser:
                     if (audioMixerVisualiser == null)
                     {
-                        LoadComponentAsync(audioMixerVisualiser = new AudioMixerVisualiser
-                        {
-                            State = { Value = Visibility.Visible },
-                            Position = getCascadeLocation(3),
-                            Depth = getNextFrontMostOverlayDepth(),
-                        }, overlayContent.Add);
+                        LoadComponentAsync(
+                            audioMixerVisualiser = new AudioMixerVisualiser
+                            {
+                                State = { Value = Visibility.Visible },
+                                Position = getCascadeLocation(3),
+                                Depth = getNextFrontMostOverlayDepth(),
+                            },
+                            overlayContent.Add
+                        );
                     }
                     else
                         toggleOverlay(audioMixerVisualiser);
@@ -412,8 +475,8 @@ namespace osu.Framework
 
             return false;
 
-            static Vector2 getCascadeLocation(int index)
-                => new Vector2(100 + index * (TitleBar.HEIGHT + 10));
+            static Vector2 getCascadeLocation(int index) =>
+                new Vector2(100 + index * (TitleBar.HEIGHT + 10));
         }
 
         protected void CycleFrameStatistics()
@@ -444,9 +507,7 @@ namespace osu.Framework
 
         private float getNextFrontMostOverlayDepth() => currentOverlayDepth -= 0.01f;
 
-        public void OnReleased(KeyBindingReleaseEvent<FrameworkAction> e)
-        {
-        }
+        public void OnReleased(KeyBindingReleaseEvent<FrameworkAction> e) { }
 
         public virtual bool OnPressed(KeyBindingPressEvent<PlatformAction> e)
         {
@@ -463,9 +524,7 @@ namespace osu.Framework
             return false;
         }
 
-        public virtual void OnReleased(KeyBindingReleaseEvent<PlatformAction> e)
-        {
-        }
+        public virtual void OnReleased(KeyBindingReleaseEvent<PlatformAction> e) { }
 
         /// <summary>
         /// Requests the game to exit. This exit can be blocked by <see cref="OnExiting"/>.
@@ -482,7 +541,9 @@ namespace osu.Framework
         public void Exit()
         {
             if (Host == null)
-                throw new InvalidOperationException("Attempted to exit a game which has not yet been run");
+                throw new InvalidOperationException(
+                    "Attempted to exit a game which has not yet been run"
+                );
 
             Host.Exit();
         }
@@ -527,7 +588,8 @@ namespace osu.Framework
                 this.game = game;
             }
 
-            protected override bool OnClick(ClickEvent e) => e.CurrentState.Mouse.LastSource is ISourcedFromTouch;
+            protected override bool OnClick(ClickEvent e) =>
+                e.CurrentState.Mouse.LastSource is ISourcedFromTouch;
 
             protected override bool OnDoubleClick(DoubleClickEvent e)
             {

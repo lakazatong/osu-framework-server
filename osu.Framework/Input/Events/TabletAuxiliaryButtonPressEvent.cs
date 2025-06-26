@@ -11,8 +11,6 @@ namespace osu.Framework.Input.Events
     public class TabletAuxiliaryButtonPressEvent : TabletAuxiliaryButtonEvent
     {
         public TabletAuxiliaryButtonPressEvent(InputState state, TabletAuxiliaryButton button)
-            : base(state, button)
-        {
-        }
+            : base(state, button) { }
     }
 }

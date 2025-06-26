@@ -15,8 +15,8 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.IO.Stores;
 using osu.Framework.Layout;
 using osu.Framework.Localisation;
-using osu.Framework.Utils;
 using osu.Framework.Text;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -25,13 +25,28 @@ namespace osu.Framework.Graphics.Sprites
     /// <summary>
     /// A container for simple text rendering purposes. If more complex text rendering is required, use <see cref="TextFlowContainer"/> instead.
     /// </summary>
-    public partial class SpriteText : Drawable, IHasLineBaseHeight, ITexturedShaderDrawable, IHasText, IHasFilterTerms, IFillFlowContainer, IHasCurrentValue<string>
+    public partial class SpriteText
+        : Drawable,
+            IHasLineBaseHeight,
+            ITexturedShaderDrawable,
+            IHasText,
+            IHasFilterTerms,
+            IFillFlowContainer,
+            IHasCurrentValue<string>
     {
         /// <remarks>
         /// <c>U+00A0</c> is the Unicode NON-BREAKING SPACE character (distinct from the standard ASCII space).
         /// <c>U+202F</c> is the Unicode NARROW NO-BREAK SPACE character.
         /// </remarks>
-        private static readonly char[] default_never_fixed_width_characters = { '.', ',', ':', ' ', '\u00A0', '\u202F' };
+        private static readonly char[] default_never_fixed_width_characters =
+        {
+            '.',
+            ',',
+            ':',
+            ' ',
+            '\u00A0',
+            '\u202F',
+        };
 
         [Resolved]
         private FontStore store { get; set; }
@@ -69,7 +84,10 @@ namespace osu.Framework.Graphics.Sprites
         {
             localisedText = localisation.GetLocalisedBindableString(text);
 
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
 
             // Pre-cache the characters in the texture store
             foreach (char character in localisedText.Value)
@@ -82,21 +100,24 @@ namespace osu.Framework.Graphics.Sprites
         {
             base.LoadComplete();
 
-            localisedText.BindValueChanged(str =>
-            {
-                current.Value = localisedText.Value;
-
-                if (string.IsNullOrEmpty(str.NewValue))
+            localisedText.BindValueChanged(
+                str =>
                 {
-                    // We'll become not present and won't update the characters to set the size to 0, so do it manually
-                    if (requiresAutoSizedWidth)
-                        base.Width = Padding.TotalHorizontal;
-                    if (requiresAutoSizedHeight)
-                        base.Height = Padding.TotalVertical;
-                }
+                    current.Value = localisedText.Value;
 
-                invalidate(true);
-            }, true);
+                    if (string.IsNullOrEmpty(str.NewValue))
+                    {
+                        // We'll become not present and won't update the characters to set the size to 0, so do it manually
+                        if (requiresAutoSizedWidth)
+                            base.Width = Padding.TotalHorizontal;
+                        if (requiresAutoSizedHeight)
+                            base.Height = Padding.TotalVertical;
+                    }
+
+                    invalidate(true);
+                },
+                true
+            );
         }
 
         private LocalisableString text = string.Empty;
@@ -264,7 +285,8 @@ namespace osu.Framework.Graphics.Sprites
             get => truncate;
             set
             {
-                if (truncate == value) return;
+                if (truncate == value)
+                    return;
 
                 if (value)
                     AllowMultiline = false;
@@ -285,7 +307,8 @@ namespace osu.Framework.Graphics.Sprites
             get => ellipsisString;
             set
             {
-                if (ellipsisString == value) return;
+                if (ellipsisString == value)
+                    return;
 
                 ellipsisString = value;
                 invalidate(true, true);
@@ -297,9 +320,11 @@ namespace osu.Framework.Graphics.Sprites
         /// </summary>
         protected bool IsTruncated { get; private set; }
 
-        private bool requiresAutoSizedWidth => explicitWidth == null && (RelativeSizeAxes & Axes.X) == 0;
+        private bool requiresAutoSizedWidth =>
+            explicitWidth == null && (RelativeSizeAxes & Axes.X) == 0;
 
-        private bool requiresAutoSizedHeight => explicitHeight == null && (RelativeSizeAxes & Axes.Y) == 0;
+        private bool requiresAutoSizedHeight =>
+            explicitHeight == null && (RelativeSizeAxes & Axes.Y) == 0;
 
         private float? explicitWidth;
 
@@ -422,7 +447,10 @@ namespace osu.Framework.Graphics.Sprites
                 if (padding.Equals(value))
                     return;
 
-                if (!Validation.IsFinite(value)) throw new ArgumentException($@"{nameof(Padding)} must be finite, but is {value}.");
+                if (!Validation.IsFinite(value))
+                    throw new ArgumentException(
+                        $@"{nameof(Padding)} must be finite, but is {value}."
+                    );
 
                 padding = value;
 
@@ -430,11 +458,15 @@ namespace osu.Framework.Graphics.Sprites
             }
         }
 
-        public override bool IsPresent => base.IsPresent && (AlwaysPresent || !string.IsNullOrEmpty(displayedText));
+        public override bool IsPresent =>
+            base.IsPresent && (AlwaysPresent || !string.IsNullOrEmpty(displayedText));
 
         #region Characters
 
-        private readonly LayoutValue charactersCache = new LayoutValue(Invalidation.DrawSize | Invalidation.Presence, InvalidationSource.Parent);
+        private readonly LayoutValue charactersCache = new LayoutValue(
+            Invalidation.DrawSize | Invalidation.Presence,
+            InvalidationSource.Parent
+        );
 
         /// <summary>
         /// Glyph list to be passed to <see cref="TextBuilder"/>.
@@ -503,10 +535,16 @@ namespace osu.Framework.Graphics.Sprites
             }
         }
 
-        private readonly LayoutValue<Vector2> shadowOffsetCache = new LayoutValue<Vector2>(Invalidation.DrawInfo, InvalidationSource.Parent);
+        private readonly LayoutValue<Vector2> shadowOffsetCache = new LayoutValue<Vector2>(
+            Invalidation.DrawInfo,
+            InvalidationSource.Parent
+        );
 
         private Vector2 premultipliedShadowOffset =>
-            shadowOffsetCache.IsValid ? shadowOffsetCache.Value : shadowOffsetCache.Value = ToScreenSpace(shadowOffset * Font.Size) - ToScreenSpace(Vector2.Zero);
+            shadowOffsetCache.IsValid
+                ? shadowOffsetCache.Value
+                : shadowOffsetCache.Value =
+                    ToScreenSpace(shadowOffset * Font.Size) - ToScreenSpace(Vector2.Zero);
 
         #endregion
 
@@ -546,7 +584,10 @@ namespace osu.Framework.Graphics.Sprites
         /// </summary>
         protected virtual char FallbackCharacter => '?';
 
-        private readonly LayoutValue<TextBuilder> textBuilderCache = new LayoutValue<TextBuilder>(Invalidation.DrawSize, InvalidationSource.Parent);
+        private readonly LayoutValue<TextBuilder> textBuilderCache = new LayoutValue<TextBuilder>(
+            Invalidation.DrawSize,
+            InvalidationSource.Parent
+        );
 
         /// <summary>
         /// Invalidates the current <see cref="TextBuilder"/>, causing a new one to be created next time it's required via <see cref="CreateTextBuilder"/>.
@@ -560,26 +601,62 @@ namespace osu.Framework.Graphics.Sprites
         /// <returns>The <see cref="TextBuilder"/>.</returns>
         protected virtual TextBuilder CreateTextBuilder(ITexturedGlyphLookupStore store)
         {
-            char[] excludeCharacters = FixedWidthExcludeCharacters ?? default_never_fixed_width_characters;
+            char[] excludeCharacters =
+                FixedWidthExcludeCharacters ?? default_never_fixed_width_characters;
 
             float builderMaxWidth = requiresAutoSizedWidth
                 ? MaxWidth
-                : ApplyRelativeAxes(RelativeSizeAxes, new Vector2(Math.Min(MaxWidth, base.Width), base.Height), FillMode).X - Padding.Right;
+                : ApplyRelativeAxes(
+                    RelativeSizeAxes,
+                    new Vector2(Math.Min(MaxWidth, base.Width), base.Height),
+                    FillMode
+                ).X - Padding.Right;
 
             if (AllowMultiline)
             {
-                return new MultilineTextBuilder(store, Font, builderMaxWidth, UseFullGlyphHeight, new Vector2(Padding.Left, Padding.Top), Spacing, charactersBacking,
-                    excludeCharacters, FallbackCharacter, FixedWidthReferenceCharacter);
+                return new MultilineTextBuilder(
+                    store,
+                    Font,
+                    builderMaxWidth,
+                    UseFullGlyphHeight,
+                    new Vector2(Padding.Left, Padding.Top),
+                    Spacing,
+                    charactersBacking,
+                    excludeCharacters,
+                    FallbackCharacter,
+                    FixedWidthReferenceCharacter
+                );
             }
 
             if (Truncate)
             {
-                return new TruncatingTextBuilder(store, Font, builderMaxWidth, ellipsisString, UseFullGlyphHeight, new Vector2(Padding.Left, Padding.Top), Spacing, charactersBacking,
-                    excludeCharacters, FallbackCharacter, FixedWidthReferenceCharacter);
+                return new TruncatingTextBuilder(
+                    store,
+                    Font,
+                    builderMaxWidth,
+                    ellipsisString,
+                    UseFullGlyphHeight,
+                    new Vector2(Padding.Left, Padding.Top),
+                    Spacing,
+                    charactersBacking,
+                    excludeCharacters,
+                    FallbackCharacter,
+                    FixedWidthReferenceCharacter
+                );
             }
 
-            return new TextBuilder(store, Font, builderMaxWidth, UseFullGlyphHeight, new Vector2(Padding.Left, Padding.Top), Spacing, charactersBacking,
-                excludeCharacters, FallbackCharacter, FixedWidthReferenceCharacter);
+            return new TextBuilder(
+                store,
+                Font,
+                builderMaxWidth,
+                UseFullGlyphHeight,
+                new Vector2(Padding.Left, Padding.Top),
+                Spacing,
+                charactersBacking,
+                excludeCharacters,
+                FallbackCharacter,
+                FixedWidthReferenceCharacter
+            );
         }
 
         private TextBuilder getTextBuilder()

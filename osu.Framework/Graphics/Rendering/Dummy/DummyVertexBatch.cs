@@ -9,22 +9,16 @@ namespace osu.Framework.Graphics.Rendering.Dummy
     internal class DummyVertexBatch<T> : IVertexBatch<T>
         where T : unmanaged, IEquatable<T>, IVertex
     {
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         public int Size => 0;
 
         public int Draw() => 0;
 
-        void IVertexBatch.ResetCounters()
-        {
-        }
+        void IVertexBatch.ResetCounters() { }
 
         public Action<T> AddAction { get; } = _ => { };
 
-        public void Add(T vertex)
-        {
-        }
+        public void Add(T vertex) { }
     }
 }

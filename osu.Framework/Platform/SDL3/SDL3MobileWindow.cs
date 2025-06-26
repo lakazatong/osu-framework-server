@@ -8,11 +8,13 @@ namespace osu.Framework.Platform.SDL3
     internal class SDL3MobileWindow : SDL3Window
     {
         public SDL3MobileWindow(GraphicsSurfaceType surfaceType, string appName)
-            : base(surfaceType, appName)
-        {
-        }
+            : base(surfaceType, appName) { }
 
-        protected override unsafe void UpdateWindowStateAndSize(WindowState state, Display display, DisplayMode displayMode)
+        protected override unsafe void UpdateWindowStateAndSize(
+            WindowState state,
+            Display display,
+            DisplayMode displayMode
+        )
         {
             // This sets the status bar to hidden.
             SDL_SetWindowFullscreen(SDLWindowHandle, true);

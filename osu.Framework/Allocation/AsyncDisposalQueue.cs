@@ -17,15 +17,22 @@ namespace osu.Framework.Allocation
     /// </summary>
     internal static class AsyncDisposalQueue
     {
-        private static readonly GlobalStatistic<Type> last_disposal = GlobalStatistics.Get<Type>("Drawable", "Last disposal");
+        private static readonly GlobalStatistic<Type> last_disposal = GlobalStatistics.Get<Type>(
+            "Drawable",
+            "Last disposal"
+        );
 
         private static Task runTask;
 
         private static readonly List<IDisposable> disposal_queue = new List<IDisposable>();
 
-        private static readonly ManualResetEventSlim processing_reset_event = new ManualResetEventSlim(true);
+        private static readonly ManualResetEventSlim processing_reset_event =
+            new ManualResetEventSlim(true);
 
-        private static readonly ThreadedTaskScheduler scheduler = new ThreadedTaskScheduler(1, "Disposal queue");
+        private static readonly ThreadedTaskScheduler scheduler = new ThreadedTaskScheduler(
+            1,
+            "Disposal queue"
+        );
 
         private static int runningTasks;
 
@@ -46,37 +53,42 @@ namespace osu.Framework.Allocation
                 processing_reset_event.Reset();
             }
 
-            runTask = Task.Factory.StartNew(() =>
-            {
-                try
+            runTask = Task.Factory.StartNew(
+                () =>
                 {
-                    IDisposable[] itemsToDispose;
-
-                    lock (disposal_queue)
+                    try
                     {
-                        itemsToDispose = disposal_queue.ToArray();
-                        disposal_queue.Clear();
-                    }
+                        IDisposable[] itemsToDispose;
 
-                    for (int i = 0; i < itemsToDispose.Length; i++)
+                        lock (disposal_queue)
+                        {
+                            itemsToDispose = disposal_queue.ToArray();
+                            disposal_queue.Clear();
+                        }
+
+                        for (int i = 0; i < itemsToDispose.Length; i++)
+                        {
+                            ref var item = ref itemsToDispose[i];
+
+                            last_disposal.Value = item.GetType();
+
+                            item.Dispose();
+                            item = null;
+                        }
+                    }
+                    finally
                     {
-                        ref var item = ref itemsToDispose[i];
-
-                        last_disposal.Value = item.GetType();
-
-                        item.Dispose();
-                        item = null;
+                        lock (disposal_queue)
+                        {
+                            if (Interlocked.Decrement(ref runningTasks) == 0)
+                                processing_reset_event.Set();
+                        }
                     }
-                }
-                finally
-                {
-                    lock (disposal_queue)
-                    {
-                        if (Interlocked.Decrement(ref runningTasks) == 0)
-                            processing_reset_event.Set();
-                    }
-                }
-            }, CancellationToken.None, TaskCreationOptions.None, scheduler);
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler
+            );
         }
 
         /// <summary>

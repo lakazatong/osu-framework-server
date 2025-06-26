@@ -18,7 +18,10 @@ namespace osu.Framework.Benchmarks
         // 0: Basic events
         // 1: Events with data
         // 2: Mixed events
-        private readonly (ResourceAllocator allocator, List<RenderEvent> list)[] staticItems = new (ResourceAllocator allocator, List<RenderEvent> list)[3];
+        private readonly (ResourceAllocator allocator, List<RenderEvent> list)[] staticItems = new (
+            ResourceAllocator allocator,
+            List<RenderEvent> list
+        )[3];
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -34,11 +37,28 @@ namespace osu.Framework.Benchmarks
 
             for (int i = 0; i < 10000; i++)
             {
-                staticItems[0].list.Add(RenderEvent.Create(new FlushEvent(new ResourceReference(1), 10)));
-                staticItems[1].list.Add(RenderEvent.Create(new AddPrimitiveToBatchEvent(new ResourceReference(0), staticItems[1].allocator.AllocateRegion(1024))));
-                staticItems[2].list.Add(i % 2 == 0
-                    ? RenderEvent.Create(new FlushEvent(new ResourceReference(1), 10))
-                    : RenderEvent.Create(new AddPrimitiveToBatchEvent(new ResourceReference(0), staticItems[2].allocator.AllocateRegion(1024))));
+                staticItems[0]
+                    .list.Add(RenderEvent.Create(new FlushEvent(new ResourceReference(1), 10)));
+                staticItems[1]
+                    .list.Add(
+                        RenderEvent.Create(
+                            new AddPrimitiveToBatchEvent(
+                                new ResourceReference(0),
+                                staticItems[1].allocator.AllocateRegion(1024)
+                            )
+                        )
+                    );
+                staticItems[2]
+                    .list.Add(
+                        i % 2 == 0
+                            ? RenderEvent.Create(new FlushEvent(new ResourceReference(1), 10))
+                            : RenderEvent.Create(
+                                new AddPrimitiveToBatchEvent(
+                                    new ResourceReference(0),
+                                    staticItems[2].allocator.AllocateRegion(1024)
+                                )
+                            )
+                    );
             }
         }
 
@@ -57,7 +77,14 @@ namespace osu.Framework.Benchmarks
             localAllocator.NewFrame();
 
             for (int i = 0; i < 10000; i++)
-                localEventList.Add(RenderEvent.Create(new AddPrimitiveToBatchEvent(new ResourceReference(0), localAllocator.AllocateRegion(1024))));
+                localEventList.Add(
+                    RenderEvent.Create(
+                        new AddPrimitiveToBatchEvent(
+                            new ResourceReference(0),
+                            localAllocator.AllocateRegion(1024)
+                        )
+                    )
+                );
         }
 
         [Benchmark]

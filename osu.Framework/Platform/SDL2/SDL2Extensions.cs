@@ -864,8 +864,10 @@ namespace osu.Framework.Platform.SDL2
 
         public static WindowState ToWindowState(this SDL_WindowFlags windowFlags)
         {
-            if (windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP) ||
-                windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_BORDERLESS))
+            if (
+                windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP)
+                || windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_BORDERLESS)
+            )
                 return WindowState.FullscreenBorderless;
 
             if (windowFlags.HasFlagFast(SDL_WindowFlags.SDL_WINDOW_MINIMIZED))
@@ -1037,7 +1039,13 @@ namespace osu.Framework.Platform.SDL2
         public static DisplayMode ToDisplayMode(this SDL_DisplayMode mode, int displayIndex)
         {
             SDL_PixelFormatEnumToMasks(mode.format, out int bpp, out _, out _, out _, out _);
-            return new DisplayMode(SDL_GetPixelFormatName(mode.format), new Size(mode.w, mode.h), bpp, mode.refresh_rate, displayIndex);
+            return new DisplayMode(
+                SDL_GetPixelFormatName(mode.format),
+                new Size(mode.w, mode.h),
+                bpp,
+                mode.refresh_rate,
+                displayIndex
+            );
         }
 
         public static string ReadableName(this SDL_LogCategory category)
@@ -1109,7 +1117,8 @@ namespace osu.Framework.Platform.SDL2
         /// <returns>
         /// <c>string</c> in the format of <c>1920x1080@60</c>.
         /// </returns>
-        public static string ReadableString(this SDL_DisplayMode mode) => $"{mode.w}x{mode.h}@{mode.refresh_rate}";
+        public static string ReadableString(this SDL_DisplayMode mode) =>
+            $"{mode.w}x{mode.h}@{mode.refresh_rate}";
 
         /// <summary>
         /// Gets the SDL error, and then clears it.

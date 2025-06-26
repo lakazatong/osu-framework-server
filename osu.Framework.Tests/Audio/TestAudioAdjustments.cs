@@ -40,7 +40,9 @@ namespace osu.Framework.Tests.Audio
         }
 
         [Test]
-        public void TestRemoveAllAdjustmentsRemovesExternalBindings([Values] AdjustableProperty type)
+        public void TestRemoveAllAdjustmentsRemovesExternalBindings(
+            [Values] AdjustableProperty type
+        )
         {
             var adjustments = new AudioAdjustments();
 
@@ -126,13 +128,7 @@ namespace osu.Framework.Tests.Audio
         {
             var adjustments = new AudioAdjustments();
 
-            var adjustments2 = new AudioAdjustments
-            {
-                Volume =
-                {
-                    Value = 0.5f
-                }
-            };
+            var adjustments2 = new AudioAdjustments { Volume = { Value = 0.5f } };
 
             adjustments.BindAdjustments(adjustments2);
 
@@ -193,10 +189,22 @@ namespace osu.Framework.Tests.Audio
         {
             var adjustments = new AudioAdjustments();
 
-            Assert.AreEqual(adjustments.AggregateVolume, adjustments.GetAggregate(AdjustableProperty.Volume));
-            Assert.AreEqual(adjustments.AggregateBalance, adjustments.GetAggregate(AdjustableProperty.Balance));
-            Assert.AreEqual(adjustments.AggregateFrequency, adjustments.GetAggregate(AdjustableProperty.Frequency));
-            Assert.AreEqual(adjustments.AggregateTempo, adjustments.GetAggregate(AdjustableProperty.Tempo));
+            Assert.AreEqual(
+                adjustments.AggregateVolume,
+                adjustments.GetAggregate(AdjustableProperty.Volume)
+            );
+            Assert.AreEqual(
+                adjustments.AggregateBalance,
+                adjustments.GetAggregate(AdjustableProperty.Balance)
+            );
+            Assert.AreEqual(
+                adjustments.AggregateFrequency,
+                adjustments.GetAggregate(AdjustableProperty.Frequency)
+            );
+            Assert.AreEqual(
+                adjustments.AggregateTempo,
+                adjustments.GetAggregate(AdjustableProperty.Tempo)
+            );
         }
     }
 }

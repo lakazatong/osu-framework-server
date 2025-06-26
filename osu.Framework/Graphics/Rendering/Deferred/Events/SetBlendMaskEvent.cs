@@ -5,7 +5,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Events
 {
     internal readonly record struct SetBlendMaskEvent(BlendingMask Mask)
     {
-        public static RenderEvent Create(BlendingMask mask)
-            => RenderEvent.Create(new SetBlendMaskEvent(mask));
+        public static RenderEvent Create(BlendingMask mask) =>
+            RenderEvent.Create(new SetBlendMaskEvent(mask));
     }
 }

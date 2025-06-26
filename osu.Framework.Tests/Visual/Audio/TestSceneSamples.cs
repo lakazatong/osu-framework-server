@@ -39,11 +39,7 @@ namespace osu.Framework.Tests.Visual.Audio
                     FillMode = FillMode.Fit,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            Colour = Color4.Blue,
-                            RelativeSizeAxes = Axes.Both,
-                        },
+                        new Box { Colour = Color4.Blue, RelativeSizeAxes = Axes.Both },
                         new Grid(beats - 1, notes),
                         samples = new AudioContainer
                         {
@@ -59,21 +55,39 @@ namespace osu.Framework.Tests.Visual.Audio
                                 new DraggableSample(5, 11),
                                 new DraggableSample(6, 14),
                                 new DraggableSample(7, 16),
-                                tracking = new TrackingLine()
-                            }
+                                tracking = new TrackingLine(),
+                            },
                         },
-                    }
+                    },
                 },
             };
 
-            AddStep("reduce volume", () => samples.VolumeTo(samples.Volume.Value - 0.5f, 1000, Easing.OutQuint));
-            AddStep("increase volume", () => samples.VolumeTo(samples.Volume.Value + 0.5f, 1000, Easing.OutQuint));
+            AddStep(
+                "reduce volume",
+                () => samples.VolumeTo(samples.Volume.Value - 0.5f, 1000, Easing.OutQuint)
+            );
+            AddStep(
+                "increase volume",
+                () => samples.VolumeTo(samples.Volume.Value + 0.5f, 1000, Easing.OutQuint)
+            );
 
-            AddStep("reduce frequency", () => samples.FrequencyTo(samples.Frequency.Value - 0.1f, 1000, Easing.OutQuint));
-            AddStep("increase frequency", () => samples.FrequencyTo(samples.Frequency.Value + 0.1f, 1000, Easing.OutQuint));
+            AddStep(
+                "reduce frequency",
+                () => samples.FrequencyTo(samples.Frequency.Value - 0.1f, 1000, Easing.OutQuint)
+            );
+            AddStep(
+                "increase frequency",
+                () => samples.FrequencyTo(samples.Frequency.Value + 0.1f, 1000, Easing.OutQuint)
+            );
 
-            AddStep("left balance", () => samples.BalanceTo(samples.Balance.Value - 1, 1000, Easing.OutQuint));
-            AddStep("right balance", () => samples.BalanceTo(samples.Balance.Value + 1, 1000, Easing.OutQuint));
+            AddStep(
+                "left balance",
+                () => samples.BalanceTo(samples.Balance.Value - 1, 1000, Easing.OutQuint)
+            );
+            AddStep(
+                "right balance",
+                () => samples.BalanceTo(samples.Balance.Value + 1, 1000, Easing.OutQuint)
+            );
         }
 
         protected override void Update()
@@ -88,7 +102,10 @@ namespace osu.Framework.Tests.Visual.Audio
             else
             {
                 tracking.X += (float)Clock.ElapsedFrameTime / 500;
-                samples.OfType<DraggableSample>().Where(s => !s.Played && s.X <= tracking.X).ForEach(s => s.Play());
+                samples
+                    .OfType<DraggableSample>()
+                    .Where(s => !s.Played && s.X <= tracking.X)
+                    .ForEach(s => s.Play());
             }
         }
 
@@ -105,11 +122,7 @@ namespace osu.Framework.Tests.Visual.Audio
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                 };
             }
         }
@@ -122,26 +135,30 @@ namespace osu.Framework.Tests.Visual.Audio
 
                 for (int i = 0; i <= beats; i++)
                 {
-                    AddInternal(new Box
-                    {
-                        RelativePositionAxes = Axes.Both,
-                        RelativeSizeAxes = Axes.Y,
-                        Width = 1,
-                        Colour = Color4.White,
-                        X = (float)i / beats
-                    });
+                    AddInternal(
+                        new Box
+                        {
+                            RelativePositionAxes = Axes.Both,
+                            RelativeSizeAxes = Axes.Y,
+                            Width = 1,
+                            Colour = Color4.White,
+                            X = (float)i / beats,
+                        }
+                    );
                 }
 
                 for (int i = 0; i <= notes; i++)
                 {
-                    AddInternal(new Box
-                    {
-                        RelativePositionAxes = Axes.Both,
-                        RelativeSizeAxes = Axes.X,
-                        Height = 1,
-                        Colour = Color4.White,
-                        Y = (float)i / notes
-                    });
+                    AddInternal(
+                        new Box
+                        {
+                            RelativePositionAxes = Axes.Both,
+                            RelativeSizeAxes = Axes.X,
+                            Height = 1,
+                            Colour = Color4.White,
+                            Y = (float)i / notes,
+                        }
+                    );
                 }
             }
         }

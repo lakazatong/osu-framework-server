@@ -5,7 +5,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Events
 {
     internal readonly record struct SetDepthInfoEvent(DepthInfo Info)
     {
-        public static RenderEvent Create(DepthInfo info)
-            => RenderEvent.Create(new SetDepthInfoEvent(info));
+        public static RenderEvent Create(DepthInfo info) =>
+            RenderEvent.Create(new SetDepthInfoEvent(info));
     }
 }

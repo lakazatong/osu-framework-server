@@ -8,7 +8,7 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Events
 {
     internal readonly record struct SetShaderEvent(ResourceReference Shader)
     {
-        public static RenderEvent Create(DeferredRenderer renderer, IShader shader)
-            => RenderEvent.Create(new SetShaderEvent(renderer.Context.Reference(shader)));
+        public static RenderEvent Create(DeferredRenderer renderer, IShader shader) =>
+            RenderEvent.Create(new SetShaderEvent(renderer.Context.Reference(shader)));
     }
 }

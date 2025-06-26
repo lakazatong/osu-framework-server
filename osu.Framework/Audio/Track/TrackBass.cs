@@ -5,15 +5,15 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using ManagedBass;
 using ManagedBass.Fx;
-using osu.Framework.IO;
-using System.Threading.Tasks;
 using osu.Framework.Audio.Callbacks;
 using osu.Framework.Audio.Mixing;
 using osu.Framework.Audio.Mixing.Bass;
 using osu.Framework.Extensions;
 using osu.Framework.Extensions.ObjectExtensions;
+using osu.Framework.IO;
 using osu.Framework.Utils;
 
 namespace osu.Framework.Audio.Track
@@ -78,10 +78,11 @@ namespace osu.Framework.Audio.Track
                 FrequencyChangedFromZero = () =>
                 {
                     // Do not resume the track if a play wasn't requested at all or has been paused via Stop().
-                    if (!isPlayed) return;
+                    if (!isPlayed)
+                        return;
 
                     startInternal();
-                }
+                },
             };
 
             // todo: support this internally to match the underlying Track implementation (which can support this).
@@ -90,7 +91,9 @@ namespace osu.Framework.Audio.Track
             AggregateTempo.ValueChanged += t =>
             {
                 if (t.NewValue < tempo_minimum_supported)
-                    throw new ArgumentException($"{nameof(TrackBass)} does not support {nameof(Tempo)} specifications below {tempo_minimum_supported}. Use {nameof(Frequency)} instead.");
+                    throw new ArgumentException(
+                        $"{nameof(TrackBass)} does not support {nameof(Tempo)} specifications below {tempo_minimum_supported}. Use {nameof(Frequency)} instead."
+                    );
             };
 
             EnqueueAction(() =>
@@ -119,7 +122,11 @@ namespace osu.Framework.Audio.Track
                     const int bytes_per_sample = 2;
 
                     // Bass does not allow seeking to the end of the track, so the last available position is 1 sample before.
-                    lastSeekablePosition = Bass.ChannelBytes2Seconds(activeStream, byteLength - bytes_per_sample * channels) * 1000;
+                    lastSeekablePosition =
+                        Bass.ChannelBytes2Seconds(
+                            activeStream,
+                            byteLength - bytes_per_sample * channels
+                        ) * 1000;
 
                     isLoaded = true;
 
@@ -130,11 +137,16 @@ namespace osu.Framework.Audio.Track
             InvalidateState();
         }
 
-        private void setLoopFlag(bool value) => EnqueueAction(() =>
-        {
-            if (activeStream != 0)
-                Bass.ChannelFlags(activeStream, value ? BassFlags.Loop : BassFlags.Default, BassFlags.Loop);
-        });
+        private void setLoopFlag(bool value) =>
+            EnqueueAction(() =>
+            {
+                if (activeStream != 0)
+                    Bass.ChannelFlags(
+                        activeStream,
+                        value ? BassFlags.Loop : BassFlags.Default,
+                        BassFlags.Loop
+                    );
+            });
 
         private int prepareStream(Stream data, bool quick)
         {
@@ -164,7 +176,12 @@ namespace osu.Framework.Audio.Track
             if (RuntimeInfo.OS != RuntimeInfo.Platform.Windows)
                 flags |= BassFlags.AsyncFile;
 
-            int stream = Bass.CreateStream(StreamSystem.NoBuffer, flags, fileCallbacks.Callbacks, fileCallbacks.Handle);
+            int stream = Bass.CreateStream(
+                StreamSystem.NoBuffer,
+                flags,
+                fileCallbacks.Callbacks,
+                fileCallbacks.Handle
+            );
 
             bitrate = (int)Math.Round(Bass.ChannelGetAttribute(stream, ChannelAttribute.Bitrate));
 
@@ -177,13 +194,32 @@ namespace osu.Framework.Audio.Track
                 const int bass_nodevice = 0x20000;
 
                 Bass.ChannelSetDevice(stream, bass_nodevice);
-                tempoAdjustStream = BassFx.TempoCreate(stream, BassFlags.Decode | BassFlags.FxFreeSource);
+                tempoAdjustStream = BassFx.TempoCreate(
+                    stream,
+                    BassFlags.Decode | BassFlags.FxFreeSource
+                );
                 Bass.ChannelSetDevice(tempoAdjustStream, bass_nodevice);
-                stream = BassFx.ReverseCreate(tempoAdjustStream, 5f, BassFlags.Default | BassFlags.FxFreeSource | BassFlags.Decode);
+                stream = BassFx.ReverseCreate(
+                    tempoAdjustStream,
+                    5f,
+                    BassFlags.Default | BassFlags.FxFreeSource | BassFlags.Decode
+                );
 
-                Bass.ChannelSetAttribute(tempoAdjustStream, ChannelAttribute.TempoUseQuickAlgorithm, 1);
-                Bass.ChannelSetAttribute(tempoAdjustStream, ChannelAttribute.TempoOverlapMilliseconds, 4);
-                Bass.ChannelSetAttribute(tempoAdjustStream, ChannelAttribute.TempoSequenceMilliseconds, 30);
+                Bass.ChannelSetAttribute(
+                    tempoAdjustStream,
+                    ChannelAttribute.TempoUseQuickAlgorithm,
+                    1
+                );
+                Bass.ChannelSetAttribute(
+                    tempoAdjustStream,
+                    ChannelAttribute.TempoOverlapMilliseconds,
+                    4
+                );
+                Bass.ChannelSetAttribute(
+                    tempoAdjustStream,
+                    ChannelAttribute.TempoSequenceMilliseconds,
+                    30
+                );
             }
 
             return stream;
@@ -193,7 +229,8 @@ namespace osu.Framework.Audio.Track
         /// Returns whether the playback state is considered to be running or not.
         /// This will only return true for <see cref="PlaybackState.Playing"/> and <see cref="PlaybackState.Stalled"/>.
         /// </summary>
-        private static bool isRunningState(PlaybackState state) => state == PlaybackState.Playing || state == PlaybackState.Stalled;
+        private static bool isRunningState(PlaybackState state) =>
+            state == PlaybackState.Playing || state == PlaybackState.Stalled;
 
         void IBassAudio.UpdateDevice(int deviceIndex)
         {
@@ -261,11 +298,12 @@ namespace osu.Framework.Audio.Track
             StartAsync().WaitSafely();
         }
 
-        public override Task StartAsync() => EnqueueAction(() =>
-        {
-            if (startInternal())
-                isRunning = isPlayed = true;
-        });
+        public override Task StartAsync() =>
+            EnqueueAction(() =>
+            {
+                if (startInternal())
+                    isRunning = isPlayed = true;
+            });
 
         private bool startInternal()
         {
@@ -332,7 +370,10 @@ namespace osu.Framework.Audio.Track
             Debug.Assert(CanPerformInline);
 
             long bytePosition = bassMixer.ChannelGetPosition(this);
-            Interlocked.Exchange(ref currentTime, Bass.ChannelBytes2Seconds(activeStream, bytePosition) * 1000);
+            Interlocked.Exchange(
+                ref currentTime,
+                Bass.ChannelBytes2Seconds(activeStream, bytePosition) * 1000
+            );
         }
 
         private double currentTime;
@@ -360,49 +401,69 @@ namespace osu.Framework.Audio.Track
             Bass.ChannelSetAttribute(activeStream, ChannelAttribute.Pan, AggregateBalance.Value);
             relativeFrequencyHandler.SetFrequency(AggregateFrequency.Value);
 
-            Bass.ChannelSetAttribute(tempoAdjustStream, ChannelAttribute.Tempo, (Math.Abs(AggregateTempo.Value) - 1) * 100);
+            Bass.ChannelSetAttribute(
+                tempoAdjustStream,
+                ChannelAttribute.Tempo,
+                (Math.Abs(AggregateTempo.Value) - 1) * 100
+            );
         }
 
         private volatile int bitrate;
 
         public override int? Bitrate => bitrate;
 
-        public override ChannelAmplitudes CurrentAmplitudes => (bassAmplitudeProcessor ??= new BassAmplitudeProcessor(this)).CurrentAmplitudes;
+        public override ChannelAmplitudes CurrentAmplitudes =>
+            (bassAmplitudeProcessor ??= new BassAmplitudeProcessor(this)).CurrentAmplitudes;
 
         private void initializeSyncs()
         {
-            Debug.Assert(stopCallback == null
-                         && stopSync == null
-                         && endCallback == null
-                         && endSync == null);
+            Debug.Assert(
+                stopCallback == null && stopSync == null && endCallback == null && endSync == null
+            );
 
             stopCallback = new SyncCallback((_, _, _, _) => RaiseFailed());
-            endCallback = new SyncCallback((_, _, _, _) =>
-            {
-                if (Looping)
+            endCallback = new SyncCallback(
+                (_, _, _, _) =>
                 {
-                    // because the sync callback doesn't necessarily fire in the right moment and the transition may not always be smooth,
-                    // do not attempt to seek back to restart point if it is 0, and defer to the channel loop flag instead.
-                    // a mixtime callback was used for this previously, but it is incompatible with mixers
-                    // (as they have a playback buffer, and so a skip forward would be audible).
-                    if (Precision.DefinitelyBigger(RestartPoint, 0, 1))
-                        seekInternal(RestartPoint);
+                    if (Looping)
+                    {
+                        // because the sync callback doesn't necessarily fire in the right moment and the transition may not always be smooth,
+                        // do not attempt to seek back to restart point if it is 0, and defer to the channel loop flag instead.
+                        // a mixtime callback was used for this previously, but it is incompatible with mixers
+                        // (as they have a playback buffer, and so a skip forward would be audible).
+                        if (Precision.DefinitelyBigger(RestartPoint, 0, 1))
+                            seekInternal(RestartPoint);
 
-                    return;
+                        return;
+                    }
+
+                    hasCompleted = true;
+                    RaiseCompleted();
                 }
+            );
 
-                hasCompleted = true;
-                RaiseCompleted();
-            });
-
-            stopSync = bassMixer.ChannelSetSync(this, SyncFlags.Stop, 0, stopCallback.Callback, stopCallback.Handle);
-            endSync = bassMixer.ChannelSetSync(this, SyncFlags.End, 0, endCallback.Callback, endCallback.Handle);
+            stopSync = bassMixer.ChannelSetSync(
+                this,
+                SyncFlags.Stop,
+                0,
+                stopCallback.Callback,
+                stopCallback.Handle
+            );
+            endSync = bassMixer.ChannelSetSync(
+                this,
+                SyncFlags.End,
+                0,
+                endCallback.Callback,
+                endCallback.Handle
+            );
         }
 
         private void cleanUpSyncs()
         {
-            if (stopSync != null) bassMixer.ChannelRemoveSync(this, stopSync.Value);
-            if (endSync != null) bassMixer.ChannelRemoveSync(this, endSync.Value);
+            if (stopSync != null)
+                bassMixer.ChannelRemoveSync(this, stopSync.Value);
+            if (endSync != null)
+                bassMixer.ChannelRemoveSync(this, endSync.Value);
 
             stopSync = null;
             endSync = null;

@@ -69,7 +69,8 @@ namespace osu.Framework.Graphics
                 r / (float)byte.MaxValue,
                 g / (float)byte.MaxValue,
                 b / (float)byte.MaxValue,
-                a / (float)byte.MaxValue);
+                a / (float)byte.MaxValue
+            );
         }
 
         /// <summary>
@@ -110,7 +111,8 @@ namespace osu.Framework.Graphics
         /// The final alpha is clamped to the 0-1 range.
         /// </summary>
         /// <param name="alpha">The new alpha value for the returned colour, in the 0-255 range.</param>
-        public Colour4 Opacity(byte alpha) => new Colour4(R, G, B, Math.Clamp(alpha / (float)byte.MaxValue, 0f, 1f));
+        public Colour4 Opacity(byte alpha) =>
+            new Colour4(R, G, B, Math.Clamp(alpha / (float)byte.MaxValue, 0f, 1f));
 
         /// <summary>
         /// Returns a new <see cref="Colour4"/> with its individual components clamped to the 0-1 range.
@@ -238,30 +240,44 @@ namespace osu.Framework.Graphics
         /// <summary>
         /// Returns the <see cref="Colour4"/> as a 32-bit unsigned integer in the format RGBA.
         /// </summary>
-        public uint ToRGBA() => ((uint)(Math.Min(1f, R) * byte.MaxValue) << 24) |
-                                ((uint)(Math.Min(1f, G) * byte.MaxValue) << 16) |
-                                ((uint)(Math.Min(1f, B) * byte.MaxValue) << 8) |
-                                (uint)(Math.Min(1f, A) * byte.MaxValue);
+        public uint ToRGBA() =>
+            ((uint)(Math.Min(1f, R) * byte.MaxValue) << 24)
+            | ((uint)(Math.Min(1f, G) * byte.MaxValue) << 16)
+            | ((uint)(Math.Min(1f, B) * byte.MaxValue) << 8)
+            | (uint)(Math.Min(1f, A) * byte.MaxValue);
 
         /// <summary>
         /// Returns a new <see cref="Colour4"/> from the passed 32-bit unsigned integer in the format RGBA.
         /// </summary>
         /// <param name="rgba">The source colour in Rgba32 format.</param>
-        public static Colour4 FromRGBA(uint rgba) => new Colour4((byte)((rgba >> 24) & 0xff), (byte)((rgba >> 16) & 0xff), (byte)((rgba >> 8) & 0xff), (byte)(rgba & 0xff));
+        public static Colour4 FromRGBA(uint rgba) =>
+            new Colour4(
+                (byte)((rgba >> 24) & 0xff),
+                (byte)((rgba >> 16) & 0xff),
+                (byte)((rgba >> 8) & 0xff),
+                (byte)(rgba & 0xff)
+            );
 
         /// <summary>
         /// Returns the <see cref="Colour4"/> as a 32-bit unsigned integer in the format ARGB.
         /// </summary>
-        public uint ToARGB() => ((uint)(Math.Min(1f, A) * byte.MaxValue) << 24) |
-                                ((uint)(Math.Min(1f, R) * byte.MaxValue) << 16) |
-                                ((uint)(Math.Min(1f, G) * byte.MaxValue) << 8) |
-                                (uint)(Math.Min(1f, B) * byte.MaxValue);
+        public uint ToARGB() =>
+            ((uint)(Math.Min(1f, A) * byte.MaxValue) << 24)
+            | ((uint)(Math.Min(1f, R) * byte.MaxValue) << 16)
+            | ((uint)(Math.Min(1f, G) * byte.MaxValue) << 8)
+            | (uint)(Math.Min(1f, B) * byte.MaxValue);
 
         /// <summary>
         /// Returns a new <see cref="Colour4"/> from the passed 32-bit unsigned integer in the format ARGB.
         /// </summary>
         /// <param name="argb">The source colour in Argb32 format.</param>
-        public static Colour4 FromARGB(uint argb) => new Colour4((byte)((argb >> 16) & 0xff), (byte)((argb >> 8) & 0xff), (byte)(argb & 0xff), (byte)((argb >> 24) & 0xff));
+        public static Colour4 FromARGB(uint argb) =>
+            new Colour4(
+                (byte)((argb >> 16) & 0xff),
+                (byte)((argb >> 8) & 0xff),
+                (byte)(argb & 0xff),
+                (byte)((argb >> 24) & 0xff)
+            );
 
         /// <summary>
         /// Converts an RGB or RGBA-formatted hex colour code into a <see cref="Colour4"/>.
@@ -283,7 +299,10 @@ namespace osu.Framework.Graphics
         public static Colour4 FromHex(string hex)
         {
             if (!TryParseHex(hex, out var colour))
-                throw new ArgumentException($"{hex} is not a valid colour hex string.", nameof(hex));
+                throw new ArgumentException(
+                    $"{hex} is not a valid colour hex string.",
+                    nameof(hex)
+                );
 
             return colour;
         }
@@ -310,7 +329,10 @@ namespace osu.Framework.Graphics
             var hexSpan = hex.StartsWith('#') ? hex.AsSpan(1) : hex.AsSpan();
 
             bool parsed = true;
-            byte r = 255, g = 255, b = 255, a = 255;
+            byte r = 255,
+                g = 255,
+                b = 255,
+                a = 255;
 
             switch (hexSpan.Length)
             {
@@ -319,9 +341,24 @@ namespace osu.Framework.Graphics
                     break;
 
                 case 3:
-                    parsed &= byte.TryParse(hexSpan.Slice(0, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out r);
-                    parsed &= byte.TryParse(hexSpan.Slice(1, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out g);
-                    parsed &= byte.TryParse(hexSpan.Slice(2, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(0, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out r
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(1, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out g
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(2, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out b
+                    );
 
                     r *= 17;
                     g *= 17;
@@ -329,16 +366,51 @@ namespace osu.Framework.Graphics
                     break;
 
                 case 6:
-                    parsed &= byte.TryParse(hexSpan.Slice(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out r);
-                    parsed &= byte.TryParse(hexSpan.Slice(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out g);
-                    parsed &= byte.TryParse(hexSpan.Slice(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(0, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out r
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(2, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out g
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(4, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out b
+                    );
                     break;
 
                 case 4:
-                    parsed &= byte.TryParse(hexSpan.Slice(0, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out r);
-                    parsed &= byte.TryParse(hexSpan.Slice(1, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out g);
-                    parsed &= byte.TryParse(hexSpan.Slice(2, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
-                    parsed &= byte.TryParse(hexSpan.Slice(3, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out a);
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(0, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out r
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(1, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out g
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(2, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out b
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(3, 1),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out a
+                    );
 
                     r *= 17;
                     g *= 17;
@@ -347,10 +419,30 @@ namespace osu.Framework.Graphics
                     break;
 
                 case 8:
-                    parsed &= byte.TryParse(hexSpan.Slice(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out r);
-                    parsed &= byte.TryParse(hexSpan.Slice(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out g);
-                    parsed &= byte.TryParse(hexSpan.Slice(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
-                    parsed &= byte.TryParse(hexSpan.Slice(6, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out a);
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(0, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out r
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(2, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out g
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(4, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out b
+                    );
+                    parsed &= byte.TryParse(
+                        hexSpan.Slice(6, 2),
+                        NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture,
+                        out a
+                    );
                     break;
             }
 
@@ -454,13 +546,20 @@ namespace osu.Framework.Graphics
         /// <param name="saturation">The saturation, between 0 and 1.</param>
         /// <param name="lightness">The value, between 0 and 1.</param>
         /// <param name="alpha">The alpha, between 0 and 1.</param>
-        public static Colour4 FromHSL(float hue, float saturation, float lightness, float alpha = 1f)
+        public static Colour4 FromHSL(
+            float hue,
+            float saturation,
+            float lightness,
+            float alpha = 1f
+        )
         {
             float c = (1f - Math.Abs(2f * lightness - 1f)) * saturation;
             float h = hue * 6f;
             float x = c * (1f - Math.Abs(h % 2f - 1f));
 
-            float r, g, b;
+            float r,
+                g,
+                b;
 
             if (0f <= h && h < 1f)
             {
@@ -529,7 +628,8 @@ namespace osu.Framework.Graphics
             if (saturation <= 0)
                 return new Vector4(0f, 0f, lightness, A);
 
-            saturation = lightness <= 0.5f ? saturation / (min + max) : saturation / (2f - max - min);
+            saturation =
+                lightness <= 0.5f ? saturation / (min + max) : saturation / (2f - max - min);
 
             float hue = 0f;
 
@@ -554,7 +654,9 @@ namespace osu.Framework.Graphics
             if (color == 1)
                 return 1;
 
-            return color <= 0.04045f ? color / 12.92f : MathF.Pow((color + 0.055f) / 1.055f, (float)gamma);
+            return color <= 0.04045f
+                ? color / 12.92f
+                : MathF.Pow((color + 0.055f) / 1.055f, (float)gamma);
         }
 
         private static float toSRGB(float color)
@@ -562,7 +664,9 @@ namespace osu.Framework.Graphics
             if (color == 1)
                 return 1;
 
-            return color < 0.0031308f ? 12.92f * color : 1.055f * MathF.Pow(color, 1.0f / (float)gamma) - 0.055f;
+            return color < 0.0031308f
+                ? 12.92f * color
+                : 1.055f * MathF.Pow(color, 1.0f / (float)gamma) - 0.055f;
         }
 
         #endregion

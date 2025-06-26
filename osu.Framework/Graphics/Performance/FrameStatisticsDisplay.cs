@@ -3,26 +3,26 @@
 
 #nullable disable
 
-using osuTK.Graphics;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
-using osu.Framework.Utils;
-using osu.Framework.Statistics;
-using osu.Framework.Threading;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
+using osu.Framework.Statistics;
+using osu.Framework.Threading;
+using osu.Framework.Utils;
 using osuTK;
+using osuTK.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using WindowState = osu.Framework.Platform.WindowState;
@@ -45,7 +45,12 @@ namespace osu.Framework.Graphics.Performance
 
         private readonly TimeBar[] timeBars;
 
-        private static readonly Color4[] garbage_collect_colors = { Color4.Green, Color4.Yellow, Color4.Red };
+        private static readonly Color4[] garbage_collect_colors =
+        {
+            Color4.Green,
+            Color4.Yellow,
+            Color4.Red,
+        };
         private readonly PerformanceMonitor monitor;
 
         private int currentX;
@@ -64,8 +69,11 @@ namespace osu.Framework.Graphics.Performance
 
         private readonly DrawablePool<GCBox> gcBoxPool;
 
-        private readonly Drawable[] legendMapping = new Drawable[FrameStatistics.NUM_PERFORMANCE_COLLECTION_TYPES];
-        private readonly Dictionary<StatisticsCounterType, CounterBar> counterBars = new Dictionary<StatisticsCounterType, CounterBar>();
+        private readonly Drawable[] legendMapping = new Drawable[
+            FrameStatistics.NUM_PERFORMANCE_COLLECTION_TYPES
+        ];
+        private readonly Dictionary<StatisticsCounterType, CounterBar> counterBars =
+            new Dictionary<StatisticsCounterType, CounterBar>();
 
         private readonly FrameTimeDisplay frameTimeDisplay;
 
@@ -79,7 +87,8 @@ namespace osu.Framework.Graphics.Performance
             get => state;
             set
             {
-                if (state == value) return;
+                if (state == value)
+                    return;
 
                 state = value;
 
@@ -179,9 +188,9 @@ namespace osu.Framework.Graphics.Performance
                                                     Label = t.ToString(),
                                                 },
                                         },
-                                    }
-                                }
-                        }
+                                    },
+                                },
+                        },
                     },
                     mainContainer = new Container
                     {
@@ -194,11 +203,7 @@ namespace osu.Framework.Graphics.Performance
                                 Masking = true,
                                 CornerRadius = 5,
                                 RelativeSizeAxes = Axes.Both,
-                                Children = timeBars = new[]
-                                {
-                                    new TimeBar(),
-                                    new TimeBar(),
-                                },
+                                Children = timeBars = new[] { new TimeBar(), new TimeBar() },
                             },
                             frameTimeDisplay = new FrameTimeDisplay(monitor.Clock)
                             {
@@ -241,12 +246,12 @@ namespace osu.Framework.Graphics.Performance
                                         Anchor = Anchor.BottomLeft,
                                         Origin = Anchor.BottomLeft,
                                         Font = FrameworkFont.Regular,
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
         }
 
@@ -319,7 +324,8 @@ namespace osu.Framework.Graphics.Performance
             get => running;
             set
             {
-                if (running == value) return;
+                if (running == value)
+                    return;
 
                 running = value;
 
@@ -339,7 +345,8 @@ namespace osu.Framework.Graphics.Performance
             {
                 value &= state == FrameStatisticsMode.Full;
 
-                if (expanded == value) return;
+                if (expanded == value)
+                    return;
 
                 expanded = value;
 
@@ -377,13 +384,19 @@ namespace osu.Framework.Graphics.Performance
             TimeBar timeBar = timeBars[timeBarIndex];
             var upload = new ArrayPoolTextureUpload(1, HEIGHT, uploadPool)
             {
-                Bounds = new RectangleI(timeBarX, 0, 1, HEIGHT)
+                Bounds = new RectangleI(timeBarX, 0, 1, HEIGHT),
             };
 
             int currentHeight = HEIGHT;
 
             for (int i = 0; i < FrameStatistics.NUM_PERFORMANCE_COLLECTION_TYPES; i++)
-                currentHeight = addArea(frame, (PerformanceCollectionType)i, currentHeight, amount_ms_steps, upload);
+                currentHeight = addArea(
+                    frame,
+                    (PerformanceCollectionType)i,
+                    currentHeight,
+                    amount_ms_steps,
+                    upload
+                );
             addArea(frame, null, currentHeight, amount_ms_steps, upload);
 
             timeBar.Sprite.Texture.SetData(upload);
@@ -477,13 +490,24 @@ namespace osu.Framework.Graphics.Performance
             }
         }
 
-        private int addArea(FrameStatistics frame, PerformanceCollectionType? frameTimeType, int currentHeight, int amountSteps, ArrayPoolTextureUpload columnUpload)
+        private int addArea(
+            FrameStatistics frame,
+            PerformanceCollectionType? frameTimeType,
+            int currentHeight,
+            int amountSteps,
+            ArrayPoolTextureUpload columnUpload
+        )
         {
             int drawHeight;
 
             if (!frameTimeType.HasValue)
                 drawHeight = currentHeight;
-            else if (frame.CollectedTimes.TryGetValue(frameTimeType.Value, out double elapsedMilliseconds))
+            else if (
+                frame.CollectedTimes.TryGetValue(
+                    frameTimeType.Value,
+                    out double elapsedMilliseconds
+                )
+            )
             {
                 legendMapping[(int)frameTimeType].Alpha = 1;
                 drawHeight = (int)(elapsedMilliseconds * scale);
@@ -491,13 +515,17 @@ namespace osu.Framework.Graphics.Performance
             else
                 return currentHeight;
 
-            Color4 col = frameTimeType.HasValue ? getColour(frameTimeType.Value) : new Color4(0.1f, 0.1f, 0.1f, 1);
+            Color4 col = frameTimeType.HasValue
+                ? getColour(frameTimeType.Value)
+                : new Color4(0.1f, 0.1f, 0.1f, 1);
 
             for (int i = currentHeight - 1; i >= 0; --i)
             {
-                if (drawHeight-- == 0) break;
+                if (drawHeight-- == 0)
+                    break;
 
-                bool acceptableRange = (float)currentHeight / HEIGHT > 1 - monitor.FrameAimTime / visible_ms_range;
+                bool acceptableRange =
+                    (float)currentHeight / HEIGHT > 1 - monitor.FrameAimTime / visible_ms_range;
 
                 float brightnessAdjust = 1;
 
@@ -509,7 +537,12 @@ namespace osu.Framework.Graphics.Performance
                 else if (acceptableRange)
                     brightnessAdjust *= 0.8f;
 
-                columnUpload.RawData[i] = new Rgba32(col.R * brightnessAdjust, col.G * brightnessAdjust, col.B * brightnessAdjust, col.A);
+                columnUpload.RawData[i] = new Rgba32(
+                    col.R * brightnessAdjust,
+                    col.G * brightnessAdjust,
+                    col.B * brightnessAdjust,
+                    col.A
+                );
 
                 currentHeight--;
             }
@@ -549,7 +582,8 @@ namespace osu.Framework.Graphics.Performance
                 get => expanded;
                 set
                 {
-                    if (expanded == value) return;
+                    if (expanded == value)
+                        return;
 
                     expanded = value;
 
@@ -604,7 +638,7 @@ namespace osu.Framework.Graphics.Performance
                         Size = new Vector2(bar_width, 0),
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.BottomRight,
-                    }
+                    },
                 };
             }
 
@@ -616,7 +650,8 @@ namespace osu.Framework.Graphics.Performance
 
                 double elapsedTime = Time.Elapsed;
 
-                double change = velocity * elapsedTime + 0.5 * acceleration * elapsedTime * elapsedTime;
+                double change =
+                    velocity * elapsedTime + 0.5 * acceleration * elapsedTime * elapsedTime;
                 double newHeight = Math.Max(height, box.Height - change);
 
                 box.Height = (float)newHeight;
@@ -641,11 +676,7 @@ namespace osu.Framework.Graphics.Performance
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        Colour = Color4.White,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    new Box { Colour = Color4.White, RelativeSizeAxes = Axes.Both },
                 };
             }
         }

@@ -38,13 +38,15 @@ namespace osu.Framework.Graphics.Visualisation
         public TreeContainer()
             : base("Draw Visualiser", "(Ctrl+F1 to toggle)", true)
         {
-            AddInternal(waitingText = new SpriteText
-            {
-                Text = @"Waiting for target selection...",
-                Font = FrameworkFont.Regular,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddInternal(
+                waitingText = new SpriteText
+                {
+                    Text = @"Waiting for target selection...",
+                    Font = FrameworkFont.Regular,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                }
+            );
 
             AddButton(@"choose target", () => ChooseTarget?.Invoke());
             AddButton(@"up one parent", () => GoUpOneParent?.Invoke());

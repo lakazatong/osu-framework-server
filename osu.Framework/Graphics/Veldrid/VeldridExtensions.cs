@@ -27,7 +27,8 @@ namespace osu.Framework.Graphics.Veldrid
 {
     internal static class VeldridExtensions
     {
-        public static RgbaFloat ToRgbaFloat(this Color4 colour) => new RgbaFloat(colour.R, colour.G, colour.B, colour.A);
+        public static RgbaFloat ToRgbaFloat(this Color4 colour) =>
+            new RgbaFloat(colour.R, colour.G, colour.B, colour.A);
 
         public static BlendFactor ToBlendFactor(this BlendingType type)
         {
@@ -106,10 +107,14 @@ namespace osu.Framework.Graphics.Veldrid
         {
             ColorWriteMask writeMask = ColorWriteMask.None;
 
-            if (mask.HasFlagFast(BlendingMask.Red)) writeMask |= ColorWriteMask.Red;
-            if (mask.HasFlagFast(BlendingMask.Green)) writeMask |= ColorWriteMask.Green;
-            if (mask.HasFlagFast(BlendingMask.Blue)) writeMask |= ColorWriteMask.Blue;
-            if (mask.HasFlagFast(BlendingMask.Alpha)) writeMask |= ColorWriteMask.Alpha;
+            if (mask.HasFlagFast(BlendingMask.Red))
+                writeMask |= ColorWriteMask.Red;
+            if (mask.HasFlagFast(BlendingMask.Green))
+                writeMask |= ColorWriteMask.Green;
+            if (mask.HasFlagFast(BlendingMask.Blue))
+                writeMask |= ColorWriteMask.Blue;
+            if (mask.HasFlagFast(BlendingMask.Alpha))
+                writeMask |= ColorWriteMask.Alpha;
 
             return writeMask;
         }
@@ -139,7 +144,10 @@ namespace osu.Framework.Graphics.Veldrid
                         break;
 
                     default:
-                        throw new ArgumentException($"Unsupported render buffer format: {renderBufferFormats[i]}", nameof(renderBufferFormats));
+                        throw new ArgumentException(
+                            $"Unsupported render buffer format: {renderBufferFormats[i]}",
+                            nameof(renderBufferFormats)
+                        );
                 }
             }
 
@@ -227,7 +235,10 @@ namespace osu.Framework.Graphics.Veldrid
             }
         }
 
-        public static VertexElementFormat ToVertexElementFormat(this VertexAttribPointerType type, int count)
+        public static VertexElementFormat ToVertexElementFormat(
+            this VertexAttribPointerType type,
+            int count
+        )
         {
             switch (type)
             {
@@ -331,16 +342,21 @@ namespace osu.Framework.Graphics.Veldrid
 
         public static GraphicsPipelineDescription Clone(this GraphicsPipelineDescription pipeline)
         {
-            pipeline.BlendState.AttachmentStates = (BlendAttachmentDescription[])pipeline.BlendState.AttachmentStates.Clone();
+            pipeline.BlendState.AttachmentStates = (BlendAttachmentDescription[])
+                pipeline.BlendState.AttachmentStates.Clone();
             pipeline.ShaderSet.Shaders = (Shader[])pipeline.ShaderSet.Shaders.Clone();
-            pipeline.ShaderSet.VertexLayouts = (VertexLayoutDescription[])pipeline.ShaderSet.VertexLayouts.Clone();
+            pipeline.ShaderSet.VertexLayouts = (VertexLayoutDescription[])
+                pipeline.ShaderSet.VertexLayouts.Clone();
 
             for (int i = 0; i < pipeline.ShaderSet.VertexLayouts.Length; i++)
-                pipeline.ShaderSet.VertexLayouts[i].Elements = (VertexElementDescription[])pipeline.ShaderSet.VertexLayouts[i].Elements.Clone();
+                pipeline.ShaderSet.VertexLayouts[i].Elements = (VertexElementDescription[])
+                    pipeline.ShaderSet.VertexLayouts[i].Elements.Clone();
 
-            pipeline.ShaderSet.Specializations = (SpecializationConstant[]?)pipeline.ShaderSet.Specializations?.Clone();
+            pipeline.ShaderSet.Specializations = (SpecializationConstant[]?)
+                pipeline.ShaderSet.Specializations?.Clone();
             pipeline.ResourceLayouts = (ResourceLayout[])pipeline.ResourceLayouts.Clone();
-            pipeline.Outputs.ColorAttachments = (OutputAttachmentDescription[])pipeline.Outputs.ColorAttachments.Clone();
+            pipeline.Outputs.ColorAttachments = (OutputAttachmentDescription[])
+                pipeline.Outputs.ColorAttachments.Clone();
 
             return pipeline;
         }
@@ -350,17 +366,21 @@ namespace osu.Framework.Graphics.Veldrid
             Debug.Assert(device.BackendType == GraphicsBackend.Direct3D11);
 
             var info = device.GetD3D11Info();
-            var dxgiAdapter = MarshallingHelpers.FromPointer<IDXGIAdapter>(info.Adapter).AsNonNull();
+            var dxgiAdapter = MarshallingHelpers
+                .FromPointer<IDXGIAdapter>(info.Adapter)
+                .AsNonNull();
             var d3d11Device = MarshallingHelpers.FromPointer<ID3D11Device>(info.Device).AsNonNull();
 
             maxTextureSize = ID3D11Resource.MaximumTexture2DSize;
 
-            Logger.Log($@"Direct3D 11 Initialized
+            Logger.Log(
+                $@"Direct3D 11 Initialized
                         Direct3D 11 Feature Level:           {d3d11Device.FeatureLevel.ToString().Replace("Level_", string.Empty).Replace("_", ".")}
                         Direct3D 11 Adapter:                 {dxgiAdapter.Description.Description}
                         Direct3D 11 Dedicated Video Memory:  {dxgiAdapter.Description.DedicatedVideoMemory / 1024 / 1024} MB
                         Direct3D 11 Dedicated System Memory: {dxgiAdapter.Description.DedicatedSystemMemory / 1024 / 1024} MB
-                        Direct3D 11 Shared System Memory:    {dxgiAdapter.Description.SharedSystemMemory / 1024 / 1024} MB");
+                        Direct3D 11 Shared System Memory:    {dxgiAdapter.Description.SharedSystemMemory / 1024 / 1024} MB"
+            );
         }
 
         public static unsafe void LogOpenGL(this GraphicsDevice device, out int maxTextureSize)
@@ -377,10 +397,19 @@ namespace osu.Framework.Graphics.Veldrid
 
             info.ExecuteOnGLThread(() =>
             {
-                version = Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.Version)) ?? string.Empty;
-                renderer = Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.Renderer)) ?? string.Empty;
-                vendor = Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.Vendor)) ?? string.Empty;
-                glslVersion = Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.ShadingLanguageVersion)) ?? string.Empty;
+                version =
+                    Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.Version))
+                    ?? string.Empty;
+                renderer =
+                    Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.Renderer))
+                    ?? string.Empty;
+                vendor =
+                    Marshal.PtrToStringUTF8((IntPtr)OpenGLNative.glGetString(StringName.Vendor))
+                    ?? string.Empty;
+                glslVersion =
+                    Marshal.PtrToStringUTF8(
+                        (IntPtr)OpenGLNative.glGetString(StringName.ShadingLanguageVersion)
+                    ) ?? string.Empty;
                 extensions = string.Join(' ', info.Extensions);
 
                 int size;
@@ -390,12 +419,14 @@ namespace osu.Framework.Graphics.Veldrid
 
             maxTextureSize = glMaxTextureSize;
 
-            Logger.Log($@"GL Initialized
+            Logger.Log(
+                $@"GL Initialized
                                     GL Version:                 {version}
                                     GL Renderer:                {renderer}
                                     GL Shader Language version: {glslVersion}
                                     GL Vendor:                  {vendor}
-                                    GL Extensions:              {extensions}");
+                                    GL Extensions:              {extensions}"
+            );
         }
 
         public static unsafe void LogVulkan(this GraphicsDevice device, out int maxTextureSize)
@@ -406,18 +437,36 @@ namespace osu.Framework.Graphics.Veldrid
             IntPtr physicalDevice = info.PhysicalDevice;
 
             uint instanceExtensionsCount = 0;
-            var result = VulkanNative.vkEnumerateInstanceExtensionProperties((byte*)null, ref instanceExtensionsCount, IntPtr.Zero);
+            var result = VulkanNative.vkEnumerateInstanceExtensionProperties(
+                (byte*)null,
+                ref instanceExtensionsCount,
+                IntPtr.Zero
+            );
 
             var instanceExtensions = new VkExtensionProperties[(int)instanceExtensionsCount];
             if (result == VkResult.Success && instanceExtensionsCount > 0)
-                VulkanNative.vkEnumerateInstanceExtensionProperties((byte*)null, ref instanceExtensionsCount, ref instanceExtensions[0]);
+                VulkanNative.vkEnumerateInstanceExtensionProperties(
+                    (byte*)null,
+                    ref instanceExtensionsCount,
+                    ref instanceExtensions[0]
+                );
 
             uint deviceExetnsionsCount = 0;
-            result = VulkanNative.vkEnumerateDeviceExtensionProperties(physicalDevice, (byte*)null, ref deviceExetnsionsCount, IntPtr.Zero);
+            result = VulkanNative.vkEnumerateDeviceExtensionProperties(
+                physicalDevice,
+                (byte*)null,
+                ref deviceExetnsionsCount,
+                IntPtr.Zero
+            );
 
             var deviceExtensions = new VkExtensionProperties[(int)deviceExetnsionsCount];
             if (result == VkResult.Success && deviceExetnsionsCount > 0)
-                VulkanNative.vkEnumerateDeviceExtensionProperties(physicalDevice, (byte*)null, ref deviceExetnsionsCount, ref deviceExtensions[0]);
+                VulkanNative.vkEnumerateDeviceExtensionProperties(
+                    physicalDevice,
+                    (byte*)null,
+                    ref deviceExetnsionsCount,
+                    ref deviceExtensions[0]
+                );
 
             VkPhysicalDeviceProperties properties;
             VulkanNative.vkGetPhysicalDeviceProperties(physicalDevice, &properties);
@@ -433,22 +482,31 @@ namespace osu.Framework.Graphics.Veldrid
             foreach (var ext in deviceExtensions)
                 extensionNames.Add(Marshal.PtrToStringUTF8((IntPtr)ext.extensionName));
 
-            string apiVersion = $"{properties.apiVersion >> 22}.{(properties.apiVersion >> 12) & 0x3FFU}.{properties.apiVersion & 0xFFFU}";
+            string apiVersion =
+                $"{properties.apiVersion >> 22}.{(properties.apiVersion >> 12) & 0x3FFU}.{properties.apiVersion & 0xFFFU}";
             string driverVersion;
 
             // https://github.com/SaschaWillems/vulkan.gpuinfo.org/blob/1e6ca6e3c0763daabd6a101b860ab4354a07f5d3/functions.php#L293-L325
             if (properties.vendorID == 0x10DE) // NVIDIA's versioning convention
-                driverVersion = $"{properties.driverVersion >> 22}.{(properties.driverVersion >> 14) & 0x0FFU}.{(properties.driverVersion >> 6) & 0x0FFU}.{properties.driverVersion & 0x003U}";
-            else if (properties.vendorID == 0x8086 && RuntimeInfo.OS == RuntimeInfo.Platform.Windows) // Intel's versioning convention on Windows
-                driverVersion = $"{properties.driverVersion >> 22}.{properties.driverVersion & 0x3FFFU}";
+                driverVersion =
+                    $"{properties.driverVersion >> 22}.{(properties.driverVersion >> 14) & 0x0FFU}.{(properties.driverVersion >> 6) & 0x0FFU}.{properties.driverVersion & 0x003U}";
+            else if (
+                properties.vendorID == 0x8086
+                && RuntimeInfo.OS == RuntimeInfo.Platform.Windows
+            ) // Intel's versioning convention on Windows
+                driverVersion =
+                    $"{properties.driverVersion >> 22}.{properties.driverVersion & 0x3FFFU}";
             else // Vulkan's convention
-                driverVersion = $"{properties.driverVersion >> 22}.{(properties.driverVersion >> 12) & 0x3FFU}.{properties.driverVersion & 0xFFFU}";
+                driverVersion =
+                    $"{properties.driverVersion >> 22}.{(properties.driverVersion >> 12) & 0x3FFU}.{properties.driverVersion & 0xFFFU}";
 
-            Logger.Log($@"{vulkanName} Initialized
+            Logger.Log(
+                $@"{vulkanName} Initialized
                                     {vulkanName} API Version:    {apiVersion}
                                     {vulkanName} Driver Version: {driverVersion}
                                     {vulkanName} Device:         {Marshal.PtrToStringUTF8((IntPtr)properties.deviceName)}
-                                    {vulkanName} Extensions:     {string.Join(',', extensionNames)}");
+                                    {vulkanName} Extensions:     {string.Join(',', extensionNames)}"
+            );
         }
 
         public static void LogMetal(this GraphicsDevice device, out int maxTextureSize)
@@ -464,14 +522,18 @@ namespace osu.Framework.Graphics.Veldrid
 
             // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
             if (info.MaxFeatureSet <= MTLFeatureSet.iOS_GPUFamily4_v1)
-                maxTextureSize = info.MaxFeatureSet <= MTLFeatureSet.iOS_GPUFamily1_v4 ? 8192 : 16384;
+                maxTextureSize =
+                    info.MaxFeatureSet <= MTLFeatureSet.iOS_GPUFamily1_v4 ? 8192 : 16384;
             else if (info.MaxFeatureSet <= MTLFeatureSet.tvOS_GPUFamily2_v1)
-                maxTextureSize = info.MaxFeatureSet <= MTLFeatureSet.tvOS_GPUFamily1_v3 ? 8192 : 16384;
+                maxTextureSize =
+                    info.MaxFeatureSet <= MTLFeatureSet.tvOS_GPUFamily1_v3 ? 8192 : 16384;
             else
                 maxTextureSize = 16384;
 
-            Logger.Log($@"Metal Initialized
-                        Metal Feature Set: {featureDevice} GPU family {featureFamily} ({featureVersion})");
+            Logger.Log(
+                $@"Metal Initialized
+                        Metal Feature Set: {featureDevice} GPU family {featureFamily} ({featureVersion})"
+            );
         }
     }
 }

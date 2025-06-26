@@ -32,8 +32,23 @@ namespace osu.Framework.Graphics.Textures
 
             private static readonly Color4 initialisation_colour = default;
 
-            public BackingAtlasTexture(IRenderer renderer, int width, int height, bool manualMipmaps, TextureFilteringMode filteringMode = TextureFilteringMode.Linear, int padding = 0)
-                : this(renderer.CreateTexture(width, height, manualMipmaps, filteringMode, initialisationColour: initialisation_colour))
+            public BackingAtlasTexture(
+                IRenderer renderer,
+                int width,
+                int height,
+                bool manualMipmaps,
+                TextureFilteringMode filteringMode = TextureFilteringMode.Linear,
+                int padding = 0
+            )
+                : this(
+                    renderer.CreateTexture(
+                        width,
+                        height,
+                        manualMipmaps,
+                        filteringMode,
+                        initialisationColour: initialisation_colour
+                    )
+                )
             {
                 this.padding = padding;
                 atlasBounds = new RectangleI(0, 0, Width, Height);
@@ -46,12 +61,20 @@ namespace osu.Framework.Graphics.Textures
                 IsAtlasTexture = parent.IsAtlasTexture = true;
             }
 
-            internal override void SetData(ITextureUpload upload, WrapMode wrapModeS, WrapMode wrapModeT, Opacity? opacity)
+            internal override void SetData(
+                ITextureUpload upload,
+                WrapMode wrapModeS,
+                WrapMode wrapModeT,
+                Opacity? opacity
+            )
             {
                 // Can only perform padding when the bounds are a sub-part of the texture
                 RectangleI middleBounds = upload.Bounds;
 
-                if (middleBounds.IsEmpty || middleBounds.Width * middleBounds.Height > upload.Data.Length)
+                if (
+                    middleBounds.IsEmpty
+                    || middleBounds.Width * middleBounds.Height > upload.Data.Length
+                )
                 {
                     // For a texture atlas, we don't care about opacity, so we avoid
                     // any computations related to it by assuming it to be mixed.
@@ -63,9 +86,24 @@ namespace osu.Framework.Graphics.Textures
 
                 var data = upload.Data;
 
-                uploadCornerPadding(data, middleBounds, actualPadding, wrapModeS != WrapMode.None && wrapModeT != WrapMode.None);
-                uploadHorizontalPadding(data, middleBounds, actualPadding, wrapModeS != WrapMode.None);
-                uploadVerticalPadding(data, middleBounds, actualPadding, wrapModeT != WrapMode.None);
+                uploadCornerPadding(
+                    data,
+                    middleBounds,
+                    actualPadding,
+                    wrapModeS != WrapMode.None && wrapModeT != WrapMode.None
+                );
+                uploadHorizontalPadding(
+                    data,
+                    middleBounds,
+                    actualPadding,
+                    wrapModeS != WrapMode.None
+                );
+                uploadVerticalPadding(
+                    data,
+                    middleBounds,
+                    actualPadding,
+                    wrapModeT != WrapMode.None
+                );
 
                 // Upload the middle part of the texture
                 // For a texture atlas, we don't care about opacity, so we avoid
@@ -73,12 +111,27 @@ namespace osu.Framework.Graphics.Textures
                 base.SetData(upload, wrapModeS, wrapModeT, Opacity.Mixed);
             }
 
-            private void uploadVerticalPadding(ReadOnlySpan<Rgba32> upload, RectangleI middleBounds, int actualPadding, bool fillOpaque)
+            private void uploadVerticalPadding(
+                ReadOnlySpan<Rgba32> upload,
+                RectangleI middleBounds,
+                int actualPadding,
+                bool fillOpaque
+            )
             {
                 RectangleI[] sideBoundsArray =
                 {
-                    new RectangleI(middleBounds.X, middleBounds.Y - actualPadding, middleBounds.Width, actualPadding).Intersect(atlasBounds), // Top
-                    new RectangleI(middleBounds.X, middleBounds.Y + middleBounds.Height, middleBounds.Width, actualPadding).Intersect(atlasBounds), // Bottom
+                    new RectangleI(
+                        middleBounds.X,
+                        middleBounds.Y - actualPadding,
+                        middleBounds.Width,
+                        actualPadding
+                    ).Intersect(atlasBounds), // Top
+                    new RectangleI(
+                        middleBounds.X,
+                        middleBounds.Y + middleBounds.Height,
+                        middleBounds.Width,
+                        actualPadding
+                    ).Intersect(atlasBounds), // Bottom
                 };
 
                 int[] sideIndices =
@@ -96,7 +149,13 @@ namespace osu.Framework.Graphics.Textures
                         bool allTransparent = true;
                         int index = sideIndices[i];
 
-                        var sideUpload = new MemoryAllocatorTextureUpload(sideBounds.Width, sideBounds.Height) { Bounds = sideBounds };
+                        var sideUpload = new MemoryAllocatorTextureUpload(
+                            sideBounds.Width,
+                            sideBounds.Height
+                        )
+                        {
+                            Bounds = sideBounds,
+                        };
                         var data = sideUpload.RawData;
 
                         for (int y = 0; y < sideBounds.Height; ++y)
@@ -106,7 +165,11 @@ namespace osu.Framework.Graphics.Textures
                                 Rgba32 pixel = upload[index + x];
                                 allTransparent &= checkEdgeRGB(pixel);
 
-                                transferBorderPixel(ref data[y * sideBounds.Width + x], pixel, fillOpaque);
+                                transferBorderPixel(
+                                    ref data[y * sideBounds.Width + x],
+                                    pixel,
+                                    fillOpaque
+                                );
                             }
                         }
 
@@ -121,12 +184,27 @@ namespace osu.Framework.Graphics.Textures
                 }
             }
 
-            private void uploadHorizontalPadding(ReadOnlySpan<Rgba32> upload, RectangleI middleBounds, int actualPadding, bool fillOpaque)
+            private void uploadHorizontalPadding(
+                ReadOnlySpan<Rgba32> upload,
+                RectangleI middleBounds,
+                int actualPadding,
+                bool fillOpaque
+            )
             {
                 RectangleI[] sideBoundsArray =
                 {
-                    new RectangleI(middleBounds.X - actualPadding, middleBounds.Y, actualPadding, middleBounds.Height).Intersect(atlasBounds), // Left
-                    new RectangleI(middleBounds.X + middleBounds.Width, middleBounds.Y, actualPadding, middleBounds.Height).Intersect(atlasBounds), // Right
+                    new RectangleI(
+                        middleBounds.X - actualPadding,
+                        middleBounds.Y,
+                        actualPadding,
+                        middleBounds.Height
+                    ).Intersect(atlasBounds), // Left
+                    new RectangleI(
+                        middleBounds.X + middleBounds.Width,
+                        middleBounds.Y,
+                        actualPadding,
+                        middleBounds.Height
+                    ).Intersect(atlasBounds), // Right
                 };
 
                 int[] sideIndices =
@@ -144,7 +222,13 @@ namespace osu.Framework.Graphics.Textures
                         bool allTransparent = true;
                         int index = sideIndices[i];
 
-                        var sideUpload = new MemoryAllocatorTextureUpload(sideBounds.Width, sideBounds.Height) { Bounds = sideBounds };
+                        var sideUpload = new MemoryAllocatorTextureUpload(
+                            sideBounds.Width,
+                            sideBounds.Height
+                        )
+                        {
+                            Bounds = sideBounds,
+                        };
                         var data = sideUpload.RawData;
 
                         int stride = middleBounds.Width;
@@ -157,7 +241,11 @@ namespace osu.Framework.Graphics.Textures
 
                                 allTransparent &= checkEdgeRGB(pixel);
 
-                                transferBorderPixel(ref data[y * sideBounds.Width + x], pixel, fillOpaque);
+                                transferBorderPixel(
+                                    ref data[y * sideBounds.Width + x],
+                                    pixel,
+                                    fillOpaque
+                                );
                             }
                         }
 
@@ -172,14 +260,39 @@ namespace osu.Framework.Graphics.Textures
                 }
             }
 
-            private void uploadCornerPadding(ReadOnlySpan<Rgba32> upload, RectangleI middleBounds, int actualPadding, bool fillOpaque)
+            private void uploadCornerPadding(
+                ReadOnlySpan<Rgba32> upload,
+                RectangleI middleBounds,
+                int actualPadding,
+                bool fillOpaque
+            )
             {
                 RectangleI[] cornerBoundsArray =
                 {
-                    new RectangleI(middleBounds.X - actualPadding, middleBounds.Y - actualPadding, actualPadding, actualPadding).Intersect(atlasBounds), // TopLeft
-                    new RectangleI(middleBounds.X + middleBounds.Width, middleBounds.Y - actualPadding, actualPadding, actualPadding).Intersect(atlasBounds), // TopRight
-                    new RectangleI(middleBounds.X - actualPadding, middleBounds.Y + middleBounds.Height, actualPadding, actualPadding).Intersect(atlasBounds), // BottomLeft
-                    new RectangleI(middleBounds.X + middleBounds.Width, middleBounds.Y + middleBounds.Height, actualPadding, actualPadding).Intersect(atlasBounds), // BottomRight
+                    new RectangleI(
+                        middleBounds.X - actualPadding,
+                        middleBounds.Y - actualPadding,
+                        actualPadding,
+                        actualPadding
+                    ).Intersect(atlasBounds), // TopLeft
+                    new RectangleI(
+                        middleBounds.X + middleBounds.Width,
+                        middleBounds.Y - actualPadding,
+                        actualPadding,
+                        actualPadding
+                    ).Intersect(atlasBounds), // TopRight
+                    new RectangleI(
+                        middleBounds.X - actualPadding,
+                        middleBounds.Y + middleBounds.Height,
+                        actualPadding,
+                        actualPadding
+                    ).Intersect(atlasBounds), // BottomLeft
+                    new RectangleI(
+                        middleBounds.X + middleBounds.Width,
+                        middleBounds.Y + middleBounds.Height,
+                        actualPadding,
+                        actualPadding
+                    ).Intersect(atlasBounds), // BottomRight
                 };
 
                 int[] cornerIndices =
@@ -199,7 +312,13 @@ namespace osu.Framework.Graphics.Textures
                     // Only upload if we have a non-zero size and if the colour isn't already transparent white
                     if (nCornerPixels > 0 && !checkEdgeRGB(pixel))
                     {
-                        var cornerUpload = new MemoryAllocatorTextureUpload(cornerBounds.Width, cornerBounds.Height) { Bounds = cornerBounds };
+                        var cornerUpload = new MemoryAllocatorTextureUpload(
+                            cornerBounds.Width,
+                            cornerBounds.Height
+                        )
+                        {
+                            Bounds = cornerBounds,
+                        };
                         var data = cornerUpload.RawData;
 
                         for (int j = 0; j < nCornerPixels; ++j)
@@ -225,10 +344,10 @@ namespace osu.Framework.Graphics.Textures
             /// Check whether the provided upload edge pixel's RGB components match the initialisation colour.
             /// </summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private bool checkEdgeRGB(Rgba32 cornerPixel)
-                => cornerPixel.R == initialisation_colour.R
-                   && cornerPixel.G == initialisation_colour.G
-                   && cornerPixel.B == initialisation_colour.B;
+            private bool checkEdgeRGB(Rgba32 cornerPixel) =>
+                cornerPixel.R == initialisation_colour.R
+                && cornerPixel.G == initialisation_colour.G
+                && cornerPixel.B == initialisation_colour.B;
         }
     }
 }

@@ -39,13 +39,17 @@ namespace osu.Framework.Tests.Visual.Platform
                     },
                     new BasicButton
                     {
-                        Action = () => host.OpenUrlExternally("this is a bad link that shouldn't crash the app"),
+                        Action = () =>
+                            host.OpenUrlExternally(
+                                "this is a bad link that shouldn't crash the app"
+                            ),
                         Size = new Vector2(150, 30),
                         Text = "Open bad link",
                     },
                     new BasicButton
                     {
-                        Action = () => host.OpenUrlExternally("https://github.com/ppy/osu-framework"),
+                        Action = () =>
+                            host.OpenUrlExternally("https://github.com/ppy/osu-framework"),
                         Size = new Vector2(150, 30),
                         Text = "Open github link",
                     },
@@ -55,7 +59,7 @@ namespace osu.Framework.Tests.Visual.Platform
                         Size = new Vector2(150, 30),
                         Text = "Open twitter link",
                     },
-                }
+                },
             };
         }
     }

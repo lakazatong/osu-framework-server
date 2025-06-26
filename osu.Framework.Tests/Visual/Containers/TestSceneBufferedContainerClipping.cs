@@ -12,9 +12,7 @@ namespace osu.Framework.Tests.Visual.Containers
     public partial class TestSceneBufferedContainerClipping : FrameworkGridTestScene
     {
         public TestSceneBufferedContainerClipping()
-            : base(1, 2)
-        {
-        }
+            : base(1, 2) { }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -24,7 +22,7 @@ namespace osu.Framework.Tests.Visual.Containers
                 Size = new Vector2(300),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Children = createContents()
+                Children = createContents(),
             };
 
             Cell(1).Child = new BufferedContainer
@@ -32,41 +30,37 @@ namespace osu.Framework.Tests.Visual.Containers
                 Size = new Vector2(300),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Children = createContents()
+                Children = createContents(),
             };
 
-            Add(new TextFlowContainer
-            {
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                TextAnchor = Anchor.TopCentre,
-                Margin = new MarginPadding { Top = 10 },
-                Text = "If clipping within buffered containers is working properly, both images below should be identical."
-            });
+            Add(
+                new TextFlowContainer
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    TextAnchor = Anchor.TopCentre,
+                    Margin = new MarginPadding { Top = 10 },
+                    Text =
+                        "If clipping within buffered containers is working properly, both images below should be identical.",
+                }
+            );
         }
 
-        private Drawable[] createContents() => new Drawable[]
-        {
-            new Box
+        private Drawable[] createContents() =>
+            new Drawable[]
             {
-                RelativeSizeAxes = Axes.Both,
-                Colour = Colour4.Red
-            },
-            new CircularContainer
-            {
-                Size = new Vector2(200),
-                RelativePositionAxes = Axes.Both,
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                Masking = true,
-                Child = new Box
+                new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Red },
+                new CircularContainer
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Colour4.Blue
-                }
-            }
-        };
+                    Size = new Vector2(200),
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    Masking = true,
+                    Child = new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Blue },
+                },
+            };
     }
 }

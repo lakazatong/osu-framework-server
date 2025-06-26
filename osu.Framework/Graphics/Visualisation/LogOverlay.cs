@@ -4,16 +4,16 @@
 #nullable disable
 
 using System.Threading;
+using osu.Framework.Development;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osu.Framework.Logging;
+using osu.Framework.Timing;
 using osuTK;
 using osuTK.Graphics;
-using osu.Framework.Development;
-using osu.Framework.Timing;
 using osuTK.Input;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Events;
 
 namespace osu.Framework.Graphics.Visualisation
 {
@@ -51,11 +51,7 @@ namespace osu.Framework.Graphics.Visualisation
                     Colour = Color4.Black,
                     Alpha = background_alpha,
                 },
-                flow = new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                }
+                flow = new FillFlowContainer { RelativeSizeAxes = Axes.X, AutoSizeAxes = Axes.Y },
             };
         }
 
@@ -66,12 +62,15 @@ namespace osu.Framework.Graphics.Visualisation
 
             base.LoadComplete();
 
-            addEntry(new LogEntry
-            {
-                Level = LogLevel.Important,
-                Message = "The debug log overlay is currently being displayed. You can toggle with Ctrl+F10 at any point.",
-                Target = LoggingTarget.Information,
-            });
+            addEntry(
+                new LogEntry
+                {
+                    Level = LogLevel.Important,
+                    Message =
+                        "The debug log overlay is currently being displayed. You can toggle with Ctrl+F10 at any point.",
+                    Target = LoggingTarget.Information,
+                }
+            );
         }
 
         private int logPosition;
@@ -87,13 +86,19 @@ namespace osu.Framework.Graphics.Visualisation
             {
                 const int display_length = 4000;
 
-                LoadComponentAsync(new DrawableLogEntry(entry), drawEntry =>
-                {
-                    flow.Insert(pos, drawEntry);
+                LoadComponentAsync(
+                    new DrawableLogEntry(entry),
+                    drawEntry =>
+                    {
+                        flow.Insert(pos, drawEntry);
 
-                    drawEntry.FadeInFromZero(800, Easing.OutQuint).Delay(display_length).FadeOut(800, Easing.InQuint);
-                    drawEntry.Expire();
-                });
+                        drawEntry
+                            .FadeInFromZero(800, Easing.OutQuint)
+                            .Delay(display_length)
+                            .FadeOut(800, Easing.InQuint);
+                        drawEntry.Expire();
+                    }
+                );
             });
         }
 
@@ -115,7 +120,8 @@ namespace osu.Framework.Graphics.Visualisation
         private void setHoldState(bool controlPressed)
         {
             box.Alpha = controlPressed ? 1 : background_alpha;
-            if (clock != null) clock.Rate = controlPressed ? 0 : 1;
+            if (clock != null)
+                clock.Rate = controlPressed ? 0 : 1;
         }
 
         protected override void PopIn()
@@ -164,11 +170,7 @@ namespace osu.Framework.Graphics.Visualisation
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = col,
-                        },
+                        new Box { RelativeSizeAxes = Axes.Both, Colour = col },
                         new SpriteText
                         {
                             Anchor = Anchor.Centre,
@@ -178,8 +180,8 @@ namespace osu.Framework.Graphics.Visualisation
                             Margin = new MarginPadding { Left = 5, Right = 5 },
                             Font = FrameworkFont.Regular.With(size: font_size),
                             Text = entry.Target?.ToString() ?? entry.LoggerName,
-                        }
-                    }
+                        },
+                    },
                 },
                 new Container
                 {
@@ -192,9 +194,9 @@ namespace osu.Framework.Graphics.Visualisation
                     {
                         RelativeSizeAxes = Axes.X,
                         Font = FrameworkFont.Regular.With(size: font_size),
-                        Text = entry.Message
-                    }
-                }
+                        Text = entry.Message,
+                    },
+                },
             };
         }
 

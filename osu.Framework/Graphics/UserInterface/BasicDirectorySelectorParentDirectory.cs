@@ -11,13 +11,9 @@ namespace osu.Framework.Graphics.UserInterface
         protected override IconUsage? Icon => FontAwesome.Solid.Folder;
 
         public BasicDirectorySelectorParentDirectory(DirectoryInfo directory)
-            : base(directory, "..")
-        {
-        }
+            : base(directory, "..") { }
 
         // this method is suppressed to ensure that parent directories that are also hidden directories are presented the same way as non-hidden parent directories
-        protected sealed override void ApplyHiddenState()
-        {
-        }
+        protected sealed override void ApplyHiddenState() { }
     }
 }

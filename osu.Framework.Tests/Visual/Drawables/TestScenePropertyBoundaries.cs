@@ -10,7 +10,9 @@ using osuTK;
 namespace osu.Framework.Tests.Visual.Drawables
 {
     [HeadlessTest]
-    [System.ComponentModel.Description("ensure validity of drawables when receiving certain values")]
+    [System.ComponentModel.Description(
+        "ensure validity of drawables when receiving certain values"
+    )]
     public partial class TestScenePropertyBoundaries : FrameworkTestScene
     {
         [BackgroundDependencyLoader]
@@ -23,11 +25,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private void testPositiveScale()
         {
-            var box = new Box
-            {
-                Size = new Vector2(100),
-                Scale = new Vector2(2)
-            };
+            var box = new Box { Size = new Vector2(100), Scale = new Vector2(2) };
 
             Add(box);
 
@@ -38,11 +36,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private void testZeroScale()
         {
-            var box = new Box
-            {
-                Size = new Vector2(100),
-                Scale = new Vector2(0)
-            };
+            var box = new Box { Size = new Vector2(100), Scale = new Vector2(0) };
 
             Add(box);
 
@@ -53,11 +47,7 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private void testNegativeScale()
         {
-            var box = new Box
-            {
-                Size = new Vector2(100),
-                Scale = new Vector2(-2)
-            };
+            var box = new Box { Size = new Vector2(100), Scale = new Vector2(-2) };
 
             Add(box);
 
@@ -86,6 +76,7 @@ namespace osu.Framework.Tests.Visual.Drawables
             && checkFloat(drawInfo.MatrixInverse.M32)
             && checkFloat(drawInfo.MatrixInverse.M33);
 
-        private bool checkFloat(float value) => !float.IsNaN(value) && !float.IsInfinity(value) && !float.IsNegativeInfinity(value);
+        private bool checkFloat(float value) =>
+            !float.IsNaN(value) && !float.IsInfinity(value) && !float.IsNegativeInfinity(value);
     }
 }

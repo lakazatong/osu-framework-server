@@ -22,7 +22,8 @@ namespace osu.Framework.Input
         /// The input queue.
         /// </summary>
         [NotNull]
-        protected IEnumerable<Drawable> InputQueue => GetInputQueue.Invoke() ?? Enumerable.Empty<Drawable>();
+        protected IEnumerable<Drawable> InputQueue =>
+            GetInputQueue.Invoke() ?? Enumerable.Empty<Drawable>();
 
         /// <summary>
         /// A function to retrieve the input queue.
@@ -42,7 +43,10 @@ namespace osu.Framework.Input
         /// <param name="lastValue">The last value for this axis.</param>
         public void HandleAxisChange(InputState state, float newValue, float lastValue)
         {
-            PropagateEvent(InputQueue, new JoystickAxisMoveEvent(state, new JoystickAxis(source, newValue), lastValue));
+            PropagateEvent(
+                InputQueue,
+                new JoystickAxisMoveEvent(state, new JoystickAxis(source, newValue), lastValue)
+            );
         }
 
         /// <summary>

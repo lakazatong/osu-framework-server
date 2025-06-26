@@ -44,28 +44,31 @@ namespace osu.Framework.Graphics.Containers.Markdown
         private void load()
         {
             MarkdownTextFlowContainer textFlowContainer;
-            InternalChildren = new[]
-            {
-                CreateBackground(),
-                textFlowContainer = CreateTextFlow(),
-            };
+            InternalChildren = new[] { CreateBackground(), textFlowContainer = CreateTextFlow() };
 
             // Markdig sometimes appends empty lines to the processed block, only add original lines to the container
             for (int i = 0; i < codeBlock.Lines.Count; i++)
                 textFlowContainer.AddParagraph(codeBlock.Lines.Lines[i].ToString());
         }
 
-        protected virtual Drawable CreateBackground() => new Box
-        {
-            RelativeSizeAxes = Axes.Both,
-            Colour = Color4.Gray,
-            Alpha = 0.5f
-        };
+        protected virtual Drawable CreateBackground() =>
+            new Box
+            {
+                RelativeSizeAxes = Axes.Both,
+                Colour = Color4.Gray,
+                Alpha = 0.5f,
+            };
 
         public virtual MarkdownTextFlowContainer CreateTextFlow()
         {
             var textFlow = parentFlowComponent.CreateTextFlow();
-            textFlow.Margin = new MarginPadding { Left = 10, Right = 10, Top = 10, Bottom = 10 };
+            textFlow.Margin = new MarginPadding
+            {
+                Left = 10,
+                Right = 10,
+                Top = 10,
+                Bottom = 10,
+            };
             return textFlow;
         }
     }

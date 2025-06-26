@@ -8,7 +8,11 @@ namespace osu.Framework.Platform.Linux
 {
     internal class SDL2LinuxWindow : SDL2DesktopWindow
     {
-        public SDL2LinuxWindow(GraphicsSurfaceType surfaceType, string appName, bool bypassCompositor)
+        public SDL2LinuxWindow(
+            GraphicsSurfaceType surfaceType,
+            string appName,
+            bool bypassCompositor
+        )
             : base(surfaceType, appName)
         {
             SDL_SetHint(SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, bypassCompositor ? "1" : "0");

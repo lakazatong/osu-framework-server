@@ -34,7 +34,10 @@ namespace osu.Framework.Tests.Visual.Drawables
 
         private readonly FillFlowContainer settingsBox;
 
-        private readonly Dictionary<string, BlendingParameters> blendingModes = new Dictionary<string, BlendingParameters>
+        private readonly Dictionary<string, BlendingParameters> blendingModes = new Dictionary<
+            string,
+            BlendingParameters
+        >
         {
             { "Inherit", BlendingParameters.Inherit },
             { "Additive", BlendingParameters.Additive },
@@ -65,8 +68,8 @@ namespace osu.Framework.Tests.Visual.Drawables
                             Children = new Drawable[]
                             {
                                 new SpriteText { Text = "Blending mode" },
-                                colourModeDropdown = new BasicDropdown<string> { Width = 200 }
-                            }
+                                colourModeDropdown = new BasicDropdown<string> { Width = 200 },
+                            },
                         },
                         new FillFlowContainer
                         {
@@ -76,8 +79,11 @@ namespace osu.Framework.Tests.Visual.Drawables
                             Children = new Drawable[]
                             {
                                 new SpriteText { Text = "Blending equation (colour)" },
-                                colourEquation = new BasicDropdown<BlendingEquation> { Width = 200 }
-                            }
+                                colourEquation = new BasicDropdown<BlendingEquation>
+                                {
+                                    Width = 200,
+                                },
+                            },
                         },
                         new FillFlowContainer
                         {
@@ -87,16 +93,16 @@ namespace osu.Framework.Tests.Visual.Drawables
                             Children = new Drawable[]
                             {
                                 new SpriteText { Text = "Blending equation (alpha)" },
-                                alphaEquation = new BasicDropdown<BlendingEquation> { Width = 200 }
-                            }
-                        }
-                    }
+                                alphaEquation = new BasicDropdown<BlendingEquation> { Width = 200 },
+                            },
+                        },
+                    },
                 },
                 new SpriteText
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Text = "Behind background"
+                    Text = "Behind background",
                 },
                 new BufferedContainer
                 {
@@ -131,7 +137,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                                     RelativeSizeAxes = Axes.Both,
                                     Size = new Vector2(0.45f),
                                     Y = -0.15f,
-                                    Colour = Color4.Cyan
+                                    Colour = Color4.Cyan,
                                 },
                                 new Circle
                                 {
@@ -141,7 +147,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                                     RelativeSizeAxes = Axes.Both,
                                     Size = new Vector2(0.45f),
                                     X = -0.15f,
-                                    Colour = Color4.Magenta
+                                    Colour = Color4.Magenta,
                                 },
                                 new Circle
                                 {
@@ -151,11 +157,11 @@ namespace osu.Framework.Tests.Visual.Drawables
                                     RelativeSizeAxes = Axes.Both,
                                     Size = new Vector2(0.45f),
                                     X = 0.15f,
-                                    Colour = Color4.Yellow
+                                    Colour = Color4.Yellow,
                                 },
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             };
 
@@ -167,7 +173,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Children = new Drawable[]
                 {
                     new SpriteText { Text = "Custom: Source" },
-                    blendingSrcDropdown = new BasicDropdown<BlendingType> { Width = 200 }
+                    blendingSrcDropdown = new BasicDropdown<BlendingType> { Width = 200 },
                 },
             };
 
@@ -179,7 +185,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Children = new Drawable[]
                 {
                     new SpriteText { Text = "Custom: Destination" },
-                    blendingDestDropdown = new BasicDropdown<BlendingType> { Width = 200 }
+                    blendingDestDropdown = new BasicDropdown<BlendingType> { Width = 200 },
                 },
             };
 
@@ -191,7 +197,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Children = new Drawable[]
                 {
                     new SpriteText { Text = "Custom: Alpha Source" },
-                    blendingAlphaSrcDropdown = new BasicDropdown<BlendingType> { Width = 200 }
+                    blendingAlphaSrcDropdown = new BasicDropdown<BlendingType> { Width = 200 },
                 },
             };
 
@@ -203,7 +209,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Children = new Drawable[]
                 {
                     new SpriteText { Text = "Custom: Alpha Destination" },
-                    blendingAlphaDestDropdown = new BasicDropdown<BlendingType> { Width = 200 }
+                    blendingAlphaDestDropdown = new BasicDropdown<BlendingType> { Width = 200 },
                 },
             };
 
@@ -264,10 +270,14 @@ namespace osu.Framework.Tests.Visual.Drawables
                     SourceAlpha = blendingAlphaSrcDropdown.Current.Value,
                     DestinationAlpha = blendingAlphaDestDropdown.Current.Value,
                     RGBEquation = colourEquation.Current.Value,
-                    AlphaEquation = alphaEquation.Current.Value
+                    AlphaEquation = alphaEquation.Current.Value,
                 };
 
-                Logger.Log("Changed blending mode to: " + blending, LoggingTarget.Runtime, LogLevel.Debug);
+                Logger.Log(
+                    "Changed blending mode to: " + blending,
+                    LoggingTarget.Runtime,
+                    LogLevel.Debug
+                );
 
                 foregroundContainer.Blending = blending;
 
@@ -283,7 +293,11 @@ namespace osu.Framework.Tests.Visual.Drawables
                 blending.RGBEquation = colourEquation.Current.Value;
                 blending.AlphaEquation = alphaEquation.Current.Value;
 
-                Logger.Log("Changed blending mode to: " + blending, LoggingTarget.Runtime, LogLevel.Debug);
+                Logger.Log(
+                    "Changed blending mode to: " + blending,
+                    LoggingTarget.Runtime,
+                    LogLevel.Debug
+                );
 
                 foregroundContainer.Blending = blending;
 

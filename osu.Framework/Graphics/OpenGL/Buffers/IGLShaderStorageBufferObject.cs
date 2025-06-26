@@ -3,7 +3,5 @@
 
 namespace osu.Framework.Graphics.OpenGL.Buffers
 {
-    internal interface IGLShaderStorageBufferObject : IGLUniformBuffer
-    {
-    }
+    internal interface IGLShaderStorageBufferObject : IGLUniformBuffer { }
 }

@@ -10,9 +10,9 @@ using System.Threading;
 using Microsoft.Extensions.ObjectPool;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Utils;
 using osu.Framework.Threading;
 using osu.Framework.Timing;
+using osu.Framework.Utils;
 
 namespace osu.Framework.Statistics
 {
@@ -20,9 +20,12 @@ namespace osu.Framework.Statistics
     {
         private readonly StopwatchClock ourClock = new StopwatchClock(true);
 
-        private readonly Stack<PerformanceCollectionType> currentCollectionTypeStack = new Stack<PerformanceCollectionType>();
+        private readonly Stack<PerformanceCollectionType> currentCollectionTypeStack =
+            new Stack<PerformanceCollectionType>();
 
-        private readonly InvokeOnDisposal[] endCollectionDelegates = new InvokeOnDisposal[FrameStatistics.NUM_PERFORMANCE_COLLECTION_TYPES];
+        private readonly InvokeOnDisposal[] endCollectionDelegates = new InvokeOnDisposal[
+            FrameStatistics.NUM_PERFORMANCE_COLLECTION_TYPES
+        ];
 
         private BackgroundStackTraceCollector traceCollector;
 
@@ -32,13 +35,16 @@ namespace osu.Framework.Statistics
 
         private readonly string threadName;
 
-        internal readonly ConcurrentQueue<FrameStatistics> PendingFrames = new ConcurrentQueue<FrameStatistics>();
+        internal readonly ConcurrentQueue<FrameStatistics> PendingFrames =
+            new ConcurrentQueue<FrameStatistics>();
 
-        internal readonly ObjectPool<FrameStatistics> FramesPool =
-            new DefaultObjectPoolProvider { MaximumRetained = max_pending_frames }
-                .Create(new DefaultPooledObjectPolicy<FrameStatistics>());
+        internal readonly ObjectPool<FrameStatistics> FramesPool = new DefaultObjectPoolProvider
+        {
+            MaximumRetained = max_pending_frames,
+        }.Create(new DefaultPooledObjectPolicy<FrameStatistics>());
 
-        internal bool[] ActiveCounters { get; } = new bool[FrameStatistics.NUM_STATISTICS_COUNTER_TYPES];
+        internal bool[] ActiveCounters { get; } =
+            new bool[FrameStatistics.NUM_STATISTICS_COUNTER_TYPES];
 
         private bool enablePerformanceProfiling;
 
@@ -60,7 +66,8 @@ namespace osu.Framework.Statistics
 
         private Thread thread;
 
-        public double FrameAimTime => 1000.0 / (Clock?.MaximumUpdateHz > 0 ? Clock.MaximumUpdateHz : double.MaxValue);
+        public double FrameAimTime =>
+            1000.0 / (Clock?.MaximumUpdateHz > 0 ? Clock.MaximumUpdateHz : double.MaxValue);
 
         internal PerformanceMonitor(GameThread thread, IEnumerable<StatisticsCounterType> counters)
         {
@@ -146,7 +153,8 @@ namespace osu.Framework.Statistics
 
         public bool HandleGC;
 
-        private readonly Dictionary<StatisticsCounterType, GlobalStatistic<long>> globalStatistics = new Dictionary<StatisticsCounterType, GlobalStatistic<long>>();
+        private readonly Dictionary<StatisticsCounterType, GlobalStatistic<long>> globalStatistics =
+            new Dictionary<StatisticsCounterType, GlobalStatistic<long>>();
 
         /// <summary>
         /// Resets all frame statistics. Run exactly once per frame.
@@ -162,7 +170,10 @@ namespace osu.Framework.Statistics
                     var type = (StatisticsCounterType)i;
 
                     if (!globalStatistics.TryGetValue(type, out var global))
-                        globalStatistics[type] = global = GlobalStatistics.Get<long>(threadName, type.ToString());
+                        globalStatistics[type] = global = GlobalStatistics.Get<long>(
+                            threadName,
+                            type.ToString()
+                        );
 
                     global.Value = count;
                     currentFrame.Counts[type] = count;
@@ -196,10 +207,18 @@ namespace osu.Framework.Statistics
             }
 
             double dampRate = Math.Max(Clock.ElapsedFrameTime, 0) / 1000;
-            averageFrameTime = Interpolation.Damp(averageFrameTime, Clock.ElapsedFrameTime, 0.01, dampRate);
+            averageFrameTime = Interpolation.Damp(
+                averageFrameTime,
+                Clock.ElapsedFrameTime,
+                0.01,
+                dampRate
+            );
 
             //check for dropped (stutter) frames
-            traceCollector?.NewFrame(Clock.ElapsedFrameTime, Math.Max(10, Math.Max(1000 / Clock.MaximumUpdateHz, averageFrameTime) * 4));
+            traceCollector?.NewFrame(
+                Clock.ElapsedFrameTime,
+                Math.Max(10, Math.Max(1000 / Clock.MaximumUpdateHz, averageFrameTime) * 4)
+            );
 
             consumeStopwatchElapsedTime();
         }

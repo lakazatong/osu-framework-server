@@ -38,10 +38,22 @@ namespace osu.Framework.Statistics
             }
         }
 
-        private readonly GlobalStatistic<int> statInflight = GlobalStatistics.Get<int>(arraypool_statistics_grouping, "Inflight");
-        private readonly GlobalStatistic<int> statAllocated = GlobalStatistics.Get<int>(arraypool_statistics_grouping, "Allocated");
-        private readonly GlobalStatistic<int> statRented = GlobalStatistics.Get<int>(arraypool_statistics_grouping, "Rented");
-        private readonly GlobalStatistic<int> statReturned = GlobalStatistics.Get<int>(arraypool_statistics_grouping, "Returned");
+        private readonly GlobalStatistic<int> statInflight = GlobalStatistics.Get<int>(
+            arraypool_statistics_grouping,
+            "Inflight"
+        );
+        private readonly GlobalStatistic<int> statAllocated = GlobalStatistics.Get<int>(
+            arraypool_statistics_grouping,
+            "Allocated"
+        );
+        private readonly GlobalStatistic<int> statRented = GlobalStatistics.Get<int>(
+            arraypool_statistics_grouping,
+            "Rented"
+        );
+        private readonly GlobalStatistic<int> statReturned = GlobalStatistics.Get<int>(
+            arraypool_statistics_grouping,
+            "Returned"
+        );
 
         protected override void OnEventWritten(EventWrittenEventArgs data)
         {
@@ -76,7 +88,12 @@ namespace osu.Framework.Statistics
                     {
                         case GCEventType.GCStartV1 when data.Payload != null:
                             // https://docs.microsoft.com/en-us/dotnet/framework/performance/garbage-collection-etw-events#gcstart_v1_event
-                            GlobalStatistics.Get<int>(gc_statistics_grouping, $"Collections Gen{data.Payload[1]}").Value++;
+                            GlobalStatistics
+                                .Get<int>(
+                                    gc_statistics_grouping,
+                                    $"Collections Gen{data.Payload[1]}"
+                                )
+                                .Value++;
                             break;
 
                         case GCEventType.GCHeapStatsV1 when data.Payload != null:
@@ -97,11 +114,17 @@ namespace osu.Framework.Statistics
                             if (allocType == null)
                                 break;
 
-                            var finalizeMethod = allocType.GetMethod("Finalize", BindingFlags.NonPublic | BindingFlags.Instance);
+                            var finalizeMethod = allocType.GetMethod(
+                                "Finalize",
+                                BindingFlags.NonPublic | BindingFlags.Instance
+                            );
                             Debug.Assert(finalizeMethod != null); // All objects have this.
 
                             if (finalizeMethod.DeclaringType != typeof(object))
-                                Logger.Log($"Allocated finalizable object: {name}", LoggingTarget.Performance);
+                                Logger.Log(
+                                    $"Allocated finalizable object: {name}",
+                                    LoggingTarget.Performance
+                                );
 
                             break;
 
@@ -109,11 +132,16 @@ namespace osu.Framework.Statistics
                             if (data.Payload[0] == null)
                                 break;
 
-                            var type = Type.GetTypeFromHandle(RuntimeTypeHandle.FromIntPtr((IntPtr)data.Payload[0]));
+                            var type = Type.GetTypeFromHandle(
+                                RuntimeTypeHandle.FromIntPtr((IntPtr)data.Payload[0])
+                            );
                             if (type == null)
                                 break;
 
-                            Logger.Log($"Finalizing object: {type.ReadableName()}", LoggingTarget.Performance);
+                            Logger.Log(
+                                $"Finalizing object: {type.ReadableName()}",
+                                LoggingTarget.Performance
+                            );
 
                             break;
                     }
@@ -122,14 +150,14 @@ namespace osu.Framework.Statistics
             }
         }
 
-        private void addStatistic<T>(string name, object data)
-            => GlobalStatistics.Get<T>(gc_statistics_grouping, name).Value = (T)data;
+        private void addStatistic<T>(string name, object data) =>
+            GlobalStatistics.Get<T>(gc_statistics_grouping, name).Value = (T)data;
 
         private enum ArrayPoolEventType
         {
             BufferRented = 1,
             BufferAllocated,
-            BufferReturned
+            BufferReturned,
         }
 
         private enum GCEventType
@@ -137,7 +165,7 @@ namespace osu.Framework.Statistics
             GCStartV1 = 1,
             GCHeapStatsV1 = 4,
             GCAllocationTickV2 = 10,
-            FinalizeObject = 29
+            FinalizeObject = 29,
         }
     }
 }

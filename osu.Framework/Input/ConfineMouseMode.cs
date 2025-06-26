@@ -7,6 +7,6 @@ namespace osu.Framework.Input
     {
         Never,
         Fullscreen,
-        Always
+        Always,
     }
 }

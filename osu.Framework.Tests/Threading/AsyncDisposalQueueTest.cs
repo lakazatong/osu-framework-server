@@ -36,7 +36,10 @@ namespace osu.Framework.Tests.Threading
             Logger.Log(objects.Select(d => d.TaskId).Distinct().Count().ToString());
 
             // It's very unlikely for this to fail by chance due to the number of objects being disposed and computational time requirement of task scheduling
-            Assert.That(objects.Select(d => d.TaskId).Distinct().Count(), Is.LessThan(objects.Count));
+            Assert.That(
+                objects.Select(d => d.TaskId).Distinct().Count(),
+                Is.LessThan(objects.Count)
+            );
         }
 
         [Test]

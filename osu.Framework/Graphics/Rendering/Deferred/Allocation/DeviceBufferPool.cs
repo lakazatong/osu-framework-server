@@ -23,7 +23,12 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
         /// <param name="bufferSize">The size of each buffer in the pool.</param>
         /// <param name="usage">The buffer usage.</param>
         /// <param name="name">A short description.</param>
-        public DeviceBufferPool(GraphicsPipeline pipeline, uint bufferSize, BufferUsage usage, string name)
+        public DeviceBufferPool(
+            GraphicsPipeline pipeline,
+            uint bufferSize,
+            BufferUsage usage,
+            string name
+        )
             : base(pipeline, name)
         {
             this.bufferSize = bufferSize;
@@ -47,7 +52,9 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
 
             public PooledDeviceBuffer(GraphicsPipeline pipeline, uint bufferSize, BufferUsage usage)
             {
-                Buffer = pipeline.Factory.CreateBuffer(new BufferDescription(bufferSize, usage | BufferUsage.Dynamic));
+                Buffer = pipeline.Factory.CreateBuffer(
+                    new BufferDescription(bufferSize, usage | BufferUsage.Dynamic)
+                );
                 statistic = GlobalStatistics.Get<long>("Native", $"PooledBuffer - {usage}");
 
                 statistic.Value += Buffer.SizeInBytes;

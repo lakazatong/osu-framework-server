@@ -33,6 +33,7 @@ namespace osu.Framework.Graphics.Containers.Markdown
             textFlow.AddInlineText(paragraphBlock.Inline);
         }
 
-        public virtual MarkdownTextFlowContainer CreateTextFlow() => parentFlowComponent.CreateTextFlow();
+        public virtual MarkdownTextFlowContainer CreateTextFlow() =>
+            parentFlowComponent.CreateTextFlow();
     }
 }

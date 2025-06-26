@@ -9,20 +9,18 @@ namespace osu.Framework.Input.StateChanges
     public class TabletPenButtonInput : ButtonInput<TabletPenButton>
     {
         public TabletPenButtonInput(IEnumerable<ButtonInputEntry<TabletPenButton>> entries)
-            : base(entries)
-        {
-        }
+            : base(entries) { }
 
         public TabletPenButtonInput(TabletPenButton button, bool isPressed)
-            : base(button, isPressed)
-        {
-        }
+            : base(button, isPressed) { }
 
-        public TabletPenButtonInput(ButtonStates<TabletPenButton> current, ButtonStates<TabletPenButton> previous)
-            : base(current, previous)
-        {
-        }
+        public TabletPenButtonInput(
+            ButtonStates<TabletPenButton> current,
+            ButtonStates<TabletPenButton> previous
+        )
+            : base(current, previous) { }
 
-        protected override ButtonStates<TabletPenButton> GetButtonStates(InputState state) => state.Tablet.PenButtons;
+        protected override ButtonStates<TabletPenButton> GetButtonStates(InputState state) =>
+            state.Tablet.PenButtons;
     }
 }

@@ -8,8 +8,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -25,87 +25,153 @@ namespace osu.Framework.Tests.Visual.Drawables
         private float b1 = 0.8f;
         private float b2 = 0.99f;
 
-        private readonly List<DoubleApproximatedPathTest> doubleApproximatedPathTests = new List<DoubleApproximatedPathTest>();
+        private readonly List<DoubleApproximatedPathTest> doubleApproximatedPathTests =
+            new List<DoubleApproximatedPathTest>();
 
         public TestScenePiecewiseLinearToBSpline()
             : base(2, 2)
         {
-            doubleApproximatedPathTests.Add(new DoubleApproximatedPathTest(PathApproximator.BezierToPiecewiseLinear));
-            Cell(0).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.BezierToPiecewiseLinear)),
-                doubleApproximatedPathTests[^1],
-            });
+            doubleApproximatedPathTests.Add(
+                new DoubleApproximatedPathTest(PathApproximator.BezierToPiecewiseLinear)
+            );
+            Cell(0)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.BezierToPiecewiseLinear)),
+                        doubleApproximatedPathTests[^1],
+                    }
+                );
 
-            doubleApproximatedPathTests.Add(new DoubleApproximatedPathTest(PathApproximator.CatmullToPiecewiseLinear));
-            Cell(1).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.CatmullToPiecewiseLinear)),
-                doubleApproximatedPathTests[^1],
-            });
+            doubleApproximatedPathTests.Add(
+                new DoubleApproximatedPathTest(PathApproximator.CatmullToPiecewiseLinear)
+            );
+            Cell(1)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.CatmullToPiecewiseLinear)),
+                        doubleApproximatedPathTests[^1],
+                    }
+                );
 
-            doubleApproximatedPathTests.Add(new DoubleApproximatedPathTest(PathApproximator.CircularArcToPiecewiseLinear));
-            Cell(2).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.CircularArcToPiecewiseLinear)),
-                doubleApproximatedPathTests[^1],
-            });
+            doubleApproximatedPathTests.Add(
+                new DoubleApproximatedPathTest(PathApproximator.CircularArcToPiecewiseLinear)
+            );
+            Cell(2)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.CircularArcToPiecewiseLinear)),
+                        doubleApproximatedPathTests[^1],
+                    }
+                );
 
-            doubleApproximatedPathTests.Add(new DoubleApproximatedPathTest(PathApproximator.LagrangePolynomialToPiecewiseLinear));
-            Cell(3).AddRange(new[]
-            {
-                createLabel(nameof(PathApproximator.LagrangePolynomialToPiecewiseLinear)),
-                doubleApproximatedPathTests[^1],
-            });
+            doubleApproximatedPathTests.Add(
+                new DoubleApproximatedPathTest(PathApproximator.LagrangePolynomialToPiecewiseLinear)
+            );
+            Cell(3)
+                .AddRange(
+                    new[]
+                    {
+                        createLabel(nameof(PathApproximator.LagrangePolynomialToPiecewiseLinear)),
+                        doubleApproximatedPathTests[^1],
+                    }
+                );
 
-            AddSliderStep($"{nameof(numControlPoints)}", 3, 25, 5, v =>
-            {
-                numControlPoints = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(numControlPoints)}",
+                3,
+                25,
+                5,
+                v =>
+                {
+                    numControlPoints = v;
+                    updateTests();
+                }
+            );
 
-            AddSliderStep($"{nameof(degree)}", 1, 5, 3, v =>
-            {
-                degree = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(degree)}",
+                1,
+                5,
+                3,
+                v =>
+                {
+                    degree = v;
+                    updateTests();
+                }
+            );
 
-            AddSliderStep($"{nameof(numTestPoints)}", 10, 200, 100, v =>
-            {
-                numTestPoints = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(numTestPoints)}",
+                10,
+                200,
+                100,
+                v =>
+                {
+                    numTestPoints = v;
+                    updateTests();
+                }
+            );
 
-            AddSliderStep($"{nameof(maxIterations)}", 0, 200, 10, v =>
-            {
-                maxIterations = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(maxIterations)}",
+                0,
+                200,
+                10,
+                v =>
+                {
+                    maxIterations = v;
+                    updateTests();
+                }
+            );
 
-            AddSliderStep($"{nameof(learningRate)}", 0, 10, 8f, v =>
-            {
-                learningRate = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(learningRate)}",
+                0,
+                10,
+                8f,
+                v =>
+                {
+                    learningRate = v;
+                    updateTests();
+                }
+            );
 
-            AddSliderStep($"{nameof(b1)}", 0, 0.999f, 0.8f, v =>
-            {
-                b1 = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(b1)}",
+                0,
+                0.999f,
+                0.8f,
+                v =>
+                {
+                    b1 = v;
+                    updateTests();
+                }
+            );
 
-            AddSliderStep($"{nameof(b2)}", 0, 0.999f, 0.99f, v =>
-            {
-                b2 = v;
-                updateTests();
-            });
+            AddSliderStep(
+                $"{nameof(b2)}",
+                0,
+                0.999f,
+                0.99f,
+                v =>
+                {
+                    b2 = v;
+                    updateTests();
+                }
+            );
 
-            AddStep("Enable optimization", () =>
-            {
-                foreach (var test in doubleApproximatedPathTests)
-                    test.OptimizePath = true;
-                updateTests();
-            });
+            AddStep(
+                "Enable optimization",
+                () =>
+                {
+                    foreach (var test in doubleApproximatedPathTests)
+                        test.OptimizePath = true;
+                    updateTests();
+                }
+            );
         }
 
         private void updateTests()
@@ -123,12 +189,13 @@ namespace osu.Framework.Tests.Visual.Drawables
             }
         }
 
-        private Drawable createLabel(string text) => new SpriteText
-        {
-            Text = text + "ToBSpline",
-            Font = new FontUsage(size: 20),
-            Colour = Color4.White,
-        };
+        private Drawable createLabel(string text) =>
+            new SpriteText
+            {
+                Text = text + "ToBSpline",
+                Font = new FontUsage(size: 20),
+                Colour = Color4.White,
+            };
 
         public delegate List<Vector2> ApproximatorFunc(ReadOnlySpan<Vector2> controlPoints);
 
@@ -177,43 +244,50 @@ namespace osu.Framework.Tests.Visual.Drawables
                         PathRadius = 2,
                         Vertices = inputPath,
                     },
-                    approximatedDrawnPath = new Path
-                    {
-                        Colour = Color4.Magenta,
-                        PathRadius = 2,
-                    },
+                    approximatedDrawnPath = new Path { Colour = Color4.Magenta, PathRadius = 2 },
                     controlPointPath = new Path
                     {
                         Colour = Color4.LightGreen,
                         PathRadius = 1,
                         Alpha = 0.5f,
                     },
-                    controlPointViz = new Container
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.5f,
-                    },
+                    controlPointViz = new Container { RelativeSizeAxes = Axes.Both, Alpha = 0.5f },
                 };
             }
 
             public void UpdatePath()
             {
-                if (!OptimizePath) return;
+                if (!OptimizePath)
+                    return;
 
-                var controlPoints = PathApproximator.PiecewiseLinearToBSpline(inputPath, NumControlPoints, Degree, NumTestPoints, MaxIterations, LearningRate, B1, B2);
-                approximatedDrawnPath.Vertices = PathApproximator.BSplineToPiecewiseLinear(controlPoints.ToArray(), Degree);
+                var controlPoints = PathApproximator.PiecewiseLinearToBSpline(
+                    inputPath,
+                    NumControlPoints,
+                    Degree,
+                    NumTestPoints,
+                    MaxIterations,
+                    LearningRate,
+                    B1,
+                    B2
+                );
+                approximatedDrawnPath.Vertices = PathApproximator.BSplineToPiecewiseLinear(
+                    controlPoints.ToArray(),
+                    Degree
+                );
                 controlPointPath.Vertices = controlPoints;
                 controlPointViz.Clear();
 
                 foreach (var cp in controlPoints)
                 {
-                    controlPointViz.Add(new Box
-                    {
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(10),
-                        Position = cp,
-                        Colour = Color4.LightGreen,
-                    });
+                    controlPointViz.Add(
+                        new Box
+                        {
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(10),
+                            Position = cp,
+                            Colour = Color4.LightGreen,
+                        }
+                    );
                 }
             }
         }

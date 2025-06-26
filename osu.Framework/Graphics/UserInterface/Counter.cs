@@ -33,17 +33,22 @@ namespace osu.Framework.Graphics.UserInterface
         /// <summary>
         /// Invoked when <see cref="Count"/> has changed.
         /// </summary>
-        protected virtual void OnCountChanged(double count)
-        {
-        }
+        protected virtual void OnCountChanged(double count) { }
 
-        public TransformSequence<Counter> CountTo(double endCount, double duration = 0, Easing easing = Easing.None)
-            => this.TransformTo(nameof(Count), endCount, duration, easing);
+        public TransformSequence<Counter> CountTo(
+            double endCount,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) => this.TransformTo(nameof(Count), endCount, duration, easing);
     }
 
     public static class CounterTransformSequenceExtensions
     {
-        public static TransformSequence<Counter> CountTo(this TransformSequence<Counter> t, double endCount, double duration = 0, Easing easing = Easing.None)
-            => t.Append(o => o.CountTo(endCount, duration, easing));
+        public static TransformSequence<Counter> CountTo(
+            this TransformSequence<Counter> t,
+            double endCount,
+            double duration = 0,
+            Easing easing = Easing.None
+        ) => t.Append(o => o.CountTo(endCount, duration, easing));
     }
 }

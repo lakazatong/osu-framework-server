@@ -60,11 +60,13 @@ namespace osu.Framework.Graphics.Animations
         /// <param name="displayDuration">The duration the new frame should be displayed for.</param>
         public void AddFrame(T content, double? displayDuration = null)
         {
-            AddFrame(new FrameData<T>
-            {
-                Duration = displayDuration ?? DefaultFrameLength, // 60 fps by default
-                Content = content,
-            });
+            AddFrame(
+                new FrameData<T>
+                {
+                    Duration = displayDuration ?? DefaultFrameLength, // 60 fps by default
+                    Content = content,
+                }
+            );
         }
 
         public void AddFrame(FrameData<T> frame)
@@ -134,15 +136,14 @@ namespace osu.Framework.Graphics.Animations
         /// </summary>
         /// <param name="content">The content of the new frame.</param>
         /// <param name="displayDuration">The display duration of the new frame.</param>
-        protected virtual void OnFrameAdded(T content, double displayDuration)
-        {
-        }
+        protected virtual void OnFrameAdded(T content, double displayDuration) { }
 
         protected override void Update()
         {
             base.Update();
 
-            if (frameData.Count == 0) return;
+            if (frameData.Count == 0)
+                return;
 
             updateFrameIndex();
 
@@ -155,7 +156,10 @@ namespace osu.Framework.Graphics.Animations
             switch (PlaybackPosition.CompareTo(frameData[CurrentFrameIndex].DisplayStartTime))
             {
                 case -1:
-                    while (CurrentFrameIndex > 0 && PlaybackPosition < frameData[CurrentFrameIndex].DisplayStartTime)
+                    while (
+                        CurrentFrameIndex > 0
+                        && PlaybackPosition < frameData[CurrentFrameIndex].DisplayStartTime
+                    )
                     {
                         CurrentFrameIndex--;
                         currentFrameCache.Invalidate();
@@ -164,7 +168,10 @@ namespace osu.Framework.Graphics.Animations
                     break;
 
                 case 1:
-                    while (CurrentFrameIndex < frameData.Count - 1 && PlaybackPosition >= frameData[CurrentFrameIndex].DisplayEndTime)
+                    while (
+                        CurrentFrameIndex < frameData.Count - 1
+                        && PlaybackPosition >= frameData[CurrentFrameIndex].DisplayEndTime
+                    )
                     {
                         CurrentFrameIndex++;
                         currentFrameCache.Invalidate();

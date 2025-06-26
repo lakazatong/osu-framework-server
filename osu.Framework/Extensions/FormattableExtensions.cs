@@ -10,6 +10,9 @@ namespace osu.Framework.Extensions
         /// <summary>
         /// Formats the value of <paramref name="formattable"/> using the default format string and the supplied <paramref name="formatProvider"/>.
         /// </summary>
-        public static string ToString(this IFormattable formattable, IFormatProvider formatProvider) => formattable.ToString(null, formatProvider);
+        public static string ToString(
+            this IFormattable formattable,
+            IFormatProvider formatProvider
+        ) => formattable.ToString(null, formatProvider);
     }
 }

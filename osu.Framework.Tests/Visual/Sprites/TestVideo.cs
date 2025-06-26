@@ -10,9 +10,7 @@ namespace osu.Framework.Tests.Visual.Sprites
     internal partial class TestVideo : Video
     {
         public TestVideo(Stream videoStream, bool startAtCurrentTime = true)
-            : base(videoStream, startAtCurrentTime)
-        {
-        }
+            : base(videoStream, startAtCurrentTime) { }
 
         private bool? rounded;
 
@@ -36,6 +34,7 @@ namespace osu.Framework.Tests.Visual.Sprites
             }
         }
 
-        public override Drawable CreateContent() => Sprite = new VideoSprite(this) { RelativeSizeAxes = Axes.Both };
+        public override Drawable CreateContent() =>
+            Sprite = new VideoSprite(this) { RelativeSizeAxes = Axes.Both };
     }
 }

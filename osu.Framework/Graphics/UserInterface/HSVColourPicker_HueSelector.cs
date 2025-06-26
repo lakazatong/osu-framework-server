@@ -17,11 +17,7 @@ namespace osu.Framework.Graphics.UserInterface
     {
         public abstract partial class HueSelector : CompositeDrawable
         {
-            public Bindable<float> Hue { get; } = new BindableFloat
-            {
-                MinValue = 0,
-                MaxValue = 1
-            };
+            public Bindable<float> Hue { get; } = new BindableFloat { MinValue = 0, MaxValue = 1 };
 
             /// <summary>
             /// The body of the hue slider.
@@ -41,16 +37,14 @@ namespace osu.Framework.Graphics.UserInterface
                     {
                         Height = 30,
                         RelativeSizeAxes = Axes.X,
-                        Child = new HueSelectorBackground
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        }
+                        Child = new HueSelectorBackground { RelativeSizeAxes = Axes.Both },
                     },
-                    nub = CreateSliderNub().With(d =>
-                    {
-                        d.RelativeSizeAxes = Axes.Y;
-                        d.RelativePositionAxes = Axes.X;
-                    })
+                    nub = CreateSliderNub()
+                        .With(d =>
+                        {
+                            d.RelativeSizeAxes = Axes.Y;
+                            d.RelativePositionAxes = Axes.X;
+                        }),
                 };
             }
 
@@ -101,7 +95,10 @@ namespace osu.Framework.Graphics.UserInterface
                 [BackgroundDependencyLoader]
                 private void load(ShaderManager shaders)
                 {
-                    TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "HueSelectorBackground");
+                    TextureShader = shaders.Load(
+                        VertexShaderDescriptor.TEXTURE_2,
+                        "HueSelectorBackground"
+                    );
                 }
             }
         }

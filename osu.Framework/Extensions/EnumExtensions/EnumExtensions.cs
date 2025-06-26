@@ -39,20 +39,30 @@ namespace osu.Framework.Extensions.EnumExtensions
             if (!type.IsEnum)
                 throw new InvalidOperationException($"{typeof(T)} must be an enum");
 
-            if (!(Attribute.GetCustomAttribute(type, typeof(HasOrderedElementsAttribute)) is HasOrderedElementsAttribute orderedAttr))
+            if (
+                !(
+                    Attribute.GetCustomAttribute(type, typeof(HasOrderedElementsAttribute))
+                    is HasOrderedElementsAttribute orderedAttr
+                )
+            )
                 return items;
 
             return items.OrderBy(i =>
             {
                 var fieldInfo = type.GetField(i.ToString().AsNonNull());
 
-                if (fieldInfo?.GetCustomAttributes(typeof(OrderAttribute), false).FirstOrDefault() is OrderAttribute attr)
+                if (
+                    fieldInfo?.GetCustomAttributes(typeof(OrderAttribute), false).FirstOrDefault()
+                    is OrderAttribute attr
+                )
                     return attr.Order;
 
                 if (orderedAttr.AllowPartialOrdering)
                     return Convert.ToInt32(i);
 
-                throw new ArgumentException($"Not all values of {typeof(T)} have {nameof(OrderAttribute)} specified.");
+                throw new ArgumentException(
+                    $"Not all values of {typeof(T)} have {nameof(OrderAttribute)} specified."
+                );
             });
         }
 
@@ -64,7 +74,8 @@ namespace osu.Framework.Extensions.EnumExtensions
         /// <param name="flag">The flag to check for.</param>
 #pragma warning restore RS0030
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool HasFlagFast<T>(this T enumValue, T flag) where T : unmanaged, Enum
+        public static unsafe bool HasFlagFast<T>(this T enumValue, T flag)
+            where T : unmanaged, Enum
         {
             // Note: Using a switch statement would eliminate inlining.
 

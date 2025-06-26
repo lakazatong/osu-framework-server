@@ -13,7 +13,8 @@ namespace osu.Framework.SourceGeneration.Analysers
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class DrawableAnalyser : DiagnosticAnalyzer
     {
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(DiagnosticRules.MAKE_DI_CLASS_PARTIAL);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+            ImmutableArray.Create(DiagnosticRules.MAKE_DI_CLASS_PARTIAL);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -35,7 +36,10 @@ namespace osu.Framework.SourceGeneration.Analysers
 
             analyseRecursively(context, classSyntax);
 
-            static bool analyseRecursively(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax node)
+            static bool analyseRecursively(
+                SyntaxNodeAnalysisContext context,
+                ClassDeclarationSyntax node
+            )
             {
                 bool requiresPartial = false;
 
@@ -46,13 +50,24 @@ namespace osu.Framework.SourceGeneration.Analysers
                 // - If at least one child requires partial, then this node also needs to be partial regardless of its own type (optimisation).
                 // - If no child requires partial, we need to check if this node is a DI candidate (e.g. If the node has no nested types).
                 if (!requiresPartial)
-                    requiresPartial = context.SemanticModel.GetDeclaredSymbol(node)?.AllInterfaces.Any(SyntaxHelpers.IsIDependencyInjectionCandidateInterface) == true;
+                    requiresPartial =
+                        context
+                            .SemanticModel.GetDeclaredSymbol(node)
+                            ?.AllInterfaces.Any(
+                                SyntaxHelpers.IsIDependencyInjectionCandidateInterface
+                            ) == true;
 
                 // Whether the node is already partial.
                 bool isPartial = node.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
 
                 if (requiresPartial && !isPartial)
-                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticRules.MAKE_DI_CLASS_PARTIAL, node.GetLocation(), node));
+                    context.ReportDiagnostic(
+                        Diagnostic.Create(
+                            DiagnosticRules.MAKE_DI_CLASS_PARTIAL,
+                            node.GetLocation(),
+                            node
+                        )
+                    );
 
                 return requiresPartial;
             }

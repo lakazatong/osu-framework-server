@@ -21,7 +21,12 @@ namespace osu.Framework.Input.StateChanges.Events
         /// </remarks>
         public readonly bool IsPrecise;
 
-        public MouseScrollChangeEvent(InputState state, IInput input, Vector2 lastScroll, bool isPrecise)
+        public MouseScrollChangeEvent(
+            InputState state,
+            IInput input,
+            Vector2 lastScroll,
+            bool isPrecise
+        )
             : base(state, input)
         {
             LastScroll = lastScroll;

@@ -3,11 +3,11 @@
 
 #nullable disable
 
-using osu.Framework.Extensions.TypeExtensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using osu.Framework.Extensions.TypeExtensions;
 using osu.Framework.IO.Serialization;
 
 namespace osu.Framework.Lists
@@ -32,18 +32,14 @@ namespace osu.Framework.Lists
         /// Constructs a new <see cref="SortedList{T}"/> with the default <typeparamref name="T"/> comparer.
         /// </summary>
         public SortedList()
-            : this(Comparer<T>.Default)
-        {
-        }
+            : this(Comparer<T>.Default) { }
 
         /// <summary>
         /// Constructs a new <see cref="SortedList{T}"/> with a custom comparison function.
         /// </summary>
         /// <param name="comparer">The comparison function.</param>
         public SortedList(Func<T, T, int> comparer)
-            : this(Comparer<T>.Create(new Comparison<T>(comparer)))
-        {
-        }
+            : this(Comparer<T>.Create(new Comparison<T>(comparer))) { }
 
         /// <summary>
         /// Constructs a new <see cref="SortedList{T}"/> with a custom <see cref="IComparer{T}"/>.

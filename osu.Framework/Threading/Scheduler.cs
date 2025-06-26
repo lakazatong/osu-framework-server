@@ -145,7 +145,8 @@ namespace osu.Framework.Threading
                     {
                         tasksToRemove.Add(sd);
 
-                        if (sd.Cancelled) continue;
+                        if (sd.Cancelled)
+                            continue;
 
                         if (sd.RepeatInterval == 0)
                         {
@@ -157,14 +158,17 @@ namespace osu.Framework.Threading
                         if (sd.RepeatInterval > 0)
                         {
                             if (timedTasks.Count > LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL)
-                                throw new ArgumentException("Too many timed tasks are in the queue!");
+                                throw new ArgumentException(
+                                    "Too many timed tasks are in the queue!"
+                                );
 
                             // schedule the next repeat of the task.
                             sd.SetNextExecution(currentTimeLocal);
                             tasksToSchedule.Add(sd);
                         }
 
-                        if (!sd.Completed) enqueue(sd);
+                        if (!sd.Completed)
+                            enqueue(sd);
                     }
                 }
 
@@ -286,7 +290,9 @@ namespace osu.Framework.Threading
         public void Add(ScheduledDelegate task)
         {
             if (task.Completed)
-                throw new InvalidOperationException($"Can not add a {nameof(ScheduledDelegate)} that has been already {nameof(ScheduledDelegate.Completed)}");
+                throw new InvalidOperationException(
+                    $"Can not add a {nameof(ScheduledDelegate)} that has been already {nameof(ScheduledDelegate.Completed)}"
+                );
 
             lock (queueLock)
             {
@@ -294,7 +300,10 @@ namespace osu.Framework.Threading
 
                 if (timedTasks.Count % LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL == 0)
                 {
-                    Logger.Log($"{this} has {timedTasks.Count} timed tasks pending", LoggingTarget.Performance);
+                    Logger.Log(
+                        $"{this} has {timedTasks.Count} timed tasks pending",
+                        LoggingTarget.Performance
+                    );
                     Logger.Log($"- First task: {timedTasks.First()}", LoggingTarget.Performance);
                     Logger.Log($"- Last task: {timedTasks.Last()}", LoggingTarget.Performance);
                 }
@@ -309,12 +318,22 @@ namespace osu.Framework.Threading
         /// <param name="timeUntilRun">Milliseconds until run.</param>
         /// <param name="repeat">Whether this task should repeat.</param>
         /// <returns>Whether this is the first queue attempt of this work.</returns>
-        public ScheduledDelegate AddDelayed<T>(Action<T> task, T data, double timeUntilRun, bool repeat = false)
+        public ScheduledDelegate AddDelayed<T>(
+            Action<T> task,
+            T data,
+            double timeUntilRun,
+            bool repeat = false
+        )
         {
             // We are locking here already to make sure we have no concurrent access to currentTime
             lock (queueLock)
             {
-                ScheduledDelegate del = new ScheduledDelegateWithData<T>(task, data, currentTime + timeUntilRun, repeat ? timeUntilRun : -1);
+                ScheduledDelegate del = new ScheduledDelegateWithData<T>(
+                    task,
+                    data,
+                    currentTime + timeUntilRun,
+                    repeat ? timeUntilRun : -1
+                );
                 Add(del);
                 return del;
             }
@@ -332,7 +351,11 @@ namespace osu.Framework.Threading
             // We are locking here already to make sure we have no concurrent access to currentTime
             lock (queueLock)
             {
-                ScheduledDelegate del = new ScheduledDelegate(task, currentTime + timeUntilRun, repeat ? timeUntilRun : -1);
+                ScheduledDelegate del = new ScheduledDelegate(
+                    task,
+                    currentTime + timeUntilRun,
+                    repeat ? timeUntilRun : -1
+                );
                 Add(del);
                 return del;
             }
@@ -349,7 +372,9 @@ namespace osu.Framework.Threading
         {
             lock (queueLock)
             {
-                var existing = runQueue.OfType<ScheduledDelegateWithData<T>>().SingleOrDefault(sd => sd.Task == task);
+                var existing = runQueue
+                    .OfType<ScheduledDelegateWithData<T>>()
+                    .SingleOrDefault(sd => sd.Task == task);
 
                 if (existing != null)
                 {
@@ -389,7 +414,10 @@ namespace osu.Framework.Threading
             {
                 runQueue.Enqueue(task);
                 if (runQueue.Count % LOG_EXCESSSIVE_QUEUE_LENGTH_INTERVAL == 0)
-                    Logger.Log($"{this} has {runQueue.Count} tasks pending", LoggingTarget.Performance);
+                    Logger.Log(
+                        $"{this} has {runQueue.Count} tasks pending",
+                        LoggingTarget.Performance
+                    );
             }
         }
     }

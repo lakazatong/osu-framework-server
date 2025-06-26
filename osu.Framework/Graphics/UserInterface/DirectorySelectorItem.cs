@@ -62,21 +62,26 @@ namespace osu.Framework.Graphics.UserInterface
 
             if (Icon.HasValue)
             {
-                Flow.Add(new SpriteIcon
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    Icon = Icon.Value,
-                    Size = new Vector2(FONT_SIZE)
-                });
+                Flow.Add(
+                    new SpriteIcon
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Icon = Icon.Value,
+                        Size = new Vector2(FONT_SIZE),
+                    }
+                );
             }
 
-            Flow.Add(CreateSpriteText().With(text =>
-            {
-                text.Anchor = Anchor.CentreLeft;
-                text.Origin = Anchor.CentreLeft;
-                text.Text = displayName ?? FallbackName;
-            }));
+            Flow.Add(
+                CreateSpriteText()
+                    .With(text =>
+                    {
+                        text.Anchor = Anchor.CentreLeft;
+                        text.Origin = Anchor.CentreLeft;
+                        text.Text = displayName ?? FallbackName;
+                    })
+            );
         }
     }
 }

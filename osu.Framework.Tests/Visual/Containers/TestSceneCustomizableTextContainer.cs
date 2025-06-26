@@ -25,37 +25,55 @@ namespace osu.Framework.Tests.Visual.Containers
         {
             CustomizableTextContainer container = null;
 
-            AddStep("create container", () => Child = container = new CustomizableTextContainer
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            AddStep(
+                "create container",
+                () =>
+                    Child = container =
+                        new CustomizableTextContainer { RelativeSizeAxes = Axes.Both }
+            );
 
-            AddStep("add content to container", () =>
-            {
-                int first = container.AddPlaceholder(new SpriteIcon
+            AddStep(
+                "add content to container",
+                () =>
                 {
-                    Size = new Vector2(16),
-                    Icon = FontAwesome.Regular.Comment
-                });
+                    int first = container.AddPlaceholder(
+                        new SpriteIcon
+                        {
+                            Size = new Vector2(16),
+                            Icon = FontAwesome.Regular.Comment,
+                        }
+                    );
 
-                int second = container.AddPlaceholder(new CircularContainer
-                {
-                    Size = new Vector2(30, 16),
-                    Masking = true,
-                    Child = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Colour4.Goldenrod
-                    }
-                });
+                    int second = container.AddPlaceholder(
+                        new CircularContainer
+                        {
+                            Size = new Vector2(30, 16),
+                            Masking = true,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Colour4.Goldenrod,
+                            },
+                        }
+                    );
 
-                container.AddText(new RomanisableString(
-                    $"this original [{first}] text has [{second}] placeholder",
-                    $"this romanised text [{first}] has placeholder [{second}]"));
-            });
+                    container.AddText(
+                        new RomanisableString(
+                            $"this original [{first}] text has [{second}] placeholder",
+                            $"this romanised text [{first}] has placeholder [{second}]"
+                        )
+                    );
+                }
+            );
 
-            AddStep("prefer unicode", () => configManager.SetValue(FrameworkSetting.ShowUnicode, true));
-            AddStep("prefer ASCII", () => configManager.SetValue(FrameworkSetting.ShowUnicode, false));
+            AddStep(
+                "prefer unicode",
+                () => configManager.SetValue(FrameworkSetting.ShowUnicode, true)
+            );
+            AddStep(
+                "prefer ASCII",
+                () => configManager.SetValue(FrameworkSetting.ShowUnicode, false)
+            );
         }
     }
 }

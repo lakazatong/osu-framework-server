@@ -101,11 +101,7 @@ namespace osu.Framework.Testing.Input
                     Masking = true,
                     BorderThickness = 2,
                     BorderColour = Color4.White,
-                    Child = new Box
-                    {
-                        Colour = Color4.Red,
-                        RelativeSizeAxes = Axes.Both,
-                    },
+                    Child = new Box { Colour = Color4.Red, RelativeSizeAxes = Axes.Both },
                 },
             };
         }
@@ -146,7 +142,9 @@ namespace osu.Framework.Testing.Input
 
         protected override bool OnScroll(ScrollEvent e)
         {
-            circle.MoveTo(circle.Position - e.ScrollDelta * 10).MoveTo(Vector2.Zero, 500, Easing.OutQuint);
+            circle
+                .MoveTo(circle.Position - e.ScrollDelta * 10)
+                .MoveTo(Vector2.Zero, 500, Easing.OutQuint);
             return base.OnScroll(e);
         }
 

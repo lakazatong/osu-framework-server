@@ -21,15 +21,33 @@ namespace osu.Framework.Platform.MacOS.Native
         private static readonly IntPtr sel_release = Selector.Get("release");
         private static readonly IntPtr sel_init_with_data = Selector.Get("initWithData:");
         private static readonly IntPtr sel_tiff_representation = Selector.Get("TIFFRepresentation");
-        private static readonly IntPtr sel_cg_image_for_proposed_rect = Selector.Get("CGImageForProposedRect:context:hints:");
+        private static readonly IntPtr sel_cg_image_for_proposed_rect = Selector.Get(
+            "CGImageForProposedRect:context:hints:"
+        );
 
-        internal CGImage CGImage => new CGImage(Interop.SendIntPtr(Handle, sel_cg_image_for_proposed_rect, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero));
+        internal CGImage CGImage =>
+            new CGImage(
+                Interop.SendIntPtr(
+                    Handle,
+                    sel_cg_image_for_proposed_rect,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    IntPtr.Zero
+                )
+            );
 
-        internal NSData TiffRepresentation => new NSData(Interop.SendIntPtr(Handle, sel_tiff_representation));
+        internal NSData TiffRepresentation =>
+            new NSData(Interop.SendIntPtr(Handle, sel_tiff_representation));
 
         [MustDisposeResource]
-        internal static NSImage InitWithData(NSData data)
-            => new NSImage(Interop.SendIntPtr(Interop.SendIntPtr(class_pointer, sel_alloc), sel_init_with_data, data));
+        internal static NSImage InitWithData(NSData data) =>
+            new NSImage(
+                Interop.SendIntPtr(
+                    Interop.SendIntPtr(class_pointer, sel_alloc),
+                    sel_init_with_data,
+                    data
+                )
+            );
 
         public void Dispose()
         {

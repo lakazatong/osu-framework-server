@@ -23,10 +23,12 @@ namespace osu.Framework.IO.Stores
             Namespace = ns;
         }
 
-        protected override IEnumerable<string> GetFilenames(string name) => base.GetFilenames($@"{Namespace}/{name}");
+        protected override IEnumerable<string> GetFilenames(string name) =>
+            base.GetFilenames($@"{Namespace}/{name}");
 
-        public override IEnumerable<string> GetAvailableResources() => base.GetAvailableResources()
-                                                                           .Where(x => x.StartsWith($"{Namespace}/", StringComparison.Ordinal))
-                                                                           .Select(x => x[(Namespace.Length + 1)..]);
+        public override IEnumerable<string> GetAvailableResources() =>
+            base.GetAvailableResources()
+                .Where(x => x.StartsWith($"{Namespace}/", StringComparison.Ordinal))
+                .Select(x => x[(Namespace.Length + 1)..]);
     }
 }

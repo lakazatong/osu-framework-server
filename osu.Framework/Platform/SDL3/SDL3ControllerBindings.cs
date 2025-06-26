@@ -58,7 +58,10 @@ namespace osu.Framework.Platform.SDL3
         {
             for (int i = 0; i < Bindings.Length; i++)
             {
-                if (Bindings[i].input_type == SDL_GamepadBindingType.SDL_GAMEPAD_BINDTYPE_BUTTON && Bindings[i].input.button == buttonIndex)
+                if (
+                    Bindings[i].input_type == SDL_GamepadBindingType.SDL_GAMEPAD_BINDTYPE_BUTTON
+                    && Bindings[i].input.button == buttonIndex
+                )
                     return true;
             }
 
@@ -69,7 +72,10 @@ namespace osu.Framework.Platform.SDL3
         {
             for (int i = 0; i < Bindings.Length; i++)
             {
-                if (Bindings[i].input_type == SDL_GamepadBindingType.SDL_GAMEPAD_BINDTYPE_AXIS && Bindings[i].input.axis.axis == axisIndex)
+                if (
+                    Bindings[i].input_type == SDL_GamepadBindingType.SDL_GAMEPAD_BINDTYPE_AXIS
+                    && Bindings[i].input.axis.axis == axisIndex
+                )
                     return true;
             }
 

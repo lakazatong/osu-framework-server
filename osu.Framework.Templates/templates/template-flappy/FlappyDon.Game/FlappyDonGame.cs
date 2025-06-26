@@ -13,7 +13,8 @@ namespace FlappyDon.Game
     public partial class FlappyDonGame : FlappyDonGameBase
     {
         // The main container for holding all of the game content
-        private readonly DrawSizePreservingFillContainer gameScreen = new DrawSizePreservingFillContainer();
+        private readonly DrawSizePreservingFillContainer gameScreen =
+            new DrawSizePreservingFillContainer();
 
         // Front-screen UI elements
         private readonly TitleSprite gameOverSprite = new TitleSprite("gameover");
@@ -64,7 +65,7 @@ namespace FlappyDon.Game
                 gameOverSprite,
                 logoSprite,
                 scoreCounter.ScoreSpriteText,
-                screenFlash
+                screenFlash,
             };
 
             // Configure the sizing strategy in such a way that all elements are relatively scaled in contrast to the Y-axis (ie height of the window),

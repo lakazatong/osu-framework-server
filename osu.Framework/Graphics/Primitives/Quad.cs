@@ -4,8 +4,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using osuTK;
 using osu.Framework.Utils;
+using osuTK;
 
 namespace osu.Framework.Graphics.Primitives
 {
@@ -37,20 +37,24 @@ namespace osu.Framework.Graphics.Primitives
         }
 
         public static implicit operator Quad(RectangleI r) => FromRectangle(r);
+
         public static implicit operator Quad(RectangleF r) => FromRectangle(r);
 
         public static Quad FromRectangle(RectangleF rectangle) =>
-            new Quad(new Vector2(rectangle.Left, rectangle.Top),
+            new Quad(
+                new Vector2(rectangle.Left, rectangle.Top),
                 new Vector2(rectangle.Right, rectangle.Top),
                 new Vector2(rectangle.Left, rectangle.Bottom),
-                new Vector2(rectangle.Right, rectangle.Bottom));
+                new Vector2(rectangle.Right, rectangle.Bottom)
+            );
 
         public static Quad operator *(Quad r, Matrix3 m) =>
             new Quad(
                 Vector2Extensions.Transform(r.TopLeft, m),
                 Vector2Extensions.Transform(r.TopRight, m),
                 Vector2Extensions.Transform(r.BottomLeft, m),
-                Vector2Extensions.Transform(r.BottomRight, m));
+                Vector2Extensions.Transform(r.BottomRight, m)
+            );
 
         public Matrix2 BasisTransform
         {
@@ -65,9 +69,7 @@ namespace osu.Framework.Graphics.Primitives
                 if (row1 != Vector2.Zero)
                     row1 /= row1.LengthSquared;
 
-                return new Matrix2(
-                    row0.X, row0.Y,
-                    row1.X, row1.Y);
+                return new Matrix2(row0.X, row0.Y, row1.X, row1.Y);
             }
         }
 
@@ -81,10 +83,34 @@ namespace osu.Framework.Graphics.Primitives
         {
             get
             {
-                int xMin = (int)Math.Floor(Math.Min(TopLeft.X, Math.Min(TopRight.X, Math.Min(BottomLeft.X, BottomRight.X))));
-                int yMin = (int)Math.Floor(Math.Min(TopLeft.Y, Math.Min(TopRight.Y, Math.Min(BottomLeft.Y, BottomRight.Y))));
-                int xMax = (int)Math.Ceiling(Math.Max(TopLeft.X, Math.Max(TopRight.X, Math.Max(BottomLeft.X, BottomRight.X))));
-                int yMax = (int)Math.Ceiling(Math.Max(TopLeft.Y, Math.Max(TopRight.Y, Math.Max(BottomLeft.Y, BottomRight.Y))));
+                int xMin = (int)
+                    Math.Floor(
+                        Math.Min(
+                            TopLeft.X,
+                            Math.Min(TopRight.X, Math.Min(BottomLeft.X, BottomRight.X))
+                        )
+                    );
+                int yMin = (int)
+                    Math.Floor(
+                        Math.Min(
+                            TopLeft.Y,
+                            Math.Min(TopRight.Y, Math.Min(BottomLeft.Y, BottomRight.Y))
+                        )
+                    );
+                int xMax = (int)
+                    Math.Ceiling(
+                        Math.Max(
+                            TopLeft.X,
+                            Math.Max(TopRight.X, Math.Max(BottomLeft.X, BottomRight.X))
+                        )
+                    );
+                int yMax = (int)
+                    Math.Ceiling(
+                        Math.Max(
+                            TopLeft.Y,
+                            Math.Max(TopRight.Y, Math.Max(BottomLeft.Y, BottomRight.Y))
+                        )
+                    );
 
                 return new RectangleI(xMin, yMin, xMax - xMin, yMax - yMin);
             }
@@ -94,10 +120,22 @@ namespace osu.Framework.Graphics.Primitives
         {
             get
             {
-                float xMin = Math.Min(TopLeft.X, Math.Min(TopRight.X, Math.Min(BottomLeft.X, BottomRight.X)));
-                float yMin = Math.Min(TopLeft.Y, Math.Min(TopRight.Y, Math.Min(BottomLeft.Y, BottomRight.Y)));
-                float xMax = Math.Max(TopLeft.X, Math.Max(TopRight.X, Math.Max(BottomLeft.X, BottomRight.X)));
-                float yMax = Math.Max(TopLeft.Y, Math.Max(TopRight.Y, Math.Max(BottomLeft.Y, BottomRight.Y)));
+                float xMin = Math.Min(
+                    TopLeft.X,
+                    Math.Min(TopRight.X, Math.Min(BottomLeft.X, BottomRight.X))
+                );
+                float yMin = Math.Min(
+                    TopLeft.Y,
+                    Math.Min(TopRight.Y, Math.Min(BottomLeft.Y, BottomRight.Y))
+                );
+                float xMax = Math.Max(
+                    TopLeft.X,
+                    Math.Max(TopRight.X, Math.Max(BottomLeft.X, BottomRight.X))
+                );
+                float yMax = Math.Max(
+                    TopLeft.Y,
+                    Math.Max(TopRight.Y, Math.Max(BottomLeft.Y, BottomRight.Y))
+                );
 
                 return new RectangleF(xMin, yMin, xMax - xMin, yMax - yMin);
             }
@@ -105,7 +143,8 @@ namespace osu.Framework.Graphics.Primitives
 
         public ReadOnlySpan<Vector2> GetAxisVertices() => GetVertices();
 
-        public ReadOnlySpan<Vector2> GetVertices() => MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in TopLeft), 4);
+        public ReadOnlySpan<Vector2> GetVertices() =>
+            MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in TopLeft), 4);
 
         /// <summary>
         /// Checks whether <paramref name="pos"/> is inside of this quad.
@@ -155,7 +194,12 @@ namespace osu.Framework.Graphics.Primitives
                 return false;
 
             float perpDot4 = Vector2.PerpDot(TopLeft - TopRight, pos - TopRight);
-            if (float.IsNaN(perpDot4) || perpDot1 * perpDot4 < 0 || perpDot2 * perpDot4 < 0 || perpDot3 * perpDot4 < 0)
+            if (
+                float.IsNaN(perpDot4)
+                || perpDot1 * perpDot4 < 0
+                || perpDot2 * perpDot4 < 0
+                || perpDot3 * perpDot4 < 0
+            )
                 return false;
 
             return true;
@@ -170,20 +214,20 @@ namespace osu.Framework.Graphics.Primitives
         public float Area => 0.5f * Math.Abs(Vector2Extensions.GetOrientation(GetVertices()));
 
         public bool Equals(Quad other) =>
-            TopLeft == other.TopLeft &&
-            TopRight == other.TopRight &&
-            BottomLeft == other.BottomLeft &&
-            BottomRight == other.BottomRight;
+            TopLeft == other.TopLeft
+            && TopRight == other.TopRight
+            && BottomLeft == other.BottomLeft
+            && BottomRight == other.BottomRight;
 
         public bool AlmostEquals(Quad other) =>
-            Precision.AlmostEquals(TopLeft.X, other.TopLeft.X) &&
-            Precision.AlmostEquals(TopLeft.Y, other.TopLeft.Y) &&
-            Precision.AlmostEquals(TopRight.X, other.TopRight.X) &&
-            Precision.AlmostEquals(TopRight.Y, other.TopRight.Y) &&
-            Precision.AlmostEquals(BottomLeft.X, other.BottomLeft.X) &&
-            Precision.AlmostEquals(BottomLeft.Y, other.BottomLeft.Y) &&
-            Precision.AlmostEquals(BottomRight.X, other.BottomRight.X) &&
-            Precision.AlmostEquals(BottomRight.Y, other.BottomRight.Y);
+            Precision.AlmostEquals(TopLeft.X, other.TopLeft.X)
+            && Precision.AlmostEquals(TopLeft.Y, other.TopLeft.Y)
+            && Precision.AlmostEquals(TopRight.X, other.TopRight.X)
+            && Precision.AlmostEquals(TopRight.Y, other.TopRight.Y)
+            && Precision.AlmostEquals(BottomLeft.X, other.BottomLeft.X)
+            && Precision.AlmostEquals(BottomLeft.Y, other.BottomLeft.Y)
+            && Precision.AlmostEquals(BottomRight.X, other.BottomRight.X)
+            && Precision.AlmostEquals(BottomRight.Y, other.BottomRight.Y);
 
         public override string ToString() => $"{TopLeft} {TopRight} {BottomLeft} {BottomRight}";
     }

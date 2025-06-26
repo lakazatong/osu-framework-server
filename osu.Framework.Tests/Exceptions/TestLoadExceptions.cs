@@ -62,17 +62,23 @@ namespace osu.Framework.Tests.Exceptions
             {
                 var exception = Assert.Throws<AggregateException>(() =>
                 {
-                    Task.Factory.StartNew(() =>
-                    {
-                        runGameWithLogic(g =>
-                        {
-                            g.Scheduler.Add(() => Task.Run(() => throw new InvalidOperationException()));
-                            g.Scheduler.AddDelayed(collect, 1, true);
+                    Task.Factory.StartNew(
+                            () =>
+                            {
+                                runGameWithLogic(g =>
+                                {
+                                    g.Scheduler.Add(() =>
+                                        Task.Run(() => throw new InvalidOperationException())
+                                    );
+                                    g.Scheduler.AddDelayed(collect, 1, true);
 
-                            if (loggedException != null)
-                                throw loggedException;
-                        });
-                    }, TaskCreationOptions.LongRunning).Wait(TimeSpan.FromSeconds(10));
+                                    if (loggedException != null)
+                                        throw loggedException;
+                                });
+                            },
+                            TaskCreationOptions.LongRunning
+                        )
+                        .Wait(TimeSpan.FromSeconds(10));
 
                     Assert.Fail("Game execution was not aborted");
                 });
@@ -100,11 +106,14 @@ namespace osu.Framework.Tests.Exceptions
 
             Assert.DoesNotThrow(() =>
             {
-                runGameWithLogic(g =>
-                {
-                    g.Add(loadTarget);
-                    loadTarget.PerformAsyncLoad();
-                }, _ => loadable.Parent == loadTarget);
+                runGameWithLogic(
+                    g =>
+                    {
+                        g.Add(loadTarget);
+                        loadTarget.PerformAsyncLoad();
+                    },
+                    _ => loadable.Parent == loadTarget
+                );
             });
         }
 
@@ -116,12 +125,15 @@ namespace osu.Framework.Tests.Exceptions
 
             Assert.DoesNotThrow(() =>
             {
-                runGameWithLogic(g =>
-                {
-                    g.Add(loadTarget);
-                    loadTarget.PerformAsyncLoad();
-                    loadTarget.PerformAsyncLoad(false);
-                }, _ => loadable.Parent == loadTarget);
+                runGameWithLogic(
+                    g =>
+                    {
+                        g.Add(loadTarget);
+                        loadTarget.PerformAsyncLoad();
+                        loadTarget.PerformAsyncLoad(false);
+                    },
+                    _ => loadable.Parent == loadTarget
+                );
             });
         }
 
@@ -206,36 +218,41 @@ namespace osu.Framework.Tests.Exceptions
                 bool disposeTriggered = false;
                 bool updatedAfterDispose = false;
 
-                runGameWithLogic(g =>
-                {
-                    g.Add(loadTarget);
-                    loadTarget.PerformAsyncLoad().ContinueWith(_ => allowDispose = true);
-                }, g =>
-                {
-                    // The following code is done here for a very specific reason, but can occur naturally in normal use
-                    // This delegate is essentially the first item in the game's scheduler, so it will always run PRIOR to the async callback
-
-                    if (disposeTriggered)
-                        updatedAfterDispose = true;
-
-                    if (allowDispose)
+                runGameWithLogic(
+                    g =>
                     {
-                        // Async load has complete, the callback has been scheduled but NOT run yet
-                        // Dispose the parent container - this is done by clearing the game
-                        g.Clear(true);
-                        disposeTriggered = true;
-                    }
+                        g.Add(loadTarget);
+                        loadTarget.PerformAsyncLoad().ContinueWith(_ => allowDispose = true);
+                    },
+                    g =>
+                    {
+                        // The following code is done here for a very specific reason, but can occur naturally in normal use
+                        // This delegate is essentially the first item in the game's scheduler, so it will always run PRIOR to the async callback
 
-                    // After disposing the parent, one update loop is required
-                    return updatedAfterDispose;
-                });
+                        if (disposeTriggered)
+                            updatedAfterDispose = true;
+
+                        if (allowDispose)
+                        {
+                            // Async load has complete, the callback has been scheduled but NOT run yet
+                            // Dispose the parent container - this is done by clearing the game
+                            g.Clear(true);
+                            disposeTriggered = true;
+                        }
+
+                        // After disposing the parent, one update loop is required
+                        return updatedAfterDispose;
+                    }
+                );
             });
         }
 
         [Test]
         public void TestSyncLoadException()
         {
-            Assert.Throws<AsyncTestException>(() => runGameWithLogic(g => g.Add(new DelayedTestBoxAsync(true))));
+            Assert.Throws<AsyncTestException>(() =>
+                runGameWithLogic(g => g.Add(new DelayedTestBoxAsync(true)))
+            );
         }
 
         [SuppressMessage("ReSharper", "AccessToDisposedClosure")]
@@ -245,18 +262,27 @@ namespace osu.Framework.Tests.Exceptions
 
             try
             {
-                using (var host = new TestRunHeadlessGameHost($"{GetType().Name}-{Guid.NewGuid()}", new HostOptions()))
+                using (
+                    var host = new TestRunHeadlessGameHost(
+                        $"{GetType().Name}-{Guid.NewGuid()}",
+                        new HostOptions()
+                    )
+                )
                 {
                     using (var game = new TestGame())
                     {
                         game.Schedule(() =>
                         {
                             storage = host.Storage;
-                            host.UpdateThread.Scheduler.AddDelayed(() =>
-                            {
-                                if (exitCondition?.Invoke(game) == true)
-                                    host.Exit();
-                            }, 0, true);
+                            host.UpdateThread.Scheduler.AddDelayed(
+                                () =>
+                                {
+                                    if (exitCondition?.Invoke(game) == true)
+                                        host.Exit();
+                                },
+                                0,
+                                true
+                            );
 
                             logic(game);
                         });
@@ -287,10 +313,15 @@ namespace osu.Framework.Tests.Exceptions
                 this.loadable = loadable;
             }
 
-            public Task PerformAsyncLoad(bool withAdd = true) => LoadComponentAsync(loadable, _ =>
-            {
-                if (withAdd) Add(loadable);
-            });
+            public Task PerformAsyncLoad(bool withAdd = true) =>
+                LoadComponentAsync(
+                    loadable,
+                    _ =>
+                    {
+                        if (withAdd)
+                            Add(loadable);
+                    }
+                );
         }
 
         public partial class DelayedTestBoxAsync : Box
@@ -313,8 +344,6 @@ namespace osu.Framework.Tests.Exceptions
             }
         }
 
-        private class AsyncTestException : Exception
-        {
-        }
+        private class AsyncTestException : Exception { }
     }
 }

@@ -21,8 +21,10 @@ namespace osu.Framework.Platform.Apple.Native
         private static readonly IntPtr sel_drain = Selector.Get("drain");
 
         [MustDisposeResource]
-        public static NSAutoreleasePool Init()
-            => new NSAutoreleasePool(Interop.SendIntPtr(Interop.SendIntPtr(class_pointer, sel_alloc), sel_init));
+        public static NSAutoreleasePool Init() =>
+            new NSAutoreleasePool(
+                Interop.SendIntPtr(Interop.SendIntPtr(class_pointer, sel_alloc), sel_init)
+            );
 
         public void Dispose()
         {

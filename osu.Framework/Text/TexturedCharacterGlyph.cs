@@ -40,7 +40,6 @@ namespace osu.Framework.Text
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float GetKerning<T>(T lastGlyph)
-            where T : ICharacterGlyph
-            => glyph.GetKerning(lastGlyph) * Scale;
+            where T : ICharacterGlyph => glyph.GetKerning(lastGlyph) * Scale;
     }
 }

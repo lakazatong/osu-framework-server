@@ -36,7 +36,13 @@ namespace osu.Framework.Platform
         /// </summary>
         public readonly int DisplayIndex;
 
-        public DisplayMode(string? format, Size size, int bitsPerPixel, float refreshRate, int displayIndex)
+        public DisplayMode(
+            string? format,
+            Size size,
+            int bitsPerPixel,
+            float refreshRate,
+            int displayIndex
+        )
         {
             Format = format ?? "Unknown";
             Size = size;
@@ -45,7 +51,8 @@ namespace osu.Framework.Platform
             DisplayIndex = displayIndex;
         }
 
-        public override string ToString() => $"Size: {Size}, BitsPerPixel: {BitsPerPixel}, RefreshRate: {RefreshRate}, Format: {Format}, DisplayIndex: {DisplayIndex}";
+        public override string ToString() =>
+            $"Size: {Size}, BitsPerPixel: {BitsPerPixel}, RefreshRate: {RefreshRate}, Format: {Format}, DisplayIndex: {DisplayIndex}";
 
         public bool Equals(DisplayMode other) =>
             Format == other.Format
@@ -55,10 +62,12 @@ namespace osu.Framework.Platform
             && DisplayIndex == other.DisplayIndex;
 
         public static bool operator ==(DisplayMode left, DisplayMode right) => left.Equals(right);
+
         public static bool operator !=(DisplayMode left, DisplayMode right) => !(left == right);
 
         public override bool Equals(object? obj) => obj is DisplayMode other && Equals(other);
 
-        public override int GetHashCode() => HashCode.Combine(Format, Size, BitsPerPixel, RefreshRate, DisplayIndex);
+        public override int GetHashCode() =>
+            HashCode.Combine(Format, Size, BitsPerPixel, RefreshRate, DisplayIndex);
     }
 }

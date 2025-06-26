@@ -64,7 +64,10 @@ namespace osu.Framework.Platform.Windows
 
         public override string? GetText()
         {
-            return getClipboard(cf_unicodetext, bytes => Encoding.Unicode.GetString(bytes).TrimEnd('\0'));
+            return getClipboard(
+                cf_unicodetext,
+                bytes => Encoding.Unicode.GetString(bytes).TrimEnd('\0')
+            );
         }
 
         public override void SetText(string text)
@@ -77,27 +80,37 @@ namespace osu.Framework.Platform.Windows
 
         public override Image<TPixel>? GetImage<TPixel>()
         {
-            return getClipboard(cf_dib, bytes =>
-            {
-                byte[] buff = new byte[bytes.Length + bitmap_file_header_length];
+            return getClipboard(
+                cf_dib,
+                bytes =>
+                {
+                    byte[] buff = new byte[bytes.Length + bitmap_file_header_length];
 
-                bmp_header_field.CopyTo(buff, 0);
-                bytes.CopyTo(buff, bitmap_file_header_length);
+                    bmp_header_field.CopyTo(buff, 0);
+                    bytes.CopyTo(buff, bitmap_file_header_length);
 
-                return Image.Load<TPixel>(buff);
-            });
+                    return Image.Load<TPixel>(buff);
+                }
+            );
         }
 
         public override bool SetImage(Image image)
         {
             using (var stream = new MemoryStream())
             {
-                var encoder = image.Configuration.ImageFormatsManager.GetEncoder(BmpFormat.Instance);
+                var encoder = image.Configuration.ImageFormatsManager.GetEncoder(
+                    BmpFormat.Instance
+                );
                 image.Save(stream, encoder);
 
                 int bitmapDataLength = (int)stream.Length - bitmap_file_header_length;
                 IntPtr unmanagedPointer = Marshal.AllocHGlobal(bitmapDataLength);
-                Marshal.Copy(stream.GetBuffer(), bitmap_file_header_length, unmanagedPointer, bitmapDataLength);
+                Marshal.Copy(
+                    stream.GetBuffer(),
+                    bitmap_file_header_length,
+                    unmanagedPointer,
+                    bitmapDataLength
+                );
                 return setClipboard(unmanagedPointer, bitmapDataLength, cf_dib);
             }
         }

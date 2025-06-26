@@ -15,7 +15,9 @@ using osu.Framework.Testing;
 namespace osu.Framework.Tests.Visual.Platform
 {
     [Ignore("This test cannot run in headless mode (a window instance is required).")]
-    [System.ComponentModel.Description($"Checks that {nameof(IWindow.Resized)} behaves correctly when {nameof(IWindow.WindowMode)} is changed.")]
+    [System.ComponentModel.Description(
+        $"Checks that {nameof(IWindow.Resized)} behaves correctly when {nameof(IWindow.WindowMode)} is changed."
+    )]
     public partial class TestSceneWindowModeResizedEvent : FrameworkTestScene
     {
         private static readonly Size windowed_size = new Size(1280, 720);
@@ -30,10 +32,7 @@ namespace osu.Framework.Tests.Visual.Platform
 
         public TestSceneWindowModeResizedEvent()
         {
-            Child = new WindowDisplaysPreview
-            {
-                RelativeSizeAxes = Axes.Both
-            };
+            Child = new WindowDisplaysPreview { RelativeSizeAxes = Axes.Both };
         }
 
         [BackgroundDependencyLoader]
@@ -49,8 +48,14 @@ namespace osu.Framework.Tests.Visual.Platform
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep($"set windowed size to {windowed_size}", () => config.SetValue(FrameworkSetting.WindowedSize, windowed_size));
-            AddStep("set default fullscreen size", () => config.GetBindable<Size>(FrameworkSetting.SizeFullscreen).SetDefault());
+            AddStep(
+                $"set windowed size to {windowed_size}",
+                () => config.SetValue(FrameworkSetting.WindowedSize, windowed_size)
+            );
+            AddStep(
+                "set default fullscreen size",
+                () => config.GetBindable<Size>(FrameworkSetting.SizeFullscreen).SetDefault()
+            );
         }
 
         private void setUp(WindowMode startingMode, WindowMode finalMode)
@@ -73,14 +78,25 @@ namespace osu.Framework.Tests.Visual.Platform
         [TestCase(WindowMode.Windowed, WindowMode.Fullscreen)]
         [TestCase(WindowMode.Fullscreen, WindowMode.Windowed)]
         [TestCase(WindowMode.Borderless, WindowMode.Windowed)]
-        public void TestModeSwitchWindowed([Values] WindowMode startingMode, [Values] WindowMode finalMode)
+        public void TestModeSwitchWindowed(
+            [Values] WindowMode startingMode,
+            [Values] WindowMode finalMode
+        )
         {
             setUp(startingMode, finalMode);
             AddAssert("only one resize event", () => resizeInvokes, () => Has.Count.EqualTo(1));
             if (finalMode == WindowMode.Windowed)
-                AddAssert("resized to windowed size", () => resizeInvokes.Dequeue(), () => Is.EqualTo(windowed_size));
+                AddAssert(
+                    "resized to windowed size",
+                    () => resizeInvokes.Dequeue(),
+                    () => Is.EqualTo(windowed_size)
+                );
             else
-                AddAssert("resized to display size", () => resizeInvokes.Dequeue(), () => Is.EqualTo(window.CurrentDisplayBindable.Value.Bounds.Size));
+                AddAssert(
+                    "resized to display size",
+                    () => resizeInvokes.Dequeue(),
+                    () => Is.EqualTo(window.CurrentDisplayBindable.Value.Bounds.Size)
+                );
         }
 
         protected override void Dispose(bool isDisposing)

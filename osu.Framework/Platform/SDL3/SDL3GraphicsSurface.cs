@@ -15,7 +15,12 @@ using static SDL.SDL3;
 
 namespace osu.Framework.Platform.SDL3
 {
-    internal unsafe class SDL3GraphicsSurface : IGraphicsSurface, IOpenGLGraphicsSurface, IMetalGraphicsSurface, ILinuxGraphicsSurface, IAndroidGraphicsSurface
+    internal unsafe class SDL3GraphicsSurface
+        : IGraphicsSurface,
+            IOpenGLGraphicsSurface,
+            IMetalGraphicsSurface,
+            ILinuxGraphicsSurface,
+            IAndroidGraphicsSurface
     {
         private readonly SDL3Window window;
 
@@ -47,7 +52,10 @@ namespace osu.Framework.Platform.SDL3
                     break;
 
                 default:
-                    throw new ArgumentException($"Unexpected graphics surface: {Type}.", nameof(surfaceType));
+                    throw new ArgumentException(
+                        $"Unexpected graphics surface: {Type}.",
+                        nameof(surfaceType)
+                    );
             }
         }
 
@@ -59,7 +67,8 @@ namespace osu.Framework.Platform.SDL3
 
         public Size GetDrawableSize()
         {
-            int width, height;
+            int width,
+                height;
             SDL_GetWindowSizeInPixels(window.SDLWindowHandle, &width, &height);
             return new Size(width, height);
         }
@@ -70,7 +79,10 @@ namespace osu.Framework.Platform.SDL3
         {
             if (RuntimeInfo.IsMobile)
             {
-                SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_CONTEXT_PROFILE_MASK, (int)SDL_GLProfile.SDL_GL_CONTEXT_PROFILE_ES);
+                SDL_GL_SetAttribute(
+                    SDL_GLAttr.SDL_GL_CONTEXT_PROFILE_MASK,
+                    (int)SDL_GLProfile.SDL_GL_CONTEXT_PROFILE_ES
+                );
 
                 // Minimum OpenGL version for ES profile:
                 SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -78,7 +90,10 @@ namespace osu.Framework.Platform.SDL3
             }
             else
             {
-                SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_CONTEXT_PROFILE_MASK, (int)SDL_GLProfile.SDL_GL_CONTEXT_PROFILE_CORE);
+                SDL_GL_SetAttribute(
+                    SDL_GLAttr.SDL_GL_CONTEXT_PROFILE_MASK,
+                    (int)SDL_GLProfile.SDL_GL_CONTEXT_PROFILE_CORE
+                );
 
                 // Minimum OpenGL version for core profile:
                 SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -88,7 +103,9 @@ namespace osu.Framework.Platform.SDL3
             context = SDL_GL_CreateContext(window.SDLWindowHandle);
 
             if (context == null)
-                throw new InvalidOperationException($"Failed to create an SDL3 GL context ({SDL_GetError()})");
+                throw new InvalidOperationException(
+                    $"Failed to create an SDL3 GL context ({SDL_GetError()})"
+                );
 
             SDL_GL_MakeCurrent(window.SDLWindowHandle, context);
 
@@ -108,8 +125,10 @@ namespace osu.Framework.Platform.SDL3
         {
             var type = bindings.GetType();
             var pointsInfo = type.GetRuntimeFields().First(x => x.Name == "_EntryPointsInstance");
-            var namesInfo = type.GetRuntimeFields().First(x => x.Name == "_EntryPointNamesInstance");
-            var offsetsInfo = type.GetRuntimeFields().First(x => x.Name == "_EntryPointNameOffsetsInstance");
+            var namesInfo = type.GetRuntimeFields()
+                .First(x => x.Name == "_EntryPointNamesInstance");
+            var offsetsInfo = type.GetRuntimeFields()
+                .First(x => x.Name == "_EntryPointNameOffsetsInstance");
 
             IntPtr[]? entryPointsInstance = (IntPtr[]?)pointsInfo.GetValue(bindings);
             byte[]? entryPointNamesInstance = (byte[]?)namesInfo.GetValue(bindings);
@@ -159,7 +178,11 @@ namespace osu.Framework.Platform.SDL3
                 var props = SDL_GetWindowProperties(window.SDLWindowHandle);
 
                 if (SDL_HasProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_FRAMEBUFFER_NUMBER))
-                    return (int)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_UIKIT_OPENGL_FRAMEBUFFER_NUMBER, 0);
+                    return (int)SDL_GetNumberProperty(
+                        props,
+                        SDL_PROP_WINDOW_UIKIT_OPENGL_FRAMEBUFFER_NUMBER,
+                        0
+                    );
 
                 return null;
             }
@@ -194,17 +217,26 @@ namespace osu.Framework.Platform.SDL3
         IntPtr IOpenGLGraphicsSurface.CurrentContext => (IntPtr)SDL_GL_GetCurrentContext();
 
         void IOpenGLGraphicsSurface.SwapBuffers() => SDL_GL_SwapWindow(window.SDLWindowHandle);
+
         void IOpenGLGraphicsSurface.CreateContext() => SDL_GL_CreateContext(window.SDLWindowHandle);
-        void IOpenGLGraphicsSurface.DeleteContext(IntPtr context) => SDL_GL_DestroyContext((SDL_GLContextState*)context);
-        void IOpenGLGraphicsSurface.MakeCurrent(IntPtr context) => SDL_GL_MakeCurrent(window.SDLWindowHandle, (SDL_GLContextState*)context);
-        void IOpenGLGraphicsSurface.ClearCurrent() => SDL_GL_MakeCurrent(window.SDLWindowHandle, null);
+
+        void IOpenGLGraphicsSurface.DeleteContext(IntPtr context) =>
+            SDL_GL_DestroyContext((SDL_GLContextState*)context);
+
+        void IOpenGLGraphicsSurface.MakeCurrent(IntPtr context) =>
+            SDL_GL_MakeCurrent(window.SDLWindowHandle, (SDL_GLContextState*)context);
+
+        void IOpenGLGraphicsSurface.ClearCurrent() =>
+            SDL_GL_MakeCurrent(window.SDLWindowHandle, null);
+
         IntPtr IOpenGLGraphicsSurface.GetProcAddress(string symbol) => getProcAddress(symbol);
 
         #endregion
 
         #region Metal-specific implementation
 
-        IntPtr IMetalGraphicsSurface.CreateMetalView() => SDL_Metal_CreateView(window.SDLWindowHandle);
+        IntPtr IMetalGraphicsSurface.CreateMetalView() =>
+            SDL_Metal_CreateView(window.SDLWindowHandle);
 
         #endregion
 

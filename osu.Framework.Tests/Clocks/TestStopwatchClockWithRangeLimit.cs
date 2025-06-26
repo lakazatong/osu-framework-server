@@ -12,9 +12,7 @@ namespace osu.Framework.Tests.Clocks
         public double MaxTime { get; set; } = double.PositiveInfinity;
 
         public TestStopwatchClockWithRangeLimit()
-            : base(true)
-        {
-        }
+            : base(true) { }
 
         public override double CurrentTime
         {
@@ -23,7 +21,8 @@ namespace osu.Framework.Tests.Clocks
                 double currentTime = base.CurrentTime;
                 double clamped = Math.Clamp(currentTime, MinTime, MaxTime);
 
-                if (clamped == currentTime) return clamped;
+                if (clamped == currentTime)
+                    return clamped;
 
                 if ((Rate > 0 && clamped == MaxTime) || (Rate < 0 && clamped == MinTime))
                     Stop();

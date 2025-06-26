@@ -57,9 +57,13 @@ namespace osu.Framework.Utils
             // Spline fitting does not make sense when the input contains no points or just one point. In this case
             // the user likely wants this function to behave like a no-op.
             if (controlPoints.Length < 2)
-                return controlPoints.Length == 0 ? Array.Empty<Vector2>() : new[] { controlPoints[0] };
+                return controlPoints.Length == 0
+                    ? Array.Empty<Vector2>()
+                    : new[] { controlPoints[0] };
 
-            return bSplineToBezierInternal(controlPoints, ref degree).SelectMany(segment => segment).ToArray();
+            return bSplineToBezierInternal(controlPoints, ref degree)
+                .SelectMany(segment => segment)
+                .ToArray();
         }
 
         /// <summary>
@@ -76,7 +80,10 @@ namespace osu.Framework.Utils
         /// <param name="degree">The polynomial order.</param>
         /// <returns>A list of vectors representing the piecewise-linear approximation.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="degree"/> was less than 1.</exception>
-        public static List<Vector2> BSplineToPiecewiseLinear(ReadOnlySpan<Vector2> controlPoints, int degree)
+        public static List<Vector2> BSplineToPiecewiseLinear(
+            ReadOnlySpan<Vector2> controlPoints,
+            int degree
+        )
         {
             // Zero-th degree splines would be piecewise-constant, which cannot be represented by the piecewise-
             // linear output of this function. Negative degrees would require rational splines which this code
@@ -86,7 +93,9 @@ namespace osu.Framework.Utils
             // Spline fitting does not make sense when the input contains no points or just one point. In this case
             // the user likely wants this function to behave like a no-op.
             if (controlPoints.Length < 2)
-                return controlPoints.Length == 0 ? new List<Vector2>() : new List<Vector2> { controlPoints[0] };
+                return controlPoints.Length == 0
+                    ? new List<Vector2>()
+                    : new List<Vector2> { controlPoints[0] };
 
             // With fewer control points than the degree, splines can not be unambiguously fitted. Rather than erroring
             // out, we set the degree to the minimal number that permits a unique fit to avoid special casing in
@@ -120,7 +129,13 @@ namespace osu.Framework.Utils
                     // an extension to De Casteljau's algorithm to obtain a piecewise-linear approximation
                     // of the bezier curve represented by our control points, consisting of the same amount
                     // of points as there are control points.
-                    bezierApproximate(parent, output, subdivisionBuffer1, subdivisionBuffer2, degree + 1);
+                    bezierApproximate(
+                        parent,
+                        output,
+                        subdivisionBuffer1,
+                        subdivisionBuffer2,
+                        degree + 1
+                    );
 
                     freeBuffers.Push(parent);
                     continue;
@@ -128,7 +143,8 @@ namespace osu.Framework.Utils
 
                 // If we do not yet have a sufficiently "flat" (in other words, detailed) approximation we keep
                 // subdividing the curve we are currently operating on.
-                Vector2[] rightChild = freeBuffers.Count > 0 ? freeBuffers.Pop() : new Vector2[degree + 1];
+                Vector2[] rightChild =
+                    freeBuffers.Count > 0 ? freeBuffers.Pop() : new Vector2[degree + 1];
                 bezierSubdivide(parent, leftChild, rightChild, subdivisionBuffer1, degree + 1);
 
                 // We re-use the buffer of the parent for one of the children, so that we save one allocation per iteration.
@@ -160,8 +176,18 @@ namespace osu.Framework.Utils
 
                 for (int c = 0; c < catmull_detail; c++)
                 {
-                    result.Add(catmullFindPoint(ref v1, ref v2, ref v3, ref v4, (float)c / catmull_detail));
-                    result.Add(catmullFindPoint(ref v1, ref v2, ref v3, ref v4, (float)(c + 1) / catmull_detail));
+                    result.Add(
+                        catmullFindPoint(ref v1, ref v2, ref v3, ref v4, (float)c / catmull_detail)
+                    );
+                    result.Add(
+                        catmullFindPoint(
+                            ref v1,
+                            ref v2,
+                            ref v3,
+                            ref v4,
+                            (float)(c + 1) / catmull_detail
+                        )
+                    );
                 }
             }
 
@@ -172,7 +198,9 @@ namespace osu.Framework.Utils
         /// Creates a piecewise-linear approximation of a circular arc curve.
         /// </summary>
         /// <returns>A list of vectors representing the piecewise-linear approximation.</returns>
-        public static List<Vector2> CircularArcToPiecewiseLinear(ReadOnlySpan<Vector2> controlPoints)
+        public static List<Vector2> CircularArcToPiecewiseLinear(
+            ReadOnlySpan<Vector2> controlPoints
+        )
         {
             CircularArcProperties pr = new CircularArcProperties(controlPoints);
             if (!pr.IsValid)
@@ -183,7 +211,17 @@ namespace osu.Framework.Utils
             // is: 2 * Math.Acos(1 - TOLERANCE / r)
             // The special case is required for extremely short sliders where the radius is smaller than
             // the tolerance. This is a pathological rather than a realistic case.
-            int amountPoints = 2 * pr.Radius <= circular_arc_tolerance ? 2 : Math.Max(2, (int)Math.Ceiling(pr.ThetaRange / (2 * Math.Acos(1 - circular_arc_tolerance / pr.Radius))));
+            int amountPoints =
+                2 * pr.Radius <= circular_arc_tolerance
+                    ? 2
+                    : Math.Max(
+                        2,
+                        (int)
+                            Math.Ceiling(
+                                pr.ThetaRange
+                                    / (2 * Math.Acos(1 - circular_arc_tolerance / pr.Radius))
+                            )
+                    );
 
             List<Vector2> output = new List<Vector2>(amountPoints);
 
@@ -211,11 +249,7 @@ namespace osu.Framework.Utils
 
             // We find the bounding box using the end-points, as well as
             // each 90 degree angle inside the range of the arc
-            List<Vector2> points = new List<Vector2>
-            {
-                controlPoints[0],
-                controlPoints[2]
-            };
+            List<Vector2> points = new List<Vector2> { controlPoints[0], controlPoints[2] };
 
             const double right_angle = Math.PI / 2;
             double step = right_angle * pr.Direction;
@@ -223,7 +257,8 @@ namespace osu.Framework.Utils
             double quotient = pr.ThetaStart / right_angle;
             // choose an initial right angle, closest to ThetaStart, going in the direction of the arc.
             // thanks to this, when looping over quadrant points to check if they lie on the arc, we only need to check against ThetaEnd.
-            double closestRightAngle = right_angle * (pr.Direction > 0 ? Math.Ceiling(quotient) : Math.Floor(quotient));
+            double closestRightAngle =
+                right_angle * (pr.Direction > 0 ? Math.Ceiling(quotient) : Math.Floor(quotient));
 
             // at most, four quadrant points must be considered.
             for (int i = 0; i < 4; ++i)
@@ -266,7 +301,9 @@ namespace osu.Framework.Utils
         /// Creates a piecewise-linear approximation of a lagrange polynomial.
         /// </summary>
         /// <returns>A list of vectors representing the piecewise-linear approximation.</returns>
-        public static List<Vector2> LagrangePolynomialToPiecewiseLinear(ReadOnlySpan<Vector2> controlPoints)
+        public static List<Vector2> LagrangePolynomialToPiecewiseLinear(
+            ReadOnlySpan<Vector2> controlPoints
+        )
         {
             // TODO: add some smarter logic here, chebyshev nodes?
             const int num_steps = 51;
@@ -309,19 +346,29 @@ namespace osu.Framework.Utils
         /// <param name="initialControlPoints">The initial bezier control points to use before optimization. The length of this list should be equal to <paramref name="numControlPoints"/>.</param>
         /// <param name="learnableMask">Mask determining which control point positions are fixed and cannot be changed by the optimiser.</param>
         /// <returns>A List of vectors representing the bezier control points.</returns>
-        public static List<Vector2> PiecewiseLinearToBezier(ReadOnlySpan<Vector2> inputPath,
-                                                            int numControlPoints,
-                                                            int numTestPoints = 100,
-                                                            int maxIterations = 100,
-                                                            float learningRate = 8f,
-                                                            float b1 = 0.8f,
-                                                            float b2 = 0.99f,
-                                                            List<Vector2>? initialControlPoints = null,
-                                                            float[,]? learnableMask = null)
+        public static List<Vector2> PiecewiseLinearToBezier(
+            ReadOnlySpan<Vector2> inputPath,
+            int numControlPoints,
+            int numTestPoints = 100,
+            int maxIterations = 100,
+            float learningRate = 8f,
+            float b1 = 0.8f,
+            float b2 = 0.99f,
+            List<Vector2>? initialControlPoints = null,
+            float[,]? learnableMask = null
+        )
         {
             numTestPoints = Math.Max(numTestPoints, 3);
-            return piecewiseLinearToSpline(inputPath, generateBezierWeights(numControlPoints, numTestPoints),
-                maxIterations, learningRate, b1, b2, initialControlPoints, learnableMask);
+            return piecewiseLinearToSpline(
+                inputPath,
+                generateBezierWeights(numControlPoints, numTestPoints),
+                maxIterations,
+                learningRate,
+                b1,
+                b2,
+                initialControlPoints,
+                learnableMask
+            );
         }
 
         /// <summary>
@@ -338,21 +385,31 @@ namespace osu.Framework.Utils
         /// <param name="initialControlPoints">The initial B-spline control points to use before optimization. The length of this list should be equal to <paramref name="numControlPoints"/>.</param>
         /// <param name="learnableMask">Mask determining which control point positions are fixed and cannot be changed by the optimiser.</param>
         /// <returns>A List of vectors representing the B-spline control points.</returns>
-        public static List<Vector2> PiecewiseLinearToBSpline(ReadOnlySpan<Vector2> inputPath,
-                                                             int numControlPoints,
-                                                             int degree,
-                                                             int numTestPoints = 100,
-                                                             int maxIterations = 100,
-                                                             float learningRate = 8f,
-                                                             float b1 = 0.8f,
-                                                             float b2 = 0.99f,
-                                                             List<Vector2>? initialControlPoints = null,
-                                                             float[,]? learnableMask = null)
+        public static List<Vector2> PiecewiseLinearToBSpline(
+            ReadOnlySpan<Vector2> inputPath,
+            int numControlPoints,
+            int degree,
+            int numTestPoints = 100,
+            int maxIterations = 100,
+            float learningRate = 8f,
+            float b1 = 0.8f,
+            float b2 = 0.99f,
+            List<Vector2>? initialControlPoints = null,
+            float[,]? learnableMask = null
+        )
         {
             degree = Math.Min(degree, numControlPoints - 1);
             numTestPoints = Math.Max(numTestPoints, 3);
-            return piecewiseLinearToSpline(inputPath, generateBSplineWeights(numControlPoints, numTestPoints, degree),
-                maxIterations, learningRate, b1, b2, initialControlPoints, learnableMask);
+            return piecewiseLinearToSpline(
+                inputPath,
+                generateBSplineWeights(numControlPoints, numTestPoints, degree),
+                maxIterations,
+                learningRate,
+                b1,
+                b2,
+                initialControlPoints,
+                learnableMask
+            );
         }
 
         /// <summary>
@@ -368,14 +425,16 @@ namespace osu.Framework.Utils
         /// <param name="initialControlPoints">The initial control points to use before optimization. The length of this list should be equal to the number of test points.</param>
         /// <param name="learnableMask">Mask determining which control point positions are fixed and cannot be changed by the optimiser.</param>
         /// <returns>A List of vectors representing the spline control points.</returns>
-        private static List<Vector2> piecewiseLinearToSpline(ReadOnlySpan<Vector2> inputPath,
-                                                             float[,] weights,
-                                                             int maxIterations = 100,
-                                                             float learningRate = 8f,
-                                                             float b1 = 0.8f,
-                                                             float b2 = 0.99f,
-                                                             List<Vector2>? initialControlPoints = null,
-                                                             float[,]? learnableMask = null)
+        private static List<Vector2> piecewiseLinearToSpline(
+            ReadOnlySpan<Vector2> inputPath,
+            float[,] weights,
+            int maxIterations = 100,
+            float learningRate = 8f,
+            float b1 = 0.8f,
+            float b2 = 0.99f,
+            List<Vector2>? initialControlPoints = null,
+            float[,]? learnableMask = null
+        )
         {
             int numControlPoints = weights.GetLength(1);
             int numTestPoints = weights.GetLength(0);
@@ -467,7 +526,15 @@ namespace osu.Framework.Utils
             return result;
         }
 
-        private static void adamUpdate(float[,] parameters, float[,] m, float[,] v, int step, float learningRate, float b1, float b2)
+        private static void adamUpdate(
+            float[,] parameters,
+            float[,] m,
+            float[,] v,
+            int step,
+            float learningRate,
+            float b1,
+            float b2
+        )
         {
             const float epsilon = 1E-8f;
             float mMult = 1 / (1 - MathF.Pow(b1, step + 1));
@@ -490,9 +557,15 @@ namespace osu.Framework.Utils
         {
             // mat1 can not be the same array as result, or it will not work correctly
             if (ReferenceEquals(mat1, result))
-                throw new ArgumentException($"{nameof(mat1)} can not be the same array as {nameof(result)}.");
+                throw new ArgumentException(
+                    $"{nameof(mat1)} can not be the same array as {nameof(result)}."
+                );
 
-            fixed (float* mat1P = mat1, mat2P = mat2, resultP = result)
+            fixed (
+                float* mat1P = mat1,
+                    mat2P = mat2,
+                    resultP = result
+            )
             {
                 var span1 = new Span<float>(mat1P, mat1.Length);
                 var span2 = new Span<float>(mat2P, mat2.Length);
@@ -504,7 +577,11 @@ namespace osu.Framework.Utils
 
         private static unsafe void matProduct(float[,] mat1, float[,] mat2, float[,] result)
         {
-            fixed (float* mat1P = mat1, mat2P = mat2, resultP = result)
+            fixed (
+                float* mat1P = mat1,
+                    mat2P = mat2,
+                    resultP = result
+            )
             {
                 var span1 = new Span<float>(mat1P, mat1.Length);
                 var span2 = new Span<float>(mat2P, mat2.Length);
@@ -515,7 +592,10 @@ namespace osu.Framework.Utils
 
         private static unsafe void matScale(float[,] mat, float scalar, float[,] result)
         {
-            fixed (float* matP = mat, resultP = result)
+            fixed (
+                float* matP = mat,
+                    resultP = result
+            )
             {
                 var span1 = new Span<float>(matP, mat.Length);
                 var spanR = new Span<float>(resultP, result.Length);
@@ -525,7 +605,11 @@ namespace osu.Framework.Utils
 
         private static unsafe void matDiff(float[,] mat1, float[,] mat2, float[,] result)
         {
-            fixed (float* mat1P = mat1, mat2P = mat2, resultP = result)
+            fixed (
+                float* mat1P = mat1,
+                    mat2P = mat2,
+                    resultP = result
+            )
             {
                 var span1 = new Span<float>(mat1P, mat1.Length);
                 var span2 = new Span<float>(mat2P, mat2.Length);
@@ -546,7 +630,10 @@ namespace osu.Framework.Utils
             {
                 for (int j = 0; j < n; j++)
                 {
-                    fixed (float* mat1P = mat1, mat2P = mat2)
+                    fixed (
+                        float* mat1P = mat1,
+                            mat2P = mat2
+                    )
                     {
                         var span1 = new Span<float>(mat1P + i * p, p);
                         var span2 = new Span<float>(mat2P + j * p, p);
@@ -574,7 +661,11 @@ namespace osu.Framework.Utils
         /// <param name="points">(2, n) shape array which represents the points of the piecewise-linear path.</param>
         /// <param name="result">n-length array to write the result to.</param>
         /// <param name="regularizingFactor">Factor to be added to each computed distance between points.</param>
-        private static void getDistanceDistribution(float[,] points, float[] result, float regularizingFactor = 0f)
+        private static void getDistanceDistribution(
+            float[,] points,
+            float[] result,
+            float regularizingFactor = 0f
+        )
         {
             int m = points.GetLength(1);
             float accumulator = 0;
@@ -582,7 +673,10 @@ namespace osu.Framework.Utils
 
             for (int i = 1; i < m; i++)
             {
-                float dist = MathF.Sqrt(MathF.Pow(points[0, i] - points[0, i - 1], 2) + MathF.Pow(points[1, i] - points[1, i - 1], 2));
+                float dist = MathF.Sqrt(
+                    MathF.Pow(points[0, i] - points[0, i - 1], 2)
+                        + MathF.Pow(points[1, i] - points[1, i - 1], 2)
+                );
                 accumulator += dist + regularizingFactor;
                 result[i] = accumulator;
             }
@@ -658,14 +752,21 @@ namespace osu.Framework.Utils
         /// <param name="numTestPoints">The number of points to evaluate the spline at.</param>
         /// <param name="degree">The order of the B-spline.</param>
         /// <returns>Matrix array of B-spline basis function values.</returns>
-        private static float[,] generateBSplineWeights(int numControlPoints, int numTestPoints, int degree)
+        private static float[,] generateBSplineWeights(
+            int numControlPoints,
+            int numTestPoints,
+            int degree
+        )
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(numControlPoints, 2);
 
             ArgumentOutOfRangeException.ThrowIfLessThan(numTestPoints, 2);
 
             if (degree < 0 || degree >= numControlPoints)
-                throw new ArgumentOutOfRangeException(nameof(degree), $"{nameof(degree)} must be >=0 and <{nameof(numControlPoints)} but was {degree}.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(degree),
+                    $"{nameof(degree)} must be >=0 and <{nameof(numControlPoints)} but was {degree}."
+                );
 
             // Calculate the basis function values using the Cox-de Boor recursion formula
             // Generate an open uniform knot vector from 0 to 1
@@ -688,7 +789,15 @@ namespace osu.Framework.Utils
 
             for (int i = 0; i < numTestPoints; i++)
             {
-                prevOrder[i, (int)MathHelper.Clamp(x[i] * (numControlPoints - degree), 0, numControlPoints - degree - 1)] = 1;
+                prevOrder[
+                    i,
+                    (int)
+                        MathHelper.Clamp(
+                            x[i] * (numControlPoints - degree),
+                            0,
+                            numControlPoints - degree - 1
+                        )
+                ] = 1;
             }
 
             // Calculate the higher order basis
@@ -703,7 +812,9 @@ namespace osu.Framework.Utils
 
                     for (int j = 0; j < numControlPoints - degree + q - 1; j++)
                     {
-                        float alpha = (x[i] - knots[degree - q + 1 + j]) / (knots[degree + 1 + j] - knots[degree - q + 1 + j]);
+                        float alpha =
+                            (x[i] - knots[degree - q + 1 + j])
+                            / (knots[degree + 1 + j] - knots[degree - q + 1 + j]);
                         float alphaVal = alpha * prevOrder[i, j];
                         float betaVal = (1 - alpha) * prevOrder[i, j];
                         prevOrder[i, j] = prevAlpha + betaVal;
@@ -742,7 +853,10 @@ namespace osu.Framework.Utils
             {
                 for (int j = 0; j < numControlPoints; j++)
                 {
-                    result[i, j] = coefficients[j] * p[i, j] * p[numTestPoints - i - 1, numControlPoints - j - 1];
+                    result[i, j] =
+                        coefficients[j]
+                        * p[i, j]
+                        * p[numTestPoints - i - 1, numControlPoints - j - 1];
                 }
             }
 
@@ -771,7 +885,10 @@ namespace osu.Framework.Utils
             return coefficients;
         }
 
-        private static Stack<Vector2[]> bSplineToBezierInternal(ReadOnlySpan<Vector2> controlPoints, ref int degree)
+        private static Stack<Vector2[]> bSplineToBezierInternal(
+            ReadOnlySpan<Vector2> controlPoints,
+            ref int degree
+        )
         {
             Stack<Vector2[]> result = new Stack<Vector2[]>();
 
@@ -832,7 +949,12 @@ namespace osu.Framework.Utils
         {
             for (int i = 1; i < controlPoints.Length - 1; i++)
             {
-                if ((controlPoints[i - 1] - 2 * controlPoints[i] + controlPoints[i + 1]).LengthSquared > BEZIER_TOLERANCE * BEZIER_TOLERANCE * 4)
+                if (
+                    (
+                        controlPoints[i - 1] - 2 * controlPoints[i] + controlPoints[i + 1]
+                    ).LengthSquared
+                    > BEZIER_TOLERANCE * BEZIER_TOLERANCE * 4
+                )
                     return false;
             }
 
@@ -849,7 +971,13 @@ namespace osu.Framework.Utils
         /// <param name="r">Output: The control points corresponding to the right half of the curve.</param>
         /// <param name="subdivisionBuffer">The first buffer containing the current subdivision state.</param>
         /// <param name="count">The number of control points in the original list.</param>
-        private static void bezierSubdivide(Vector2[] controlPoints, Vector2[] l, Vector2[] r, Vector2[] subdivisionBuffer, int count)
+        private static void bezierSubdivide(
+            Vector2[] controlPoints,
+            Vector2[] l,
+            Vector2[] r,
+            Vector2[] subdivisionBuffer,
+            int count
+        )
         {
             Vector2[] midpoints = subdivisionBuffer;
 
@@ -875,7 +1003,13 @@ namespace osu.Framework.Utils
         /// <param name="count">The number of control points in the original list.</param>
         /// <param name="subdivisionBuffer1">The first buffer containing the current subdivision state.</param>
         /// <param name="subdivisionBuffer2">The second buffer containing the current subdivision state.</param>
-        private static void bezierApproximate(Vector2[] controlPoints, List<Vector2> output, Vector2[] subdivisionBuffer1, Vector2[] subdivisionBuffer2, int count)
+        private static void bezierApproximate(
+            Vector2[] controlPoints,
+            List<Vector2> output,
+            Vector2[] subdivisionBuffer1,
+            Vector2[] subdivisionBuffer2,
+            int count
+        )
         {
             Vector2[] l = subdivisionBuffer2;
             Vector2[] r = subdivisionBuffer1;
@@ -904,14 +1038,34 @@ namespace osu.Framework.Utils
         /// <param name="vec4">The fourth vector.</param>
         /// <param name="t">The parameter at which to find the point on the spline, in the range [0, 1].</param>
         /// <returns>The point on the spline at <paramref name="t"/>.</returns>
-        private static Vector2 catmullFindPoint(ref Vector2 vec1, ref Vector2 vec2, ref Vector2 vec3, ref Vector2 vec4, float t)
+        private static Vector2 catmullFindPoint(
+            ref Vector2 vec1,
+            ref Vector2 vec2,
+            ref Vector2 vec3,
+            ref Vector2 vec4,
+            float t
+        )
         {
             float t2 = t * t;
             float t3 = t * t2;
 
             Vector2 result;
-            result.X = 0.5f * (2f * vec2.X + (-vec1.X + vec3.X) * t + (2f * vec1.X - 5f * vec2.X + 4f * vec3.X - vec4.X) * t2 + (-vec1.X + 3f * vec2.X - 3f * vec3.X + vec4.X) * t3);
-            result.Y = 0.5f * (2f * vec2.Y + (-vec1.Y + vec3.Y) * t + (2f * vec1.Y - 5f * vec2.Y + 4f * vec3.Y - vec4.Y) * t2 + (-vec1.Y + 3f * vec2.Y - 3f * vec3.Y + vec4.Y) * t3);
+            result.X =
+                0.5f
+                * (
+                    2f * vec2.X
+                    + (-vec1.X + vec3.X) * t
+                    + (2f * vec1.X - 5f * vec2.X + 4f * vec3.X - vec4.X) * t2
+                    + (-vec1.X + 3f * vec2.X - 3f * vec3.X + vec4.X) * t3
+                );
+            result.Y =
+                0.5f
+                * (
+                    2f * vec2.Y
+                    + (-vec1.Y + vec3.Y) * t
+                    + (2f * vec1.Y - 5f * vec2.Y + 4f * vec3.Y - vec4.Y) * t2
+                    + (-vec1.Y + 3f * vec2.Y - 3f * vec3.Y + vec4.Y) * t3
+                );
 
             return result;
         }

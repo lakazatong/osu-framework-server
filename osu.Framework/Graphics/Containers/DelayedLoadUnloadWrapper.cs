@@ -4,9 +4,9 @@
 #nullable disable
 
 using System;
-using osu.Framework.Statistics;
 using System.Diagnostics;
 using osu.Framework.Layout;
+using osu.Framework.Statistics;
 using osu.Framework.Threading;
 using osu.Framework.Timing;
 
@@ -16,7 +16,11 @@ namespace osu.Framework.Graphics.Containers
     {
         private readonly double timeBeforeUnload;
 
-        public DelayedLoadUnloadWrapper(Func<Drawable> createContentFunction, double timeBeforeLoad = 500, double timeBeforeUnload = 1000)
+        public DelayedLoadUnloadWrapper(
+            Func<Drawable> createContentFunction,
+            double timeBeforeLoad = 500,
+            double timeBeforeUnload = 1000
+        )
             : base(createContentFunction, timeBeforeLoad)
         {
             this.timeBeforeUnload = timeBeforeUnload;
@@ -24,13 +28,17 @@ namespace osu.Framework.Graphics.Containers
             AddLayout(unloadClockBacking);
         }
 
-        private static readonly GlobalStatistic<int> total_loaded = GlobalStatistics.Get<int>("Drawable", $"{nameof(DelayedLoadUnloadWrapper)}s");
+        private static readonly GlobalStatistic<int> total_loaded = GlobalStatistics.Get<int>(
+            "Drawable",
+            $"{nameof(DelayedLoadUnloadWrapper)}s"
+        );
 
         private double timeHidden;
 
         private ScheduledDelegate unloadSchedule;
 
-        protected bool ShouldUnloadContent => timeBeforeUnload == 0 || timeHidden > timeBeforeUnload;
+        protected bool ShouldUnloadContent =>
+            timeBeforeUnload == 0 || timeHidden > timeBeforeUnload;
 
         private ScheduledDelegate scheduledUnloadCheckRegistration;
 
@@ -87,9 +95,16 @@ namespace osu.Framework.Graphics.Containers
             scheduledUnloadCheckRegistration = null;
         }
 
-        private readonly LayoutValue<IFrameBasedClock> unloadClockBacking = new LayoutValue<IFrameBasedClock>(Invalidation.Parent);
+        private readonly LayoutValue<IFrameBasedClock> unloadClockBacking =
+            new LayoutValue<IFrameBasedClock>(Invalidation.Parent);
 
-        private IFrameBasedClock unloadClock => unloadClockBacking.IsValid ? unloadClockBacking.Value : (unloadClockBacking.Value = this.FindClosestParent<Game>() == null ? Game.Clock : Clock);
+        private IFrameBasedClock unloadClock =>
+            unloadClockBacking.IsValid
+                ? unloadClockBacking.Value
+                : (
+                    unloadClockBacking.Value =
+                        this.FindClosestParent<Game>() == null ? Game.Clock : Clock
+                );
 
         private void checkForUnload()
         {

@@ -17,9 +17,7 @@ namespace osu.Framework.Tests.Visual.Sprites
     public partial class TestSceneTextureCropping : GridTestScene
     {
         public TestSceneTextureCropping()
-            : base(3, 3)
-        {
-        }
+            : base(3, 3) { }
 
         protected override void LoadComplete()
         {
@@ -30,32 +28,38 @@ namespace osu.Framework.Tests.Visual.Sprites
                 for (int j = 0; j < Cols; ++j)
                 {
                     RectangleF cropRectangle = new RectangleF(i / 3f, j / 3f, 1 / 3f, 1 / 3f);
-                    Cell(i, j).AddRange(new Drawable[]
-                    {
-                        new SpriteText
-                        {
-                            Text = $"{cropRectangle}",
-                            Font = new FontUsage(size: 14),
-                        },
-                        new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(0.5f),
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Masking = true,
-                            Children = new Drawable[]
+                    Cell(i, j)
+                        .AddRange(
+                            new Drawable[]
                             {
-                                new Sprite
+                                new SpriteText
+                                {
+                                    Text = $"{cropRectangle}",
+                                    Font = new FontUsage(size: 14),
+                                },
+                                new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Texture = texture?.Crop(cropRectangle, relativeSizeAxes: Axes.Both),
+                                    Size = new Vector2(0.5f),
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                }
+                                    Masking = true,
+                                    Children = new Drawable[]
+                                    {
+                                        new Sprite
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            Texture = texture?.Crop(
+                                                cropRectangle,
+                                                relativeSizeAxes: Axes.Both
+                                            ),
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
+                                    },
+                                },
                             }
-                        }
-                    });
+                        );
                 }
             }
         }

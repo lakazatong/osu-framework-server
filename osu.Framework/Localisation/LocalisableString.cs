@@ -39,13 +39,15 @@ namespace osu.Framework.Localisation
         /// <param name="format">The format string.</param>
         /// <param name="args">The objects to format.</param>
         [StringFormatMethod("format")]
-        public static LocalisableString Format(string format, params object?[] args) => new LocalisableFormattableString(format, args);
+        public static LocalisableString Format(string format, params object?[] args) =>
+            new LocalisableFormattableString(format, args);
 
         /// <summary>
         /// Creates a <see cref="LocalisableString"/> representation of the specified interpolated string.
         /// </summary>
         /// <param name="interpolation">The interpolated string containing format and arguments.</param>
-        public static LocalisableString Interpolate(FormattableString interpolation) => new LocalisableFormattableString(interpolation);
+        public static LocalisableString Interpolate(FormattableString interpolation) =>
+            new LocalisableFormattableString(interpolation);
 
         /// <summary>
         /// Indicates whether the specified <see cref="LocalisableString"/> is <see langword="null"/> or an empty <see langword="string"/>.
@@ -97,17 +99,34 @@ namespace osu.Framework.Localisation
         // it's somehow common to call default(LocalisableString), and we should return empty string then.
         public override string ToString() => Data?.ToString() ?? string.Empty;
 
-        public bool Equals(LocalisableString other) => LocalisableStringEqualityComparer.Default.Equals(this, other);
+        public bool Equals(LocalisableString other) =>
+            LocalisableStringEqualityComparer.Default.Equals(this, other);
+
         public override bool Equals(object? obj) => obj is LocalisableString other && Equals(other);
-        public override int GetHashCode() => LocalisableStringEqualityComparer.Default.GetHashCode(this);
 
-        public static implicit operator LocalisableString(string text) => new LocalisableString(text);
-        public static implicit operator LocalisableString(TranslatableString translatable) => new LocalisableString(translatable);
-        public static implicit operator LocalisableString(RomanisableString romanisable) => new LocalisableString(romanisable);
-        public static implicit operator LocalisableString(LocalisableFormattableString formattable) => new LocalisableString(formattable);
-        public static implicit operator LocalisableString(CaseTransformableString transformable) => new LocalisableString(transformable);
+        public override int GetHashCode() =>
+            LocalisableStringEqualityComparer.Default.GetHashCode(this);
 
-        public static bool operator ==(LocalisableString left, LocalisableString right) => left.Equals(right);
-        public static bool operator !=(LocalisableString left, LocalisableString right) => !left.Equals(right);
+        public static implicit operator LocalisableString(string text) =>
+            new LocalisableString(text);
+
+        public static implicit operator LocalisableString(TranslatableString translatable) =>
+            new LocalisableString(translatable);
+
+        public static implicit operator LocalisableString(RomanisableString romanisable) =>
+            new LocalisableString(romanisable);
+
+        public static implicit operator LocalisableString(
+            LocalisableFormattableString formattable
+        ) => new LocalisableString(formattable);
+
+        public static implicit operator LocalisableString(CaseTransformableString transformable) =>
+            new LocalisableString(transformable);
+
+        public static bool operator ==(LocalisableString left, LocalisableString right) =>
+            left.Equals(right);
+
+        public static bool operator !=(LocalisableString left, LocalisableString right) =>
+            !left.Equals(right);
     }
 }

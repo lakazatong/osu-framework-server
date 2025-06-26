@@ -15,14 +15,20 @@ namespace osu.Framework.SourceGeneration.Tests.LongRunningLoad
         [InlineData("LongRunningType")]
         public Task Check(string name)
         {
-            GetTestSources(name,
+            GetTestSources(
+                name,
                 out (string filename, string content)[] commonSourceFiles,
                 out (string filename, string content)[] sourceFiles,
                 out (string filename, string content)[] commonGeneratedFiles,
                 out (string filename, string content)[] generatedFiles
             );
 
-            return VerifyCS.VerifyAsync(commonSourceFiles, sourceFiles, commonGeneratedFiles, generatedFiles);
+            return VerifyCS.VerifyAsync(
+                commonSourceFiles,
+                sourceFiles,
+                commonGeneratedFiles,
+                generatedFiles
+            );
         }
     }
 }

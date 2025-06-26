@@ -6,7 +6,5 @@ namespace osu.Framework.Input
     /// <summary>
     /// Denotes that this class handles keyboard input globally.
     /// </summary>
-    public interface IHandleGlobalKeyboardInput
-    {
-    }
+    public interface IHandleGlobalKeyboardInput { }
 }

@@ -12,8 +12,14 @@ namespace osu.Framework.Tests.Platform
     [TestFixture]
     public class UserStorageLookupTest
     {
-        private static readonly string path1 = Path.Combine(TestRunHeadlessGameHost.TemporaryTestDirectory, "path1");
-        private static readonly string path2 = Path.Combine(TestRunHeadlessGameHost.TemporaryTestDirectory, "path2");
+        private static readonly string path1 = Path.Combine(
+            TestRunHeadlessGameHost.TemporaryTestDirectory,
+            "path1"
+        );
+        private static readonly string path2 = Path.Combine(
+            TestRunHeadlessGameHost.TemporaryTestDirectory,
+            "path2"
+        );
 
         private const string game_name = "test_game";
 
@@ -25,18 +31,14 @@ namespace osu.Framework.Tests.Platform
                 File.Delete(path1);
                 File.Delete(path2);
             }
-            catch
-            {
-            }
+            catch { }
 
             try
             {
                 Directory.Delete(path1, true);
                 Directory.Delete(path2, true);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         [Test]
@@ -47,7 +49,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path1, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path1, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -59,7 +64,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path1, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path1, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -72,7 +80,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path2, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path2, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -84,7 +95,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path1, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path1, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -96,7 +110,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path2, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path2, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -109,7 +126,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path1, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path1, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -122,7 +142,10 @@ namespace osu.Framework.Tests.Platform
             using (var host = new StorageLookupHeadlessGameHost())
             {
                 runHost(host);
-                Assert.IsTrue(host.Storage.GetFullPath(string.Empty).StartsWith(path2, StringComparison.Ordinal));
+                Assert.IsTrue(
+                    host.Storage.GetFullPath(string.Empty)
+                        .StartsWith(path2, StringComparison.Ordinal)
+                );
             }
         }
 
@@ -136,15 +159,9 @@ namespace osu.Framework.Tests.Platform
         private class StorageLookupHeadlessGameHost : TestRunHeadlessGameHost
         {
             public StorageLookupHeadlessGameHost()
-                : base(game_name, new HostOptions())
-            {
-            }
+                : base(game_name, new HostOptions()) { }
 
-            public override IEnumerable<string> UserStoragePaths => new[]
-            {
-                path1,
-                path2,
-            };
+            public override IEnumerable<string> UserStoragePaths => new[] { path1, path2 };
         }
     }
 }

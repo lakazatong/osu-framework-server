@@ -15,32 +15,38 @@ namespace osu.Framework.Tests.Visual.Input
         public TestSceneNestedHover()
         {
             HoverBox box1;
-            Add(box1 = new HoverBox(Color4.Gray, Color4.White)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(300, 300),
-                CornerRadius = 100,
-                CornerExponent = 5,
-                Masking = true,
-            });
+            Add(
+                box1 = new HoverBox(Color4.Gray, Color4.White)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(300, 300),
+                    CornerRadius = 100,
+                    CornerExponent = 5,
+                    Masking = true,
+                }
+            );
 
             HoverBox box2;
-            box1.Add(box2 = new HoverBox(Color4.Pink, Color4.Red)
-            {
-                RelativePositionAxes = Axes.Both,
-                RelativeSizeAxes = Axes.Both,
-                Position = new Vector2(0.2f, 0.2f),
-                Size = new Vector2(0.6f, 0.6f)
-            });
+            box1.Add(
+                box2 = new HoverBox(Color4.Pink, Color4.Red)
+                {
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Position = new Vector2(0.2f, 0.2f),
+                    Size = new Vector2(0.6f, 0.6f),
+                }
+            );
 
-            box2.Add(new HoverBox(Color4.LightBlue, Color4.Blue, false)
-            {
-                RelativePositionAxes = Axes.Both,
-                RelativeSizeAxes = Axes.Both,
-                Position = new Vector2(0.2f, 0.2f),
-                Size = new Vector2(0.6f, 0.6f)
-            });
+            box2.Add(
+                new HoverBox(Color4.LightBlue, Color4.Blue, false)
+                {
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Position = new Vector2(0.2f, 0.2f),
+                    Size = new Vector2(0.6f, 0.6f),
+                }
+            );
         }
 
         private partial class HoverBox : Container
@@ -59,11 +65,7 @@ namespace osu.Framework.Tests.Visual.Input
 
                 Children = new Drawable[]
                 {
-                    box = new Box
-                    {
-                        Colour = normalColour,
-                        RelativeSizeAxes = Axes.Both
-                    }
+                    box = new Box { Colour = normalColour, RelativeSizeAxes = Axes.Both },
                 };
             }
 

@@ -53,17 +53,20 @@ namespace osu.Framework.Benchmarks
             public ManualGameHost(Game runnableGame)
                 : base("manual", new HostOptions())
             {
-                Task.Factory.StartNew(() =>
-                {
-                    try
+                Task.Factory.StartNew(
+                    () =>
                     {
-                        Run(runnableGame);
-                    }
-                    catch
-                    {
-                        // may throw an unobserved exception if we don't handle here.
-                    }
-                }, TaskCreationOptions.LongRunning);
+                        try
+                        {
+                            Run(runnableGame);
+                        }
+                        catch
+                        {
+                            // may throw an unobserved exception if we don't handle here.
+                        }
+                    },
+                    TaskCreationOptions.LongRunning
+                );
 
                 // wait for the game to initialise before continuing with the benchmark process.
                 while (threadRunner?.HasRunOnce != true)
@@ -78,7 +81,8 @@ namespace osu.Framework.Benchmarks
 
             public void RunSingleFrame() => threadRunner.RunSingleFrame();
 
-            protected override ThreadRunner CreateThreadRunner(InputThread mainThread) => threadRunner = new ManualThreadRunner(mainThread);
+            protected override ThreadRunner CreateThreadRunner(InputThread mainThread) =>
+                threadRunner = new ManualThreadRunner(mainThread);
         }
 
         private class ManualThreadRunner : ThreadRunner

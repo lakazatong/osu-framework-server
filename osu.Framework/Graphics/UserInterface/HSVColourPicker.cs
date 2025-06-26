@@ -41,10 +41,7 @@ namespace osu.Framework.Graphics.UserInterface
 
             InternalChildren = new Drawable[]
             {
-                Background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                Background = new Box { RelativeSizeAxes = Axes.Both },
                 Content = new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,
@@ -53,9 +50,9 @@ namespace osu.Framework.Graphics.UserInterface
                     Children = new Drawable[]
                     {
                         saturationValueSelector = CreateSaturationValueSelector(),
-                        hueSelector = CreateHueSelector()
-                    }
-                }
+                        hueSelector = CreateHueSelector(),
+                    },
+                },
             };
         }
 
@@ -69,9 +66,10 @@ namespace osu.Framework.Graphics.UserInterface
         /// </summary>
         protected abstract SaturationValueSelector CreateSaturationValueSelector();
 
-        public override bool IsPresent => base.IsPresent
-                                          || saturationValueSelector.Scheduler.HasPendingTasks
-                                          || hueSelector.Scheduler.HasPendingTasks;
+        public override bool IsPresent =>
+            base.IsPresent
+            || saturationValueSelector.Scheduler.HasPendingTasks
+            || hueSelector.Scheduler.HasPendingTasks;
 
         protected override void LoadComplete()
         {

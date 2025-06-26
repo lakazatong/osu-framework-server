@@ -53,7 +53,9 @@ namespace osu.Framework.Bindables
                 return false;
 
             if (source == null)
-                throw new InvalidOperationException($"Must {nameof(Return)} from original leased source");
+                throw new InvalidOperationException(
+                    $"Must {nameof(Return)} from original leased source"
+                );
 
             UnbindAll();
             return true;
@@ -67,7 +69,8 @@ namespace osu.Framework.Bindables
                 if (source != null)
                     checkValid();
 
-                if (EqualityComparer<T>.Default.Equals(Value, value)) return;
+                if (EqualityComparer<T>.Default.Equals(Value, value))
+                    return;
 
                 SetValue(base.Value, value, true);
             }
@@ -81,7 +84,8 @@ namespace osu.Framework.Bindables
                 if (source != null)
                     checkValid();
 
-                if (EqualityComparer<T>.Default.Equals(Default, value)) return;
+                if (EqualityComparer<T>.Default.Equals(Default, value))
+                    return;
 
                 SetDefaultValue(base.Default, value, true);
             }
@@ -95,7 +99,8 @@ namespace osu.Framework.Bindables
                 if (source != null)
                     checkValid();
 
-                if (Disabled == value) return;
+                if (Disabled == value)
+                    return;
 
                 SetDisabled(value, true);
             }
@@ -122,7 +127,9 @@ namespace osu.Framework.Bindables
         private void checkValid()
         {
             if (source != null && hasBeenReturned)
-                throw new InvalidOperationException($"Cannot perform operations on a {nameof(LeasedBindable<T>)} that has been {nameof(Return)}ed.");
+                throw new InvalidOperationException(
+                    $"Cannot perform operations on a {nameof(LeasedBindable<T>)} that has been {nameof(Return)}ed."
+                );
         }
     }
 }

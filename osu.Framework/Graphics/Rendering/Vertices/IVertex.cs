@@ -3,7 +3,5 @@
 
 namespace osu.Framework.Graphics.Rendering.Vertices
 {
-    public interface IVertex
-    {
-    }
+    public interface IVertex { }
 }

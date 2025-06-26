@@ -46,23 +46,29 @@ namespace osu.Framework.Graphics.UserInterface
 
             InternalChildren = new Drawable[]
             {
-                textBox = CreateTextBox().With(t =>
-                {
-                    t.RelativeSizeAxes = Axes.Both;
-                    t.Size = new Vector2(1f);
-                    t.Current = SearchTerm;
-                    t.ReleaseFocusOnCommit = true;
-                    t.CommitOnFocusLost = false;
-                    t.OnCommit += onTextBoxCommit;
-                })
+                textBox = CreateTextBox()
+                    .With(t =>
+                    {
+                        t.RelativeSizeAxes = Axes.Both;
+                        t.Size = new Vector2(1f);
+                        t.Current = SearchTerm;
+                        t.ReleaseFocusOnCommit = true;
+                        t.CommitOnFocusLost = false;
+                        t.OnCommit += onTextBoxCommit;
+                    }),
             };
 
             dropdown.MenuStateChanged += onMenuStateChanged;
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(
+            IReadOnlyDependencyContainer parent
+        )
         {
-            inputSource = new DropdownTextInputSource(parent.Get<TextInputSource>(), parent.Get<GameHost>());
+            inputSource = new DropdownTextInputSource(
+                parent.Get<TextInputSource>(),
+                parent.Get<GameHost>()
+            );
 
             var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
             dependencies.CacheAs(typeof(TextInputSource), inputSource);
@@ -75,10 +81,12 @@ namespace osu.Framework.Graphics.UserInterface
             SearchTerm.BindValueChanged(_ => updateTextBoxVisibility(), true);
         }
 
-        public override bool PropagateNonPositionalInputSubTree => dropdown.Enabled.Value && base.PropagateNonPositionalInputSubTree;
+        public override bool PropagateNonPositionalInputSubTree =>
+            dropdown.Enabled.Value && base.PropagateNonPositionalInputSubTree;
 
         // Importantly, this also removes the visibility condition of the base implementation - this element is always present even though it may not be physically visible on the screen.
-        public override bool PropagatePositionalInputSubTree => dropdown.Enabled.Value && RequestsPositionalInputSubTree && !IsMaskedAway;
+        public override bool PropagatePositionalInputSubTree =>
+            dropdown.Enabled.Value && RequestsPositionalInputSubTree && !IsMaskedAway;
 
         protected override void Update()
         {
@@ -117,7 +125,9 @@ namespace osu.Framework.Graphics.UserInterface
         /// </summary>
         private void updateTextBoxVisibility()
         {
-            bool showTextBox = !host.OnScreenKeyboardOverlapsGameWindow && (AlwaysDisplayOnFocus || !string.IsNullOrEmpty(SearchTerm.Value));
+            bool showTextBox =
+                !host.OnScreenKeyboardOverlapsGameWindow
+                && (AlwaysDisplayOnFocus || !string.IsNullOrEmpty(SearchTerm.Value));
             State.Value = textBox.HasFocus && showTextBox ? Visibility.Visible : Visibility.Hidden;
         }
 

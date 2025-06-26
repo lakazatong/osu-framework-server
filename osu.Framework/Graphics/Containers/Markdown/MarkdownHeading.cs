@@ -36,10 +36,11 @@ namespace osu.Framework.Graphics.Containers.Markdown
             textFlow.AddInlineText(headingBlock.Inline);
         }
 
-        public virtual MarkdownTextFlowContainer CreateTextFlow() => new MarkdownHeadingTextFlowContainer
-        {
-            FontSize = GetFontSizeByLevel(headingBlock.Level),
-        };
+        public virtual MarkdownTextFlowContainer CreateTextFlow() =>
+            new MarkdownHeadingTextFlowContainer
+            {
+                FontSize = GetFontSizeByLevel(headingBlock.Level),
+            };
 
         protected virtual float GetFontSizeByLevel(int level)
         {
@@ -66,8 +67,8 @@ namespace osu.Framework.Graphics.Containers.Markdown
         {
             public float FontSize;
 
-            protected internal override SpriteText CreateSpriteText()
-                => base.CreateSpriteText().With(t => t.Font = t.Font.With(size: FontSize));
+            protected internal override SpriteText CreateSpriteText() =>
+                base.CreateSpriteText().With(t => t.Font = t.Font.With(size: FontSize));
         }
     }
 }

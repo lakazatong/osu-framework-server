@@ -16,6 +16,6 @@ namespace osu.Framework.IO.Network
         /// <summary>
         /// This parameter should be placed in the body of the request, using the <c>multipart/form-data</c> MIME type.
         /// </summary>
-        Form
+        Form,
     }
 }

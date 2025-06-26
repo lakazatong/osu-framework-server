@@ -3,16 +3,16 @@
 
 #nullable disable
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
-using osu.Framework.Utils;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Layout;
+using osu.Framework.Utils;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.Containers
 {
@@ -28,10 +28,12 @@ namespace osu.Framework.Graphics.Containers
     public partial class BufferedContainer : BufferedContainer<Drawable>
     {
         /// <inheritdoc />
-        public BufferedContainer(RenderBufferFormat[] formats = null, bool pixelSnapping = false, bool cachedFrameBuffer = false)
-            : base(formats, pixelSnapping, cachedFrameBuffer)
-        {
-        }
+        public BufferedContainer(
+            RenderBufferFormat[] formats = null,
+            bool pixelSnapping = false,
+            bool cachedFrameBuffer = false
+        )
+            : base(formats, pixelSnapping, cachedFrameBuffer) { }
     }
 
     /// <summary>
@@ -253,11 +255,19 @@ namespace osu.Framework.Graphics.Containers
         /// or the size of the container (i.e. frame buffer) changes.
         /// When disabled, drawing will be clipped to the game window bounds. Enabling can allow drawing larger than (or outside) the game window bounds.
         /// </param>
-        public BufferedContainer(RenderBufferFormat[] formats = null, bool pixelSnapping = false, bool cachedFrameBuffer = false)
+        public BufferedContainer(
+            RenderBufferFormat[] formats = null,
+            bool pixelSnapping = false,
+            bool cachedFrameBuffer = false
+        )
         {
             UsingCachedFrameBuffer = cachedFrameBuffer;
 
-            sharedData = new BufferedContainerDrawNodeSharedData(formats, pixelSnapping, !cachedFrameBuffer);
+            sharedData = new BufferedContainerDrawNodeSharedData(
+                formats,
+                pixelSnapping,
+                !cachedFrameBuffer
+            );
 
             AddLayout(screenSpaceSizeBacking);
         }
@@ -265,11 +275,18 @@ namespace osu.Framework.Graphics.Containers
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
-            blurShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.BLUR);
+            TextureShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.TEXTURE
+            );
+            blurShader = shaders.Load(
+                VertexShaderDescriptor.TEXTURE_2,
+                FragmentShaderDescriptor.BLUR
+            );
         }
 
-        protected override DrawNode CreateDrawNode() => new BufferedContainerDrawNode(this, sharedData);
+        protected override DrawNode CreateDrawNode() =>
+            new BufferedContainerDrawNode(this, sharedData);
 
         public override bool UpdateSubTreeMasking()
         {
@@ -285,7 +302,9 @@ namespace osu.Framework.Graphics.Containers
         private Vector2 lastScreenSpaceSize;
 
         // We actually only care about Invalidation.MiscGeometry | Invalidation.DrawInfo
-        private readonly LayoutValue screenSpaceSizeBacking = new LayoutValue(Invalidation.Presence | Invalidation.RequiredParentSizeToFit | Invalidation.DrawInfo);
+        private readonly LayoutValue screenSpaceSizeBacking = new LayoutValue(
+            Invalidation.Presence | Invalidation.RequiredParentSizeToFit | Invalidation.DrawInfo
+        );
 
         protected override bool OnInvalidate(Invalidation invalidation, InvalidationSource source)
         {
@@ -301,7 +320,8 @@ namespace osu.Framework.Graphics.Containers
         }
 
         private long childrenUpdateVersion = -1;
-        protected override bool RequiresChildrenUpdate => base.RequiresChildrenUpdate && childrenUpdateVersion != updateVersion;
+        protected override bool RequiresChildrenUpdate =>
+            base.RequiresChildrenUpdate && childrenUpdateVersion != updateVersion;
 
         protected override void Update()
         {
@@ -316,7 +336,9 @@ namespace osu.Framework.Graphics.Containers
 
                 if (!RedrawOnScale)
                 {
-                    Matrix3 scaleMatrix = Matrix3.CreateScale(DrawInfo.MatrixInverse.ExtractScale());
+                    Matrix3 scaleMatrix = Matrix3.CreateScale(
+                        DrawInfo.MatrixInverse.ExtractScale()
+                    );
                     Vector2Extensions.Transform(ref drawSize, ref scaleMatrix, out drawSize);
                 }
 
@@ -350,7 +372,8 @@ namespace osu.Framework.Graphics.Containers
         /// Creates a view which can be added to a container to display the content of this <see cref="BufferedContainer{T}"/>.
         /// </summary>
         /// <returns>The view.</returns>
-        public BufferedContainerView<T> CreateView() => new BufferedContainerView<T>(this, sharedData);
+        public BufferedContainerView<T> CreateView() =>
+            new BufferedContainerView<T>(this, sharedData);
 
         public DrawColourInfo? FrameBufferDrawColour => base.DrawColourInfo;
 

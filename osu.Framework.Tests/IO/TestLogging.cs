@@ -197,21 +197,15 @@ namespace osu.Framework.Tests.IO
             Assert.IsNotNull(resolvedInnerException, "inner exception wasn't forwarded by logger");
         }
 
-        private class TestException : Exception
-        {
-        }
+        private class TestException : Exception { }
 
         public class TestExceptionWithInnerException : Exception
         {
             public TestExceptionWithInnerException()
-                : base("", new TestInnerException())
-            {
-            }
+                : base("", new TestInnerException()) { }
         }
 
-        private class TestInnerException : Exception
-        {
-        }
+        private class TestInnerException : Exception { }
 
         [TearDown]
         public void TearDown()

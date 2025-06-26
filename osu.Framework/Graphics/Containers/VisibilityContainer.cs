@@ -39,7 +39,10 @@ namespace osu.Framework.Graphics.Containers
 
         protected override void LoadComplete()
         {
-            State.BindValueChanged(UpdateState, State.Value == Visibility.Visible || !didInitialHide);
+            State.BindValueChanged(
+                UpdateState,
+                State.Value == Visibility.Visible || !didInitialHide
+            );
 
             base.LoadComplete();
         }
@@ -57,10 +60,14 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// Toggle this container's visibility.
         /// </summary>
-        public void ToggleVisibility() => State.Value = State.Value == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+        public void ToggleVisibility() =>
+            State.Value =
+                State.Value == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
 
-        public override bool PropagateNonPositionalInputSubTree => base.PropagateNonPositionalInputSubTree && State.Value == Visibility.Visible;
-        public override bool PropagatePositionalInputSubTree => base.PropagatePositionalInputSubTree && State.Value == Visibility.Visible;
+        public override bool PropagateNonPositionalInputSubTree =>
+            base.PropagateNonPositionalInputSubTree && State.Value == Visibility.Visible;
+        public override bool PropagatePositionalInputSubTree =>
+            base.PropagatePositionalInputSubTree && State.Value == Visibility.Visible;
 
         /// <summary>
         /// Implement any transition to be played when <see cref="State"/> becomes <see cref="Visibility.Visible"/>.
@@ -96,6 +103,6 @@ namespace osu.Framework.Graphics.Containers
     public enum Visibility
     {
         Hidden,
-        Visible
+        Visible,
     }
 }

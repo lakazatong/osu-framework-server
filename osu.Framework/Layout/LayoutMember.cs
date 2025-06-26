@@ -44,7 +44,11 @@ namespace osu.Framework.Layout
         /// <param name="invalidation">The <see cref="Graphics.Invalidation"/> flags that will invalidate this <see cref="LayoutMember"/>.</param>
         /// <param name="source">The source of the invalidation.</param>
         /// <param name="conditions">Any extra conditions that must be satisfied before this <see cref="LayoutMember"/> is invalidated.</param>
-        protected LayoutMember(Invalidation invalidation, InvalidationSource source = InvalidationSource.Default, InvalidationConditionDelegate? conditions = null)
+        protected LayoutMember(
+            Invalidation invalidation,
+            InvalidationSource source = InvalidationSource.Default,
+            InvalidationConditionDelegate? conditions = null
+        )
         {
             Invalidation = invalidation;
             Conditions = conditions;

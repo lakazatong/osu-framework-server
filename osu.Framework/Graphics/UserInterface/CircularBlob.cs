@@ -36,7 +36,9 @@ namespace osu.Framework.Graphics.UserInterface
             set
             {
                 if (!float.IsFinite(value))
-                    throw new ArgumentException($"{nameof(InnerRadius)} must be finite, but is {value}.");
+                    throw new ArgumentException(
+                        $"{nameof(InnerRadius)} must be finite, but is {value}."
+                    );
 
                 innerRadius = Math.Clamp(value, 0, 1);
                 Invalidate(Invalidation.DrawNode);
@@ -51,7 +53,9 @@ namespace osu.Framework.Graphics.UserInterface
             set
             {
                 if (!float.IsFinite(value))
-                    throw new ArgumentException($"{nameof(Amplitude)} must be finite, but is {value}.");
+                    throw new ArgumentException(
+                        $"{nameof(Amplitude)} must be finite, but is {value}."
+                    );
 
                 amplitude = Math.Clamp(value, 0, 1);
                 Invalidate(Invalidation.DrawNode);
@@ -66,7 +70,9 @@ namespace osu.Framework.Graphics.UserInterface
             set
             {
                 if (!float.IsFinite(value))
-                    throw new ArgumentException($"{nameof(Frequency)} must be finite, but is {value}.");
+                    throw new ArgumentException(
+                        $"{nameof(Frequency)} must be finite, but is {value}."
+                    );
 
                 frequency = value;
                 Invalidate(Invalidation.DrawNode);
@@ -90,9 +96,7 @@ namespace osu.Framework.Graphics.UserInterface
             public new CircularBlob Source => (CircularBlob)base.Source;
 
             public CircularBlobDrawNode(CircularBlob source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             private float innerRadius;
             private float texelSize;
@@ -114,7 +118,10 @@ namespace osu.Framework.Graphics.UserInterface
                 if (seed != newSeed)
                 {
                     Random rand = new Random(newSeed);
-                    noisePosition = new Vector2((float)(rand.NextDouble() * 1000), (float)(rand.NextDouble() * 1000));
+                    noisePosition = new Vector2(
+                        (float)(rand.NextDouble() * 1000),
+                        (float)(rand.NextDouble() * 1000)
+                    );
                     seed = newSeed;
                 }
 

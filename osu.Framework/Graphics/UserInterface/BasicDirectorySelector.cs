@@ -11,20 +11,28 @@ namespace osu.Framework.Graphics.UserInterface
 {
     public partial class BasicDirectorySelector : DirectorySelector
     {
-        protected override DirectorySelectorBreadcrumbDisplay CreateBreadcrumb() => new BasicDirectorySelectorBreadcrumbDisplay();
+        protected override DirectorySelectorBreadcrumbDisplay CreateBreadcrumb() =>
+            new BasicDirectorySelectorBreadcrumbDisplay();
 
-        protected override Drawable CreateHiddenToggleButton() => new BasicButton
-        {
-            Size = new Vector2(200, 25),
-            Text = "Toggle hidden items",
-            Action = ShowHiddenItems.Toggle,
-        };
+        protected override Drawable CreateHiddenToggleButton() =>
+            new BasicButton
+            {
+                Size = new Vector2(200, 25),
+                Text = "Toggle hidden items",
+                Action = ShowHiddenItems.Toggle,
+            };
 
-        protected override DirectorySelectorDirectory CreateDirectoryItem(DirectoryInfo directory, string displayName = null) => new BasicDirectorySelectorDirectory(directory, displayName);
+        protected override DirectorySelectorDirectory CreateDirectoryItem(
+            DirectoryInfo directory,
+            string displayName = null
+        ) => new BasicDirectorySelectorDirectory(directory, displayName);
 
-        protected override DirectorySelectorDirectory CreateParentDirectoryItem(DirectoryInfo directory) => new BasicDirectorySelectorParentDirectory(directory);
+        protected override DirectorySelectorDirectory CreateParentDirectoryItem(
+            DirectoryInfo directory
+        ) => new BasicDirectorySelectorParentDirectory(directory);
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => new BasicScrollContainer();
+        protected override ScrollContainer<Drawable> CreateScrollContainer() =>
+            new BasicScrollContainer();
 
         protected override void NotifySelectionError()
         {

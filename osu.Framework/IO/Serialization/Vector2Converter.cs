@@ -15,7 +15,13 @@ namespace osu.Framework.IO.Serialization
     /// </summary>
     public class Vector2Converter : JsonConverter<Vector2>
     {
-        public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Vector2 ReadJson(
+            JsonReader reader,
+            Type objectType,
+            Vector2 existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer
+        )
         {
             var obj = JObject.Load(reader);
             return new Vector2((float)obj["x"], (float)obj["y"]);

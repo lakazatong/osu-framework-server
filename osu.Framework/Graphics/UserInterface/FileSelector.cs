@@ -53,17 +53,21 @@ namespace osu.Framework.Graphics.UserInterface
             if (systemFileSelector == null)
                 return false;
 
-            systemFileSelector.Selected += f => Schedule(() =>
-            {
-                CurrentFile.Value = f;
-                CurrentPath.Value = f.Directory;
-            });
+            systemFileSelector.Selected += f =>
+                Schedule(() =>
+                {
+                    CurrentFile.Value = f;
+                    CurrentPath.Value = f.Directory;
+                });
 
             systemFileSelector.Present();
             return true;
         }
 
-        protected override bool TryGetEntriesForPath(DirectoryInfo path, out ICollection<DirectorySelectorItem> items)
+        protected override bool TryGetEntriesForPath(
+            DirectoryInfo path,
+            out ICollection<DirectorySelectorItem> items
+        )
         {
             items = new List<DirectorySelectorItem>();
 
@@ -81,7 +85,9 @@ namespace osu.Framework.Graphics.UserInterface
 
                 foreach (var file in files.OrderBy(d => d.Name))
                 {
-                    if (ShowHiddenItems.Value || !file.Attributes.HasFlagFast(FileAttributes.Hidden))
+                    if (
+                        ShowHiddenItems.Value || !file.Attributes.HasFlagFast(FileAttributes.Hidden)
+                    )
                         items.Add(CreateFileItem(file));
                 }
 

@@ -102,7 +102,10 @@ namespace osu.Framework.Input
             if (ButtonDownInputQueue == null)
                 return;
 
-            HandleButtonUp(state, ButtonDownInputQueue.Where(d => d.IsRootedAt(InputManager)).ToList());
+            HandleButtonUp(
+                state,
+                ButtonDownInputQueue.Where(d => d.IsRootedAt(InputManager)).ToList()
+            );
             ButtonDownInputQueue = null;
         }
 
@@ -134,9 +137,13 @@ namespace osu.Framework.Input
 
             if (handledBy != null)
             {
-                Logger.Log(SuppressLoggingEventInformation(handledBy)
-                    ? $"{e.GetType().Name} handled by {handledBy}."
-                    : $"{e} handled by {handledBy}.", LoggingTarget.Runtime, LogLevel.Debug);
+                Logger.Log(
+                    SuppressLoggingEventInformation(handledBy)
+                        ? $"{e.GetType().Name} handled by {handledBy}."
+                        : $"{e} handled by {handledBy}.",
+                    LoggingTarget.Runtime,
+                    LogLevel.Debug
+                );
             }
 
             return handledBy;

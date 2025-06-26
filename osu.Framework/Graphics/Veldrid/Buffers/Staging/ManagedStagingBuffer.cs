@@ -25,7 +25,10 @@ namespace osu.Framework.Graphics.Veldrid.Buffers.Staging
             Count = count;
             SizeInBytes = (uint)(Unsafe.SizeOf<T>() * count);
 
-            memoryOwner = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<T>((int)Count, AllocationOptions.Clean);
+            memoryOwner = SixLabors.ImageSharp.Configuration.Default.MemoryAllocator.Allocate<T>(
+                (int)Count,
+                AllocationOptions.Clean
+            );
             vertexMemory = memoryOwner.Memory;
         }
 
@@ -43,7 +46,8 @@ namespace osu.Framework.Graphics.Veldrid.Buffers.Staging
                 buffer,
                 (uint)(dstOffset * Unsafe.SizeOf<T>()),
                 ref Data[(int)srcOffset],
-                (uint)(count * Unsafe.SizeOf<T>()));
+                (uint)(count * Unsafe.SizeOf<T>())
+            );
         }
 
         public void Dispose()

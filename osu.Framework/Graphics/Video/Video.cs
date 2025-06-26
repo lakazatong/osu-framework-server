@@ -3,11 +3,11 @@
 
 #nullable disable
 
-using osu.Framework.Allocation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using JetBrains.Annotations;
+using osu.Framework.Allocation;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Logging;
@@ -89,11 +89,10 @@ namespace osu.Framework.Graphics.Video
         /// <param name="filename">The video file.</param>
         /// <param name="startAtCurrentTime">Whether the current clock time should be assumed as the 0th video frame.</param>
         public Video(string filename, bool startAtCurrentTime = true)
-            : this(File.OpenRead(filename), startAtCurrentTime)
-        {
-        }
+            : this(File.OpenRead(filename), startAtCurrentTime) { }
 
-        public override Drawable CreateContent() => Sprite = new VideoSprite(this) { RelativeSizeAxes = Axes.Both };
+        public override Drawable CreateContent() =>
+            Sprite = new VideoSprite(this) { RelativeSizeAxes = Axes.Both };
 
         /// <summary>
         /// Creates a new <see cref="Video"/>.
@@ -112,7 +111,10 @@ namespace osu.Framework.Graphics.Video
             decoder = gameHost.CreateVideoDecoder(stream);
             decoder.Looping = Loop;
 
-            config.BindWith(FrameworkSetting.HardwareVideoDecoder, decoder.TargetHardwareVideoDecoders);
+            config.BindWith(
+                FrameworkSetting.HardwareVideoDecoder,
+                decoder.TargetHardwareVideoDecoders
+            );
 
             decoder.StartDecoding();
 
@@ -123,7 +125,10 @@ namespace osu.Framework.Graphics.Video
         {
             base.Update();
 
-            if (decoder.State == VideoDecoder.DecoderState.EndOfStream && availableFrames.Count == 0)
+            if (
+                decoder.State == VideoDecoder.DecoderState.EndOfStream
+                && availableFrames.Count == 0
+            )
             {
                 // if at the end of the stream but our playback enters a valid time region again, a seek operation is required to get the decoder back on track.
                 if (PlaybackPosition < decoder.LastDecodedFrameTime)
@@ -142,15 +147,20 @@ namespace osu.Framework.Graphics.Video
                 if (Loop)
                 {
                     // handle looping bounds (as we could be in the roll-over process between loops).
-                    outOfSync &= Math.Abs(PlaybackPosition - decoder.Duration - peekFrame.Time) > lenience_before_seek &&
-                                 Math.Abs(PlaybackPosition + decoder.Duration - peekFrame.Time) > lenience_before_seek;
+                    outOfSync &=
+                        Math.Abs(PlaybackPosition - decoder.Duration - peekFrame.Time)
+                            > lenience_before_seek
+                        && Math.Abs(PlaybackPosition + decoder.Duration - peekFrame.Time)
+                            > lenience_before_seek;
                 }
             }
 
             // we are too far ahead or too far behind
             if (outOfSync && decoder.CanSeek)
             {
-                Logger.Log($"Video too far out of sync ({peekFrame.Time}), seeking to {PlaybackPosition}");
+                Logger.Log(
+                    $"Video too far out of sync ({peekFrame.Time}), seeking to {PlaybackPosition}"
+                );
                 seekIntoSync();
             }
 
@@ -158,7 +168,8 @@ namespace osu.Framework.Graphics.Video
 
             while (availableFrames.Count > 0 && checkNextFrameValid(availableFrames.Peek()))
             {
-                if (lastFrame != null) decoder.ReturnFrames(new[] { lastFrame });
+                if (lastFrame != null)
+                    decoder.ReturnFrames(new[] { lastFrame });
                 lastFrame = availableFrames.Dequeue();
                 lastFrameShown = false;
             }
@@ -201,7 +212,8 @@ namespace osu.Framework.Graphics.Video
             if (Loop && Math.Abs((frame.Time - Duration) - PlaybackPosition) < lenience_before_seek)
                 return true;
 
-            return frame.Time <= PlaybackPosition && Math.Abs(frame.Time - PlaybackPosition) < lenience_before_seek;
+            return frame.Time <= PlaybackPosition
+                && Math.Abs(frame.Time - PlaybackPosition) < lenience_before_seek;
         }
 
         protected override void Dispose(bool isDisposing)

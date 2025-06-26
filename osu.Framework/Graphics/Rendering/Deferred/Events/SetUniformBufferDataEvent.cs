@@ -6,10 +6,22 @@ using osu.Framework.Graphics.Rendering.Deferred.Allocation;
 
 namespace osu.Framework.Graphics.Rendering.Deferred.Events
 {
-    internal readonly record struct SetUniformBufferDataEvent(ResourceReference Buffer, MemoryReference Data)
+    internal readonly record struct SetUniformBufferDataEvent(
+        ResourceReference Buffer,
+        MemoryReference Data
+    )
     {
-        public static RenderEvent Create<T>(DeferredRenderer renderer, IDeferredUniformBuffer uniformBuffer, T data)
-            where T : unmanaged, IEquatable<T>
-            => RenderEvent.Create(new SetUniformBufferDataEvent(renderer.Context.Reference(uniformBuffer), renderer.Context.AllocateObject(data)));
+        public static RenderEvent Create<T>(
+            DeferredRenderer renderer,
+            IDeferredUniformBuffer uniformBuffer,
+            T data
+        )
+            where T : unmanaged, IEquatable<T> =>
+            RenderEvent.Create(
+                new SetUniformBufferDataEvent(
+                    renderer.Context.Reference(uniformBuffer),
+                    renderer.Context.AllocateObject(data)
+                )
+            );
     }
 }

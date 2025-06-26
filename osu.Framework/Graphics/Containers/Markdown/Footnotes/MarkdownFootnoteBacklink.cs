@@ -33,7 +33,7 @@ namespace osu.Framework.Graphics.Containers.Markdown.Footnotes
                 Margin = new MarginPadding { Left = 5 },
                 Size = new Vector2(fontSize / 2),
                 Icon = FontAwesome.Solid.ArrowUp,
-                Colour = Color4.DodgerBlue
+                Colour = Color4.DodgerBlue,
             };
         }
     }

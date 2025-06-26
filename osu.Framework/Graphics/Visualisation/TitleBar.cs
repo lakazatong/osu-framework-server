@@ -24,11 +24,7 @@ namespace osu.Framework.Graphics.Visualisation
 
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = FrameworkColour.BlueDark,
-                },
+                new Box { RelativeSizeAxes = Axes.Both, Colour = FrameworkColour.BlueDark },
                 new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.Y,
@@ -58,9 +54,9 @@ namespace osu.Framework.Graphics.Visualisation
                             Text = keyHelpText,
                             Font = FrameworkFont.Condensed,
                             Colour = FrameworkColour.Yellow,
-                            Alpha = 0.5f
+                            Alpha = 0.5f,
                         },
-                    }
+                    },
                 },
             };
         }

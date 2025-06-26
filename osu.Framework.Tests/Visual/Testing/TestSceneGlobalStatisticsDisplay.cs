@@ -19,10 +19,7 @@ namespace osu.Framework.Tests.Visual.Testing
         [BackgroundDependencyLoader]
         private void load()
         {
-            Children = new[]
-            {
-                display = new GlobalStatisticsDisplay(),
-            };
+            Children = new[] { display = new GlobalStatisticsDisplay() };
         }
 
         [SetUpSteps]
@@ -36,22 +33,31 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             GlobalStatistic<double> stat = null;
 
-            AddStep("Register test statistic", () => stat = GlobalStatistics.Get<double>("TestCase", "Test Statistic"));
+            AddStep(
+                "Register test statistic",
+                () => stat = GlobalStatistics.Get<double>("TestCase", "Test Statistic")
+            );
 
             AddStep("Change value once", () => stat.Value = 10);
             AddStep("Change value again", () => stat.Value = 20);
 
-            AddStep("Register statistics non-alphabetically", () =>
-            {
-                GlobalStatistics.Get<int>("ZZZZZ", "BBBBB");
-                GlobalStatistics.Get<int>("ZZZZZ", "AAAAA");
-            });
+            AddStep(
+                "Register statistics non-alphabetically",
+                () =>
+                {
+                    GlobalStatistics.Get<int>("ZZZZZ", "BBBBB");
+                    GlobalStatistics.Get<int>("ZZZZZ", "AAAAA");
+                }
+            );
 
-            AddStep("Register groups non-alphabetically", () =>
-            {
-                GlobalStatistics.Get<int>("XXXXX", "BBBBB");
-                GlobalStatistics.Get<int>("TTTTT", "AAAAA");
-            });
+            AddStep(
+                "Register groups non-alphabetically",
+                () =>
+                {
+                    GlobalStatistics.Get<int>("XXXXX", "BBBBB");
+                    GlobalStatistics.Get<int>("TTTTT", "AAAAA");
+                }
+            );
         }
 
         [TearDownSteps]

@@ -5,8 +5,8 @@ using System;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Utils;
 using osu.Framework.Physics;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -93,57 +93,86 @@ namespace osu.Framework.Tests.Visual.UserInterface
             Random random = new Random(1337);
 
             // Add a textbox... because we can.
-            generateN(3, () => new RigidBodyContainer<Drawable>
-            {
-                Position = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 1000,
-                Size = new Vector2(1, 0.1f + 0.2f * (float)random.NextDouble()) * (150 + 150 * (float)random.NextDouble()),
-                Rotation = (float)random.NextDouble() * 360,
-                Child = new BasicTextBox
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    PlaceholderText = "Text box fun!",
-                },
-            });
+            generateN(
+                3,
+                () =>
+                    new RigidBodyContainer<Drawable>
+                    {
+                        Position =
+                            new Vector2((float)random.NextDouble(), (float)random.NextDouble())
+                            * 1000,
+                        Size =
+                            new Vector2(1, 0.1f + 0.2f * (float)random.NextDouble())
+                            * (150 + 150 * (float)random.NextDouble()),
+                        Rotation = (float)random.NextDouble() * 360,
+                        Child = new BasicTextBox
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            PlaceholderText = "Text box fun!",
+                        },
+                    }
+            );
 
             // Boxes
-            generateN(10, () => new TestRigidBody
-            {
-                Position = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 1000,
-                Size = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 200,
-                Rotation = (float)random.NextDouble() * 360,
-                Colour = new Color4(253, 253, 253, 255),
-            });
+            generateN(
+                10,
+                () =>
+                    new TestRigidBody
+                    {
+                        Position =
+                            new Vector2((float)random.NextDouble(), (float)random.NextDouble())
+                            * 1000,
+                        Size =
+                            new Vector2((float)random.NextDouble(), (float)random.NextDouble())
+                            * 200,
+                        Rotation = (float)random.NextDouble() * 360,
+                        Colour = new Color4(253, 253, 253, 255),
+                    }
+            );
 
             // Circles
-            generateN(5, () =>
-            {
-                Vector2 size = new Vector2((float)random.NextDouble()) * 200;
-                return new TestRigidBody
+            generateN(
+                5,
+                () =>
                 {
-                    Position = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 1000,
-                    Size = size,
-                    Rotation = (float)random.NextDouble() * 360,
-                    CornerRadius = size.X / 2,
-                    Colour = new Color4(253, 253, 253, 255),
-                    Masking = true,
-                };
-            });
+                    Vector2 size = new Vector2((float)random.NextDouble()) * 200;
+                    return new TestRigidBody
+                    {
+                        Position =
+                            new Vector2((float)random.NextDouble(), (float)random.NextDouble())
+                            * 1000,
+                        Size = size,
+                        Rotation = (float)random.NextDouble() * 360,
+                        CornerRadius = size.X / 2,
+                        Colour = new Color4(253, 253, 253, 255),
+                        Masking = true,
+                    };
+                }
+            );
 
             // Totally random stuff
-            generateN(10, () =>
-            {
-                Vector2 size = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 200;
-                return new TestRigidBody
+            generateN(
+                10,
+                () =>
                 {
-                    Position = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 1000,
-                    Size = size,
-                    Rotation = (float)random.NextDouble() * 360,
-                    Shear = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 2 - new Vector2(1),
-                    CornerRadius = (float)random.NextDouble() * Math.Min(size.X, size.Y) / 2,
-                    Colour = new Color4(253, 253, 253, 255),
-                    Masking = true,
-                };
-            });
+                    Vector2 size =
+                        new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 200;
+                    return new TestRigidBody
+                    {
+                        Position =
+                            new Vector2((float)random.NextDouble(), (float)random.NextDouble())
+                            * 1000,
+                        Size = size,
+                        Rotation = (float)random.NextDouble() * 360,
+                        Shear =
+                            new Vector2((float)random.NextDouble(), (float)random.NextDouble()) * 2
+                            - new Vector2(1),
+                        CornerRadius = (float)random.NextDouble() * Math.Min(size.X, size.Y) / 2,
+                        Colour = new Color4(253, 253, 253, 255),
+                        Masking = true,
+                    };
+                }
+            );
 
             // Set appropriate properties
             foreach (var d in sim.Children)
@@ -169,7 +198,11 @@ namespace osu.Framework.Tests.Visual.UserInterface
                 base.LoadComplete();
 
                 foreach (var d in Children)
-                    d.ApplyImpulse(new Vector2(RNG.NextSingle() - 0.5f, RNG.NextSingle() - 0.5f) * 100, d.Centre + new Vector2(RNG.NextSingle() - 0.5f, RNG.NextSingle() - 0.5f) * 100);
+                    d.ApplyImpulse(
+                        new Vector2(RNG.NextSingle() - 0.5f, RNG.NextSingle() - 0.5f) * 100,
+                        d.Centre
+                            + new Vector2(RNG.NextSingle() - 0.5f, RNG.NextSingle() - 0.5f) * 100
+                    );
             }
         }
     }

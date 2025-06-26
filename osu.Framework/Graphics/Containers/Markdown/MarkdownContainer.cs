@@ -24,7 +24,10 @@ namespace osu.Framework.Graphics.Containers.Markdown
     /// <summary>
     /// Visualises a markdown text document.
     /// </summary>
-    public partial class MarkdownContainer : CompositeDrawable, IMarkdownTextComponent, IMarkdownTextFlowComponent
+    public partial class MarkdownContainer
+        : CompositeDrawable,
+            IMarkdownTextComponent,
+            IMarkdownTextFlowComponent
     {
         private const int root_level = 0;
 
@@ -42,7 +45,9 @@ namespace osu.Framework.Graphics.Containers.Markdown
             set
             {
                 if (value.HasFlagFast(Axes.X))
-                    throw new ArgumentException($"{nameof(MarkdownContainer)} does not support an {nameof(AutoSizeAxes)} of {value}");
+                    throw new ArgumentException(
+                        $"{nameof(MarkdownContainer)} does not support an {nameof(AutoSizeAxes)} of {value}"
+                    );
 
                 base.AutoSizeAxes = value;
             }
@@ -188,10 +193,14 @@ namespace osu.Framework.Graphics.Containers.Markdown
 
                     if (documentUri != null)
                     {
-                        link.Url = rootUri != null && url.StartsWith('/')
-                            // Ensure the URI is document-relative by removing all trailing slashes
-                            ? new Uri(rootUri, new Uri(url.TrimStart('/'), UriKind.Relative)).AbsoluteUri
-                            : new Uri(documentUri, new Uri(url, UriKind.Relative)).AbsoluteUri;
+                        link.Url =
+                            rootUri != null && url.StartsWith('/')
+                                // Ensure the URI is document-relative by removing all trailing slashes
+                                ? new Uri(
+                                    rootUri,
+                                    new Uri(url.TrimStart('/'), UriKind.Relative)
+                                ).AbsoluteUri
+                                : new Uri(documentUri, new Uri(url, UriKind.Relative)).AbsoluteUri;
                     }
                 }
 
@@ -210,7 +219,8 @@ namespace osu.Framework.Graphics.Containers.Markdown
             validateContent();
         }
 
-        public virtual MarkdownTextFlowContainer CreateTextFlow() => new MarkdownTextFlowContainer();
+        public virtual MarkdownTextFlowContainer CreateTextFlow() =>
+            new MarkdownTextFlowContainer();
 
         public virtual SpriteText CreateSpriteText() => new SpriteText();
 
@@ -221,7 +231,11 @@ namespace osu.Framework.Graphics.Containers.Markdown
         /// <param name="container">The container to add the visualisation to.</param>
         /// <param name="level">The level in the document of <paramref name="markdownObject"/>.
         /// 0 for the root level, 1 for first-level items in a list, 2 for second-level items in a list, etc.</param>
-        protected virtual void AddMarkdownComponent(IMarkdownObject markdownObject, FillFlowContainer container, int level)
+        protected virtual void AddMarkdownComponent(
+            IMarkdownObject markdownObject,
+            FillFlowContainer container,
+            int level
+        )
         {
             switch (markdownObject)
             {
@@ -292,7 +306,8 @@ namespace osu.Framework.Graphics.Containers.Markdown
         /// </summary>
         /// <param name="headingBlock">The <see cref="HeadingBlock"/> to visualise.</param>
         /// <returns>The visualiser.</returns>
-        protected virtual MarkdownHeading CreateHeading(HeadingBlock headingBlock) => new MarkdownHeading(headingBlock);
+        protected virtual MarkdownHeading CreateHeading(HeadingBlock headingBlock) =>
+            new MarkdownHeading(headingBlock);
 
         /// <summary>
         /// Creates the visualiser for a <see cref="ParagraphBlock"/>.
@@ -301,21 +316,26 @@ namespace osu.Framework.Graphics.Containers.Markdown
         /// <param name="level">The level in the document of <paramref name="paragraphBlock"/>.
         /// 0 for the root level, 1 for first-level items in a list, 2 for second-level items in a list, etc.</param>
         /// <returns>The visualiser.</returns>
-        protected virtual MarkdownParagraph CreateParagraph(ParagraphBlock paragraphBlock, int level) => new MarkdownParagraph(paragraphBlock);
+        protected virtual MarkdownParagraph CreateParagraph(
+            ParagraphBlock paragraphBlock,
+            int level
+        ) => new MarkdownParagraph(paragraphBlock);
 
         /// <summary>
         /// Creates the visualiser for a <see cref="QuoteBlock"/>.
         /// </summary>
         /// <param name="quoteBlock">The <see cref="QuoteBlock"/> to visualise.</param>
         /// <returns>The visualiser.</returns>
-        protected virtual MarkdownQuoteBlock CreateQuoteBlock(QuoteBlock quoteBlock) => new MarkdownQuoteBlock(quoteBlock);
+        protected virtual MarkdownQuoteBlock CreateQuoteBlock(QuoteBlock quoteBlock) =>
+            new MarkdownQuoteBlock(quoteBlock);
 
         /// <summary>
         /// Creates the visualiser for a <see cref="CodeBlock"/>.
         /// </summary>
         /// <param name="codeBlock">The <see cref="CodeBlock"/> to visualise.</param>
         /// <returns>The visualiser.</returns>
-        protected virtual MarkdownCodeBlock CreateCodeBlock(CodeBlock codeBlock) => new MarkdownCodeBlock(codeBlock);
+        protected virtual MarkdownCodeBlock CreateCodeBlock(CodeBlock codeBlock) =>
+            new MarkdownCodeBlock(codeBlock);
 
         /// <summary>
         /// Creates the visualiser for a <see cref="Table"/>.
@@ -334,28 +354,35 @@ namespace osu.Framework.Graphics.Containers.Markdown
         /// Creates the visualiser for a horizontal separator.
         /// </summary>
         /// <returns>The visualiser.</returns>
-        protected virtual MarkdownSeparator CreateSeparator(ThematicBreakBlock thematicBlock) => new MarkdownSeparator();
+        protected virtual MarkdownSeparator CreateSeparator(ThematicBreakBlock thematicBlock) =>
+            new MarkdownSeparator();
 
         /// <summary>
         /// Creates the visualiser for a <see cref="FootnoteGroup"/>.
         /// </summary>
-        protected virtual MarkdownFootnoteGroup CreateFootnoteGroup(FootnoteGroup footnoteGroup) => new MarkdownFootnoteGroup();
+        protected virtual MarkdownFootnoteGroup CreateFootnoteGroup(FootnoteGroup footnoteGroup) =>
+            new MarkdownFootnoteGroup();
 
         /// <summary>
         /// Creates the visualiser for a <see cref="Footnote"/>.
         /// </summary>
-        protected virtual MarkdownFootnote CreateFootnote(Footnote footnote) => new MarkdownFootnote(footnote);
+        protected virtual MarkdownFootnote CreateFootnote(Footnote footnote) =>
+            new MarkdownFootnote(footnote);
 
         /// <summary>
         /// Creates the visualiser for an element that isn't implemented.
         /// </summary>
         /// <param name="markdownObject">The <see cref="MarkdownObject"/> that isn't implemented.</param>
         /// <returns>The visualiser.</returns>
-        protected virtual NotImplementedMarkdown CreateNotImplemented(IMarkdownObject markdownObject) => new NotImplementedMarkdown(markdownObject);
+        protected virtual NotImplementedMarkdown CreateNotImplemented(
+            IMarkdownObject markdownObject
+        ) => new NotImplementedMarkdown(markdownObject);
 
-        protected virtual MarkdownPipeline CreateBuilder()
-            => new MarkdownPipelineBuilder().UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-                                            .UseEmojiAndSmiley()
-                                            .UseAdvancedExtensions().Build();
+        protected virtual MarkdownPipeline CreateBuilder() =>
+            new MarkdownPipelineBuilder()
+                .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+                .UseEmojiAndSmiley()
+                .UseAdvancedExtensions()
+                .Build();
     }
 }

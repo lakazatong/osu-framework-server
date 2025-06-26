@@ -43,7 +43,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             {
                 ushort[] indices = new ushort[amountIndices];
 
-                for (int i = 0, j = 0; j < amountIndices; i += IRenderer.VERTICES_PER_QUAD, j += IRenderer.INDICES_PER_QUAD)
+                for (
+                    int i = 0, j = 0;
+                    j < amountIndices;
+                    i += IRenderer.VERTICES_PER_QUAD, j += IRenderer.INDICES_PER_QUAD
+                )
                 {
                     indices[j] = (ushort)i;
                     indices[j + 1] = (ushort)(i + 1);
@@ -53,7 +57,12 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                     indices[j + 5] = (ushort)(i + 1);
                 }
 
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(amountIndices * sizeof(ushort)), indices, BufferUsageHint.StaticDraw);
+                GL.BufferData(
+                    BufferTarget.ElementArrayBuffer,
+                    (IntPtr)(amountIndices * sizeof(ushort)),
+                    indices,
+                    BufferUsageHint.StaticDraw
+                );
 
                 GLQuadIndexData.MaxAmountIndices = amountIndices;
             }

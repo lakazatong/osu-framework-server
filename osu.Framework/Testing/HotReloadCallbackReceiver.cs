@@ -14,6 +14,8 @@ namespace osu.Framework.Testing
     internal static class HotReloadCallbackReceiver
     {
         public static event Action<Type[]> CompilationFinished;
-        public static void UpdateApplication([CanBeNull] Type[] updatedTypes) => CompilationFinished?.Invoke(updatedTypes);
+
+        public static void UpdateApplication([CanBeNull] Type[] updatedTypes) =>
+            CompilationFinished?.Invoke(updatedTypes);
     }
 }

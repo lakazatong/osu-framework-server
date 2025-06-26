@@ -26,7 +26,10 @@ namespace osu.Framework.Benchmarks
         }
 
         [Benchmark]
-        public int EnumerateEmptyDifferences() => new ButtonStates<MouseButton>().EnumerateDifference(new ButtonStates<MouseButton>()).Pressed.Length;
+        public int EnumerateEmptyDifferences() =>
+            new ButtonStates<MouseButton>()
+                .EnumerateDifference(new ButtonStates<MouseButton>())
+                .Pressed.Length;
 
         [Arguments(1)]
         [Arguments(5)]

@@ -8,18 +8,12 @@ namespace osu.Framework.Tests.Visual.Testing
     public partial class TestSceneDerivedTestWithDerivedSource : TestSceneTestWithSource
     {
         [TestCaseSource(nameof(SourceField))]
-        public void TestDerivedSourceField(int a, int b)
-        {
-        }
+        public void TestDerivedSourceField(int a, int b) { }
 
         [TestCaseSource(nameof(SourceProperty))]
-        public void TestDerivedSourceProperty(int a, int b)
-        {
-        }
+        public void TestDerivedSourceProperty(int a, int b) { }
 
         [TestCaseSource(nameof(SourceMethod))]
-        public void TestDerivedSourceMethod(int a, int b)
-        {
-        }
+        public void TestDerivedSourceMethod(int a, int b) { }
     }
 }

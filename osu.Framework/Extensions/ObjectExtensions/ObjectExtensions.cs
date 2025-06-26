@@ -30,6 +30,7 @@ namespace osu.Framework.Extensions.ObjectExtensions
         /// <summary>
         /// <c>true</c> if the given object is not null, <c>false</c> otherwise.
         /// </summary>
-        public static bool IsNotNull<T>([NotNullWhen(true)] this T obj) => !ReferenceEquals(obj, null);
+        public static bool IsNotNull<T>([NotNullWhen(true)] this T obj) =>
+            !ReferenceEquals(obj, null);
     }
 }

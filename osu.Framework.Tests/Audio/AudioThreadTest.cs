@@ -25,7 +25,10 @@ namespace osu.Framework.Tests.Audio
         {
             thread = new AudioThread();
 
-            var store = new NamespacedResourceStore<byte[]>(new DllResourceStore(@"osu.Framework.Tests.dll"), @"Resources");
+            var store = new NamespacedResourceStore<byte[]>(
+                new DllResourceStore(@"osu.Framework.Tests.dll"),
+                @"Resources"
+            );
 
             Manager = new AudioManagerWithDeviceLoss(thread, store, store);
 
@@ -51,7 +54,11 @@ namespace osu.Framework.Tests.Audio
             for (int i = 0; i < 2; i++)
             {
                 double checkAfter = track.CurrentTime;
-                WaitForOrAssert(() => track.CurrentTime > checkAfter, "Track time did not increase", 1000);
+                WaitForOrAssert(
+                    () => track.CurrentTime > checkAfter,
+                    "Track time did not increase",
+                    1000
+                );
                 Assert.IsTrue(track.IsRunning);
             }
         }
@@ -62,11 +69,20 @@ namespace osu.Framework.Tests.Audio
         /// <param name="condition">The condition which should become true.</param>
         /// <param name="message">A message to display on timeout.</param>
         /// <param name="timeout">Timeout in milliseconds.</param>
-        public static void WaitForOrAssert(Func<bool> condition, string message, int timeout = 60000) =>
-            Assert.IsTrue(Task.Run(() =>
-            {
-                while (!condition()) Thread.Sleep(50);
-            }).Wait(timeout), message);
+        public static void WaitForOrAssert(
+            Func<bool> condition,
+            string message,
+            int timeout = 60000
+        ) =>
+            Assert.IsTrue(
+                Task.Run(() =>
+                    {
+                        while (!condition())
+                            Thread.Sleep(50);
+                    })
+                    .Wait(timeout),
+                message
+            );
 
         /// <summary>
         /// Block for a specified number of audio thread frames.
@@ -76,15 +92,16 @@ namespace osu.Framework.Tests.Audio
         {
             var cts = new TaskCompletionSource<bool>();
 
-            void runScheduled() => thread.Scheduler.Add(() =>
-            {
-                if (count-- > 0)
-                    runScheduled();
-                else
+            void runScheduled() =>
+                thread.Scheduler.Add(() =>
                 {
-                    cts.SetResult(true);
-                }
-            });
+                    if (count-- > 0)
+                        runScheduled();
+                    else
+                    {
+                        cts.SetResult(true);
+                    }
+                });
 
             runScheduled();
 

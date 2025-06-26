@@ -18,6 +18,7 @@ namespace osu.Framework.Timing
         /// </summary>
         public double Current;
 
-        public override readonly string ToString() => Math.Truncate(Current).ToString(CultureInfo.InvariantCulture);
+        public override readonly string ToString() =>
+            Math.Truncate(Current).ToString(CultureInfo.InvariantCulture);
     }
 }

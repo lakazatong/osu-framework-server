@@ -21,15 +21,25 @@ namespace osu.Framework.Tests.Visual.Testing
             AddStep("move mouse", () => InputManager.MoveMouseTo(Vector2.Zero));
             AddStep("press mouse", () => InputManager.PressButton(MouseButton.Left));
             AddStep("press key", () => InputManager.PressKey(Key.Z));
-            AddStep("press joystick", () => InputManager.PressJoystickButton(JoystickButton.Button1));
+            AddStep(
+                "press joystick",
+                () => InputManager.PressJoystickButton(JoystickButton.Button1)
+            );
 
             AddStep("reset input", ResetInput);
 
-            AddAssert("mouse position is zero", () => InputManager.CurrentState.Mouse.Position, () => Is.EqualTo(Vector2.Zero));
-            AddAssert("all input states released", () =>
-                !InputManager.CurrentState.Mouse.Buttons.HasAnyButtonPressed &&
-                !InputManager.CurrentState.Keyboard.Keys.HasAnyButtonPressed &&
-                !InputManager.CurrentState.Joystick.Buttons.HasAnyButtonPressed);
+            AddAssert(
+                "mouse position is zero",
+                () => InputManager.CurrentState.Mouse.Position,
+                () => Is.EqualTo(Vector2.Zero)
+            );
+            AddAssert(
+                "all input states released",
+                () =>
+                    !InputManager.CurrentState.Mouse.Buttons.HasAnyButtonPressed
+                    && !InputManager.CurrentState.Keyboard.Keys.HasAnyButtonPressed
+                    && !InputManager.CurrentState.Joystick.Buttons.HasAnyButtonPressed
+            );
         }
 
         [Test]
@@ -37,19 +47,27 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             BasicTextBox textbox = null!;
 
-            AddStep("add textbox", () => Child = textbox = new BasicTextBox
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(100, 20),
-                Text = "test text"
-            });
+            AddStep(
+                "add textbox",
+                () =>
+                    Child = textbox =
+                        new BasicTextBox
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(100, 20),
+                            Text = "test text",
+                        }
+            );
 
-            AddStep("focus textbox", () =>
-            {
-                InputManager.MoveMouseTo(textbox);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "focus textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(textbox);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("text is not selected", () => string.IsNullOrEmpty(textbox.SelectedText));
 
@@ -63,7 +81,12 @@ namespace osu.Framework.Tests.Visual.Testing
         {
             TestCursor cursor = null!;
 
-            AddStep("retrieve cursor", () => cursor = (TestCursor)InputManager.ChildrenOfType<TestCursorContainer>().Single().ActiveCursor);
+            AddStep(
+                "retrieve cursor",
+                () =>
+                    cursor = (TestCursor)
+                        InputManager.ChildrenOfType<TestCursorContainer>().Single().ActiveCursor
+            );
 
             AddStep("move mouse to screen zero", () => InputManager.MoveMouseTo(Vector2.Zero));
             AddAssert("ensure cursor masked away", () => cursor.IsMaskedAway);

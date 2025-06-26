@@ -46,11 +46,17 @@ namespace osu.Framework.Tests.Visual.Drawables
         {
             TestDrawableModel drawableModel = null;
 
-            AddStep("load first model", () => backedDrawable.Model = new TestModel(drawableModel = new TestDrawableModel()));
+            AddStep(
+                "load first model",
+                () => backedDrawable.Model = new TestModel(drawableModel = new TestDrawableModel())
+            );
             AddWaitStep("wait a bit", 5);
             AddStep("finish load", () => drawableModel.AllowLoad.Set());
             AddWaitStep("wait a bit", 5);
-            AddStep("load second model", () => backedDrawable.Model = new TestModel(drawableModel = new TestDrawableModel()));
+            AddStep(
+                "load second model",
+                () => backedDrawable.Model = new TestModel(drawableModel = new TestDrawableModel())
+            );
             AddWaitStep("wait a bit", 5);
             AddStep("finish load", () => drawableModel.AllowLoad.Set());
         }
@@ -72,23 +78,25 @@ namespace osu.Framework.Tests.Visual.Drawables
                 CornerRadius = 5;
                 Masking = true;
 
-                AddRangeInternal(new[]
-                {
-                    new Box
+                AddRangeInternal(
+                    new[]
                     {
-                        Colour = new Color4(0.1f, 0.1f, 0.1f, 1),
-                        RelativeSizeAxes = Axes.Both,
-                        Depth = float.MaxValue
-                    },
-                    spinner = new LoadingSpinner
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Size = new Vector2(20),
-                        Alpha = 0,
-                        Depth = float.MinValue
+                        new Box
+                        {
+                            Colour = new Color4(0.1f, 0.1f, 0.1f, 1),
+                            RelativeSizeAxes = Axes.Both,
+                            Depth = float.MaxValue,
+                        },
+                        spinner = new LoadingSpinner
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(20),
+                            Alpha = 0,
+                            Depth = float.MinValue,
+                        },
                     }
-                });
+                );
             }
 
             protected override bool TransformImmediately => immediate;
@@ -161,17 +169,13 @@ namespace osu.Framework.Tests.Visual.Drawables
 
                 InternalChildren = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = BackgroundColour
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = BackgroundColour },
                     new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = $"Model {id++}"
-                    }
+                        Text = $"Model {id++}",
+                    },
                 };
             }
 
@@ -194,7 +198,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
-                    Icon = FontAwesome.Solid.Spinner
+                    Icon = FontAwesome.Solid.Spinner,
                 };
             }
 

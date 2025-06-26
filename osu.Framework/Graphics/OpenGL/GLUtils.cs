@@ -29,7 +29,10 @@ namespace osu.Framework.Graphics.OpenGL
                     return PrimitiveType.TriangleStrip;
 
                 default:
-                    throw new ArgumentException($"Unsupported vertex topology: {topology}.", nameof(topology));
+                    throw new ArgumentException(
+                        $"Unsupported vertex topology: {topology}.",
+                        nameof(topology)
+                    );
             }
         }
 
@@ -62,7 +65,10 @@ namespace osu.Framework.Graphics.OpenGL
                     return DepthFunction.Always;
 
                 default:
-                    throw new ArgumentException($"Unsupported depth test function: {testFunction}.", nameof(testFunction));
+                    throw new ArgumentException(
+                        $"Unsupported depth test function: {testFunction}.",
+                        nameof(testFunction)
+                    );
             }
         }
 
@@ -95,7 +101,10 @@ namespace osu.Framework.Graphics.OpenGL
                     return StencilFunction.Always;
 
                 default:
-                    throw new ArgumentException($"Unsupported stencil test function: {testFunction}.", nameof(testFunction));
+                    throw new ArgumentException(
+                        $"Unsupported stencil test function: {testFunction}.",
+                        nameof(testFunction)
+                    );
             }
         }
 
@@ -128,7 +137,10 @@ namespace osu.Framework.Graphics.OpenGL
                     return StencilOp.DecrWrap;
 
                 default:
-                    throw new ArgumentException($"Unsupported stencil operation: {operation}.", nameof(operation));
+                    throw new ArgumentException(
+                        $"Unsupported stencil operation: {operation}.",
+                        nameof(operation)
+                    );
             }
         }
     }

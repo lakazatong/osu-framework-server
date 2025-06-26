@@ -37,19 +37,15 @@ namespace osu.Framework.Testing.Drawables.Steps
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                Light = new Box
-                {
-                    RelativeSizeAxes = Axes.Y,
-                    Width = 5,
-                },
+                Light = new Box { RelativeSizeAxes = Axes.Y, Width = 5 },
                 SpriteText = new SpriteText
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     Font = FrameworkFont.Regular.With(size: 14),
                     X = 5,
-                    Padding = new MarginPadding(5)
-                }
+                    Padding = new MarginPadding(5),
+                },
             };
 
             Height = 20;
@@ -75,7 +71,8 @@ namespace osu.Framework.Testing.Drawables.Steps
             set
             {
                 lightColour = value;
-                if (IsLoaded) Reset();
+                if (IsLoaded)
+                    Reset();
             }
         }
 
@@ -126,7 +123,9 @@ namespace osu.Framework.Testing.Drawables.Steps
 
         protected virtual void Failure()
         {
-            Background.DelayUntilTransformsFinished().FadeColour(new Color4(0.3f, 0.15f, 0.15f, 1), 1000, Easing.OutQuint);
+            Background
+                .DelayUntilTransformsFinished()
+                .FadeColour(new Color4(0.3f, 0.15f, 0.15f, 1), 1000, Easing.OutQuint);
             Light.FadeColour(Color4.Red);
         }
 

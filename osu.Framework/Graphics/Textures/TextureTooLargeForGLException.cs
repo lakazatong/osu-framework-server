@@ -5,7 +5,5 @@ using System;
 
 namespace osu.Framework.Graphics.Textures
 {
-    public class TextureTooLargeForGLException : InvalidOperationException
-    {
-    }
+    public class TextureTooLargeForGLException : InvalidOperationException { }
 }

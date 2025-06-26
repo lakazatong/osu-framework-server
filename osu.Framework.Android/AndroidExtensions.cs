@@ -8,6 +8,7 @@ namespace osu.Framework.Android
 {
     public static class AndroidExtensions
     {
-        public static RectangleI ToRectangleI(this Rect rect) => new RectangleI(rect.Left, rect.Top, rect.Width(), rect.Height());
+        public static RectangleI ToRectangleI(this Rect rect) =>
+            new RectangleI(rect.Left, rect.Top, rect.Width(), rect.Height());
     }
 }

@@ -16,9 +16,13 @@ namespace osu.Framework.Localisation
     {
         public IBindable<LocalisationParameters> CurrentParameters => currentParameters;
 
-        private readonly Bindable<LocalisationParameters> currentParameters = new Bindable<LocalisationParameters>(LocalisationParameters.DEFAULT);
+        private readonly Bindable<LocalisationParameters> currentParameters =
+            new Bindable<LocalisationParameters>(LocalisationParameters.DEFAULT);
 
-        private readonly Dictionary<string, LocaleMapping> locales = new Dictionary<string, LocaleMapping>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, LocaleMapping> locales = new Dictionary<
+            string,
+            LocaleMapping
+        >(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// The first locale added to <see cref="locales"/>.
@@ -32,7 +36,8 @@ namespace osu.Framework.Localisation
         /// The <see cref="LocaleMapping"/> that most closely matches the <see cref="CultureInfoHelper.SystemUICulture"/>, or null iff <see cref="locales"/> is empty.
         /// </summary>
         /// <remarks>This property is cached.</remarks>
-        public LocaleMapping? SystemDefaultLocaleMapping => systemDefaultLocaleMapping ??= getSystemDefaultLocaleMapping();
+        public LocaleMapping? SystemDefaultLocaleMapping =>
+            systemDefaultLocaleMapping ??= getSystemDefaultLocaleMapping();
 
         private readonly Bindable<string> configLocale = new Bindable<string>();
         private readonly Bindable<bool> configPreferUnicode = new BindableBool();
@@ -43,10 +48,15 @@ namespace osu.Framework.Localisation
             configLocale.BindValueChanged(onLocaleChanged);
 
             config.BindWith(FrameworkSetting.ShowUnicode, configPreferUnicode);
-            configPreferUnicode.BindValueChanged(preferUnicode =>
-            {
-                currentParameters.Value = currentParameters.Value.With(preferOriginalScript: preferUnicode.NewValue);
-            }, true);
+            configPreferUnicode.BindValueChanged(
+                preferUnicode =>
+                {
+                    currentParameters.Value = currentParameters.Value.With(
+                        preferOriginalScript: preferUnicode.NewValue
+                    );
+                },
+                true
+            );
         }
 
         /// <summary>
@@ -112,7 +122,8 @@ namespace osu.Framework.Localisation
         /// Creates an <see cref="ILocalisedBindableString"/> which automatically updates its text according to information provided in <see cref="ILocalisedBindableString.Text"/>.
         /// </summary>
         /// <returns>The <see cref="ILocalisedBindableString"/>.</returns>
-        public ILocalisedBindableString GetLocalisedBindableString(LocalisableString original) => new LocalisedBindableString(original, this);
+        public ILocalisedBindableString GetLocalisedBindableString(LocalisableString original) =>
+            new LocalisedBindableString(original, this);
 
         private void onLocaleChanged(ValueChangedEvent<string> locale)
         {
@@ -121,7 +132,10 @@ namespace osu.Framework.Localisation
 
             if (tryGetLocaleMappingForLocale(locale.NewValue, out var localeMapping))
             {
-                currentParameters.Value = new LocalisationParameters(localeMapping.Storage, configPreferUnicode.Value);
+                currentParameters.Value = new LocalisationParameters(
+                    localeMapping.Storage,
+                    configPreferUnicode.Value
+                );
             }
             else
             {
@@ -140,7 +154,10 @@ namespace osu.Framework.Localisation
         /// <param name="locale">Current <see cref="FrameworkSetting.Locale"/>, can be <see cref="string.Empty"/> to return <see cref="SystemDefaultLocaleMapping"/>.</param>
         /// <param name="localeMapping">If valid, <see cref="LocaleMapping"/> with <see cref="LocaleMapping.Name"/> equal to <paramref name="locale"/>, or <see cref="SystemDefaultLocaleMapping"/>.</param>
         /// <returns><c>true</c> if the requested <paramref name="locale"/> is valid was found in <see cref="locales"/>.</returns>
-        private bool tryGetLocaleMappingForLocale(string locale, [NotNullWhen(true)] out LocaleMapping? localeMapping)
+        private bool tryGetLocaleMappingForLocale(
+            string locale,
+            [NotNullWhen(true)] out LocaleMapping? localeMapping
+        )
         {
             Debug.Assert(locales.Count > 0);
 

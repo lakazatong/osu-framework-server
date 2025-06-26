@@ -258,10 +258,7 @@ namespace osu.Framework.Tests.Clocks
         [Test]
         public void TestSeekBeyondLengthWhileDecoupling()
         {
-            source = new TestStopwatchClockWithRangeLimit
-            {
-                MaxTime = 500
-            };
+            source = new TestStopwatchClockWithRangeLimit { MaxTime = 500 };
 
             decouplingClock.ChangeSource(source);
             decouplingClock.AllowDecoupling = true;
@@ -276,10 +273,7 @@ namespace osu.Framework.Tests.Clocks
         [Test]
         public void TestSeekFromNegativeToBeyondLengthWhileDecoupling()
         {
-            source = new TestStopwatchClockWithRangeLimit
-            {
-                MaxTime = 500
-            };
+            source = new TestStopwatchClockWithRangeLimit { MaxTime = 500 };
 
             decouplingClock.ChangeSource(source);
             decouplingClock.AllowDecoupling = true;
@@ -443,10 +437,7 @@ namespace osu.Framework.Tests.Clocks
         [Test]
         public void TestForwardPlaybackOverLengthBoundary()
         {
-            source = new TestStopwatchClockWithRangeLimit
-            {
-                MaxTime = 10000
-            };
+            source = new TestStopwatchClockWithRangeLimit { MaxTime = 10000 };
 
             decouplingClock.ChangeSource(source);
             decouplingClock.AllowDecoupling = true;

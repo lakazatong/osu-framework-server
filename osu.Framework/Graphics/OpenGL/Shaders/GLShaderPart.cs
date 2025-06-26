@@ -16,9 +16,17 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
 {
     internal class GLShaderPart : IShaderPart
     {
-        public static readonly Regex SHADER_INPUT_PATTERN = new Regex(@"^\s*layout\s*\(\s*location\s*=\s*(-?\d+)\s*\)\s*(in\s+(?:(?:lowp|mediump|highp)\s+)?\w+\s+(\w+)\s*;)", RegexOptions.Multiline);
-        private static readonly Regex uniform_pattern = new Regex(@"^(\s*layout\s*\(.*)set\s*=\s*(-?\d)(.*\)\s*(?:(?:readonly\s*)?buffer|uniform))", RegexOptions.Multiline);
-        private static readonly Regex include_pattern = new Regex(@"^\s*#\s*include\s+[""<](.*)["">]");
+        public static readonly Regex SHADER_INPUT_PATTERN = new Regex(
+            @"^\s*layout\s*\(\s*location\s*=\s*(-?\d+)\s*\)\s*(in\s+(?:(?:lowp|mediump|highp)\s+)?\w+\s+(\w+)\s*;)",
+            RegexOptions.Multiline
+        );
+        private static readonly Regex uniform_pattern = new Regex(
+            @"^(\s*layout\s*\(.*)set\s*=\s*(-?\d)(.*\)\s*(?:(?:readonly\s*)?buffer|uniform))",
+            RegexOptions.Multiline
+        );
+        private static readonly Regex include_pattern = new Regex(
+            @"^\s*#\s*include\s+[""<](.*)["">]"
+        );
 
         internal bool Compiled { get; private set; }
 
@@ -31,7 +39,13 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
 
         private int partID = -1;
 
-        public GLShaderPart(GLRenderer renderer, string name, byte[]? data, ShaderType type, IShaderStore store)
+        public GLShaderPart(
+            GLRenderer renderer,
+            string name,
+            byte[]? data,
+            ShaderType type,
+            IShaderStore store
+        )
         {
             this.renderer = renderer;
             this.store = store;
@@ -50,10 +64,15 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
 
             foreach (string code in shaderCodes)
             {
-                minSet = Math.Min(minSet, uniform_pattern.Matches(code)
-                                                         .Where(m => m.Success)
-                                                         .Select(m => int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture))
-                                                         .DefaultIfEmpty(0).Min());
+                minSet = Math.Min(
+                    minSet,
+                    uniform_pattern
+                        .Matches(code)
+                        .Where(m => m.Success)
+                        .Select(m => int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture))
+                        .DefaultIfEmpty(0)
+                        .Min()
+                );
             }
 
             // Increment the binding set of all uniform blocks equal to the absolute value of the minimum set from above.
@@ -63,7 +82,9 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
             {
                 shaderCodes[i] = uniform_pattern.Replace(
                     shaderCodes[i],
-                    match => $"{match.Groups[1].Value}set = {int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) + Math.Abs(minSet)}{match.Groups[3].Value}");
+                    match =>
+                        $"{match.Groups[1].Value}set = {int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) + Math.Abs(minSet)}{match.Groups[3].Value}"
+                );
             }
         }
 
@@ -76,8 +97,12 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
 
             if (mainFile)
             {
-                builder.AppendLine(loadFile(store.GetRawData("Internal/sh_Compatibility.h"), false));
-                builder.AppendLine(loadFile(store.GetRawData("Internal/sh_GlobalUniforms.h"), false));
+                builder.AppendLine(
+                    loadFile(store.GetRawData("Internal/sh_Compatibility.h"), false)
+                );
+                builder.AppendLine(
+                    loadFile(store.GetRawData("Internal/sh_GlobalUniforms.h"), false)
+                );
             }
 
             using (MemoryStream ms = new MemoryStream(bytes))
@@ -124,18 +149,25 @@ namespace osu.Framework.Graphics.OpenGL.Shaders
 
                 string code = builder.ToString();
 
-                if (!mainFile) return code;
+                if (!mainFile)
+                    return code;
 
                 if (Type == ShaderType.VertexShader)
                 {
-                    string backbufferCode = loadFile(store.GetRawData("Internal/sh_Vertex_Output.h"), false);
+                    string backbufferCode = loadFile(
+                        store.GetRawData("Internal/sh_Vertex_Output.h"),
+                        false
+                    );
 
                     if (!string.IsNullOrEmpty(backbufferCode))
                     {
                         const string real_main_name = "__internal_real_main";
 
                         backbufferCode = backbufferCode.Replace("{{ real_main }}", real_main_name);
-                        code = Regex.Replace(code, @"void main\((.*)\)", $"void {real_main_name}()") + backbufferCode + '\n';
+                        code =
+                            Regex.Replace(code, @"void main\((.*)\)", $"void {real_main_name}()")
+                            + backbufferCode
+                            + '\n';
                     }
                 }
 

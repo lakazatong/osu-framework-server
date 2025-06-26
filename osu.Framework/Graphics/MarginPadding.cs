@@ -1,10 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
 using System;
 using osu.Framework.Graphics.Transforms;
 using osu.Framework.Utils;
+using osuTK;
 
 namespace osu.Framework.Graphics
 {
@@ -82,7 +82,11 @@ namespace osu.Framework.Graphics
             Top = Left = Bottom = Right = allSides;
         }
 
-        public readonly bool Equals(MarginPadding other) => Top == other.Top && Left == other.Left && Bottom == other.Bottom && Right == other.Right;
+        public readonly bool Equals(MarginPadding other) =>
+            Top == other.Top
+            && Left == other.Left
+            && Bottom == other.Bottom
+            && Right == other.Right;
 
         public override readonly string ToString() => $@"({Top}, {Left}, {Bottom}, {Right})";
 
@@ -104,14 +108,49 @@ namespace osu.Framework.Graphics
                 Bottom = mp.Bottom * v.Y,
             };
 
-        public MarginPadding ValueAt<TEasing>(double time, MarginPadding startValue, MarginPadding endValue, double startTime, double endTime, in TEasing easing)
-            where TEasing : IEasingFunction
-            => new MarginPadding
+        public MarginPadding ValueAt<TEasing>(
+            double time,
+            MarginPadding startValue,
+            MarginPadding endValue,
+            double startTime,
+            double endTime,
+            in TEasing easing
+        )
+            where TEasing : IEasingFunction =>
+            new MarginPadding
             {
-                Left = Interpolation.ValueAt(time, startValue.Left, endValue.Left, startTime, endTime, easing),
-                Top = Interpolation.ValueAt(time, startValue.Top, endValue.Top, startTime, endTime, easing),
-                Right = Interpolation.ValueAt(time, startValue.Right, endValue.Right, startTime, endTime, easing),
-                Bottom = Interpolation.ValueAt(time, startValue.Bottom, endValue.Bottom, startTime, endTime, easing),
+                Left = Interpolation.ValueAt(
+                    time,
+                    startValue.Left,
+                    endValue.Left,
+                    startTime,
+                    endTime,
+                    easing
+                ),
+                Top = Interpolation.ValueAt(
+                    time,
+                    startValue.Top,
+                    endValue.Top,
+                    startTime,
+                    endTime,
+                    easing
+                ),
+                Right = Interpolation.ValueAt(
+                    time,
+                    startValue.Right,
+                    endValue.Right,
+                    startTime,
+                    endTime,
+                    easing
+                ),
+                Bottom = Interpolation.ValueAt(
+                    time,
+                    startValue.Bottom,
+                    endValue.Bottom,
+                    startTime,
+                    endTime,
+                    easing
+                ),
             };
     }
 }

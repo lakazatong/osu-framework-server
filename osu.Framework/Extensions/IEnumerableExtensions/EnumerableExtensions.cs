@@ -19,7 +19,8 @@ namespace osu.Framework.Extensions.IEnumerableExtensions
         /// <param name="action">The action to be performed.</param>
         public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
         {
-            if (collection == null) return;
+            if (collection == null)
+                return;
 
             foreach (var item in collection)
                 action(item);
@@ -43,7 +44,10 @@ namespace osu.Framework.Extensions.IEnumerableExtensions
         /// <returns>The item in <paramref name="collection"/> appearing after <paramref name="pivot"/>, or null if no such item exists.</returns>
         public static T GetNext<T>(this IEnumerable<T> collection, T pivot)
         {
-            return collection.SkipWhile(i => !EqualityComparer<T>.Default.Equals(i, pivot)).Skip(1).FirstOrDefault();
+            return collection
+                .SkipWhile(i => !EqualityComparer<T>.Default.Equals(i, pivot))
+                .Skip(1)
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -53,8 +57,8 @@ namespace osu.Framework.Extensions.IEnumerableExtensions
         /// <param name="collection">The collection to iterate on.</param>
         /// <param name="pivot">The pivot value.</param>
         /// <returns>The item in <paramref name="collection"/> appearing before <paramref name="pivot"/>, or null if no such item exists.</returns>
-        public static T GetPrevious<T>(this IEnumerable<T> collection, T pivot)
-            => collection.Reverse().GetNext(pivot);
+        public static T GetPrevious<T>(this IEnumerable<T> collection, T pivot) =>
+            collection.Reverse().GetNext(pivot);
 
         /// <summary>
         /// Returns the most common prefix of every string in this <see cref="IEnumerable{T}"/>
@@ -94,7 +98,9 @@ namespace osu.Framework.Extensions.IEnumerableExtensions
         /// <summary>
         /// Get all combinations of provided sequences.
         /// </summary>
-        public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(this IEnumerable<IEnumerable<T>> sequences)
+        public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(
+            this IEnumerable<IEnumerable<T>> sequences
+        )
         {
             // https://stackoverflow.com/a/3098381
             IEnumerable<IEnumerable<T>> emptyProduct = new[] { Enumerable.Empty<T>() };

@@ -13,34 +13,39 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            CreateMenu(() => new TestMenu
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                State = MenuState.Open,
-                Items = new[] { new MenuItem("Item #1") { Items = new[] { new MenuItem("Sub-item #1", () => { }) } } }
-            });
+            CreateMenu(() =>
+                new TestMenu
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    State = MenuState.Open,
+                    Items = new[]
+                    {
+                        new MenuItem("Item #1")
+                        {
+                            Items = new[] { new MenuItem("Sub-item #1", () => { }) },
+                        },
+                    },
+                }
+            );
         }
 
         private partial class TestMenu : BasicMenu
         {
-            protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) => new TestDrawableMenuItem(item);
+            protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) =>
+                new TestDrawableMenuItem(item);
 
             protected override Menu CreateSubMenu() => new TestMenu();
 
             public TestMenu()
-                : base(Direction.Vertical)
-            {
-            }
+                : base(Direction.Vertical) { }
 
             private partial class TestDrawableMenuItem : BasicDrawableMenuItem
             {
                 public override bool CloseMenuOnClick => false;
 
                 public TestDrawableMenuItem(MenuItem item)
-                    : base(item)
-                {
-                }
+                    : base(item) { }
             }
         }
 
@@ -49,9 +54,12 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             AddStep("click item", () => ClickItem(0, 0));
             AddStep("click item", () => ClickItem(1, 0));
-            AddAssert("menu not closed", () =>
-                Menus.GetSubMenu(0).State == MenuState.Open &&
-                Menus.GetSubMenu(1).State == MenuState.Open);
+            AddAssert(
+                "menu not closed",
+                () =>
+                    Menus.GetSubMenu(0).State == MenuState.Open
+                    && Menus.GetSubMenu(1).State == MenuState.Open
+            );
         }
     }
 }

@@ -12,7 +12,8 @@ namespace osu.Framework.Tests.Visual.Performance
     public partial class TestSceneBlendingPerformance : RepeatedDrawablePerformanceTestScene
     {
         private readonly BindableFloat alpha = new BindableFloat();
-        private readonly Bindable<BlendingParameters> blendingParameters = new Bindable<BlendingParameters>();
+        private readonly Bindable<BlendingParameters> blendingParameters =
+            new Bindable<BlendingParameters>();
 
         protected override void LoadComplete()
         {
@@ -22,19 +23,27 @@ namespace osu.Framework.Tests.Visual.Performance
             AddSliderStep("spacing", -20, 20f, -1f, v => Flow.Spacing = new Vector2(v));
             AddSliderStep("alpha", 0f, 1f, 0.9f, v => alpha.Value = v);
             AddStep("disable blending", () => blendingParameters.Value = BlendingParameters.None);
-            AddStep("set additive blending", () => blendingParameters.Value = BlendingParameters.Additive);
-            AddStep("set mixture blending", () => blendingParameters.Value = BlendingParameters.Mixture);
+            AddStep(
+                "set additive blending",
+                () => blendingParameters.Value = BlendingParameters.Additive
+            );
+            AddStep(
+                "set mixture blending",
+                () => blendingParameters.Value = BlendingParameters.Mixture
+            );
         }
 
-        protected override Drawable CreateDrawable() => new TestBlendingBox
-        {
-            BlendingParameters = { BindTarget = blendingParameters },
-            AlphaBindable = { BindTarget = alpha },
-        };
+        protected override Drawable CreateDrawable() =>
+            new TestBlendingBox
+            {
+                BlendingParameters = { BindTarget = blendingParameters },
+                AlphaBindable = { BindTarget = alpha },
+            };
 
         private partial class TestBlendingBox : Box
         {
-            public readonly IBindable<BlendingParameters> BlendingParameters = new Bindable<BlendingParameters>();
+            public readonly IBindable<BlendingParameters> BlendingParameters =
+                new Bindable<BlendingParameters>();
             public readonly IBindable<float> AlphaBindable = new Bindable<float>();
 
             [BackgroundDependencyLoader]

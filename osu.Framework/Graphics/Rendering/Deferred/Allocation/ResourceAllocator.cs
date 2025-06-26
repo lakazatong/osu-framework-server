@@ -109,7 +109,9 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
             ThreadSafety.EnsureDrawThread();
 
             if (memoryBuffers.Count == 0 || memoryBuffers[^1].Remaining < length)
-                memoryBuffers.Add(new MemoryBuffer(memoryBuffers.Count, Math.Max(min_buffer_size, length)));
+                memoryBuffers.Add(
+                    new MemoryBuffer(memoryBuffers.Count, Math.Max(min_buffer_size, length))
+                );
 
             return memoryBuffers[^1].Reserve(length);
         }
@@ -128,7 +130,10 @@ namespace osu.Framework.Graphics.Rendering.Deferred.Allocation
 
         private class MemoryBuffer : IDisposable
         {
-            private static readonly GlobalStatistic<long> statistic = GlobalStatistics.Get<long>(nameof(ResourceAllocator), "Total Bytes");
+            private static readonly GlobalStatistic<long> statistic = GlobalStatistics.Get<long>(
+                nameof(ResourceAllocator),
+                "Total Bytes"
+            );
 
             public readonly int Id;
             public int Size => buffer.Length;

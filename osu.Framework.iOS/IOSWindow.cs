@@ -10,8 +10,8 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Framework.Platform.SDL3;
-using static SDL.SDL3;
 using UIKit;
+using static SDL.SDL3;
 
 namespace osu.Framework.iOS
 {
@@ -32,9 +32,7 @@ namespace osu.Framework.iOS
         }
 
         public IOSWindow(GraphicsSurfaceType surfaceType, string appName)
-            : base(surfaceType, appName)
-        {
-        }
+            : base(surfaceType, appName) { }
 
         public override void Create()
         {

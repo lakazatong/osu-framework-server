@@ -88,13 +88,14 @@ namespace osu.Framework.Tests.Visual.Performance
                     TopLeft = RandomiseColour.Value ? getRandomColour() : Color4.Red,
                     TopRight = RandomiseColour.Value ? getRandomColour() : Color4.Blue,
                     BottomLeft = RandomiseColour.Value ? getRandomColour() : Color4.Green,
-                    BottomRight = RandomiseColour.Value ? getRandomColour() : Color4.Yellow
+                    BottomRight = RandomiseColour.Value ? getRandomColour() : Color4.Yellow,
                 };
             }
             else
                 drawable.Colour = RandomiseColour.Value ? getRandomColour() : Color4.White;
         }
 
-        private Colour4 getRandomColour() => new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1f);
+        private Colour4 getRandomColour() =>
+            new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1f);
     }
 }

@@ -31,70 +31,74 @@ namespace osu.Framework.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create popover container", () =>
-            {
-                Child = popoverWrapper = new Container
+            AddStep(
+                "create popover container",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Masking = true,
-                    BorderThickness = 5,
-                    BorderColour = Colour4.White,
-                    Children = new Drawable[]
+                    Child = popoverWrapper = new Container
                     {
-                        new Box
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Masking = true,
+                        BorderThickness = 5,
+                        BorderColour = Colour4.White,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            AlwaysPresent = true,
-                            Colour = Colour4.Transparent
-                        },
-                        popoverContainer = new PopoverContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Padding = new MarginPadding(5),
-                            Children = new Drawable[]
+                            new Box
                             {
-                                new ClickableContainer
+                                RelativeSizeAxes = Axes.Both,
+                                AlwaysPresent = true,
+                                Colour = Colour4.Transparent,
+                            },
+                            popoverContainer = new PopoverContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Padding = new MarginPadding(5),
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Size = new Vector2(0.5f),
-                                    Children = new Drawable[]
+                                    new ClickableContainer
                                     {
-                                        new Box
+                                        RelativeSizeAxes = Axes.Both,
+                                        Size = new Vector2(0.5f),
+                                        Children = new Drawable[]
                                         {
-                                            Colour = Color4.Blue,
-                                            RelativeSizeAxes = Axes.Both,
+                                            new Box
+                                            {
+                                                Colour = Color4.Blue,
+                                                RelativeSizeAxes = Axes.Both,
+                                            },
+                                            new TextFlowContainer
+                                            {
+                                                AutoSizeAxes = Axes.X,
+                                                TextAnchor = Anchor.TopCentre,
+                                                Anchor = Anchor.Centre,
+                                                Origin = Anchor.Centre,
+                                                Text =
+                                                    "click blocking container between\nPopover creator and PopoverContainer",
+                                            },
                                         },
-                                        new TextFlowContainer
-                                        {
-                                            AutoSizeAxes = Axes.X,
-                                            TextAnchor = Anchor.TopCentre,
-                                            Anchor = Anchor.Centre,
-                                            Origin = Anchor.Centre,
-                                            Text = "click blocking container between\nPopover creator and PopoverContainer"
-                                        }
-                                    }
+                                    },
+                                    gridContainer = new GridContainer
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
                                 },
-                                gridContainer = new GridContainer
-                                {
-                                    RelativeSizeAxes = Axes.Both
-                                }
-                            }
-                        }
+                            },
+                        },
+                    };
+
+                    cells = new Container[3, 3];
+
+                    for (int r = 0; r < 3; r++)
+                    {
+                        for (int c = 0; c < 3; c++)
+                            cells[r, c] = new Container { RelativeSizeAxes = Axes.Both };
                     }
-                };
 
-                cells = new Container[3, 3];
-
-                for (int r = 0; r < 3; r++)
-                {
-                    for (int c = 0; c < 3; c++)
-                        cells[r, c] = new Container { RelativeSizeAxes = Axes.Both };
+                    gridContainer.Content = cells.ToJagged();
                 }
-
-                gridContainer.Content = cells.ToJagged();
-            });
+            );
         }
 
         [Test]
@@ -102,32 +106,55 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             createContent(button => new BasicPopover
             {
-                Child = new SpriteText
+                Child = new SpriteText { Text = $"{button.Anchor} popover" },
+            });
+
+            AddStep(
+                "click button",
+                () =>
                 {
-                    Text = $"{button.Anchor} popover"
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
+                    InputManager.Click(MouseButton.Left);
                 }
-            });
+            );
+            AddAssert(
+                "popover shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("popover shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddStep(
+                "click popover",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().Single().Body);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "popover still visible",
+                () => this.ChildrenOfType<Popover>().Single().State.Value == Visibility.Visible
+            );
 
-            AddStep("click popover", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().Single().Body);
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("popover still visible", () => this.ChildrenOfType<Popover>().Single().State.Value == Visibility.Visible);
-
-            AddStep("click away", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First().ScreenSpaceDrawQuad.BottomRight + new Vector2(10));
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("all hidden", () => this.ChildrenOfType<Popover>().All(popover => popover.State.Value != Visibility.Visible));
+            AddStep(
+                "click away",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<DrawableWithPopover>()
+                            .First()
+                            .ScreenSpaceDrawQuad.BottomRight + new Vector2(10)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "all hidden",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .All(popover => popover.State.Value != Visibility.Visible)
+            );
         }
 
         [Test]
@@ -135,21 +162,31 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             createContent(button => new BasicPopover
             {
-                Child = new SpriteText
-                {
-                    Text = $"{button.Anchor} popover"
-                }
+                Child = new SpriteText { Text = $"{button.Anchor} popover" },
             });
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
-                InputManager.Click(MouseButton.Left);
-            });
-            AddAssert("popover shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "popover shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
 
             AddStep("press Escape", () => InputManager.Key(Key.Escape));
-            AddAssert("all hidden", () => this.ChildrenOfType<Popover>().All(popover => popover.State.Value != Visibility.Visible));
+            AddAssert(
+                "all hidden",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .All(popover => popover.State.Value != Visibility.Visible)
+            );
         }
 
         [Test]
@@ -157,17 +194,27 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             createContent(button => new BasicPopover
             {
-                Child = new SpriteText
-                {
-                    Text = $"{button.Anchor} popover"
-                }
+                Child = new SpriteText { Text = $"{button.Anchor} popover" },
             });
 
-            AddStep("show popover manually", () => this.ChildrenOfType<DrawableWithPopover>().First().ShowPopover());
-            AddAssert("popover shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddStep(
+                "show popover manually",
+                () => this.ChildrenOfType<DrawableWithPopover>().First().ShowPopover()
+            );
+            AddAssert(
+                "popover shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
 
             AddStep("hide popover manually", () => popoverContainer.HidePopover());
-            AddAssert("all hidden", () => this.ChildrenOfType<Popover>().All(popover => popover.State.Value != Visibility.Visible));
+            AddAssert(
+                "all hidden",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .All(popover => popover.State.Value != Visibility.Visible)
+            );
         }
 
         [Test]
@@ -176,27 +223,36 @@ namespace osu.Framework.Tests.Visual.UserInterface
             createContent(button => new BasicPopover
             {
                 Name = button.Anchor.ToString(),
-                Child = new SpriteText
+                Child = new SpriteText { Text = $"{button.Anchor} popover" },
+            });
+
+            AddStep(
+                "click button",
+                () =>
                 {
-                    Text = $"{button.Anchor} popover"
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
+                    InputManager.Click(MouseButton.Left);
                 }
-            });
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddAssert(
+                "first shown",
+                () => this.ChildrenOfType<Popover>().Single().Name == Anchor.TopLeft.ToString()
+            );
 
-            AddAssert("first shown", () => this.ChildrenOfType<Popover>().Single().Name == Anchor.TopLeft.ToString());
+            AddStep(
+                "click last button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().Last());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddStep("click last button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().Last());
-                InputManager.Click(MouseButton.Left);
-            });
-
-            AddAssert("last shown", () => this.ChildrenOfType<Popover>().Single().Name == Anchor.BottomRight.ToString());
+            AddAssert(
+                "last shown",
+                () => this.ChildrenOfType<Popover>().Single().Name == Anchor.BottomRight.ToString()
+            );
         }
 
         [Test]
@@ -204,32 +260,51 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             createContent(button => new BasicPopover
             {
-                Child = new SpriteText
+                Child = new SpriteText { Text = $"{button.Anchor} popover" },
+            });
+
+            AddStep(
+                "click button",
+                () =>
                 {
-                    Text = $"{button.Anchor} popover"
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
+                    InputManager.Click(MouseButton.Left);
                 }
-            });
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddAssert(
+                "popover shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
 
-            AddAssert("popover shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddStep(
+                "mousedown popover",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().Single().Body);
+                    InputManager.PressButton(MouseButton.Left);
+                }
+            );
+            AddAssert(
+                "popover still visible",
+                () => this.ChildrenOfType<Popover>().Single().State.Value == Visibility.Visible
+            );
 
-            AddStep("mousedown popover", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().Single().Body);
-                InputManager.PressButton(MouseButton.Left);
-            });
-            AddAssert("popover still visible", () => this.ChildrenOfType<Popover>().Single().State.Value == Visibility.Visible);
-
-            AddStep("move away", () => InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().Last()));
+            AddStep(
+                "move away",
+                () => InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().Last())
+            );
 
             AddStep("release button", () => InputManager.ReleaseButton(MouseButton.Left));
 
-            AddAssert("popover remains", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddAssert(
+                "popover remains",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
         }
 
         [Test]
@@ -253,44 +328,71 @@ namespace osu.Framework.Tests.Visual.UserInterface
                             {
                                 PlaceholderText = $"{button.Anchor} text box",
                                 Height = 30,
-                                RelativeSizeAxes = Axes.X
+                                RelativeSizeAxes = Axes.X,
                             },
                             new BasicButton
                             {
                                 RelativeSizeAxes = Axes.X,
                                 Height = 30,
                                 Text = "Clear",
-                                Action = () => textBox.Text = string.Empty
-                            }
-                        }
-                    }
+                                Action = () => textBox.Text = string.Empty,
+                            },
+                        },
+                    },
                 };
             });
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<DrawableWithPopover>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
-            AddAssert("popover shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddAssert(
+                "popover shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
 
-            AddStep("click textbox", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<TextBox>().First());
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click textbox",
+                () =>
+                {
+                    InputManager.MoveMouseTo(this.ChildrenOfType<TextBox>().First());
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("textbox is focused", () => InputManager.FocusedDrawable is TextBox);
-            AddAssert("popover still shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
-            AddStep("click in popover", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().First().Body.ScreenSpaceDrawQuad.TopLeft + Vector2.One);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddAssert(
+                "popover still shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
+            AddStep(
+                "click in popover",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        this.ChildrenOfType<Popover>().First().Body.ScreenSpaceDrawQuad.TopLeft
+                            + Vector2.One
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("popover is focused", () => InputManager.FocusedDrawable is Popover);
-            AddAssert("popover still shown", () => this.ChildrenOfType<Popover>().Any(popover => popover.State.Value == Visibility.Visible));
+            AddAssert(
+                "popover still shown",
+                () =>
+                    this.ChildrenOfType<Popover>()
+                        .Any(popover => popover.State.Value == Visibility.Visible)
+            );
         }
 
         [Test]
@@ -298,80 +400,115 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             DrawableWithPopover target = null!;
 
-            AddStep("add button", () => popoverContainer.Child = target = new DrawableWithPopover
-            {
-                Width = 200,
-                Height = 30,
-                RelativePositionAxes = Axes.Both,
-                Text = "open",
-                CreateContent = _ => new BasicPopover
+            AddStep(
+                "add button",
+                () =>
+                    popoverContainer.Child = target =
+                        new DrawableWithPopover
+                        {
+                            Width = 200,
+                            Height = 30,
+                            RelativePositionAxes = Axes.Both,
+                            Text = "open",
+                            CreateContent = _ => new BasicPopover
+                            {
+                                Child = new SpriteText
+                                {
+                                    Text = "This popover follows its associated UI component",
+                                    Size = new Vector2(400),
+                                },
+                            },
+                        }
+            );
+
+            AddSliderStep(
+                "move X",
+                0f,
+                1,
+                0,
+                x =>
                 {
-                    Child = new SpriteText
-                    {
-                        Text = "This popover follows its associated UI component",
-                        Size = new Vector2(400)
-                    }
+                    if (target.IsNotNull())
+                        target.X = x;
                 }
-            });
+            );
 
-            AddSliderStep("move X", 0f, 1, 0, x =>
-            {
-                if (target.IsNotNull())
-                    target.X = x;
-            });
+            AddSliderStep(
+                "move Y",
+                0f,
+                1,
+                0,
+                y =>
+                {
+                    if (target.IsNotNull())
+                        target.Y = y;
+                }
+            );
 
-            AddSliderStep("move Y", 0f, 1, 0, y =>
-            {
-                if (target.IsNotNull())
-                    target.Y = y;
-            });
+            AddSliderStep(
+                "container width",
+                0f,
+                1,
+                1,
+                width =>
+                {
+                    if (popoverWrapper.IsNotNull())
+                        popoverWrapper.Width = width;
+                }
+            );
 
-            AddSliderStep("container width", 0f, 1, 1, width =>
-            {
-                if (popoverWrapper.IsNotNull())
-                    popoverWrapper.Width = width;
-            });
-
-            AddSliderStep("container height", 0f, 1, 1, height =>
-            {
-                if (popoverWrapper.IsNotNull())
-                    popoverWrapper.Height = height;
-            });
+            AddSliderStep(
+                "container height",
+                0f,
+                1,
+                1,
+                height =>
+                {
+                    if (popoverWrapper.IsNotNull())
+                        popoverWrapper.Height = height;
+                }
+            );
         }
 
         [Test]
         public void TestAutoSize()
         {
-            AddStep("create content", () =>
-            {
-                popoverWrapper.RelativeSizeAxes = popoverContainer.RelativeSizeAxes = Axes.X;
-                popoverWrapper.AutoSizeAxes = popoverContainer.AutoSizeAxes = Axes.Y;
-
-                popoverContainer.Child = new Container
+            AddStep(
+                "create content",
+                () =>
                 {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 200,
-                    Child = new DrawableWithPopover
-                    {
-                        Width = 200,
-                        Height = 30,
-                        Text = "open",
-                        CreateContent = _ => new BasicPopover
-                        {
-                            Child = new SpriteText
-                            {
-                                Text = "I'm in an auto-sized container!"
-                            }
-                        }
-                    }
-                };
-            });
+                    popoverWrapper.RelativeSizeAxes = popoverContainer.RelativeSizeAxes = Axes.X;
+                    popoverWrapper.AutoSizeAxes = popoverContainer.AutoSizeAxes = Axes.Y;
 
-            AddSliderStep("change content height", 100, 500, 200, height =>
-            {
-                if (popoverContainer.IsNotNull() && popoverContainer.Children.Count == 1)
-                    popoverContainer.Child.Height = height;
-            });
+                    popoverContainer.Child = new Container
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 200,
+                        Child = new DrawableWithPopover
+                        {
+                            Width = 200,
+                            Height = 30,
+                            Text = "open",
+                            CreateContent = _ => new BasicPopover
+                            {
+                                Child = new SpriteText { Text = "I'm in an auto-sized container!" },
+                            },
+                        },
+                    };
+                }
+            );
+
+            AddSliderStep(
+                "change content height",
+                100,
+                500,
+                200,
+                height =>
+                {
+                    if (popoverContainer.IsNotNull() && popoverContainer.Children.Count == 1)
+                        popoverContainer.Child.Height = height;
+                }
+            );
         }
 
         [Test]
@@ -379,24 +516,33 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             TextBoxWithPopover target = null!;
 
-            AddStep("create content", () =>
-            {
-                popoverContainer.Child = target = new TextBoxWithPopover
+            AddStep(
+                "create content",
+                () =>
                 {
-                    Width = 200,
-                    Height = 30,
-                    PlaceholderText = "focus to show popover"
-                };
-            });
+                    popoverContainer.Child = target = new TextBoxWithPopover
+                    {
+                        Width = 200,
+                        Height = 30,
+                        PlaceholderText = "focus to show popover",
+                    };
+                }
+            );
 
-            AddStep("click text box", () =>
-            {
-                InputManager.MoveMouseTo(target);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click text box",
+                () =>
+                {
+                    InputManager.MoveMouseTo(target);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("popover shown", () => this.ChildrenOfType<Popover>().Any());
 
-            AddStep("take away text box focus", () => ((IFocusManager)InputManager).ChangeFocus(null));
+            AddStep(
+                "take away text box focus",
+                () => ((IFocusManager)InputManager).ChangeFocus(null)
+            );
             AddAssert("popover hidden", () => !this.ChildrenOfType<Popover>().Any());
         }
 
@@ -405,27 +551,36 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             DrawableWithPopover target = null!;
 
-            AddStep("add button", () => popoverContainer.Child = target = new DrawableWithPopover
-            {
-                Width = 200,
-                Height = 30,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Text = "open",
-                CreateContent = _ => new BasicPopover
-                {
-                    Child = new SpriteText
-                    {
-                        Text = "This popover should be cleaned up when its button is removed",
-                    }
-                }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    popoverContainer.Child = target =
+                        new DrawableWithPopover
+                        {
+                            Width = 200,
+                            Height = 30,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Text = "open",
+                            CreateContent = _ => new BasicPopover
+                            {
+                                Child = new SpriteText
+                                {
+                                    Text =
+                                        "This popover should be cleaned up when its button is removed",
+                                },
+                            },
+                        }
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(target);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(target);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("popover created", () => this.ChildrenOfType<Popover>().Any());
 
             AddStep("dispose of button", () => popoverContainer.Clear());
@@ -437,27 +592,36 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             DrawableWithPopover target = null!;
 
-            AddStep("add button", () => popoverContainer.Child = target = new DrawableWithPopover
-            {
-                Width = 200,
-                Height = 30,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Text = "open",
-                CreateContent = _ => new BasicPopover
-                {
-                    Child = new SpriteText
-                    {
-                        Text = "This popover should be cleaned up when its button is hidden",
-                    }
-                }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    popoverContainer.Child = target =
+                        new DrawableWithPopover
+                        {
+                            Width = 200,
+                            Height = 30,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Text = "open",
+                            CreateContent = _ => new BasicPopover
+                            {
+                                Child = new SpriteText
+                                {
+                                    Text =
+                                        "This popover should be cleaned up when its button is hidden",
+                                },
+                            },
+                        }
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(target);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(target);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
             AddAssert("popover created", () => this.ChildrenOfType<Popover>().Any());
 
             AddStep("hide button", () => target.Hide());
@@ -470,52 +634,76 @@ namespace osu.Framework.Tests.Visual.UserInterface
             EventHandlingContainer eventHandlingContainer = null!;
             DrawableWithPopover target = null!;
 
-            AddStep("add button", () => popoverContainer.Child = eventHandlingContainer = new EventHandlingContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = target = new DrawableWithPopover
-                {
-                    Width = 200,
-                    Height = 30,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Text = "open",
-                    CreateContent = _ => new BasicPopover
-                    {
-                        Child = new SpriteText
+            AddStep(
+                "add button",
+                () =>
+                    popoverContainer.Child = eventHandlingContainer =
+                        new EventHandlingContainer
                         {
-                            Text = "This popover should be handle hover and click events",
+                            RelativeSizeAxes = Axes.Both,
+                            Child = target =
+                                new DrawableWithPopover
+                                {
+                                    Width = 200,
+                                    Height = 30,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Text = "open",
+                                    CreateContent = _ => new BasicPopover
+                                    {
+                                        Child = new SpriteText
+                                        {
+                                            Text =
+                                                "This popover should be handle hover and click events",
+                                        },
+                                    },
+                                },
                         }
-                    }
-                }
-            });
+            );
 
-            AddStep("click button", () =>
-            {
-                InputManager.MoveMouseTo(target);
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "click button",
+                () =>
+                {
+                    InputManager.MoveMouseTo(target);
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("container received hover", () => eventHandlingContainer.HoverReceived);
 
             AddAssert("popover created", () => this.ChildrenOfType<Popover>().Any());
 
-            AddStep("mouse over popover", () =>
-            {
-                eventHandlingContainer.Reset();
-                InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().Single().Body);
-            });
+            AddStep(
+                "mouse over popover",
+                () =>
+                {
+                    eventHandlingContainer.Reset();
+                    InputManager.MoveMouseTo(this.ChildrenOfType<Popover>().Single().Body);
+                }
+            );
 
-            AddAssert("container did not receive hover", () => !eventHandlingContainer.HoverReceived);
+            AddAssert(
+                "container did not receive hover",
+                () => !eventHandlingContainer.HoverReceived
+            );
 
             AddStep("click on popover", () => InputManager.Click(MouseButton.Left));
-            AddAssert("container did not receive click", () => !eventHandlingContainer.ClickReceived);
+            AddAssert(
+                "container did not receive click",
+                () => !eventHandlingContainer.ClickReceived
+            );
 
-            AddStep("dismiss popover", () =>
-            {
-                InputManager.MoveMouseTo(eventHandlingContainer.ScreenSpaceDrawQuad.TopLeft + new Vector2(10));
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep(
+                "dismiss popover",
+                () =>
+                {
+                    InputManager.MoveMouseTo(
+                        eventHandlingContainer.ScreenSpaceDrawQuad.TopLeft + new Vector2(10)
+                    );
+                    InputManager.Click(MouseButton.Left);
+                }
+            );
 
             AddAssert("container received hover", () => eventHandlingContainer.HoverReceived);
             AddStep("click again", () => InputManager.Click(MouseButton.Left));
@@ -527,49 +715,78 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             DrawableWithPopover target = null!;
 
-            AddStep("add button", () => popoverContainer.Child = target = new DrawableWithPopover
-            {
-                Width = 200,
-                Height = 30,
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
-                RelativePositionAxes = Axes.Both,
-                Text = "open",
-            });
+            AddStep(
+                "add button",
+                () =>
+                    popoverContainer.Child = target =
+                        new DrawableWithPopover
+                        {
+                            Width = 200,
+                            Height = 30,
+                            Anchor = Anchor.TopLeft,
+                            Origin = Anchor.TopLeft,
+                            RelativePositionAxes = Axes.Both,
+                            Text = "open",
+                        }
+            );
 
-            AddStep("allow popover to only show above & below", () =>
-            {
-                target.HidePopover();
-                target.CreateContent = _ => new BasicPopover
+            AddStep(
+                "allow popover to only show above & below",
+                () =>
                 {
-                    AllowableAnchors = new[] { Anchor.TopCentre, Anchor.BottomCentre },
-                    Child = new SpriteText { Text = "This popover can only be shown above or below" }
-                };
-                target.ShowPopover();
-            });
+                    target.HidePopover();
+                    target.CreateContent = _ => new BasicPopover
+                    {
+                        AllowableAnchors = new[] { Anchor.TopCentre, Anchor.BottomCentre },
+                        Child = new SpriteText
+                        {
+                            Text = "This popover can only be shown above or below",
+                        },
+                    };
+                    target.ShowPopover();
+                }
+            );
 
-            AddStep("allow popover to only show to the sides", () =>
-            {
-                target.HidePopover();
-                target.CreateContent = _ => new BasicPopover
+            AddStep(
+                "allow popover to only show to the sides",
+                () =>
                 {
-                    AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight },
-                    Child = new SpriteText { Text = "This popover can only be shown to the sides" }
-                };
-                target.ShowPopover();
-            });
+                    target.HidePopover();
+                    target.CreateContent = _ => new BasicPopover
+                    {
+                        AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight },
+                        Child = new SpriteText
+                        {
+                            Text = "This popover can only be shown to the sides",
+                        },
+                    };
+                    target.ShowPopover();
+                }
+            );
 
-            AddSliderStep("move X", 0f, 1, 0, x =>
-            {
-                if (target.IsNotNull())
-                    target.X = x;
-            });
+            AddSliderStep(
+                "move X",
+                0f,
+                1,
+                0,
+                x =>
+                {
+                    if (target.IsNotNull())
+                        target.X = x;
+                }
+            );
 
-            AddSliderStep("move Y", 0f, 1, 0, y =>
-            {
-                if (target.IsNotNull())
-                    target.Y = y;
-            });
+            AddSliderStep(
+                "move Y",
+                0f,
+                1,
+                0,
+                y =>
+                {
+                    if (target.IsNotNull())
+                        target.Y = y;
+                }
+            );
         }
 
         [Test]
@@ -577,52 +794,61 @@ namespace osu.Framework.Tests.Visual.UserInterface
         {
             DrawableWithPopover target = null!;
 
-            AddStep("add button", () => popoverContainer.Child = target = new DrawableWithPopover
-            {
-                Width = 200,
-                Height = 30,
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
-                RelativePositionAxes = Axes.Both,
-                Text = "open",
-                CreateContent = _ => new BasicPopover
-                {
-                    AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight },
-                    Child = new SpriteText { Text = "no twitching!" }
-                }
-            });
+            AddStep(
+                "add button",
+                () =>
+                    popoverContainer.Child = target =
+                        new DrawableWithPopover
+                        {
+                            Width = 200,
+                            Height = 30,
+                            Anchor = Anchor.TopLeft,
+                            Origin = Anchor.TopLeft,
+                            RelativePositionAxes = Axes.Both,
+                            Text = "open",
+                            CreateContent = _ => new BasicPopover
+                            {
+                                AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight },
+                                Child = new SpriteText { Text = "no twitching!" },
+                            },
+                        }
+            );
 
             AddStep("show popover", () => target.ShowPopover());
             AddStep("move off screen", () => target.Y = 20);
         }
 
-        private void createContent(Func<DrawableWithPopover, Popover> creationFunc)
-            => AddStep("create content", () =>
-            {
-                for (int i = 0; i < 3; ++i)
+        private void createContent(Func<DrawableWithPopover, Popover> creationFunc) =>
+            AddStep(
+                "create content",
+                () =>
                 {
-                    for (int j = 0; j < 3; ++j)
+                    for (int i = 0; i < 3; ++i)
                     {
-                        Anchor popoverAnchor = 0;
-                        popoverAnchor |= (Anchor)((int)Anchor.x0 << i);
-                        popoverAnchor |= (Anchor)((int)Anchor.y0 << j);
-
-                        cells[j, i].Child = new DrawableWithPopover
+                        for (int j = 0; j < 3; ++j)
                         {
-                            Width = 200,
-                            Height = 30,
-                            Text = $"open {popoverAnchor}",
-                            Anchor = popoverAnchor,
-                            Origin = popoverAnchor,
-                            CreateContent = creationFunc
-                        };
+                            Anchor popoverAnchor = 0;
+                            popoverAnchor |= (Anchor)((int)Anchor.x0 << i);
+                            popoverAnchor |= (Anchor)((int)Anchor.y0 << j);
+
+                            cells[j, i].Child = new DrawableWithPopover
+                            {
+                                Width = 200,
+                                Height = 30,
+                                Text = $"open {popoverAnchor}",
+                                Anchor = popoverAnchor,
+                                Origin = popoverAnchor,
+                                CreateContent = creationFunc,
+                            };
+                        }
                     }
                 }
-            });
+            );
 
         private partial class AnimatedPopover : BasicPopover
         {
             protected override void PopIn() => this.FadeIn(300, Easing.OutQuint);
+
             protected override void PopOut() => this.FadeOut(300, Easing.OutQuint);
         }
 
@@ -645,17 +871,13 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
                 Children = new Drawable[]
                 {
-                    new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = FrameworkColour.GreenDark
-                    },
+                    new Box { RelativeSizeAxes = Axes.Both, Colour = FrameworkColour.GreenDark },
                     spriteText = new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Font = FontUsage.Default.With(italics: true)
-                    }
+                        Font = FontUsage.Default.With(italics: true),
+                    },
                 };
             }
 
@@ -682,13 +904,11 @@ namespace osu.Framework.Tests.Visual.UserInterface
                 this.HidePopover();
             }
 
-            public Popover GetPopover() => new BasicPopover
-            {
-                Child = new SpriteText
+            public Popover GetPopover() =>
+                new BasicPopover
                 {
-                    Text = "the text box has focus now!"
-                }
-            };
+                    Child = new SpriteText { Text = "the text box has focus now!" },
+                };
         }
 
         private partial class EventHandlingContainer : Container
@@ -702,19 +922,21 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             public EventHandlingContainer()
             {
-                AddInternal(new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
+                AddInternal(
+                    new Container
                     {
-                        colourBox = new Box
+                        RelativeSizeAxes = Axes.Both,
+                        Children = new Drawable[]
                         {
-                            Colour = Color4.Black,
-                            RelativeSizeAxes = Axes.Both,
+                            colourBox = new Box
+                            {
+                                Colour = Color4.Black,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            Content = new Container { RelativeSizeAxes = Axes.Both },
                         },
-                        Content = new Container { RelativeSizeAxes = Axes.Both },
                     }
-                });
+                );
             }
 
             public void Reset()

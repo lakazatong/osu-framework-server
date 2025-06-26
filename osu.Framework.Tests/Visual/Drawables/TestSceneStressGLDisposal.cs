@@ -20,30 +20,37 @@ namespace osu.Framework.Tests.Visual.Drawables
         protected override double TimePerAction => 0.001;
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            Add(fillFlow = new FillFlowContainer
+        public void SetUp() =>
+            Schedule(() =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Direction = FillDirection.Full
+                Add(
+                    fillFlow = new FillFlowContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Full,
+                    }
+                );
             });
-        });
 
         [Test]
         public void TestAddRemoveDrawable()
         {
-            AddRepeatStep("add/remove drawables", () =>
-            {
-                for (int i = 0; i < 50; i++)
+            AddRepeatStep(
+                "add/remove drawables",
+                () =>
                 {
-                    fillFlow.Add(new Box { Size = new Vector2(5) });
-
-                    if (fillFlow.Count > 100)
+                    for (int i = 0; i < 50; i++)
                     {
-                        fillFlow.Remove(fillFlow.First(), true);
+                        fillFlow.Add(new Box { Size = new Vector2(5) });
+
+                        if (fillFlow.Count > 100)
+                        {
+                            fillFlow.Remove(fillFlow.First(), true);
+                        }
                     }
-                }
-            }, 100000);
+                },
+                100000
+            );
         }
     }
 }

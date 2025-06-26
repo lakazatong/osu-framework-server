@@ -24,17 +24,26 @@ namespace osu.Framework.Tests.Visual.Containers
 
             AddStep("add composite", () => Child = composite = new SortableComposite());
 
-            AddStep("reverse comparer", () =>
-            {
-                firstItem = composite.InternalChildren[0];
-                lastItem = composite.InternalChildren[^1];
+            AddStep(
+                "reverse comparer",
+                () =>
+                {
+                    firstItem = composite.InternalChildren[0];
+                    lastItem = composite.InternalChildren[^1];
 
-                for (int i = 0; i < composite.InternalChildren.Count; i++)
-                    ((SortableBox)composite.InternalChildren[i]).Id = composite.InternalChildren.Count - 1 - i;
-                composite.Sort();
-            });
+                    for (int i = 0; i < composite.InternalChildren.Count; i++)
+                        ((SortableBox)composite.InternalChildren[i]).Id =
+                            composite.InternalChildren.Count - 1 - i;
+                    composite.Sort();
+                }
+            );
 
-            AddAssert("children reversed", () => composite.InternalChildren[0] == lastItem && composite.InternalChildren[^1] == firstItem);
+            AddAssert(
+                "children reversed",
+                () =>
+                    composite.InternalChildren[0] == lastItem
+                    && composite.InternalChildren[^1] == firstItem
+            );
         }
 
         [Test]
@@ -43,15 +52,23 @@ namespace osu.Framework.Tests.Visual.Containers
             Container parent = null;
             Container nestedChild = null;
 
-            AddStep("create hierarchy", () => Child = parent = new Container
-            {
-                Child = new Container
-                {
-                    Child = nestedChild = new Container()
-                }
-            });
+            AddStep(
+                "create hierarchy",
+                () =>
+                    Child = parent =
+                        new Container
+                        {
+                            Child = new Container { Child = nestedChild = new Container() },
+                        }
+            );
 
-            AddStep("bad change child depth call fails", () => Assert.Throws<InvalidOperationException>(() => parent.ChangeChildDepth(nestedChild, 10)));
+            AddStep(
+                "bad change child depth call fails",
+                () =>
+                    Assert.Throws<InvalidOperationException>(() =>
+                        parent.ChangeChildDepth(nestedChild, 10)
+                    )
+            );
         }
 
         /// <summary>
@@ -63,27 +80,31 @@ namespace osu.Framework.Tests.Visual.Containers
             Container container = null;
             bool clearedTransforms = false;
 
-            AddStep("create hierarchy", () =>
-            {
-                Child = container = new Container
+            AddStep(
+                "create hierarchy",
+                () =>
                 {
-                    Masking = true,
-                    AutoSizeAxes = Axes.Both,
-                    AutoSizeDuration = 1000,
-                    Child = new Box { Size = new Vector2(100) },
-                };
+                    Child = container = new Container
+                    {
+                        Masking = true,
+                        AutoSizeAxes = Axes.Both,
+                        AutoSizeDuration = 1000,
+                        Child = new Box { Size = new Vector2(100) },
+                    };
 
-                clearedTransforms = false;
+                    clearedTransforms = false;
 
-                container.OnAutoSize += () => Schedule(() =>
-                {
-                    if (clearedTransforms)
-                        return;
+                    container.OnAutoSize += () =>
+                        Schedule(() =>
+                        {
+                            if (clearedTransforms)
+                                return;
 
-                    container.ClearTransforms();
-                    clearedTransforms = true;
-                });
-            });
+                            container.ClearTransforms();
+                            clearedTransforms = true;
+                        });
+                }
+            );
 
             AddAssert("transforms cleared", () => clearedTransforms);
             AddUntilStep("container still autosized", () => container.Size == new Vector2(100));
@@ -99,20 +120,22 @@ namespace osu.Framework.Tests.Visual.Containers
 
                 for (int i = 0; i < 128; i++)
                 {
-                    AddInternal(new SortableBox
-                    {
-                        Id = i,
-                        Colour = new Color4(i / 255f, i / 255f, i / 255f, 1.0f),
-                        Position = new Vector2(3 * i),
-                        Size = new Vector2(50)
-                    });
+                    AddInternal(
+                        new SortableBox
+                        {
+                            Id = i,
+                            Colour = new Color4(i / 255f, i / 255f, i / 255f, 1.0f),
+                            Position = new Vector2(3 * i),
+                            Size = new Vector2(50),
+                        }
+                    );
                 }
             }
 
             public void Sort() => SortInternal();
 
-            protected override int Compare(Drawable x, Drawable y)
-                => ((SortableBox)x).Id.CompareTo(((SortableBox)y).Id);
+            protected override int Compare(Drawable x, Drawable y) =>
+                ((SortableBox)x).Id.CompareTo(((SortableBox)y).Id);
         }
 
         private partial class SortableBox : Box

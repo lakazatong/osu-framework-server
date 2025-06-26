@@ -4,6 +4,6 @@ namespace FlappyDon.Game
     {
         Ready,
         Playing,
-        GameOver
+        GameOver,
     }
 }

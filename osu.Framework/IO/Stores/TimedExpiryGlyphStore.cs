@@ -19,12 +19,11 @@ namespace osu.Framework.IO.Stores
     /// </remarks>
     public class TimedExpiryGlyphStore : GlyphStore
     {
-        private readonly TimedExpiryCache<int, TextureUpload> texturePages = new TimedExpiryCache<int, TextureUpload>();
+        private readonly TimedExpiryCache<int, TextureUpload> texturePages =
+            new TimedExpiryCache<int, TextureUpload>();
 
         public TimedExpiryGlyphStore(ResourceStore<byte[]> store, string assetName = null)
-            : base(store, assetName)
-        {
-        }
+            : base(store, assetName) { }
 
         protected override TextureUpload GetPageImage(int page)
         {
@@ -39,7 +38,8 @@ namespace osu.Framework.IO.Stores
 
         private int loadedPageCount;
 
-        public override string ToString() => $@"GlyphStore({AssetName}) LoadedPages:{loadedPageCount} LoadedGlyphs:{LoadedGlyphCount}";
+        public override string ToString() =>
+            $@"GlyphStore({AssetName}) LoadedPages:{loadedPageCount} LoadedGlyphs:{LoadedGlyphCount}";
 
         protected override void Dispose(bool disposing)
         {

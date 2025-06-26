@@ -29,7 +29,7 @@ namespace osu.Framework.Benchmarks
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Size = new Vector2(200),
-                    Masking = true
+                    Masking = true,
                 };
 
                 for (int i = 0; i < 10000; i++)

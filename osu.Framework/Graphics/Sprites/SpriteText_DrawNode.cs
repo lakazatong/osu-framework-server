@@ -26,9 +26,7 @@ namespace osu.Framework.Graphics.Sprites
             private List<ScreenSpaceCharacterPart>? parts;
 
             public SpriteTextDrawNode(SpriteText source)
-                : base(source)
-            {
-            }
+                : base(source) { }
 
             public override void ApplyState()
             {
@@ -53,7 +51,10 @@ namespace osu.Framework.Graphics.Sprites
                 BindTextureShader(renderer);
 
                 var avgColour = (Color4)DrawColourInfo.Colour.AverageColour;
-                float shadowAlpha = MathF.Pow(Math.Max(Math.Max(avgColour.R, avgColour.G), avgColour.B), 2);
+                float shadowAlpha = MathF.Pow(
+                    Math.Max(Math.Max(avgColour.R, avgColour.G), avgColour.B),
+                    2
+                );
 
                 //adjust shadow alpha based on highest component intensity to avoid muddy display of darker text.
                 //squared result for quadratic fall-off seems to give the best result.
@@ -66,16 +67,25 @@ namespace osu.Framework.Graphics.Sprites
                     {
                         var shadowQuad = parts[i].DrawQuad;
 
-                        renderer.DrawQuad(parts[i].Texture,
+                        renderer.DrawQuad(
+                            parts[i].Texture,
                             new Quad(
                                 shadowQuad.TopLeft + shadowOffset,
                                 shadowQuad.TopRight + shadowOffset,
                                 shadowQuad.BottomLeft + shadowOffset,
-                                shadowQuad.BottomRight + shadowOffset),
-                            finalShadowColour, inflationPercentage: parts[i].InflationPercentage);
+                                shadowQuad.BottomRight + shadowOffset
+                            ),
+                            finalShadowColour,
+                            inflationPercentage: parts[i].InflationPercentage
+                        );
                     }
 
-                    renderer.DrawQuad(parts[i].Texture, parts[i].DrawQuad, DrawColourInfo.Colour, inflationPercentage: parts[i].InflationPercentage);
+                    renderer.DrawQuad(
+                        parts[i].Texture,
+                        parts[i].DrawQuad,
+                        DrawColourInfo.Colour,
+                        inflationPercentage: parts[i].InflationPercentage
+                    );
                 }
 
                 UnbindTextureShader(renderer);
@@ -100,14 +110,23 @@ namespace osu.Framework.Graphics.Sprites
 
                 foreach (var character in Source.characters)
                 {
-                    parts.Add(new ScreenSpaceCharacterPart
-                    {
-                        DrawQuad = Source.ToScreenSpace(character.DrawRectangle.Inflate(inflationAmount)),
-                        InflationPercentage = new Vector2(
-                            character.DrawRectangle.Size.X == 0 ? 0 : inflationAmount.X / character.DrawRectangle.Size.X,
-                            character.DrawRectangle.Size.Y == 0 ? 0 : inflationAmount.Y / character.DrawRectangle.Size.Y),
-                        Texture = character.Texture
-                    });
+                    parts.Add(
+                        new ScreenSpaceCharacterPart
+                        {
+                            DrawQuad = Source.ToScreenSpace(
+                                character.DrawRectangle.Inflate(inflationAmount)
+                            ),
+                            InflationPercentage = new Vector2(
+                                character.DrawRectangle.Size.X == 0
+                                    ? 0
+                                    : inflationAmount.X / character.DrawRectangle.Size.X,
+                                character.DrawRectangle.Size.Y == 0
+                                    ? 0
+                                    : inflationAmount.Y / character.DrawRectangle.Size.Y
+                            ),
+                            Texture = character.Texture,
+                        }
+                    );
                 }
             }
         }

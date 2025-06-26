@@ -1,10 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Framework.Graphics.Effects
 {
@@ -35,14 +35,17 @@ namespace osu.Framework.Graphics.Effects
         /// </summary>
         public bool PadExtent;
 
-        public BufferedContainer ApplyTo(Drawable drawable) => drawable.WithEffect(new BlurEffect
-        {
-            Strength = Strength,
-            Sigma = BlurSigma,
-            Colour = Colour,
-            PadExtent = PadExtent,
+        public BufferedContainer ApplyTo(Drawable drawable) =>
+            drawable.WithEffect(
+                new BlurEffect
+                {
+                    Strength = Strength,
+                    Sigma = BlurSigma,
+                    Colour = Colour,
+                    PadExtent = PadExtent,
 
-            DrawOriginal = true,
-        });
+                    DrawOriginal = true,
+                }
+            );
     }
 }

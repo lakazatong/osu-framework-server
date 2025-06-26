@@ -30,7 +30,8 @@ namespace osu.Framework.Graphics.Veldrid.Buffers
     {
         private VeldridUniformBufferStorage<TData> currentStorage => storages[currentStorageIndex];
 
-        private readonly List<VeldridUniformBufferStorage<TData>> storages = new List<VeldridUniformBufferStorage<TData>>();
+        private readonly List<VeldridUniformBufferStorage<TData>> storages =
+            new List<VeldridUniformBufferStorage<TData>>();
         private int currentStorageIndex;
         private bool hasPendingData;
         private TData data;

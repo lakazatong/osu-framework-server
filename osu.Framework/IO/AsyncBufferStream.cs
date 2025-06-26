@@ -42,7 +42,11 @@ namespace osu.Framework.IO
         /// <param name="stream">The underlying stream to read from.</param>
         /// <param name="blocksToReadAhead">The amount of blocks to read ahead of the read position.</param>
         /// <param name="shared">Another AsyncBufferStream which is backing the same underlying stream. Allows shared usage of memory-backing.</param>
-        public AsyncBufferStream(Stream stream, int blocksToReadAhead, AsyncBufferStream shared = null)
+        public AsyncBufferStream(
+            Stream stream,
+            int blocksToReadAhead,
+            AsyncBufferStream shared = null
+        )
         {
             underlyingStream = stream ?? throw new ArgumentNullException(nameof(stream));
             this.blocksToReadAhead = blocksToReadAhead;
@@ -63,7 +67,12 @@ namespace osu.Framework.IO
             }
 
             cancellationToken = new CancellationTokenSource();
-            Task.Factory.StartNew(loadRequiredBlocks, cancellationToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            Task.Factory.StartNew(
+                loadRequiredBlocks,
+                cancellationToken.Token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default
+            );
         }
 
         private void loadRequiredBlocks()
@@ -107,20 +116,25 @@ namespace osu.Framework.IO
                 isLoaded = blockLoadedStatus.All(loaded => loaded);
             }
 
-            if (!isClosed) underlyingStream?.Close();
+            if (!isClosed)
+                underlyingStream?.Close();
         }
 
         private int nextBlockToLoad
         {
             get
             {
-                if (isClosed) return -1;
+                if (isClosed)
+                    return -1;
 
                 int start = underlyingStream.CanSeek ? position / block_size : 0;
 
                 int end = blockLoadedStatus.Length;
                 if (blocksToReadAhead > -1)
-                    end = Math.Min(end, (position + amountBytesToRead) / block_size + blocksToReadAhead + 1);
+                    end = Math.Min(
+                        end,
+                        (position + amountBytesToRead) / block_size + blocksToReadAhead + 1
+                    );
 
                 for (int i = start; i < end; i++)
                 {
@@ -142,7 +156,8 @@ namespace osu.Framework.IO
             cancellationToken?.Dispose();
             cancellationToken = null;
 
-            if (!isClosed) Close();
+            if (!isClosed)
+                Close();
             base.Dispose(disposing);
         }
 
@@ -174,7 +189,8 @@ namespace osu.Framework.IO
             throw new NotSupportedException();
         }
 
-        public override int Read(byte[] buffer, int offset, int count) => Read(buffer.AsSpan(offset, count));
+        public override int Read(byte[] buffer, int offset, int count) =>
+            Read(buffer.AsSpan(offset, count));
 
         public override int Read(Span<byte> buffer)
         {

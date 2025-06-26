@@ -60,11 +60,16 @@ namespace osu.Framework.Input.States
             if (!lastButtons.HasAnyButtonPressed)
             {
                 // if no buttons pressed anywhere, use static to avoid alloc.
-                return !HasAnyButtonPressed ? ButtonStateDifference.EMPTY : new ButtonStateDifference(Array.Empty<TButton>(), pressedButtons.ToArray());
+                return !HasAnyButtonPressed
+                    ? ButtonStateDifference.EMPTY
+                    : new ButtonStateDifference(Array.Empty<TButton>(), pressedButtons.ToArray());
             }
 
             if (!HasAnyButtonPressed)
-                return new ButtonStateDifference(lastButtons.pressedButtons.ToArray(), Array.Empty<TButton>());
+                return new ButtonStateDifference(
+                    lastButtons.pressedButtons.ToArray(),
+                    Array.Empty<TButton>()
+                );
 
             List<TButton> released = new List<TButton>();
             List<TButton> pressed = new List<TButton>();
@@ -95,9 +100,12 @@ namespace osu.Framework.Input.States
                 pressedButtons.Add(b);
         }
 
-        public override string ToString() => $@"{GetType().ReadableName()}({string.Join(' ', pressedButtons)})";
+        public override string ToString() =>
+            $@"{GetType().ReadableName()}({string.Join(' ', pressedButtons)})";
 
-        public IEnumerator<TButton> GetEnumerator() => ((IEnumerable<TButton>)pressedButtons).GetEnumerator();
+        public IEnumerator<TButton> GetEnumerator() =>
+            ((IEnumerable<TButton>)pressedButtons).GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         // for collection initializer
@@ -108,7 +116,10 @@ namespace osu.Framework.Input.States
             public readonly TButton[] Released;
             public readonly TButton[] Pressed;
 
-            public static readonly ButtonStateDifference EMPTY = new ButtonStateDifference(Array.Empty<TButton>(), Array.Empty<TButton>());
+            public static readonly ButtonStateDifference EMPTY = new ButtonStateDifference(
+                Array.Empty<TButton>(),
+                Array.Empty<TButton>()
+            );
 
             public ButtonStateDifference(TButton[] released, TButton[] pressed)
             {

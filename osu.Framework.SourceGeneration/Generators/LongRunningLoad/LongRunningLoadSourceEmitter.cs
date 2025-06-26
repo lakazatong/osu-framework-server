@@ -9,26 +9,32 @@ namespace osu.Framework.SourceGeneration.Generators.LongRunningLoad
 {
     public class LongRunningLoadSourceEmitter : IncrementalSourceEmitter
     {
-        private const string interface_name = "global::osu.Framework.Allocation.ISourceGeneratedLongRunningLoadCache";
+        private const string interface_name =
+            "global::osu.Framework.Allocation.ISourceGeneratedLongRunningLoadCache";
 
         protected override string FileSuffix => "LongRunningLoad";
 
-        public new LongRunningLoadSemanticTarget Target => (LongRunningLoadSemanticTarget)base.Target;
+        public new LongRunningLoadSemanticTarget Target =>
+            (LongRunningLoadSemanticTarget)base.Target;
 
         public LongRunningLoadSourceEmitter(IncrementalSemanticTarget target)
-            : base(target)
-        {
-        }
+            : base(target) { }
 
-        protected override ClassDeclarationSyntax ConstructClass(ClassDeclarationSyntax initialClass)
+        protected override ClassDeclarationSyntax ConstructClass(
+            ClassDeclarationSyntax initialClass
+        )
         {
-            return initialClass.WithBaseList(
-                                   SyntaxFactory.BaseList(
-                                       SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
-                                           SyntaxFactory.SimpleBaseType(
-                                               SyntaxFactory.ParseTypeName(interface_name)))))
-                               .WithMembers(
-                                   SyntaxFactory.List(createProperties()));
+            return initialClass
+                .WithBaseList(
+                    SyntaxFactory.BaseList(
+                        SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
+                            SyntaxFactory.SimpleBaseType(
+                                SyntaxFactory.ParseTypeName(interface_name)
+                            )
+                        )
+                    )
+                )
+                .WithMembers(SyntaxFactory.List(createProperties()));
         }
 
         private IEnumerable<MemberDeclarationSyntax> createProperties()
@@ -36,36 +42,47 @@ namespace osu.Framework.SourceGeneration.Generators.LongRunningLoad
             // Drawable is the base type which always needs to have the members defined.
             bool isDrawable = Target.FullyQualifiedTypeName == "osu.Framework.Graphics.Drawable";
 
-            yield return SyntaxFactory.PropertyDeclaration(
-                                          SyntaxFactory.ParseTypeName("global::System.Type"),
-                                          SyntaxFactory.Identifier("KnownType"))
-                                      .WithExplicitInterfaceSpecifier(
-                                          SyntaxFactory.ExplicitInterfaceSpecifier(
-                                              SyntaxFactory.IdentifierName(interface_name)))
-                                      .WithExpressionBody(
-                                          SyntaxFactory.ArrowExpressionClause(
-                                              SyntaxFactory.TypeOfExpression(
-                                                  SyntaxFactory.ParseTypeName(Target.GlobalPrefixedTypeName))))
-                                      .WithSemicolonToken(
-                                          SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+            yield return SyntaxFactory
+                .PropertyDeclaration(
+                    SyntaxFactory.ParseTypeName("global::System.Type"),
+                    SyntaxFactory.Identifier("KnownType")
+                )
+                .WithExplicitInterfaceSpecifier(
+                    SyntaxFactory.ExplicitInterfaceSpecifier(
+                        SyntaxFactory.IdentifierName(interface_name)
+                    )
+                )
+                .WithExpressionBody(
+                    SyntaxFactory.ArrowExpressionClause(
+                        SyntaxFactory.TypeOfExpression(
+                            SyntaxFactory.ParseTypeName(Target.GlobalPrefixedTypeName)
+                        )
+                    )
+                )
+                .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
 
             if (Target.IsLongRunning || isDrawable)
             {
-                yield return SyntaxFactory.PropertyDeclaration(
-                                              SyntaxFactory.PredefinedType(
-                                                  SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-                                              SyntaxFactory.Identifier("IsLongRunning"))
-                                          .WithExplicitInterfaceSpecifier(
-                                              SyntaxFactory.ExplicitInterfaceSpecifier(
-                                                  SyntaxFactory.IdentifierName(interface_name)))
-                                          .WithExpressionBody(
-                                              SyntaxFactory.ArrowExpressionClause(
-                                                  SyntaxFactory.LiteralExpression(
-                                                      Target.IsLongRunning
-                                                          ? SyntaxKind.TrueLiteralExpression
-                                                          : SyntaxKind.FalseLiteralExpression)))
-                                          .WithSemicolonToken(
-                                              SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+                yield return SyntaxFactory
+                    .PropertyDeclaration(
+                        SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
+                        SyntaxFactory.Identifier("IsLongRunning")
+                    )
+                    .WithExplicitInterfaceSpecifier(
+                        SyntaxFactory.ExplicitInterfaceSpecifier(
+                            SyntaxFactory.IdentifierName(interface_name)
+                        )
+                    )
+                    .WithExpressionBody(
+                        SyntaxFactory.ArrowExpressionClause(
+                            SyntaxFactory.LiteralExpression(
+                                Target.IsLongRunning
+                                    ? SyntaxKind.TrueLiteralExpression
+                                    : SyntaxKind.FalseLiteralExpression
+                            )
+                        )
+                    )
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
             }
         }
     }

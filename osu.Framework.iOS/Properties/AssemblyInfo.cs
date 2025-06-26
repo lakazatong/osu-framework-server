@@ -12,4 +12,6 @@ using ObjCRuntime;
 [assembly: InternalsVisibleTo("osu.Framework.Tests.Dynamic")]
 
 [assembly: LinkWith(LinkerFlags = "-lstdc++ -lbz2")]
-[assembly: LinkWith(Frameworks = "AudioToolbox AVFoundation CoreMedia VideoToolbox SystemConfiguration CFNetwork Accelerate")]
+[assembly: LinkWith(
+    Frameworks = "AudioToolbox AVFoundation CoreMedia VideoToolbox SystemConfiguration CFNetwork Accelerate"
+)]

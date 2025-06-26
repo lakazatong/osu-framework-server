@@ -7,6 +7,7 @@ namespace osu.Framework.Tests.Visual
 {
     public abstract partial class FrameworkTestScene : TestScene
     {
-        protected override ITestSceneTestRunner CreateRunner() => new FrameworkTestSceneTestRunner();
+        protected override ITestSceneTestRunner CreateRunner() =>
+            new FrameworkTestSceneTestRunner();
     }
 }

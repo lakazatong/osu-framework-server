@@ -61,18 +61,14 @@ namespace osu.Framework.Graphics.Containers
         /// Constructs a new <see cref="ModelBackedDrawable{T}"/> with the default <typeparamref name="T"/> equality comparer.
         /// </summary>
         protected ModelBackedDrawable()
-            : this(EqualityComparer<T>.Default)
-        {
-        }
+            : this(EqualityComparer<T>.Default) { }
 
         /// <summary>
         /// Constructs a new <see cref="ModelBackedDrawable{T}"/> with a custom equality function.
         /// </summary>
         /// <param name="func">The equality function.</param>
         protected ModelBackedDrawable(Func<T, T, bool> func)
-            : this(new FuncEqualityComparer<T>(func))
-        {
-        }
+            : this(new FuncEqualityComparer<T>(func)) { }
 
         /// <summary>
         /// Constructs a new <see cref="ModelBackedDrawable{T}"/> with a custom <see cref="IEqualityComparer{T}"/>.
@@ -109,9 +105,8 @@ namespace osu.Framework.Graphics.Containers
                 DisposeChildAsync(currentWrapper);
             }
 
-            currentWrapper = createDrawableFunc == null
-                ? null
-                : createWrapper(createDrawableFunc, LoadDelay);
+            currentWrapper =
+                createDrawableFunc == null ? null : createWrapper(createDrawableFunc, LoadDelay);
 
             if (currentWrapper == null)
             {
@@ -157,9 +152,12 @@ namespace osu.Framework.Graphics.Containers
 
                 // If the new wrapper is non-null, we need to wait for the show transformation to complete before hiding the old wrapper,
                 // otherwise, we can hide the old wrapper instantaneously and leave a blank display
-                var hideTransforms = wrapper == null
-                    ? ApplyHideTransforms(lastWrapper)
-                    : ((Drawable)lastWrapper)?.Delay(TransformDuration)?.Append(ApplyHideTransforms);
+                var hideTransforms =
+                    wrapper == null
+                        ? ApplyHideTransforms(lastWrapper)
+                        : ((Drawable)lastWrapper)
+                            ?.Delay(TransformDuration)
+                            ?.Append(ApplyHideTransforms);
 
                 // Expire the last wrapper after the front-most transform has completed (the last wrapper is assumed to be invisible by that point)
                 (showTransforms ?? hideTransforms)?.OnComplete(_ => lastWrapper?.Expire());
@@ -174,40 +172,42 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="createContentFunc">A function that creates the wrapped <see cref="Drawable"/>.</param>
         /// <param name="timeBeforeLoad">The time before loading should begin.</param>
         /// <returns>A <see cref="DelayedLoadWrapper"/> or null if <paramref name="createContentFunc"/> returns null.</returns>
-        private DelayedLoadWrapper createWrapper(Func<Drawable?> createContentFunc, double timeBeforeLoad)
+        private DelayedLoadWrapper createWrapper(
+            Func<Drawable?> createContentFunc,
+            double timeBeforeLoad
+        )
         {
             // Note that this only becomes null after the first consumption.
             // ie. the `createContentFunc` cannot provide a null.
             Drawable? content = createContentFunc();
 
-            return CreateDelayedLoadWrapper(() =>
-            {
-                try
+            return CreateDelayedLoadWrapper(
+                () =>
                 {
-                    // optimisation to use already constructed object (used above for null check).
-                    return content ?? createContentFunc()!;
-                }
-                finally
-                {
-                    // consume initial object if not already.
-                    content = null;
-                }
-            }, timeBeforeLoad);
+                    try
+                    {
+                        // optimisation to use already constructed object (used above for null check).
+                        return content ?? createContentFunc()!;
+                    }
+                    finally
+                    {
+                        // consume initial object if not already.
+                        content = null;
+                    }
+                },
+                timeBeforeLoad
+            );
         }
 
         /// <summary>
         /// Invoked when the <see cref="Drawable"/> representation of a model begins loading.
         /// </summary>
-        protected virtual void OnLoadStarted()
-        {
-        }
+        protected virtual void OnLoadStarted() { }
 
         /// <summary>
         /// Invoked when the <see cref="Drawable"/> representation of a model has finished loading.
         /// </summary>
-        protected virtual void OnLoadFinished()
-        {
-        }
+        protected virtual void OnLoadFinished() { }
 
         /// <summary>
         /// Determines whether <see cref="ApplyHideTransforms"/> should be invoked immediately on the currently-displayed drawable when switching to a new model.
@@ -227,8 +227,10 @@ namespace osu.Framework.Graphics.Containers
         /// <summary>
         /// Allows subclasses to customise the <see cref="DelayedLoadWrapper"/>.
         /// </summary>
-        protected virtual DelayedLoadWrapper CreateDelayedLoadWrapper(Func<Drawable> createContentFunc, double timeBeforeLoad) =>
-            new DelayedLoadWrapper(createContentFunc(), timeBeforeLoad);
+        protected virtual DelayedLoadWrapper CreateDelayedLoadWrapper(
+            Func<Drawable> createContentFunc,
+            double timeBeforeLoad
+        ) => new DelayedLoadWrapper(createContentFunc(), timeBeforeLoad);
 
         /// <summary>
         /// Creates a custom <see cref="Drawable"/> to display a model.
@@ -242,15 +244,15 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         /// <param name="drawable">The drawable that is to be hidden.</param>
         /// <returns>The transform sequence.</returns>
-        protected virtual TransformSequence<Drawable> ApplyHideTransforms(Drawable drawable)
-            => drawable.FadeOut(TransformDuration, Easing.OutQuint);
+        protected virtual TransformSequence<Drawable> ApplyHideTransforms(Drawable drawable) =>
+            drawable.FadeOut(TransformDuration, Easing.OutQuint);
 
         /// <summary>
         /// Shows a drawable.
         /// </summary>
         /// <param name="drawable">The drawable that is to be shown.</param>
         /// <returns>The transform sequence.</returns>
-        protected virtual TransformSequence<Drawable> ApplyShowTransforms(Drawable drawable)
-            => drawable.FadeIn(TransformDuration, Easing.OutQuint);
+        protected virtual TransformSequence<Drawable> ApplyShowTransforms(Drawable drawable) =>
+            drawable.FadeIn(TransformDuration, Easing.OutQuint);
     }
 }

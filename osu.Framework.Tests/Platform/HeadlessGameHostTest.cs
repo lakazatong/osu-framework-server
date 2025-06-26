@@ -21,7 +21,11 @@ namespace osu.Framework.Tests.Platform
         [Test]
         public void TestGameHostExceptionDuringSetupHost()
         {
-            using (var host = new ExceptionDuringSetupGameHost(nameof(TestGameHostExceptionDuringSetupHost)))
+            using (
+                var host = new ExceptionDuringSetupGameHost(
+                    nameof(TestGameHostExceptionDuringSetupHost)
+                )
+            )
             {
                 Assert.Throws<InvalidOperationException>(() => host.Run(new TestGame()));
 
@@ -37,9 +41,15 @@ namespace osu.Framework.Tests.Platform
         [Test]
         public void TestGameHostExceptionDuringAsynchronousChildLoad()
         {
-            using (var host = new TestRunHeadlessGameHostWithOverriddenExit(nameof(TestGameHostExceptionDuringAsynchronousChildLoad)))
+            using (
+                var host = new TestRunHeadlessGameHostWithOverriddenExit(
+                    nameof(TestGameHostExceptionDuringAsynchronousChildLoad)
+                )
+            )
             {
-                Assert.Throws<InvalidOperationException>(() => host.Run(new ExceptionDuringAsynchronousLoadTestGame()));
+                Assert.Throws<InvalidOperationException>(() =>
+                    host.Run(new ExceptionDuringAsynchronousLoadTestGame())
+                );
 
                 Assert.AreEqual(ExecutionState.Stopped, host.ExecutionState);
             }
@@ -48,7 +58,13 @@ namespace osu.Framework.Tests.Platform
         [Test]
         public void TestGameHostDisposalWhenNeverRun()
         {
-            using (new TestRunHeadlessGameHost(nameof(TestGameHostDisposalWhenNeverRun), new HostOptions(), true))
+            using (
+                new TestRunHeadlessGameHost(
+                    nameof(TestGameHostDisposalWhenNeverRun),
+                    new HostOptions(),
+                    true
+                )
+            )
             {
                 // never call host.Run()
             }
@@ -58,25 +74,33 @@ namespace osu.Framework.Tests.Platform
         [SuppressMessage("ReSharper", "AccessToDisposedClosure")]
         public void TestThreadSafetyResetOnEnteringThread()
         {
-            using (var host = new TestRunHeadlessGameHost(nameof(TestThreadSafetyResetOnEnteringThread), new HostOptions()))
+            using (
+                var host = new TestRunHeadlessGameHost(
+                    nameof(TestThreadSafetyResetOnEnteringThread),
+                    new HostOptions()
+                )
+            )
             {
                 bool isDrawThread = false;
                 bool isUpdateThread = false;
                 bool isInputThread = false;
                 bool isAudioThread = false;
 
-                var task = Task.Factory.StartNew(() =>
-                {
-                    var game = new TestGame();
-                    game.Scheduler.Add(() => host.Exit());
+                var task = Task.Factory.StartNew(
+                    () =>
+                    {
+                        var game = new TestGame();
+                        game.Scheduler.Add(() => host.Exit());
 
-                    host.Run(game);
+                        host.Run(game);
 
-                    isDrawThread = ThreadSafety.IsDrawThread;
-                    isUpdateThread = ThreadSafety.IsUpdateThread;
-                    isInputThread = ThreadSafety.IsInputThread;
-                    isAudioThread = ThreadSafety.IsAudioThread;
-                }, TaskCreationOptions.LongRunning);
+                        isDrawThread = ThreadSafety.IsDrawThread;
+                        isUpdateThread = ThreadSafety.IsUpdateThread;
+                        isInputThread = ThreadSafety.IsInputThread;
+                        isAudioThread = ThreadSafety.IsAudioThread;
+                    },
+                    TaskCreationOptions.LongRunning
+                );
 
                 task.WaitSafely();
 
@@ -87,9 +111,7 @@ namespace osu.Framework.Tests.Platform
         public class ExceptionDuringSetupGameHost : TestRunHeadlessGameHost
         {
             public ExceptionDuringSetupGameHost(string gameName)
-                : base(gameName, new HostOptions())
-            {
-            }
+                : base(gameName, new HostOptions()) { }
 
             protected override void SetupForRun()
             {
@@ -101,9 +123,7 @@ namespace osu.Framework.Tests.Platform
         public class TestRunHeadlessGameHostWithOverriddenExit : TestRunHeadlessGameHost
         {
             public TestRunHeadlessGameHostWithOverriddenExit(string gameName)
-                : base(gameName, new HostOptions())
-            {
-            }
+                : base(gameName, new HostOptions()) { }
 
             protected override void PerformExit(bool immediately)
             {

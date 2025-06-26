@@ -12,7 +12,10 @@ namespace osu.Framework.Graphics.Containers.Markdown.Footnotes
     /// <summary>
     /// Visualises a single <see cref="Markdig.Extensions.Footnotes.Footnote"/> within a <see cref="FootnoteGroup"/>.
     /// </summary>
-    public partial class MarkdownFootnote : CompositeDrawable, IMarkdownTextComponent, IMarkdownTextFlowComponent
+    public partial class MarkdownFootnote
+        : CompositeDrawable,
+            IMarkdownTextComponent,
+            IMarkdownTextFlowComponent
     {
         public readonly Footnote Footnote;
 
@@ -38,23 +41,28 @@ namespace osu.Framework.Graphics.Containers.Markdown.Footnotes
             InternalChildren = new Drawable[]
             {
                 CreateOrderMarker(Footnote.Order),
-                textFlow = CreateTextFlow()
+                textFlow = CreateTextFlow(),
             };
 
             if (Footnote.LastChild is ParagraphBlock paragraphBlock)
                 textFlow.AddInlineText(paragraphBlock.Inline);
         }
 
-        public virtual SpriteText CreateOrderMarker(int order) => CreateSpriteText().With(text =>
-        {
-            text.Text = order.ToLocalisableString();
-        });
+        public virtual SpriteText CreateOrderMarker(int order) =>
+            CreateSpriteText()
+                .With(text =>
+                {
+                    text.Text = order.ToLocalisableString();
+                });
 
         public SpriteText CreateSpriteText() => parentTextComponent.CreateSpriteText();
 
-        public virtual MarkdownTextFlowContainer CreateTextFlow() => parentFlowComponent.CreateTextFlow().With(flow =>
-        {
-            flow.Margin = new MarginPadding { Left = 20 };
-        });
+        public virtual MarkdownTextFlowContainer CreateTextFlow() =>
+            parentFlowComponent
+                .CreateTextFlow()
+                .With(flow =>
+                {
+                    flow.Margin = new MarginPadding { Left = 20 };
+                });
     }
 }

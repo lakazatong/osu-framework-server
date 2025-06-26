@@ -26,30 +26,36 @@ namespace osu.Framework.Tests.Layout
             Box box = null;
             GridContainer parent = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new GridContainer
+            AddStep(
+                "create test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    Content = new[]
+                    Child = parent = new GridContainer
                     {
-                        new Drawable[]
+                        AutoSizeAxes = Axes.Both,
+                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                        ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                        Content = new[]
                         {
-                            box = new Box
+                            new Drawable[]
                             {
-                                Size = new Vector2(200),
-                                LifetimeStart = double.MaxValue
-                            }
+                                box = new Box
+                                {
+                                    Size = new Vector2(200),
+                                    LifetimeStart = double.MaxValue,
+                                },
+                            },
                         },
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             AddStep("make child alive", () => box.LifetimeStart = double.MinValue);
 
-            AddAssert("parent has size 200", () => Precision.AlmostEquals(new Vector2(200), parent.DrawSize));
+            AddAssert(
+                "parent has size 200",
+                () => Precision.AlmostEquals(new Vector2(200), parent.DrawSize)
+            );
         }
 
         /// <summary>
@@ -61,26 +67,29 @@ namespace osu.Framework.Tests.Layout
             Box box = null;
             GridContainer parent = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new GridContainer
+            AddStep(
+                "create test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    Content = new[]
+                    Child = parent = new GridContainer
                     {
-                        new Drawable[]
+                        AutoSizeAxes = Axes.Both,
+                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                        ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                        Content = new[]
                         {
-                            box = new Box { Size = new Vector2(200) }
+                            new Drawable[] { box = new Box { Size = new Vector2(200) } },
                         },
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             AddStep("make child dead", () => box.Expire());
 
-            AddAssert("parent has size 0", () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize));
+            AddAssert(
+                "parent has size 0",
+                () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize)
+            );
         }
 
         /// <summary>
@@ -92,26 +101,29 @@ namespace osu.Framework.Tests.Layout
             Box box = null;
             GridContainer parent = null;
 
-            AddStep("create test", () =>
-            {
-                Child = parent = new GridContainer
+            AddStep(
+                "create test",
+                () =>
                 {
-                    AutoSizeAxes = Axes.Both,
-                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
-                    Content = new[]
+                    Child = parent = new GridContainer
                     {
-                        new Drawable[]
+                        AutoSizeAxes = Axes.Both,
+                        RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                        ColumnDimensions = new[] { new Dimension(GridSizeMode.AutoSize) },
+                        Content = new[]
                         {
-                            box = new TestBox1 { Size = new Vector2(200) }
+                            new Drawable[] { box = new TestBox1 { Size = new Vector2(200) } },
                         },
-                    }
-                };
-            });
+                    };
+                }
+            );
 
             AddStep("make child dead", () => box.Expire());
 
-            AddAssert("parent has size 0", () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize));
+            AddAssert(
+                "parent has size 0",
+                () => Precision.AlmostEquals(Vector2.Zero, parent.DrawSize)
+            );
         }
 
         private partial class TestBox1 : Box

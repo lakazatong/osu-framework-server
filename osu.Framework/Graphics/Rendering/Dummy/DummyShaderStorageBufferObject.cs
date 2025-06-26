@@ -24,8 +24,6 @@ namespace osu.Framework.Graphics.Rendering.Dummy
             set => data[index] = value;
         }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }
